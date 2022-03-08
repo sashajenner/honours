@@ -1,0 +1,13 @@
+\begin{thebibliography}{1}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\providecommand{\href}[2]{#2}
+
+\bibitem[{Clark and Curran(2007)}]{clark-curran:07}
+Stephen Clark and James~R. Curran. 2007.
+\newblock \href{http://dx.doi.org/10.1162/coli.2007.33.4.493}{Wide-coverage
+  efficient statistical parsing with {CCG} and log-linear models}.
+\newblock \emph{Computational Linguistics}, 33(4):493--552.
+
+\end{thebibliography}
