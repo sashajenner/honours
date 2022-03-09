@@ -1,5 +1,6 @@
 #!/bin/bash
-# get number of points in each read signal into one column with header 'len_raw_signal'
+# get number of points in each read signal into one column with header
+# 'len_raw_signal'
 USAGE="$0 (B|S)LOW5_FILE"
 
 if [ $# -ne 1 ]

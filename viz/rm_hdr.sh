@@ -14,5 +14,7 @@ fi
 FILE="$1"
 
 # print from the line beginning with '#read_id'
-LINE_NUM_END_HDR=$("$SLOW5TOOLS" view "$FILE" --to slow5 2>/dev/null | grep '^#read_id' -n | cut -d : -f 1)
-"$SLOW5TOOLS" view "$FILE" --to slow5 2>/dev/null | tail -n +"$LINE_NUM_END_HDR"
+LINE_NUM_END_HDR=$("$SLOW5TOOLS" view "$FILE" --to slow5 2>/dev/null |
+	grep '^#read_id' -n | cut -d : -f 1)
+"$SLOW5TOOLS" view "$FILE" --to slow5 2>/dev/null |
+	tail -n +"$LINE_NUM_END_HDR"
