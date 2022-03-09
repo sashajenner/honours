@@ -10,5 +10,6 @@ then
 fi
 
 FILE="$1"
+BASEDIR=$(dirname "$0")
 
-./rm_hdr.sh "$FILE" | cut -f 7
+"$BASEDIR"/rm_hdr.sh "$FILE" | cut -f 7

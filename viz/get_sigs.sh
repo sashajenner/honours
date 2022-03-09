@@ -9,5 +9,6 @@ then
 fi
 
 FILE="$1"
+BASEDIR=$(dirname "$0")
 
-./rm_hdr.sh "$FILE" | cut -f 8 | tr , '\n'
+"$BASEDIR"/rm_hdr.sh "$FILE" | cut -f 8 | tr , '\n'
