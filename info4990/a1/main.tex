@@ -1,0 +1,63 @@
+\documentclass[a4paper, 12pt]{article}
+
+\usepackage[margin=0.5in]{geometry}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{etoolbox}
+\patchcmd{\thebibliography}{\section*{\refname}}{}{}{}
+
+\begin{document}
+
+\title{INFO4990 Assignment 1}
+\author{Sasha Jenner}
+\maketitle
+\tableofcontents
+
+\section{Conferences and Journals}
+The following list ranks the top conferences and journals relevant to this project.
+\begin{enumerate}
+	\item \href{https://www.nature.com/nbt/}{Nature Biotechnology}
+	\item \href{https://www.cs.brandeis.edu/~dcc/}{Data Compression Conference (DCC)}
+	\item \href{https://academic.oup.com/bioinformatics/}{Bioinformatics}
+	\item \href{https://www.isit2022.org/}{IEEE International Symposium on Information Theory (ISIT)}
+	\item \href{https://compression.stanford.edu/stanford-compression-workshop-2021}{Stanford Compression Workshop}
+\end{enumerate}
+
+According to \href{https://www.scimagojr.com/}{Scimago}, Nature Biotechnology has an h-index of 445 in comparison to DCC, ISIT and Bioinformatics which have 390, 95 and 53 respectively. The h-index is a clear indicator of the impact of these conferences/journals with a higher score meaning more papers having more citations. It is well known that Nature is one of the most prestigious academic journals for a scientist to publish in. However, the DCC is very relevant to this project's research area.
+
+Bioinformatics on the other hand clearly has a great impact and is the journal to publish in apart from Nature Biotechnology in the area of bioinformatics. Furthermore, ISIT is focussed on information theory rather than biology and seems like a great conference with its 2021 edition having been organised to run in Melbourne. Finally, the Stanford Compression Workshop seems to be a very small bi-annual event which is highly relevant to the research topic of genetic data compression.
+
+\section{Research Groups}
+Below is a list of the main research groups working on this research topic. As is expected for an interdisciplinary research topic, there seems to be few groups working on this exact problem. However, various aspects of it seem to be addressed by the following groups.
+\begin{itemize}
+	\item \href{https://compression.stanford.edu/about-scf}{Stanford Compression Forum (SCF)}. In particular: \href{https://scholar.google.com/citations?hl=en&user=t1u0f5QAAAAJ}{Shubham Chandak} and \href{https://scholar.google.com/citations?hl=en&user=RU0ZAp4AAAAJ}{Kedar Tatwawadi} who have explored lossy compression of nanopore raw signal data.
+	\item \href{https://www.teluq.ca/siteweb/univ/en/dlemire.html#onglet1369}{Daniel Lemire} and his colleagues at the University of Quebec who have explored integer compression performance optimisation.
+	\item \href{https://sciprofiles.com/profile/1532550}{Chen Qianhao} from the \href{http://www.cbeis.zju.edu.cn/cbeisen/2018/0702/c23757a902246/page.htm}{Institute of Biomedical Engineering} in Zhejiang University and his colleagues who have explored lossless compression of sensor signals.
+\end{itemize}
+
+\section{Exemplary Papers}
+\begin{enumerate}
+	\item ``Impact of lossy compression of nanopore raw signal data on basecalling and consensus accuracy" by Shubham Chandak et al.
+
+		This paper is exemplary in my opinion since it gives a detailed overview of past research in the area. It presents a significant amount of results on the impact of lossy compression for downstream analysis accuracy of nanopore raw signal data. It is the closest related research paper I have found to the research topic of interest. Furthermore, the authors have structured the paper very nicely into Introduction; Background; Experiments; Results and Discussion; and Conclusion and Future Work.
+
+	\item ``Decoding billions of integers per second through vectorization" by Daniel Lemire and Leonid Boytsov.
+
+		I also believe this paper is exemplary since it gives a remarkable review of past integer encoding schemes which I would also like to follow in some respects. The writing style is very clear and easy to follow despite the concepts being far from easy to understand. The paper is 29 pages long but the language is clear and concise to read. The authors also include examples following some theory which makes the paper much more readable. Furthermore, the paper's results section is quite exhaustive with many graphs and tables presents many experiments in a clear manner.
+\end{enumerate}
+
+\section{Research Problems}
+\begin{enumerate}
+	\item Design a more space and time efficient lossless compressor of nanopore raw signal data.
+	\item Design a lossy compressor of nanopore raw signal data with significant compression benefits and few analysis drawbacks.
+\end{enumerate}
+
+\section{Annotated Bibliography}
+
+\nocite{mcdrc,simd-pfor,picopore,genomic-comp,genozip}
+\nocite{lossy-nano,lfzip}
+
+\bibliography{bib}
+\bibliographystyle{plain-annote}
+
+\end{document}
