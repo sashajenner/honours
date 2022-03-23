@@ -12,9 +12,9 @@ if (length(args) != 1) {
 
 path = args[1]
 df = read.csv(path)
-ggplot(df, aes(1:nrow(df), raw_signal)) +
-	geom_line() +
+plot = ggplot(df, aes(1:nrow(df), raw_signal)) +
+    geom_line() +
 	xlab('') +
 	ylab('Amplitude') +
 	labs(title = 'Signal')
-ggsave(paste0(path, '.pdf'))
+ggsave(paste0(path, '.pdf'), plot)
