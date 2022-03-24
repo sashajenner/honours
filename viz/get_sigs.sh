@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 # combine all read signals into one column with header 'raw_signal'
-USAGE="$0 (B|S)LOW5_FILE"
+USAGE="usage: $0 (B|S)LOW5_FILE"
 
 if [ $# -ne 1 ]
 then

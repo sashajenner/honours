@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # plot numbers in a column on the y-axis
-usage = "usage: ./sig.R DATA_FILE"
+USAGE = 'usage: ./sig.R DATA_FILE'
 
 library(ggplot2)
 library(plotly)
@@ -9,7 +9,7 @@ library(htmlwidgets)
 args = commandArgs(TRUE)
 
 if (length(args) != 1) {
-	stop(usage)
+	stop(USAGE)
 }
 
 path = args[1]
@@ -19,14 +19,14 @@ title = paste0(name, ' Raw Signal')
 xtitle = 'Data Point'
 ytitle = 'ADC Output'
 
-plot = ggplot(df, aes(1:nrow(df), raw_signal)) +
+plot = ggplot(df, aes(1:nrow(df), df[,1])) +
 	geom_line() +
 	xlab(xtitle) +
 	ylab(ytitle) +
 	labs(title = title)
 ggsave(paste0(path, '.pdf'), plot, width=40)
 
-plotly = plot_ly(df, x = aes(1:nrow(df)), y = ~raw_signal,
+plotly = plot_ly(x = 1:nrow(df), y = df[,1],
 		 type = 'scatter',
 		 mode = 'lines',
 		 name = title) %>%
