@@ -16,8 +16,8 @@ path = args[1]
 df = read.csv(path)
 name = basename(path)
 colname = names(df)[1]
-title = paste(name, colname, 'Density Histogram')
-xtitle = 'ADC Output'
+title = paste(name, 'Density Histogram')
+xtitle = colname
 
 plot = ggplot(df, aes(df[,1])) +
 	geom_density() +

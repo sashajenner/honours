@@ -15,9 +15,10 @@ if (length(args) != 1) {
 path = args[1]
 df = read.csv(path)
 name = basename(path)
-title = paste0(name, ' Raw Signal')
+colname = names(df)[1]
+title = paste(name, colname)
 xtitle = 'Data Point'
-ytitle = 'ADC Output'
+ytitle = colname
 
 plot = ggplot(df, aes(1:nrow(df), df[,1])) +
 	geom_line() +
