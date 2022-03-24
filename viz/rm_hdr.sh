@@ -12,9 +12,18 @@ then
 fi
 
 FILE="$1"
+EXT="${FILE##*.}"
+
+# if given file is not a slow5 file, make tmp slow5 file
+if [ "$EXT" = 'slow5' ]
+then
+	slow5file="$FILE"
+else
+	slow5file="$(mktemp)"
+	"$SLOW5TOOLS" view "$FILE" --to slow5 2>/dev/null > "$slow5file"
+fi
+
 
 # print from the line beginning with '#read_id'
-LINE_NUM_END_HDR=$("$SLOW5TOOLS" view "$FILE" --to slow5 2>/dev/null |
-	grep '^#read_id' -n | cut -d : -f 1)
-"$SLOW5TOOLS" view "$FILE" --to slow5 2>/dev/null |
-	tail -n +"$LINE_NUM_END_HDR"
+LINE_NUM_END_HDR=$(grep '^#read_id' "$slow5file" -n | cut -d : -f 1)
+tail -n +"$LINE_NUM_END_HDR" "$slow5file"
