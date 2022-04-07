@@ -1,5 +1,6 @@
 /*
  * get stats about numbers in a column
+ * ignore the first line
  * cc sigstat.c -lm -o sigstat
  * ./sigstat DATA_FILE
  */
@@ -158,6 +159,8 @@ int main(int argc, char **argv)
 {
 	FILE *fp;
 	int ret;
+	char *line;
+	size_t n;
 
 	if (argc != 2) {
 		printf(USAGE, argv[0]);
@@ -169,6 +172,13 @@ int main(int argc, char **argv)
 		perror(NULL);
 		return 1;
 	}
+
+	line = NULL;
+	n = 0;
+	ret = getline(&line, &n, fp);
+	if (ret == -1)
+		perror("empty file");
+	free(line);
 
 	ret = sigstat(fp);
 	if (ret)
