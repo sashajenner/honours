@@ -48,10 +48,12 @@ uint64_t *gettally(FILE *fp, uint16_t *min, uint16_t *max)
 
 void printtally(const uint64_t *tally, uint16_t min, uint16_t max)
 {
+	PRINTHDR("freq");
+
 	int i;
 
 	for (i = min; i <= max; ++i) {
-		printf("%d: %zu\n", i, tally[i]);
+		printf("%d" SEP "%zu\n", i, tally[i]);
 	}
 }
 
@@ -65,8 +67,10 @@ void printprob(const uint64_t *tally, uint16_t min, uint16_t max)
 		tot += tally[i];
 	}
 
+	PRINTHDR("prob");
+
 	for (i = min; i <= max; ++i) {
 		prob = ((double) tally[i]) / tot;
-		printf("%d: %f\n", i, prob);
+		printf("%d" SEP "%f\n", i, prob);
 	}
 }
