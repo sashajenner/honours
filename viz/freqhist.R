@@ -3,6 +3,8 @@
 USAGE = 'usage: ./freqhist.R DATA_FILE'
 
 library(ggplot2)
+library(plotly)
+library(htmlwidgets)
 
 args = commandArgs(TRUE)
 
@@ -22,3 +24,9 @@ plot = ggplot(df, aes(x=df[,1], y=df[,2])) +
 	xlab(xtitle) +
 	labs(title = title)
 ggsave(paste0(path, '.hist.pdf'), plot)
+
+plotly = plot_ly(x = df[,1], y=df[,2],
+		 type = 'bar',
+		 name = title) %>%
+	layout(xaxis = list(title = xtitle))
+saveWidget(plotly, paste0(path, '.hist.html'))
