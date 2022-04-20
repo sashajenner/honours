@@ -1,7 +1,7 @@
 /*
  * get stats about numbers in a column
  * ignore the first line
- * cc sigstat.c -lm -o sigstat
+ * cc sigstat.c getsig.c -lm -o sigstat
  * ./sigstat DATA_FILE
  */
 
@@ -9,9 +9,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
+#include "getsig.h"
 
-#define USAGE ("usage: %s DATA_FILE")
-#define MAX_WIDTH_INT16 (6)
+#define USAGE ("usage: %s DATA_FILE\n")
 
 struct stats {
 	size_t n;
@@ -112,46 +112,31 @@ void printstats(const struct stats *st)
 		st->sd);
 }
 
-/* expects line = "[NUM]\n\0" */
-int getsig(char *line, size_t n, int16_t *sig)
-{
-	char *endptr;
-
-	*sig = strtol(line, &endptr, 10);
-	if (endptr[0] != '\n') {
-		perror("parsing failed");
-		return 1;
-	}
-
-	return 0;
-}
-
 int sigstat(FILE *fp)
 {
-	char *line;
-	size_t n;
 	int16_t sig;
 	int ret;
 	struct stats sigstats;
+	size_t n;
+	char *line;
 
-	n = MAX_WIDTH_INT16 + 2; /* \n + \0 */
+	n = MAX_WIDTH_LINE;
 	line = malloc(n);
 	if (!line)
 		return 1;
 
 	initstats(&sigstats);
 
-	while (getline(&line, &n, fp) != -1) {
-		ret = getsig(line, n, &sig);
-		if (ret)
-			return 1;
+	while ((ret = getnextsig(fp, line, n, &sig)) == 0)
 		updatestats(sig, &sigstats);
-	}
+	free(line);
+	if (ret != 1)
+		return 1;
+
 	updatestatsend(&sigstats);
 
 	printstats(&sigstats);
 
-	free(line);
 	return 0;
 }
 
@@ -173,12 +158,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	line = NULL;
-	n = 0;
-	ret = getline(&line, &n, fp);
-	if (ret == -1)
-		perror("empty file");
-	free(line);
+	skipline(fp);
 
 	ret = sigstat(fp);
 	if (ret)
