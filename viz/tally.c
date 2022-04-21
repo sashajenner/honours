@@ -5,6 +5,7 @@
 #include "getsig.h"
 
 #define TALLY_SZ (65536) /* 2^16 */
+#define TALLY_SZ_EXP (2048) /* 2^11 */
 
 uint64_t *gettally(FILE *fp, uint16_t *min, uint16_t *max)
 {
@@ -17,7 +18,7 @@ uint64_t *gettally(FILE *fp, uint16_t *min, uint16_t *max)
 	*min = UINT16_MAX;
 	*max = 0;
 
-	tally = calloc(TALLY_SZ, sizeof (*tally));
+	tally = calloc(TALLY_SZ_EXP, sizeof (*tally));
 	if (!tally)
 		return NULL;
 
@@ -44,6 +45,49 @@ uint64_t *gettally(FILE *fp, uint16_t *min, uint16_t *max)
 	}
 
 	return tally;
+}
+
+uint64_t *gettrally(FILE *fp, uint16_t *min, uint16_t *max)
+{
+	uint64_t *trally;
+	uint16_t prev;
+	uint16_t x;
+	int ret;
+	size_t n;
+	char *line;
+
+	trally = calloc(TALLY_SZ_EXP * TALLY_SZ_EXP, sizeof (*trally));
+	if (!trally)
+		return NULL;
+
+	n = MAX_WIDTH_LINE;
+	line = malloc(n);
+	if (!line) {
+		free(trally);
+		return NULL;
+	}
+
+	(void) getnextsig(fp, line, n, &prev);
+	*min = prev;
+	*max = prev;
+
+	while ((ret = getnextsig(fp, line, n, &x)) == 0) {
+		trally[prev * TALLY_SZ_EXP + x] ++;
+		if (x < *min)
+			*min = x;
+		if (x > *max)
+			*max = x;
+		prev = x;
+	}
+
+	free(line);
+
+	if (ret != 1) {
+		free(trally);
+		return NULL;
+	}
+
+	return trally;
 }
 
 void printtally(const uint64_t *tally, uint16_t min, uint16_t max)
@@ -88,7 +132,44 @@ void printparity(const uint64_t *tally, uint16_t min, uint16_t max)
 			odd += tally[i];
 	}
 
-	PRINTHDR("parity", "freq");
+	PRINTHDR2("parity", "freq");
 	printf("even" SEP "%zu\n", even);
 	printf("odd" SEP "%zu\n", odd);
 }
+
+void printtrallymat(const uint64_t *trally, uint16_t min, uint16_t max)
+{
+	printf("from/to" SEP);
+
+	int i;
+	int j;
+
+	for (i = min; i < max; ++i) {
+		printf("%d" SEP, i);
+	}
+	printf("%d\n", i);
+
+	for (i = min; i <= max; ++i) {
+		printf("%d" SEP, i);
+		for (j = min; j < max; ++j) {
+			printf("%zu" SEP, trally[i * TALLY_SZ_EXP + j]);
+		}
+		printf("%zu\n", trally[i * TALLY_SZ_EXP + j]);
+	}
+}
+
+void printtrally(const uint64_t *trally, uint16_t min, uint16_t max)
+{
+	PRINTHDR3("from", "to", "freq");
+
+	int i;
+	int j;
+
+	for (i = min; i <= max; ++i) {
+		for (j = min; j <= max; ++j) {
+			printf("%d" SEP "%d" SEP "%zu\n", i, j,
+			       trally[i * TALLY_SZ_EXP + j]);
+		}
+	}
+}
+
