@@ -33,7 +33,7 @@ void print_all_stats(struct slow5_file *fp)
 		for (i = 0; i < rec->len_raw_signal; i++) {
 			update_stats(rec->raw_signal[i], &rec_info);
 		}
-		update_stats_end(&rec_info);
+		update_stats_end(rec, &rec_info);
 		print_stats(&rec_info);
 
 		init_stats(&rec_info);
