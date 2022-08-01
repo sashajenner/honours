@@ -87,7 +87,7 @@ void print_hdr_stats(void)
 		"max\t"
 		"mean\t"
 		"var\t"
-		"sd\n");
+		"sd");
 }
 
 void print_stats(const struct stats *st)

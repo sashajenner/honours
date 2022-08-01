@@ -19,7 +19,8 @@ void print_all_stats(struct slow5_file *fp)
 	int ret;
 	uint64_t i;
 
-	/* init stats */
+	/* init */
+	rec = NULL;
 	init_stats(&rec_info);
 
 	/* print header */
