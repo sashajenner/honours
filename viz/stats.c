@@ -114,7 +114,7 @@ void print_stats(const struct stats *st)
 		"%d\t" /* max */
 		"%f\t" /* mean */
 		"%f\t" /* var */
-		"%f\n" /* sd */
+		"%f\t" /* sd */
 		"%f\t" /* min_pa */
 		"%f\t" /* max_pa */
 		"%f\t" /* mean_pa */
