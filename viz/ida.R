@@ -38,7 +38,7 @@ cat('smallest signal value: ', min(df$min), '\n', sep='')
 cat('largest signal value: ', max(df$max), '\n', sep='')
 
 # average signal value?
-cat('average signal value: ', mean(df$mean), '\n', sep='')
+cat('average signal value: ', sum(df$mean * df$n) / sum(df$n), '\n', sep='')
 
 # distribution of signal values? TODO
 
@@ -49,6 +49,6 @@ cat('smallest signal value (pa): ', min(df$min_pa), '\n', sep='')
 cat('largest signal value (pa): ', max(df$max_pa), '\n', sep='')
 
 # average signal value in pa?
-cat('average signal value (pa): ', mean(df$mean_pa), '\n', sep='')
+cat('average signal value (pa): ', sum(df$mean_pa * df$n) / sum(df$n), '\n', sep='')
 
 # distribution of signal values in pa? TODO
