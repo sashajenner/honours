@@ -15,14 +15,20 @@ if (length(args) != 1) {
 path = args[1]
 df = read.delim(path)
 
+# total number of reads?
+cat('num reads: ', nrow(df), '\n', sep='')
+
+# total number of signals?
+cat('num signals: ', sum(df$n), '\n', sep='')
+
 # smallest read length?
-cat('smallest read length: ', min(df$n), '\n', sep='')
+cat('read length min: ', min(df$n), '\n', sep='')
 
 # largest read length?
-cat('largest read length: ', max(df$n), '\n', sep='')
+cat('read length max: ', max(df$n), '\n', sep='')
 
 # average read length?
-cat('average read length: ', mean(df$n), '\n', sep='')
+cat('read length mean: ', mean(df$n), '\n', sep='')
 
 # distribution of read lengths?
 ggplot(df, aes(x=n)) +
@@ -32,23 +38,23 @@ ggplot(df, aes(x=n)) +
 	labs(title='boxplot of read lengths')
 
 # smallest signal value?
-cat('smallest signal value: ', min(df$min), '\n', sep='')
+cat('raw signal min: ', min(df$min), '\n', sep='')
 
 # largest signal value?
-cat('largest signal value: ', max(df$max), '\n', sep='')
+cat('raw signal max: ', max(df$max), '\n', sep='')
 
 # average signal value?
-cat('average signal value: ', sum(df$mean * df$n) / sum(df$n), '\n', sep='')
+cat('raw signal mean: ', sum(df$mean * df$n) / sum(df$n), '\n', sep='')
 
 # distribution of signal values? TODO
 
 # smallest signal value in pa?
-cat('smallest signal value (pa): ', min(df$min_pa), '\n', sep='')
+cat('signal (pa) min: ', min(df$min_pa), '\n', sep='')
 
 # largest signal value in pa?
-cat('largest signal value (pa): ', max(df$max_pa), '\n', sep='')
+cat('signal (pa) max: ', max(df$max_pa), '\n', sep='')
 
 # average signal value in pa?
-cat('average signal value (pa): ', sum(df$mean_pa * df$n) / sum(df$n), '\n', sep='')
+cat('signal (pa) mean: ', sum(df$mean_pa * df$n) / sum(df$n), '\n', sep='')
 
 # distribution of signal values in pa? TODO
