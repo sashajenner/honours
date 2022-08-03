@@ -19,7 +19,8 @@ df = read.delim(path)
 cat('num reads: ', nrow(df), '\n', sep='')
 
 # total number of signals?
-cat('num signals: ', sum(df$n), '\n', sep='')
+num_sigs = sum(as.numeric(df$n))
+cat('num signals: ', num_sigs, '\n', sep='')
 
 # smallest read length?
 cat('read length min: ', min(df$n), '\n', sep='')
@@ -44,7 +45,7 @@ cat('raw signal min: ', min(df$min), '\n', sep='')
 cat('raw signal max: ', max(df$max), '\n', sep='')
 
 # average signal value?
-cat('raw signal mean: ', sum(df$mean * df$n) / sum(df$n), '\n', sep='')
+cat('raw signal mean: ', sum(df$mean * df$n) / num_sigs, '\n', sep='')
 
 # distribution of signal values? TODO
 
@@ -55,6 +56,6 @@ cat('signal (pa) min: ', min(df$min_pa), '\n', sep='')
 cat('signal (pa) max: ', max(df$max_pa), '\n', sep='')
 
 # average signal value in pa?
-cat('signal (pa) mean: ', sum(df$mean_pa * df$n) / sum(df$n), '\n', sep='')
+cat('signal (pa) mean: ', sum(df$mean_pa * df$n) / num_sigs, '\n', sep='')
 
 # distribution of signal values in pa? TODO
