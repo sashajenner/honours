@@ -6,6 +6,7 @@
 #include "stats.h"
 
 #define TO_PICOAMPS(SIGNAL, DIG, OFFSET, RANGE) (((SIGNAL)+(OFFSET))*((RANGE)/(DIG)))
+#define VAR_TO_PICOAMPS(VAR, RANGE, DIG) ((VAR) * pow((RANGE)/(DIG), 2))
 
 void init_stats(struct stats *st)
 {
@@ -60,6 +61,7 @@ static inline void update_stats_var(struct stats *st)
 static inline void update_stats_sd(struct stats *st)
 {
 	st->sd = sqrt(st->var);
+	st->sd_pa = sqrt(st->var_pa);
 }
 
 static inline void update_stats_pa(const struct slow5_rec *rec, struct stats *st)
@@ -67,8 +69,7 @@ static inline void update_stats_pa(const struct slow5_rec *rec, struct stats *st
 	st->min_pa = TO_PICOAMPS(st->min, rec->digitisation, rec->offset, rec->range);
 	st->max_pa = TO_PICOAMPS(st->max, rec->digitisation, rec->offset, rec->range);
 	st->mean_pa = TO_PICOAMPS(st->mean, rec->digitisation, rec->offset, rec->range);
-	st->var_pa = TO_PICOAMPS(st->var, rec->digitisation, rec->offset, rec->range);
-	st->sd_pa = TO_PICOAMPS(st->sd, rec->digitisation, rec->offset, rec->range);
+	st->var_pa = VAR_TO_PICOAMPS(st->var, rec->range, rec->digitisation);
 }
 
 void update_stats(int16_t x, struct stats *st)
@@ -83,8 +84,8 @@ void update_stats(int16_t x, struct stats *st)
 void update_stats_end(const struct slow5_rec *rec, struct stats *st)
 {
 	update_stats_var(st);
-	update_stats_sd(st);
 	update_stats_pa(rec, st);
+	update_stats_sd(st);
 }
 
 void print_hdr_stats(void)
