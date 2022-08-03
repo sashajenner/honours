@@ -62,19 +62,8 @@ static inline void update_stats_sd(struct stats *st)
 	st->sd = sqrt(st->var);
 }
 
-void assert_positive_pa(const struct slow5_rec *rec)
-{
-	if (rec->digitisation < 0)
-		fprintf(stderr, "negative digitisation: %f\n", rec->digitisation);
-	if (rec->offset < 0)
-		fprintf(stderr, "negative offset: %f\n", rec->offset);
-	if (rec->range < 0)
-		fprintf(stderr, "negative range: %f\n", rec->range);
-}
-
 static inline void update_stats_pa(const struct slow5_rec *rec, struct stats *st)
 {
-	assert_positive_pa(rec);
 	st->min_pa = TO_PICOAMPS(st->min, rec->digitisation, rec->offset, rec->range);
 	st->max_pa = TO_PICOAMPS(st->max, rec->digitisation, rec->offset, rec->range);
 	st->mean_pa = TO_PICOAMPS(st->mean, rec->digitisation, rec->offset, rec->range);
