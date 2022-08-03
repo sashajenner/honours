@@ -19,10 +19,9 @@ void init_stats(struct stats *st)
 	st->sd = 0;
 }
 
-static inline void update_stats_n(const struct slow5_rec *rec,
-				  struct stats *st)
+static inline void update_stats_n(struct stats *st)
 {
-	st->n = rec->len_raw_signal;
+	st->n ++;
 }
 
 static inline void update_stats_min(int16_t x, struct stats *st)
@@ -86,15 +85,11 @@ static inline void update_stats_pa(const struct slow5_rec *rec, struct stats *st
 
 void update_stats(int16_t x, struct stats *st)
 {
+	update_stats_n(st);
 	update_stats_min(x, st);
 	update_stats_max(x, st);
 	update_stats_mean(x, st);
 	update_stats_var(x, st);
-}
-
-void update_stats_start(const struct slow5_rec *rec, struct stats *st)
-{
-	update_stats_n(rec, st);
 }
 
 void update_stats_end(const struct slow5_rec *rec, struct stats *st)

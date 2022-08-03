@@ -29,7 +29,6 @@ void print_all_stats(struct slow5_file *fp)
 	/* print each read's statistics */
 	ret = slow5_get_next(&rec, fp);
 	while (ret >= 0) {
-		update_stats_start(rec, &rec_info);
 		for (i = 0; i < rec->len_raw_signal; i++) {
 			update_stats(rec->raw_signal[i], &rec_info);
 		}

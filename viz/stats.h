@@ -25,7 +25,6 @@ struct stats {
 
 void init_stats(struct stats *st);
 void update_stats(int16_t x, struct stats *st);
-void update_stats_start(const struct slow5_rec *rec, struct stats *st);
 void update_stats_end(const struct slow5_rec *rec, struct stats *st);
 void print_hdr_stats(void);
 void print_stats(const struct stats *st);

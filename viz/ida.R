@@ -47,6 +47,12 @@ cat('raw signal max: ', max(df$max), '\n', sep='')
 # average signal value?
 cat('raw signal mean: ', sum(df$mean * df$n) / num_sigs, '\n', sep='')
 
+# variance of signal values?
+cat('raw signal var: ', sum(df$var * df$n) / num_sigs, '\n', sep='')
+
+# standard deviation of signal values?
+cat('raw signal sd: ', sum(df$sd * df$n) / num_sigs, '\n', sep='')
+
 # distribution of signal values? TODO
 
 # smallest signal value in pa?
@@ -57,5 +63,11 @@ cat('signal (pa) max: ', max(df$max_pa), '\n', sep='')
 
 # average signal value in pa?
 cat('signal (pa) mean: ', sum(df$mean_pa * df$n) / num_sigs, '\n', sep='')
+
+# variance of signal values?
+cat('signal (pa) var: ', sum(df$var_pa * df$n) / num_sigs, '\n', sep='')
+
+# standard deviation of signal values?
+cat('signal (pa) sd: ', sum(df$sd_pa * df$n) / num_sigs, '\n', sep='')
 
 # distribution of signal values in pa? TODO
