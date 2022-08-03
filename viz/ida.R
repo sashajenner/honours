@@ -48,10 +48,11 @@ cat('raw signal max: ', max(df$max), '\n', sep='')
 cat('raw signal mean: ', sum(df$mean * df$n) / num_sigs, '\n', sep='')
 
 # variance of signal values?
-cat('raw signal var: ', sum(df$var * df$n) / num_sigs, '\n', sep='')
+raw_sig_var = sum(df$var * df$n) / num_sigs
+cat('raw signal var: ', raw_sig_var, '\n', sep='')
 
 # standard deviation of signal values?
-cat('raw signal sd: ', sum(df$sd * df$n) / num_sigs, '\n', sep='')
+cat('raw signal sd: ', sqrt(raw_sig_var), '\n', sep='')
 
 # distribution of signal values? TODO
 
@@ -65,9 +66,10 @@ cat('signal (pa) max: ', max(df$max_pa), '\n', sep='')
 cat('signal (pa) mean: ', sum(df$mean_pa * df$n) / num_sigs, '\n', sep='')
 
 # variance of signal values?
-cat('signal (pa) var: ', sum(df$var_pa * df$n) / num_sigs, '\n', sep='')
+sig_var = sum(df$var_pa * df$n) / num_sigs
+cat('signal (pa) var: ', sig_var, '\n', sep='')
 
 # standard deviation of signal values?
-cat('signal (pa) sd: ', sum(df$sd_pa * df$n) / num_sigs, '\n', sep='')
+cat('signal (pa) sd: ', sqrt(sig_var), '\n', sep='')
 
 # distribution of signal values in pa? TODO

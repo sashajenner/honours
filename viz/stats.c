@@ -52,9 +52,8 @@ static inline void update_stats_m2(int16_t x, struct stats *st)
 	st->m2 += st->delta * (x - st->mean);
 }
 
-static inline void update_stats_var(int16_t x, struct stats *st)
+static inline void update_stats_var(struct stats *st)
 {
-	update_stats_m2(x, st);
 	st->var = st->m2 / st->n;
 }
 
@@ -89,11 +88,12 @@ void update_stats(int16_t x, struct stats *st)
 	update_stats_min(x, st);
 	update_stats_max(x, st);
 	update_stats_mean(x, st);
-	update_stats_var(x, st);
+	update_stats_m2(x, st);
 }
 
 void update_stats_end(const struct slow5_rec *rec, struct stats *st)
 {
+	update_stats_var(st);
 	update_stats_sd(st);
 	update_stats_pa(rec, st);
 }
