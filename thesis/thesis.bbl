@@ -4,10 +4,10 @@
 \providecommand{\urlprefix}{URL }
 \providecommand{\href}[2]{#2}
 
-\bibitem[{Clark and Curran(2007)}]{clark-curran:07}
-Stephen Clark and James~R. Curran. 2007.
-\newblock \href{http://dx.doi.org/10.1162/coli.2007.33.4.493}{Wide-coverage
-  efficient statistical parsing with {CCG} and log-linear models}.
-\newblock \emph{Computational Linguistics}, 33(4):493--552.
+\bibitem[{Wang et~al.(2021)Wang, Zhao, Bollas, Wang, and Au}]{Wang2021}
+Yunhao Wang, Yue Zhao, Audrey Bollas, Yuru Wang, and Kin~Fai Au. 2021.
+\newblock \href{https://doi.org/10.1038/s41587-021-01108-x}{Nanopore sequencing
+  technology, bioinformatics and applications}.
+\newblock \emph{Nature Biotechnology}, 39(11):1348--1365.
 
 \end{thebibliography}

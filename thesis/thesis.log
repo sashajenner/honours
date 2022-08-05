@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.3.3)  7 MAR 2022 10:56
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.3.3)  3 AUG 2022 10:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -966,7 +966,7 @@ LaTeX Info: Redefining \nameref on input line 76.
 LaTeX Info: Redefining \Ref on input line 76.
 \c@lstlisting=\count327
  ABD: EveryShipout initializing macros
-<style/usyd-primary-colour.pdf, id=53, 293.095pt x 101.37875pt>
+<style/usyd-primary-colour.pdf, id=57, 293.095pt x 101.37875pt>
 File: style/usyd-primary-colour.pdf Graphic file (type pdf)
 <use style/usyd-primary-colour.pdf>
 Package pdftex.def Info: style/usyd-primary-colour.pdf  used on input line 81.
@@ -1028,6 +1028,14 @@ List of Tables
 
 ] (./introduction/introduction.tex
 Chapter 1
+
+Package natbib Warning: Citation `clark-curran:07' on page 1 undefined on input
+ line 3.
+
+
+Package natbib Warning: Citation `clark-curran:07' on page 1 undefined on input
+ line 3.
+
 ) (./litreview/litreview.tex [1
 
 
@@ -1060,7 +1068,11 @@ Chapter 6
 
 ] (./thesis.bbl
 Bibliography
-) [7
+)
+
+Package natbib Warning: There were undefined citations.
+
+[7
 
 
 
@@ -1072,25 +1084,25 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 144.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 144.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 144.
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 78A36C39F64E00515FDF4155A5A78C0F;667.
+(rerunfilecheck)             Checksum: E80F322428D22EBB99D7ED721F03F221;723.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 144.
  ) 
 Here is how much of TeX's memory you used:
- 19240 strings out of 483107
- 319263 string characters out of 5964631
- 559694 words of memory out of 5000000
- 33562 multiletter control sequences out of 15000+600000
+ 19243 strings out of 483107
+ 319269 string characters out of 5964631
+ 559759 words of memory out of 5000000
+ 33564 multiletter control sequences out of 15000+600000
  584495 words of font info for 81 fonts, out of 8000000 for 9000
  220 hyphenation exceptions out of 8191
- 52i,6n,56p,401b,379s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 52i,6n,56p,482b,379s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fo
 nts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/t
 imes/utmri8a.pfb>
-Output written on thesis.pdf (14 pages, 58194 bytes).
+Output written on thesis.pdf (14 pages, 60588 bytes).
 PDF statistics:
- 163 PDF objects out of 1000 (max. 8388607)
- 141 compressed objects within 2 object streams
- 30 named destinations out of 1000 (max. 500000)
- 114 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 167 PDF objects out of 1000 (max. 8388607)
+ 145 compressed objects within 2 object streams
+ 31 named destinations out of 1000 (max. 500000)
+ 122 words of extra memory for PDF output out of 10000 (max. 10000000)
 
