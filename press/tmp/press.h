@@ -25,6 +25,4 @@ static inline uint64_t uint11_depress(const uint8_t *in, uint64_t nin, int16_t *
 	return uintx_depress(11, in, nin, out);
 }
 
-char *int2bin(int16_t a, char *buffer, int buf_size);
-
 #endif /* press.h */
