@@ -12,5 +12,6 @@
 
 uint64_t svbytebound(const uint16_t *in, uint64_t nin);
 void svbytecode(const uint16_t *in, uint64_t nin, uint8_t *out);
+void svbytedecode(const uint8_t *in, uint64_t nin, uint16_t *out);
 
 #endif

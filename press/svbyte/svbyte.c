@@ -47,3 +47,18 @@ void svbytecode(const uint16_t *in, uint64_t nin, uint8_t *out)
 		data_offset += bytes;
 	}
 }
+
+void svbytedecode(const uint8_t *in, uint64_t nin, uint16_t *out)
+{
+	uint64_t i;
+	uint64_t data_offset;
+	uint8_t bytes;
+
+	data_offset = SIZEOF_BITMAP(nin);
+
+	for (i = 0; i < nin; ++i) {
+		bytes = get_bit(i, in) + 1;
+		memcpy(out + i, in + data_offset, bytes);
+		data_offset += bytes;
+	}
+}

@@ -31,4 +31,6 @@ static inline void bitmap_zero(uint8_t *addr, uint64_t nbits)
 void set_bit(uint64_t bit, uint8_t *addr);
 void clear_bit(uint64_t bit, uint8_t *addr);
 
+uint8_t get_bit(uint64_t bit, const uint8_t *addr);
+
 #endif /* bitmap.h */

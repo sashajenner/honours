@@ -80,11 +80,42 @@ int svbytecode_test(void) {
 	return EXIT_SUCCESS;
 }
 
+int svbytedecode_test(void) {
+	uint16_t *raw = malloc(sizeof SEQ0);
+	ASSERT(raw);
+
+	svbytedecode(SEQ0_CODE, LENGTH(SEQ0), raw);
+	ASSERT(memcmp(raw, SEQ0, sizeof SEQ0) == 0);
+
+	raw = realloc(raw, sizeof SEQ1);
+	ASSERT(raw);
+
+	svbytedecode(SEQ1_CODE, LENGTH(SEQ1), raw);
+	ASSERT(memcmp(raw, SEQ1, sizeof SEQ1) == 0);
+
+	raw = realloc(raw, sizeof SEQ2);
+	ASSERT(raw);
+
+	svbytedecode(SEQ2_CODE, LENGTH(SEQ2), raw);
+	ASSERT(memcmp(raw, SEQ2, sizeof SEQ2) == 0);
+
+	raw = realloc(raw, sizeof SEQ3);
+	ASSERT(raw);
+
+	svbytedecode(SEQ3_CODE, LENGTH(SEQ3), raw);
+	ASSERT(memcmp(raw, SEQ3, sizeof SEQ3) == 0);
+
+	free(raw);
+
+	return EXIT_SUCCESS;
+}
+
 int main(void) {
 
 	struct command tests[] = {
 		CMD(svbytebound_test),
 		CMD(svbytecode_test),
+		CMD(svbytedecode_test),
 	};
 
 	return RUN_TESTS(tests);

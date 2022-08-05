@@ -24,3 +24,14 @@ void clear_bit(uint64_t bit, uint8_t *addr)
 	addr += BIT_WORD(bit);
 	*addr &= ~mask;
 }
+
+uint8_t get_bit(uint64_t bit, const uint8_t *addr)
+{
+	uint8_t onoff;
+	uint64_t mask = BIT_MASK(bit);
+
+	addr += BIT_WORD(bit);
+	onoff = *addr & mask;
+
+	return onoff;
+}
