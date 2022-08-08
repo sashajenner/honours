@@ -8,7 +8,7 @@ struct stats {
 
 	int16_t min;
 	int16_t max;
-	int16_t median;
+	/* int16_t median; */ /* TODO */
 	/* int16_t mode; */ /* TODO */
 
 	double delta; /* difference between current and mean */

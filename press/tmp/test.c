@@ -73,5 +73,7 @@ int main(void)
 	TEST(P11, none_bound, none_press, none_depress);
 	TEST(P11, uint11_bound, uint11_press, uint11_depress);
 	TEST(P11, uint_bound, uint_press, uint_depress);
+	TEST(P11, uint_minusmin_bound, uint_minusmin_press, uint_minusmin_depress);
+	TEST(P11, uint_zd_bound, uint_zd_press, uint_zd_depress);
 	return 0;
 }
