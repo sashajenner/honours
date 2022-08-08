@@ -195,7 +195,7 @@ uint64_t uint_depress(const uint8_t *in, uint64_t nin, int16_t *out)
 	return uintx_depress(x, in + 1, nin - 1, out);
 }
 
-uint64_t uint_minusmin_bound(const int16_t *in, uint64_t nin)
+uint64_t uint_submin_bound(const int16_t *in, uint64_t nin)
 {
 	struct stats st;
 	uint8_t x;
@@ -207,26 +207,26 @@ uint64_t uint_minusmin_bound(const int16_t *in, uint64_t nin)
 	return uintx_bound(x, in, nin) + sizeof st.min + 1;
 }
 
-uint64_t uint_minusmin_press(const int16_t *in, uint64_t nin, uint8_t *out)
+uint64_t uint_submin_press(const int16_t *in, uint64_t nin, uint8_t *out)
 {
 	struct stats st;
-	int16_t *in_minusmin;
+	int16_t *in_submin;
 	uint64_t i;
 	uint64_t nout;
 
 	/* TODO have this as an argument */
 	get_stats(in, nin, &st);
-	in_minusmin = shift_x(-1 * st.min, in, nin);
+	in_submin = shift_x(-1 * st.min, in, nin);
 
 	(void) memcpy(out, &st.min, sizeof st.min);
 	/* TODO pass stats as argument */
-	nout = uint_press(in_minusmin, nin, out + sizeof st.min) + sizeof st.min;
+	nout = uint_press(in_submin, nin, out + sizeof st.min) + sizeof st.min;
 
-	free(in_minusmin);
+	free(in_submin);
 	return nout;
 }
 
-uint64_t uint_minusmin_depress(const uint8_t *in, uint64_t nin, int16_t *out)
+uint64_t uint_submin_depress(const uint8_t *in, uint64_t nin, int16_t *out)
 {
 	struct stats st;
 	uint64_t i;
@@ -273,13 +273,62 @@ uint64_t uint_zd_press(const int16_t *in, uint64_t nin, uint8_t *out)
 
 uint64_t uint_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out)
 {
-	uint64_t i;
 	uint64_t nout;
 
 	(void) memcpy(out, in, sizeof *out);
 	nout = uint_depress(in + sizeof *out, nin - sizeof *out, out + 1) + 1;
 
 	unzigdelta_inplace(out, nout);
+
+	return nout;
+}
+
+uint64_t uint_zsubmean_bound(const int16_t *in, uint64_t nin)
+{
+	struct stats st;
+	int16_t *in_zsm;
+	uint64_t nout;
+
+	get_stats(in, nin, &st);
+	in_zsm = shift_x(-1 * (int16_t) st.mean, in, nin);
+	zigzag_inplace(in_zsm, nin);
+
+	nout = uint_bound(in_zsm, nin) + sizeof (int16_t);
+	free(in_zsm);
+
+	return nout;
+}
+
+uint64_t uint_zsubmean_press(const int16_t *in, uint64_t nin, uint8_t *out)
+{
+	struct stats st;
+	int16_t mean;
+	int16_t *in_zsm;
+	uint64_t nout;
+
+	get_stats(in, nin, &st);
+	mean = (int16_t) st.mean;
+
+	in_zsm = shift_x(-1 * mean, in, nin);
+	zigzag_inplace(in_zsm, nin);
+
+	(void) memcpy(out, &mean, sizeof mean);
+	nout = uint_press(in_zsm, nin, out + sizeof mean) + sizeof mean;
+
+	free(in_zsm);
+	return nout;
+}
+
+uint64_t uint_zsubmean_depress(const uint8_t *in, uint64_t nin, int16_t *out)
+{
+	int16_t mean;
+	uint64_t nout;
+
+	(void) memcpy(&mean, in, sizeof mean);
+	nout = uint_depress(in + sizeof mean, nin - sizeof mean, out);
+
+	unzigzag_inplace(out, nout);
+	shift_x_inplace(mean, out, nout);
 
 	return nout;
 }

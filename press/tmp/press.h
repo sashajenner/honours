@@ -39,12 +39,12 @@ uint64_t uint_outliers_press(const int16_t *in, uint64_t nin, uint8_t *out);
 uint64_t uint_outliers_depress(const uint8_t *in, uint64_t nin, int16_t *out);
 
 /*
- * minus min from all sigs
+ * subtract min from all sigs
  * compressed: [min, x, sigs - min as uintx_t]
  */
-uint64_t uint_minusmin_bound(const int16_t *in, uint64_t nin);
-uint64_t uint_minusmin_press(const int16_t *in, uint64_t nin, uint8_t *out);
-uint64_t uint_minusmin_depress(const uint8_t *in, uint64_t nin, int16_t *out);
+uint64_t uint_submin_bound(const int16_t *in, uint64_t nin);
+uint64_t uint_submin_press(const int16_t *in, uint64_t nin, uint8_t *out);
+uint64_t uint_submin_depress(const uint8_t *in, uint64_t nin, int16_t *out);
 
 /*
  * zigzag delta: take successive differences and map to unsigned integers
@@ -53,5 +53,13 @@ uint64_t uint_minusmin_depress(const uint8_t *in, uint64_t nin, int16_t *out);
 uint64_t uint_zd_bound(const int16_t *in, uint64_t nin);
 uint64_t uint_zd_press(const int16_t *in, uint64_t nin, uint8_t *out);
 uint64_t uint_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out);
+
+/*
+ * zigzag subtract mean: subtract mean from all sigs and map to unsigned integers
+ * compressed: [mean, x, zigzag(sigs - mean) as uintx_t]
+ */
+uint64_t uint_zsubmean_bound(const int16_t *in, uint64_t nin);
+uint64_t uint_zsubmean_press(const int16_t *in, uint64_t nin, uint8_t *out);
+uint64_t uint_zsubmean_depress(const uint8_t *in, uint64_t nin, int16_t *out);
 
 #endif /* press.h */

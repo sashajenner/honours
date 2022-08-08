@@ -3,7 +3,9 @@
 
 #include <stdio.h>
 
-#define TEST(signals, bound, press, depress) ASSERT(test((signals), LENGTH(signals), (bound), (press), (depress)) == EXIT_SUCCESS);
+#define TEST(signals, name, bound, press, depress) \
+	puts("-----\n" name); \
+	ASSERT(test((signals), LENGTH(signals), (bound), (press), (depress)) == EXIT_SUCCESS);
 
 #define ASSERT(statement) \
 if (!(statement)) { \
