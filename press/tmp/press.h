@@ -25,4 +25,19 @@ static inline uint64_t uint11_depress(const uint8_t *in, uint64_t nin, int16_t *
 	return uintx_depress(11, in, nin, out);
 }
 
+/* store each int16_t as uintx_t where x is decided after one pass */
+uint64_t uint_bound(const int16_t *in, uint64_t nin);
+uint64_t uint_press(const int16_t *in, uint64_t nin, uint8_t *out);
+uint64_t uint_depress(const uint8_t *in, uint64_t nin, int16_t *out);
+
+/* TODO store outliers separately */
+uint64_t uint_outliers_bound(const int16_t *in, uint64_t nin);
+uint64_t uint_outliers_press(const int16_t *in, uint64_t nin, uint8_t *out);
+uint64_t uint_outliers_depress(const uint8_t *in, uint64_t nin, int16_t *out);
+
+/* TODO minus min from all sigs */
+uint64_t uint_minusmin_bound(const int16_t *in, uint64_t nin);
+uint64_t uint_minusmin_press(const int16_t *in, uint64_t nin, uint8_t *out);
+uint64_t uint_minusmin_depress(const uint8_t *in, uint64_t nin, int16_t *out);
+
 #endif /* press.h */

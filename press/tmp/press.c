@@ -1,6 +1,10 @@
 #include <string.h>
+#include <math.h>
+#include <stdio.h> /* TODO testing */
+#include <inttypes.h> /* TODO testing */
 #include "press.h"
 #include "bitmap.h"
+#include "stats.h"
 
 uint64_t none_bound(const int16_t *in, uint64_t nin)
 {
@@ -135,4 +139,64 @@ uint64_t uintx_depress(uint8_t x, const uint8_t *in, uint64_t nin, int16_t *out)
 	}
 
 	return out_i;
+}
+
+/*
+static inline uint32_t zigzag(int32_t x)
+{
+	return (x + x) ^ (x >> 31);
+}
+*/
+
+uint8_t get_uint_bound(int16_t min, int16_t max)
+{
+	uint8_t i;
+
+	/* can't unsigned bound if min < 0 */
+	if (min < 0)
+		return 0;
+
+	for (i = 1; i <= 16; i++) {
+		if (max < pow(2, i))
+			return i;
+	}
+
+	return 0;
+}
+
+uint64_t uint_bound(const int16_t *in, uint64_t nin)
+{
+	struct stats st;
+	uint8_t x;
+
+	get_stats(in, nin, &st);
+	x = get_uint_bound(st.min, st.max);
+
+	/* +1 to store x */
+	return uintx_bound(x, in, nin) + 1;
+}
+
+uint64_t uint_press(const int16_t *in, uint64_t nin, uint8_t *out)
+{
+	struct stats st;
+	uint8_t x;
+
+	/* TODO have this as an argument */
+	get_stats(in, nin, &st);
+	x = get_uint_bound(st.min, st.max);
+	print_stats(&st);
+	printf("bits per sig: %" PRIu8 "\n", x);
+
+	out[0] = x;
+
+	return uintx_press(x, in, nin, out + 1) + 1;
+}
+
+uint64_t uint_depress(const uint8_t *in, uint64_t nin, int16_t *out)
+{
+	uint8_t x;
+
+	x = in[0];
+
+	return uintx_depress(x, in + 1, nin - 1, out);
 }

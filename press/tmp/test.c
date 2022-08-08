@@ -33,6 +33,8 @@ int test(const int16_t *sigs,
 	/* compress sigs */
 	press_len = press(sigs, nr_sigs, sigs_press);
 	ASSERT(press_len <= press_bound);
+	fprintf(stderr, "press ratio:\t%f\n",
+			(float) nr_sigs_bytes / press_len);
 
 	/* init sigs_depress */
 	sigs_depress = malloc(nr_sigs_bytes);
@@ -70,5 +72,6 @@ int main(void)
 {
 	TEST(P11, none_bound, none_press, none_depress);
 	TEST(P11, uint11_bound, uint11_press, uint11_depress);
+	TEST(P11, uint_bound, uint_press, uint_depress);
 	return 0;
 }
