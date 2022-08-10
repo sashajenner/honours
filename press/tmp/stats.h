@@ -25,4 +25,4 @@ void update_stats_end(struct stats *st);
 void get_stats(const int16_t *sigs, uint64_t nsigs, struct stats *st);
 void print_stats(const struct stats *st);
 
-#endif
+#endif /* stat.h */

@@ -1,11 +1,12 @@
 #include <string.h>
-#include <math.h>
 #include <stdio.h> /* TODO testing */
 #include <inttypes.h> /* TODO testing */
 #include "press.h"
 #include "bitmap.h"
 #include "stats.h"
 #include "trans.h"
+#include "util.h"
+#include "flat.h"
 
 uint64_t none_bound(const int16_t *in, uint64_t nin)
 {
@@ -140,22 +141,6 @@ uint64_t uintx_depress(uint8_t x, const uint8_t *in, uint64_t nin, int16_t *out)
 	}
 
 	return out_i;
-}
-
-uint8_t get_uint_bound(int16_t min, int16_t max)
-{
-	uint8_t i;
-
-	/* can't unsigned bound if min < 0 */
-	if (min < 0)
-		return 0;
-
-	for (i = 1; i <= 16; i++) {
-		if (max < pow(2, i))
-			return i;
-	}
-
-	return 0;
 }
 
 uint64_t uint_bound(const int16_t *in, uint64_t nin)
@@ -331,4 +316,50 @@ uint64_t uint_zsubmean_depress(const uint8_t *in, uint64_t nin, int16_t *out)
 	shift_x_inplace(mean, out, nout);
 
 	return nout;
+}
+
+uint64_t flat_uint_submin_bound(const int16_t *in, uint64_t nin)
+{
+	/*
+	struct stats st;
+	uint64_t nbits;
+	uint64_t nsigs;
+	uint64_t start;
+	uint8_t x;
+
+	nbits = 0;
+	start = 0;
+
+	while (start < nin) {
+		printf("%" PRIu64 ",", start);
+		nsigs = end_flat(in + start, nin - start, &st);
+		start += nsigs;
+		x = get_uint_bound(0, st.max - st.min);
+		nbits += NBITS_FLAT_UINT_SUBMIN_HDR + nsigs * x;
+	}
+	puts("");
+	*/
+
+	uint64_t nbits;
+	uint32_t *flats;
+	uint64_t nflats;
+	uint64_t i;
+
+	nbits = get_flats(in, nin, &flats, &nflats);
+	printf("0,");
+	for (i = 0; i < nflats; i++) {
+		printf("%" PRIu32 ",", flats[i]);
+	}
+	puts("");
+
+	return BITS_TO_BYTES(nbits);
+}
+
+uint64_t flat_uint_submin_press(const int16_t *in, uint64_t nin, uint8_t *out)
+{
+	return 0;
+}
+uint64_t flat_uint_submin_depress(const uint8_t *in, uint64_t nin, int16_t *out)
+{
+	return 0;
 }

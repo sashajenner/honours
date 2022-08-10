@@ -24,6 +24,7 @@ int test(const int16_t *sigs,
 
 	/* bound sigs_press */
 	press_bound = bound(sigs, nr_sigs);
+	fprintf(stderr, "press bound:\t%" PRIu64 "\n", press_bound);
 	ASSERT(press_bound <= nr_sigs_bytes);
 
 	/* init sigs_press */
@@ -76,5 +77,6 @@ int main(void)
 	TEST(P11, "uintx subtract min", uint_submin_bound, uint_submin_press, uint_submin_depress);
 	TEST(P11, "uintx zigzag delta", uint_zd_bound, uint_zd_press, uint_zd_depress);
 	TEST(P11, "uintx zigzag subtract mean", uint_zsubmean_bound, uint_zsubmean_press, uint_zsubmean_depress);
+	TEST(P11, "flat uintx subtract min", flat_uint_submin_bound, flat_uint_submin_press, flat_uint_submin_depress);
 	return 0;
 }

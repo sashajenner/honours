@@ -33,7 +33,14 @@ uint64_t uint_bound(const int16_t *in, uint64_t nin);
 uint64_t uint_press(const int16_t *in, uint64_t nin, uint8_t *out);
 uint64_t uint_depress(const uint8_t *in, uint64_t nin, int16_t *out);
 
-/* TODO store outliers separately */
+/*
+ * TODO store outliers separately
+ * where to store?
+ * - at the beginning: store indices of outliers before data
+ * - in sequence: use an extra bit to represent if outlier or not, then data
+ * determine outlier?
+ * - sds from mean: approximate with normal distribution
+ */
 uint64_t uint_outliers_bound(const int16_t *in, uint64_t nin);
 uint64_t uint_outliers_press(const int16_t *in, uint64_t nin, uint8_t *out);
 uint64_t uint_outliers_depress(const uint8_t *in, uint64_t nin, int16_t *out);
@@ -61,5 +68,15 @@ uint64_t uint_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out);
 uint64_t uint_zsubmean_bound(const int16_t *in, uint64_t nin);
 uint64_t uint_zsubmean_press(const int16_t *in, uint64_t nin, uint8_t *out);
 uint64_t uint_zsubmean_depress(const uint8_t *in, uint64_t nin, int16_t *out);
+
+#define NBITS_FLAT_UINT_SUBMIN_HDR (56) /* nsigs + min + x = 32 + 8 + 16 */
+
+/*
+ * separate into flat regions, compress using uint_submin
+ * compressed: [[num_sigs, min, x, sigs - min as uintx_t]...]
+ */
+uint64_t flat_uint_submin_bound(const int16_t *in, uint64_t nin);
+uint64_t flat_uint_submin_press(const int16_t *in, uint64_t nin, uint8_t *out);
+uint64_t flat_uint_submin_depress(const uint8_t *in, uint64_t nin, int16_t *out);
 
 #endif /* press.h */

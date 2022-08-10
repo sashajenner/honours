@@ -10,4 +10,4 @@ void unzigzag_inplace(int16_t *in, uint64_t nin);
 int16_t *zigdelta(const int16_t *in, uint64_t nin, uint64_t *nout);
 void unzigdelta_inplace(int16_t *in, uint64_t nin);
 
-#endif
+#endif /* trans.h */
