@@ -13,10 +13,9 @@
 static uint64_t get_flats_between(const int16_t *in, uint64_t nin,
 				  uint64_t start, uint64_t end,
 				  uint32_t **flats, uint64_t *nflats,
-				  int16_t *cache);
-static void update_cache(const int16_t *in, uint64_t nin, uint64_t start,
-			 uint64_t end, int16_t *cache);
-static uint64_t flat_nbits(uint64_t start, uint64_t end, uint64_t nin,
+				  uint32_t *cache);
+static void fill_cache(const int16_t *in, uint64_t nin, int16_t *cache);
+static uint32_t flat_nbits(uint64_t start, uint64_t end, uint64_t nin,
 			   int16_t *cache);
 
 uint64_t end_flat(const int16_t *in, uint64_t nin, struct stats *st)
@@ -60,10 +59,11 @@ uint64_t get_flats(const int16_t *in, uint64_t nin, uint32_t **flats,
 	int16_t *cache;
 	uint64_t nbits;
 
-	cache = calloc(nin * nin * 2, sizeof *cache);
+	cache = malloc(nin * nin * 2 * sizeof *cache);
+	fill_cache(in, nin, cache);
 	fprintf(stderr, "cache:\t%p\n", cache);
 	fprintf(stderr, "cache elements:\t%ld\n", nin * nin * 2);
-	nbits = get_flats_between(in, nin, 0, nin - 1, flats, nflats, cache);
+	nbits = get_flats_between(in, nin, 0, nin - 1, flats, nflats, (uint32_t *) cache);
 	free(cache);
 
 	return nbits;
@@ -72,15 +72,15 @@ uint64_t get_flats(const int16_t *in, uint64_t nin, uint32_t **flats,
 static uint64_t get_flats_between(const int16_t *in, uint64_t nin,
 				  uint64_t start, uint64_t end,
 				  uint32_t **flats, uint64_t *nflats,
-				  int16_t *cache)
+				  uint32_t *cache)
 {
 	uint32_t *flats_l;
 	uint32_t *flats_r;
+	uint32_t nbits;
+	uint32_t nbits_l;
+	uint32_t nbits_r;
 	uint64_t capflats;
 	uint64_t i;
-	uint64_t nbits;
-	uint64_t nbits_l;
-	uint64_t nbits_r;
 	uint64_t nflats_l;
 	uint64_t nflats_r;
 
@@ -88,8 +88,7 @@ static uint64_t get_flats_between(const int16_t *in, uint64_t nin,
 	*flats = malloc(capflats * sizeof *flats);
 	*nflats = 1;
 	(*flats)[0] = end;
-	update_cache(in, nin, start, end, cache);
-	nbits = flat_nbits(start, end, nin, cache);
+	nbits = cache[INDEX(start, end, 0, nin, 2)];
 
 	for (i = 0; i < end; i++) {
 		nbits_l = get_flats_between(in, nin, 0, i, &flats_l, &nflats_l,
@@ -115,32 +114,35 @@ static uint64_t get_flats_between(const int16_t *in, uint64_t nin,
 	return nbits;
 }
 
-static void update_cache(const int16_t *in, uint64_t nin, uint64_t start,
-			 uint64_t end, int16_t *cache)
+static void fill_cache(const int16_t *in, uint64_t nin, int16_t *cache)
 {
+	uint64_t i;
 	uint64_t j;
-	int16_t min;
-	int16_t max;
+	uint32_t nbits;
 
-	fprintf(stderr, "cache index:\t%ld\n", INDEX(start, end, 0, nin, 2));
-	min = cache[INDEX(start, end, 0, nin, 2)];
-	max = cache[INDEX(start, end, 1, nin, 2)];
-	if (min && max)
-		return;
-
-	for (j = start; j <= end; j++) {
-		min = cache[INDEX(start, end, 0, nin, 2)];
-		max = cache[INDEX(start, end, 1, nin, 2)];
-		if (!min || in[j] < min) {
-			cache[INDEX(start, j, 0, nin, 2)] = in[j];
+	for (j = 0; j < nin; j++) {
+		/*
+		 * min(in[i, j]) = min(in[j], min(in[i, j - 1]))
+		 * max(in[i, j]) = max(in[j], max(in[i, j - 1]))
+		 */
+		for (i = 0; i < j; i++) {
+			cache[INDEX(i, j, 0, nin, 2)] = MIN(in[j], cache[INDEX(i, j - 1, 0, nin, 2)]);
+			cache[INDEX(i, j, 1, nin, 2)] = MAX(in[j], cache[INDEX(i, j - 1, 1, nin, 2)]);
 		}
-		if (in[j] > max) {
-			cache[INDEX(start, j, 1, nin, 2)] = in[j];
+		cache[INDEX(j, j, 0, nin, 2)] = in[j];
+		cache[INDEX(j, j, 1, nin, 2)] = in[j];
+	}
+
+	for (i = 0; i < nin; i++) {
+		for (j = 0; j < nin; j++) {
+			nbits = flat_nbits(i, j, nin, cache);
+			memcpy(cache + INDEX(i, j, 0, nin, 2), &nbits,
+			       sizeof nbits);
 		}
 	}
 }
 
-static uint64_t flat_nbits(uint64_t start, uint64_t end, uint64_t nin,
+static uint32_t flat_nbits(uint64_t start, uint64_t end, uint64_t nin,
 			   int16_t *cache)
 {
 	uint8_t x;
