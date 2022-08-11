@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-#define MIN(x, y) ((x) ? (x) < (y) : (y))
-#define MAX(x, y) ((x) ? (x) > (y) : (y))
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
 
 uint8_t get_uint_bound(int16_t min, int16_t max);
 
