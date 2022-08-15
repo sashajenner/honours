@@ -8,7 +8,8 @@
 #include "press.h"
 
 #define INDEX_2D(i, j, imax) ((i) + (j) * (imax))
-#define I2(i, j, nin) INDEX_2D(i, j, nin)
+#define INDEX_2D_TRIANGLE(i, j) ((i) + (j) * (j + 1) / 2)
+#define I2(i, j) INDEX_2D_TRIANGLE(i, j)
 
 /* metadata for a signal sequence */
 struct flat_meta {
@@ -37,7 +38,7 @@ void fill_meta_flat_disjoint(uint64_t i, uint64_t j, uint64_t nin,
 			     struct flat_meta *meta);
 void fill_meta_flat_union(uint64_t i, uint64_t j, uint64_t nin,
 			  struct flat_meta *meta);
-uint32_t flat_nbits(uint64_t start, uint64_t end, uint64_t nin,
+uint32_t flat_nbits(uint64_t i, uint64_t j, uint64_t nin,
 		    struct flat_meta *meta);
 void print_meta_minmax(struct flat_meta *meta, uint64_t nin);
 void print_meta_nbits(struct flat_meta *meta, uint64_t nin);
@@ -84,7 +85,7 @@ uint64_t get_flats(const int16_t *in, uint64_t nin, uint32_t **flats,
 	struct flat_meta *meta;
 	uint64_t nbits;
 
-	meta = malloc(nin * nin * sizeof *meta);
+	meta = malloc(nin * (nin + 1) / 2 * sizeof *meta);
 	fprintf(stderr, "%p\n", meta);
 	fill_meta(in, nin, meta);
 
@@ -101,7 +102,7 @@ uint64_t get_flats_between(const int16_t *in, uint64_t nin, uint64_t i,
 {
 	uint64_t k;
 
-	meta += I2(i, j, nin);
+	meta += I2(i, j);
 	*nflats = meta->nflats;
 	*flats = malloc(*nflats * sizeof *flats);
 
@@ -132,16 +133,16 @@ void fill_meta_nbits(const int16_t *in, uint64_t nin, struct flat_meta *meta)
 		 * max(in[i, j]) = max(in[j], max(in[i, j - 1]))
 		 */
 		for (i = 0; i < j; i++) {
-			min = MIN(in[j], meta[I2(i, j - 1, nin)].min);
-			max = MAX(in[j], meta[I2(i, j - 1, nin)].max);
+			min = MIN(in[j], meta[I2(i, j - 1)].min);
+			max = MAX(in[j], meta[I2(i, j - 1)].max);
 
-			cur = meta + I2(i, j, nin);
+			cur = meta + I2(i, j);
 			cur->min = min;
 			cur->max = max;
 			cur->nbits = flat_nbits(i, j, nin, meta);
 		}
 		/* min(in[j, j]) = max(in[j, j]) = in[j] */
-		cur = meta + I2(j, j, nin);
+		cur = meta + I2(j, j);
 		cur->min = in[j];
 		cur->max = in[j];
 		cur->nbits = flat_nbits(j, j, nin, meta);
@@ -172,7 +173,7 @@ void fill_meta_flat(uint64_t i, uint64_t j, uint64_t nin,
 {
 	struct flat_meta *cur;
 
-	cur = meta + I2(i, j, nin);
+	cur = meta + I2(i, j);
 
 	cur->nflats = 1;
 	cur->flats = malloc(cur->nflats * sizeof *(cur->flats));
@@ -194,13 +195,13 @@ void fill_meta_flat_disjoint(uint64_t i, uint64_t j, uint64_t nin,
 	uint32_t flats_nbits;
 	uint64_t k;
 
-	cur = meta + I2(i, j, nin);
+	cur = meta + I2(i, j);
 	left_min = NULL;
 	right_min = NULL;
 
 	for (k = i; k < j; k++) {
-		left = meta + I2(i, k, nin);
-		right = meta + I2(k + 1, j, nin);
+		left = meta + I2(i, k);
+		right = meta + I2(k + 1, j);
 		flats_nbits = left->flats_nbits + right->flats_nbits;
 		if (flats_nbits < cur->flats_nbits) {
 			cur->flats_nbits = flats_nbits;
@@ -238,13 +239,13 @@ void fill_meta_flat_union(uint64_t i, uint64_t j, uint64_t nin,
 	uint64_t x;
 	uint64_t y;
 
-	cur = meta + I2(i, j, nin);
+	cur = meta + I2(i, j);
 	left_min = NULL;
 	right_min = NULL;
 
 	for (k = i; k < j; k++) {
-		left = meta + I2(i, k, nin);
-		right = meta + I2(k + 1, j, nin);
+		left = meta + I2(i, k);
+		right = meta + I2(k + 1, j);
 
 		x = left->flats[left->nflats - 1];
 		if (right->nflats >= 2)
@@ -252,9 +253,9 @@ void fill_meta_flat_union(uint64_t i, uint64_t j, uint64_t nin,
 		else
 			y = j;
 
-		mid = meta + I2(x, y, nin);
-		mid_left = meta + I2(x, k, nin);
-		mid_right = meta + I2(k + 1, y, nin);
+		mid = meta + I2(x, y);
+		mid_left = meta + I2(x, k);
+		mid_right = meta + I2(k + 1, y);
 
 		flats_nbits = (left->flats_nbits - mid_left->nbits) + mid->nbits
 			     + (right->flats_nbits - mid_right->nbits);
@@ -278,7 +279,7 @@ void fill_meta_flat_union(uint64_t i, uint64_t j, uint64_t nin,
 	}
 }
 
-uint32_t flat_nbits(uint64_t start, uint64_t end, uint64_t nin,
+uint32_t flat_nbits(uint64_t i, uint64_t j, uint64_t nin,
 		    struct flat_meta *meta)
 {
 	int16_t max;
@@ -286,12 +287,12 @@ uint32_t flat_nbits(uint64_t start, uint64_t end, uint64_t nin,
 	struct flat_meta *cur;
 	uint8_t x;
 
-	cur = meta + I2(start, end, nin);
+	cur = meta + I2(i, j);
 	min = cur->min;
 	max = cur->max;
 
 	x = get_uint_bound(0, max - min);
-	return NBITS_FLAT_UINT_SUBMIN_HDR + x * (end - start + 1);
+	return NBITS_FLAT_UINT_SUBMIN_HDR + x * (j - i+ 1);
 }
 
 void print_meta_minmax(struct flat_meta *meta, uint64_t nin)
@@ -303,8 +304,8 @@ void print_meta_minmax(struct flat_meta *meta, uint64_t nin)
 
 	for (j = 0; j < nin; j++) {
 		for (i = 0; i <= j; i++) {
-			min = meta[I2(i, j, nin)].min;
-			max = meta[I2(i, j, nin)].max;
+			min = meta[I2(i, j)].min;
+			max = meta[I2(i, j)].max;
 			printf("[%" PRIu64 ",%" PRIu64 "]: min %" PRId16 ", max %" PRId16 "\n",
 			       i, j, min, max);
 		}
@@ -319,7 +320,7 @@ void print_meta_nbits(struct flat_meta *meta, uint64_t nin)
 	for (j = 0; j < nin; j++) {
 		for (i = 0; i <= j; i++) {
 			printf("[%" PRIu64 ",%" PRIu64 "]: nbits %" PRIu32 "\n",
-			       i, j, meta[I2(i, j, nin)].nbits);
+			       i, j, meta[I2(i, j)].nbits);
 		}
 	}
 }
@@ -331,7 +332,7 @@ void free_meta(struct flat_meta *meta, uint64_t nin)
 
 	for (j = 0; j < nin; j++) {
 		for (i = 0; i <= j; i++) {
-			free(meta[I2(i, j, nin)].flats);
+			free(meta[I2(i, j)].flats);
 		}
 	}
 
