@@ -7,30 +7,41 @@
 #include "util.h"
 #include "press.h"
 
-/* min and max of each subsequence is cached */
-#define NUM_ELEMENTS (2)
-#define MIN_INDEX (0)
-#define MAX_INDEX (1)
-
 #define INDEX_2D(i, j, imax) ((i) + (j) * (imax))
-#define INDEX_3D(i, j, k, imax, jmax) ((i) + (j) * (imax) + (k) * (imax) * (jmax))
-/* cache index */
 #define I2(i, j, nin) INDEX_2D(i, j, nin)
-#define I3(i, j, k, nin) INDEX_3D(i, j, k, nin, nin)
 
-#define FLATS_MIN_CAPACITY (64)
+/* metadata for a signal sequence */
+struct flat_meta {
+	int16_t max;		/* max signal */
+	int16_t min;		/* min signal */
+	uint32_t nbits;		/* number of bits after compressing the
+				   sequence as one */
+	/* TODO put in separate struct */
+	uint32_t *flats;	/* the first indices of the subsequences with
+				   min total number of bits after compressing
+				   each separately */
+	uint32_t nflats;	/* number of subsequences */
+	uint32_t flats_nbits;	/* total nbits after compressing each
+				   subsequence */
+};
 
-static uint64_t get_flats_between(const int16_t *in, uint64_t nin,
-				  uint64_t start, uint64_t end,
-				  uint32_t **flats, uint64_t *nflats,
-				  uint32_t *cache);
-static void fill_cache_minmax(const int16_t *in, uint64_t nin, int16_t *cache);
-static void fill_cache_nbits(const int16_t *in, uint64_t nin,
-			     int16_t *cache_minmax, uint32_t *cache_nbits);
-static uint32_t flat_nbits(uint64_t start, uint64_t end, uint64_t nin,
-			   int16_t *cache);
-static void print_cache_minmax(int16_t *cache, uint64_t nin);
-static void print_cache_nbits(uint32_t *cache, uint64_t nin);
+uint64_t get_flats_between(const int16_t *in, uint64_t nin, uint64_t i,
+			   uint64_t j, uint32_t **flats, uint64_t *nflats,
+			   struct flat_meta *meta);
+void fill_meta(const int16_t *in, uint64_t nin, struct flat_meta *meta);
+void fill_meta_nbits(const int16_t *in, uint64_t nin, struct flat_meta *meta);
+void fill_meta_flats(uint64_t nin, struct flat_meta *meta);
+void fill_meta_flat(uint64_t i, uint64_t j, uint64_t nin,
+		    struct flat_meta *meta);
+void fill_meta_flat_disjoint(uint64_t i, uint64_t j, uint64_t nin,
+			     struct flat_meta *meta);
+void fill_meta_flat_union(uint64_t i, uint64_t j, uint64_t nin,
+			  struct flat_meta *meta);
+uint32_t flat_nbits(uint64_t start, uint64_t end, uint64_t nin,
+		    struct flat_meta *meta);
+void print_meta_minmax(struct flat_meta *meta, uint64_t nin);
+void print_meta_nbits(struct flat_meta *meta, uint64_t nin);
+void free_meta(struct flat_meta *meta, uint64_t nin);
 
 uint64_t end_flat(const int16_t *in, uint64_t nin, struct stats *st)
 {
@@ -70,77 +81,49 @@ uint64_t end_flat(const int16_t *in, uint64_t nin, struct stats *st)
 uint64_t get_flats(const int16_t *in, uint64_t nin, uint32_t **flats,
 		   uint64_t *nflats)
 {
-	int16_t *cache_minmax;
-	uint32_t *cache_nbits;
+	struct flat_meta *meta;
 	uint64_t nbits;
 
-	cache_minmax = malloc(nin * nin * NUM_ELEMENTS * sizeof *cache_minmax);
-	fill_cache_minmax(in, nin, cache_minmax);
-	fprintf(stderr, "cache_minmax:\t%p\n", cache_minmax);
-
-	/* TODO reuse minmax cache */
-	cache_nbits = malloc(nin * nin * sizeof *cache_nbits);
-	fprintf(stderr, "cache_nbits:\t%p\n", cache_minmax);
-	fill_cache_nbits(in, nin, cache_minmax, cache_nbits);
-	free(cache_minmax);
+	meta = malloc(nin * nin * sizeof *meta);
+	fill_meta(in, nin, meta);
 
 	nbits = get_flats_between(in, nin, 0, nin - 1, flats, nflats,
-				  cache_nbits);
-	free(cache_nbits);
+				  meta);
+	free_meta(meta, nin);
 
 	return nbits;
 }
 
-static uint64_t get_flats_between(const int16_t *in, uint64_t nin,
-				  uint64_t start, uint64_t end,
-				  uint32_t **flats, uint64_t *nflats,
-				  uint32_t *cache)
+uint64_t get_flats_between(const int16_t *in, uint64_t nin, uint64_t i,
+			   uint64_t j, uint32_t **flats, uint64_t *nflats,
+			   struct flat_meta *meta)
 {
-	uint32_t *flats_l;
-	uint32_t *flats_r;
-	uint32_t nbits;
-	uint32_t nbits_l;
-	uint32_t nbits_r;
-	uint64_t capflats;
-	uint64_t i;
-	uint64_t nflats_l;
-	uint64_t nflats_r;
+	uint64_t k;
 
-	capflats = FLATS_MIN_CAPACITY;
-	*flats = malloc(capflats * sizeof *flats);
-	*nflats = 1;
-	(*flats)[0] = end;
-	nbits = cache[I2(start, end, nin)];
+	meta += I2(i, j, nin);
+	*nflats = meta->nflats;
+	*flats = malloc(*nflats * sizeof *flats);
 
-	for (i = 0; i < end; i++) {
-		nbits_l = get_flats_between(in, nin, 0, i, &flats_l, &nflats_l,
-					    cache);
-		nbits_r = get_flats_between(in, nin, i + 1, end, &flats_r,
-					    &nflats_r, cache);
-
-		if (nbits > nbits_l + nbits_r) {
-			nbits = nbits_l + nbits_r;
-			*nflats = nflats_l + nflats_r;
-			if (*nflats > capflats) {
-				capflats <<= 2;
-				*flats = realloc(*flats, capflats);
-			}
-			memcpy(*flats, flats_l, nflats_l * sizeof *flats);
-			memcpy(*flats + nflats_l, flats_r,
-			       nflats_r * sizeof *flats);
-		}
-
-		free(flats_l);
-		free(flats_r);
+	for (k = 0; k < *nflats; k++) {
+		(*flats)[k] = meta->flats[k];
 	}
 
-	return nbits;
+	return meta->flats_nbits;
 }
 
-static void fill_cache_minmax(const int16_t *in, uint64_t nin, int16_t *cache)
+void fill_meta(const int16_t *in, uint64_t nin, struct flat_meta *meta)
+{
+	fill_meta_nbits(in, nin, meta);
+	fill_meta_flats(nin, meta);
+}
+
+void fill_meta_nbits(const int16_t *in, uint64_t nin, struct flat_meta *meta)
 {
 	uint64_t i;
 	uint64_t j;
+	int16_t min;
+	int16_t max;
+	struct flat_meta *cur;
 
 	for (j = 0; j < nin; j++) {
 		/*
@@ -148,49 +131,169 @@ static void fill_cache_minmax(const int16_t *in, uint64_t nin, int16_t *cache)
 		 * max(in[i, j]) = max(in[j], max(in[i, j - 1]))
 		 */
 		for (i = 0; i < j; i++) {
-			cache[I3(i, j, MIN_INDEX, nin)] = MIN(in[j], cache[I3(i, j - 1, MIN_INDEX, nin)]);
-			cache[I3(i, j, MAX_INDEX, nin)] = MAX(in[j], cache[I3(i, j - 1, MAX_INDEX, nin)]);
+			min = MIN(in[j], meta[I2(i, j - 1, nin)].min);
+			max = MAX(in[j], meta[I2(i, j - 1, nin)].max);
+
+			cur = meta + I2(i, j, nin);
+			cur->min = min;
+			cur->max = max;
+			cur->nbits = flat_nbits(i, j, nin, meta);
 		}
 		/* min(in[j, j]) = max(in[j, j]) = in[j] */
-		cache[I3(j, j, MIN_INDEX, nin)] = in[j];
-		cache[I3(j, j, MAX_INDEX, nin)] = in[j];
+		cur = meta + I2(j, j, nin);
+		cur->min = in[j];
+		cur->max = in[j];
+		cur->nbits = flat_nbits(j, j, nin, meta);
 	}
 
-	/* print_cache_minmax(cache, nin); */
+	/* print_meta_minmax(meta, nin); */
 }
 
-static void fill_cache_nbits(const int16_t *in, uint64_t nin,
-			     int16_t *cache_minmax, uint32_t *cache_nbits)
+void fill_meta_flats(uint64_t nin, struct flat_meta *meta)
 {
 	uint64_t i;
 	uint64_t j;
-	uint32_t nbits;
+	uint64_t len;
 
-	for (j = 0; j < nin; j++) {
-		for (i = 0; i <= j; i++) {
-			nbits = flat_nbits(i, j, nin, cache_minmax);
-			cache_nbits[I2(i, j, nin)] = nbits;
+	for (len = 1; len <= nin; len++) {
+		for (i = 0; i <= nin - len; i++) {
+			j = i + len - 1;
+
+			fill_meta_flat(i, j, nin, meta);
+
+			j++;
+		}
+	}
+}
+
+void fill_meta_flat(uint64_t i, uint64_t j, uint64_t nin,
+		    struct flat_meta *meta)
+{
+	struct flat_meta *cur;
+
+	cur = meta + I2(i, j, nin);
+
+	cur->nflats = 1;
+	cur->flats = malloc(cur->nflats * sizeof *(cur->flats));
+	cur->flats[0] = i;
+	cur->flats_nbits = cur->nbits;
+
+	fill_meta_flat_disjoint(i, j, nin, meta);
+	fill_meta_flat_union(i, j, nin, meta);
+}
+
+void fill_meta_flat_disjoint(uint64_t i, uint64_t j, uint64_t nin,
+			     struct flat_meta *meta)
+{
+	struct flat_meta *cur;
+	struct flat_meta *left;
+	struct flat_meta *left_min;
+	struct flat_meta *right;
+	struct flat_meta *right_min;
+	uint32_t flats_nbits;
+	uint64_t k;
+
+	cur = meta + I2(i, j, nin);
+	left_min = NULL;
+	right_min = NULL;
+
+	for (k = i; k < j; k++) {
+		left = meta + I2(i, k, nin);
+		right = meta + I2(k + 1, j, nin);
+		flats_nbits = left->flats_nbits + right->flats_nbits;
+		if (flats_nbits < cur->flats_nbits) {
+			cur->flats_nbits = flats_nbits;
+			left_min = left;
+			right_min = right;
 		}
 	}
 
-	/* print_cache_nbits(cache_nbits, nin); */
+	if (left_min && right_min) {
+		cur->flats = realloc(cur->flats,
+				     (left_min->nflats + right_min->nflats) *
+				     sizeof(*cur->flats));
+		for (k = 0; k < left_min->nflats; k++) {
+			cur->flats[k] = left_min->flats[k];
+		}
+		for (k = 0; k < right_min->nflats; k++) {
+			cur->flats[left_min->nflats + k] = right_min->flats[k];
+		}
+	}
 }
 
-static uint32_t flat_nbits(uint64_t start, uint64_t end, uint64_t nin,
-			   int16_t *cache)
+void fill_meta_flat_union(uint64_t i, uint64_t j, uint64_t nin,
+			  struct flat_meta *meta)
 {
-	uint8_t x;
-	int16_t min;
-	int16_t max;
+	struct flat_meta *cur;
+	struct flat_meta *left;
+	struct flat_meta *left_min;
+	struct flat_meta *mid;
+	struct flat_meta *mid_left;
+	struct flat_meta *mid_right;
+	struct flat_meta *right;
+	struct flat_meta *right_min;
+	uint32_t flats_nbits;
+	uint64_t k;
+	uint64_t x;
+	uint64_t y;
 
-	min = cache[I3(start, end, MIN_INDEX, nin)];
-	max = cache[I3(start, end, MAX_INDEX, nin)];
+	cur = meta + I2(i, j, nin);
+	left_min = NULL;
+	right_min = NULL;
+
+	for (k = i; k < j; k++) {
+		left = meta + I2(i, k, nin);
+		right = meta + I2(k + 1, j, nin);
+
+		x = left->flats[left->nflats - 1];
+		if (right->nflats >= 2)
+			y = right->flats[1] - 1;
+		else
+			y = j;
+
+		mid = meta + I2(x, y, nin);
+		mid_left = meta + I2(x, k, nin);
+		mid_right = meta + I2(k + 1, y, nin);
+
+		flats_nbits = (left->flats_nbits - mid_left->nbits) + mid->nbits
+			     + (right->flats_nbits - mid_right->nbits);
+		if (flats_nbits < cur->flats_nbits) {
+			cur->flats_nbits = flats_nbits;
+			left_min = left;
+			right_min = right;
+		}
+	}
+
+	if (left_min && right_min) {
+		cur->flats = realloc(cur->flats,
+				     (left_min->nflats + right_min->nflats - 1)
+				     * sizeof(*cur->flats));
+		for (k = 0; k < left_min->nflats; k++) {
+			cur->flats[k] = left_min->flats[k];
+		}
+		for (k = 1; k < right_min->nflats; k++) {
+			cur->flats[left_min->nflats + k] = right_min->flats[k];
+		}
+	}
+}
+
+uint32_t flat_nbits(uint64_t start, uint64_t end, uint64_t nin,
+		    struct flat_meta *meta)
+{
+	int16_t max;
+	int16_t min;
+	struct flat_meta *cur;
+	uint8_t x;
+
+	cur = meta + I2(start, end, nin);
+	min = cur->min;
+	max = cur->max;
 
 	x = get_uint_bound(0, max - min);
 	return NBITS_FLAT_UINT_SUBMIN_HDR + x * (end - start + 1);
 }
 
-static void print_cache_minmax(int16_t *cache, uint64_t nin)
+void print_meta_minmax(struct flat_meta *meta, uint64_t nin)
 {
 	uint64_t i;
 	uint64_t j;
@@ -199,15 +302,15 @@ static void print_cache_minmax(int16_t *cache, uint64_t nin)
 
 	for (j = 0; j < nin; j++) {
 		for (i = 0; i <= j; i++) {
-			min = cache[I3(i, j, MIN_INDEX, nin)];
-			max = cache[I3(i, j, MAX_INDEX, nin)];
+			min = meta[I2(i, j, nin)].min;
+			max = meta[I2(i, j, nin)].max;
 			printf("[%" PRIu64 ",%" PRIu64 "]: min %" PRId16 ", max %" PRId16 "\n",
 			       i, j, min, max);
 		}
 	}
 }
 
-static void print_cache_nbits(uint32_t *cache, uint64_t nin)
+void print_meta_nbits(struct flat_meta *meta, uint64_t nin)
 {
 	uint64_t i;
 	uint64_t j;
@@ -215,7 +318,21 @@ static void print_cache_nbits(uint32_t *cache, uint64_t nin)
 	for (j = 0; j < nin; j++) {
 		for (i = 0; i <= j; i++) {
 			printf("[%" PRIu64 ",%" PRIu64 "]: nbits %" PRIu32 "\n",
-			       i, j, cache[I2(i, j, nin)]);
+			       i, j, meta[I2(i, j, nin)].nbits);
 		}
 	}
+}
+
+void free_meta(struct flat_meta *meta, uint64_t nin)
+{
+	uint64_t i;
+	uint64_t j;
+
+	for (j = 0; j < nin; j++) {
+		for (i = 0; i <= j; i++) {
+			free(meta[I2(i, j, nin)].flats);
+		}
+	}
+
+	free(meta);
 }
