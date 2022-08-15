@@ -85,6 +85,7 @@ uint64_t get_flats(const int16_t *in, uint64_t nin, uint32_t **flats,
 	uint64_t nbits;
 
 	meta = malloc(nin * nin * sizeof *meta);
+	fprintf(stderr, "%p\n", meta);
 	fill_meta(in, nin, meta);
 
 	nbits = get_flats_between(in, nin, 0, nin - 1, flats, nflats,
