@@ -346,11 +346,11 @@ uint64_t flat_uint_submin_bound(const int16_t *in, uint64_t nin)
 	uint64_t i;
 
 	nbits = get_flats(in, nin, &flats, &nflats);
-	printf("0,");
 	for (i = 0; i < nflats; i++) {
 		printf("%" PRIu32 ",", flats[i]);
 	}
 	puts("");
+	free(flats);
 
 	return BITS_TO_BYTES(nbits);
 }

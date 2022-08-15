@@ -211,8 +211,8 @@ void fill_meta_flat_disjoint(uint64_t i, uint64_t j, uint64_t nin,
 	}
 
 	if (left_min && right_min) {
-		cur->flats = realloc(cur->flats,
-				     (left_min->nflats + right_min->nflats) *
+		cur->nflats = left_min->nflats + right_min->nflats;
+		cur->flats = realloc(cur->flats, cur->nflats *
 				     sizeof(*cur->flats));
 		for (k = 0; k < left_min->nflats; k++) {
 			cur->flats[k] = left_min->flats[k];
@@ -267,9 +267,9 @@ void fill_meta_flat_union(uint64_t i, uint64_t j, uint64_t nin,
 	}
 
 	if (left_min && right_min) {
-		cur->flats = realloc(cur->flats,
-				     (left_min->nflats + right_min->nflats - 1)
-				     * sizeof(*cur->flats));
+		cur->nflats = left_min->nflats + right_min->nflats - 1;
+		cur->flats = realloc(cur->flats, cur->nflats *
+				     sizeof(*cur->flats));
 		for (k = 0; k < left_min->nflats; k++) {
 			cur->flats[k] = left_min->flats[k];
 		}
