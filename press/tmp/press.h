@@ -84,11 +84,10 @@ uint32_t uint_zsubmean_bound(const int16_t *in, uint32_t nin);
 uint32_t uint_zsubmean_press(const int16_t *in, uint32_t nin, uint8_t *out);
 uint32_t uint_zsubmean_depress(const uint8_t *in, uint32_t nin, int16_t *out);
 
-/* num_sigs + min + x */
-#define NBYTES_FLAT_UINT_SUBMIN_HDR (sizeof (uint32_t) + sizeof (int16_t) + \
-				     sizeof (uint8_t))
-#define NBITS_FLAT_UINT_SUBMIN_HDR (NBYTES_FLAT_UINT_SUBMIN_HDR * \
-				    BITS_PER_BYTE)
+/* num_sigs + min/start + x */
+#define NBYTES_FLAT_UINT_HDR (sizeof (uint32_t) + sizeof (int16_t) + \
+			      sizeof (uint8_t))
+#define NBITS_FLAT_UINT_HDR BYTES_TO_BITS(NBYTES_FLAT_UINT_HDR)
 
 /*
  * separate into flat regions, compress using uint_submin
@@ -97,5 +96,31 @@ uint32_t uint_zsubmean_depress(const uint8_t *in, uint32_t nin, int16_t *out);
 uint32_t flat_uint_submin_bound(const int16_t *in, uint32_t nin);
 uint32_t flat_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out);
 uint32_t flat_uint_submin_depress(const uint8_t *in, uint32_t nin, int16_t *out);
+
+/*
+ * TODO
+ * separate into flat regions, compress using uint_zd
+ * compressed: [[num_sigs, start, x, sigs zigzag delta as uintx_t]...]
+ */
+/*
+uint32_t flat_uint_zd_bound(const int16_t *in, uint32_t nin);
+uint32_t flat_uint_zd_press(const int16_t *in, uint32_t nin, uint8_t *out);
+uint32_t flat_uint_zd_depress(const uint8_t *in, uint32_t nin, int16_t *out);
+*/
+
+/* zlib */
+uint32_t zlib_bound(const int16_t *in, uint32_t nin);
+uint32_t zlib_press(const int16_t *in, uint32_t nin, uint8_t *out);
+uint32_t zlib_depress(const uint8_t *in, uint32_t nin, int16_t *out);
+
+/* TODO
+ * zstd
+ * svb
+ * svb16
+ * svb zd
+ * variable byte
+ * huffman
+ * peak-picking flat approximation
+ */
 
 #endif /* press.h */

@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdio.h> /* TODO testing */
 #include <inttypes.h> /* TODO testing */
+#include <zlib.h>
 #include "press.h"
 #include "bitmap.h"
 #include "stats.h"
@@ -382,7 +383,7 @@ uint32_t flat_uint_submin_bound(const int16_t *in, uint32_t nin)
 		nsigs = end_flat(in + start, nin - start, &st);
 		start += nsigs;
 		x = get_uint_bound(0, st.max - st.min);
-		nbits += NBITS_FLAT_UINT_SUBMIN_HDR + nsigs * x;
+		nbits += NBITS_FLAT_UINT_HDR + nsigs * x;
 	}
 	puts("");
 	*/
@@ -401,8 +402,7 @@ uint32_t flat_uint_submin_bound(const int16_t *in, uint32_t nin)
 	free(flats);
 	*/
 
-	return NBYTES_FLAT_UINT_SUBMIN_HDR +
-	       BITS_TO_BYTES(nin * MAX_NBITS_PER_SIG);
+	return NBYTES_FLAT_UINT_HDR + BITS_TO_BYTES(nin * MAX_NBITS_PER_SIG);
 }
 
 uint32_t flat_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out)
@@ -476,4 +476,57 @@ uint32_t flat_uint_submin_depress(const uint8_t *in, uint32_t nin, int16_t *out)
 	}
 
 	return nout_total;
+}
+
+uint32_t zlib_bound(const int16_t *in, uint32_t nin)
+{
+	return compressBound(nin * sizeof *in);
+}
+
+uint32_t zlib_press(const int16_t *in, uint32_t nin, uint8_t *out)
+{
+	int ret;
+	uint64_t nout;
+
+	/* TODO nout is already calculated when allocating out */
+	nout = zlib_bound(in, nin);
+	ret = compress2(out, &nout, (const uint8_t *) in, nin * sizeof *in,
+			Z_DEFAULT_COMPRESSION);
+	switch (ret) {
+		case Z_MEM_ERROR:
+			fprintf(stderr, "error: zlib compress2 out of memory\n");
+			break;
+		case Z_BUF_ERROR:
+			fprintf(stderr, "error: zlib compress2 not enough room in out\n");
+			break;
+		case Z_STREAM_ERROR:
+			fprintf(stderr, "error: zlib compress2 invalid level param\n");
+			break;
+	}
+
+	return nout;
+}
+
+uint32_t zlib_depress(const uint8_t *in, uint32_t nin, int16_t *out)
+{
+	uint64_t nout;
+	int ret;
+
+	/* TODO this is dodgy but works... */
+	nout = nin * 4;
+	ret = uncompress((uint8_t *) out, &nout, in, nin);
+
+	switch (ret) {
+		case Z_MEM_ERROR:
+			fprintf(stderr, "error: zlib uncompress out of memory\n");
+			break;
+		case Z_BUF_ERROR:
+			fprintf(stderr, "error: zlib uncompress not enough room in out\n");
+			break;
+		case Z_DATA_ERROR:
+			fprintf(stderr, "error: zlib uncompress input corrupted\n");
+			break;
+	}
+
+	return nout / sizeof *out;
 }

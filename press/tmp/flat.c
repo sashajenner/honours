@@ -54,7 +54,7 @@ uint32_t end_flat(const int16_t *in, uint32_t nin, struct stats *st)
 	uint8_t x;
 
 	is_flat = 1;
-	nbits = NBITS_FLAT_UINT_SUBMIN_HDR;
+	nbits = NBITS_FLAT_UINT_HDR;
 
 	init_stats(st);
 
@@ -63,11 +63,11 @@ uint32_t end_flat(const int16_t *in, uint32_t nin, struct stats *st)
 		update_stats(in[st->n], st);
 
 		x = get_uint_bound(0, st->max - st->min);
-		nbits_new = NBITS_FLAT_UINT_SUBMIN_HDR + st->n * x;
+		nbits_new = NBITS_FLAT_UINT_HDR + st->n * x;
 
 		/* if adding the current signal is more expensive than placing
 		 * it on its own */
-		if (nbits_new > nbits + NBITS_FLAT_UINT_SUBMIN_HDR) {
+		if (nbits_new > nbits + NBITS_FLAT_UINT_HDR) {
 			is_flat = 0;
 			*st = st_prev;
 		} else {
@@ -284,7 +284,7 @@ uint64_t flat_nbits(uint32_t i, uint32_t j, uint32_t nin,
 
 	x = get_uint_bound(0, cur->max - cur->min);
 	/* TODO do not waste space to nearest byte boundary */
-	nbytes = NBYTES_FLAT_UINT_SUBMIN_HDR + uintx_bound(x, NULL, j - i + 1);
+	nbytes = NBYTES_FLAT_UINT_HDR + uintx_bound(x, NULL, j - i + 1);
 	return nbytes * BITS_PER_BYTE;
 }
 

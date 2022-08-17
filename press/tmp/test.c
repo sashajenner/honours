@@ -10,7 +10,8 @@ int test(const int16_t *sigs,
 	 const uint32_t nr_sigs,
 	 uint32_t (*bound)(const int16_t *, uint32_t),
 	 uint32_t (*press)(const int16_t *, uint32_t, uint8_t *),
-	 uint32_t (*depress)(const uint8_t *, uint32_t, int16_t *))
+	 uint32_t (*depress)(const uint8_t *, uint32_t, int16_t *),
+	 int is_depress_nin_nbytes)
 {
 	uint32_t i;
 	uint32_t nr_sigs_bytes;
@@ -42,7 +43,10 @@ int test(const int16_t *sigs,
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
-	depress_len = depress(sigs_press, nr_sigs, sigs_depress);
+	if (is_depress_nin_nbytes)
+		depress_len = depress(sigs_press, press_len, sigs_depress);
+	else
+		depress_len = depress(sigs_press, nr_sigs, sigs_depress);
 	/*
 	fprintf(stderr, "depress_len:\t%" PRIu32 "\n", depress_len);
 	fprintf(stderr, "nr_sigs:\t%" PRIu32 "\n", nr_sigs);
@@ -84,6 +88,7 @@ int main(void)
 	TEST(P11, "uintx zigzag subtract mean", uint_zsubmean_bound, uint_zsubmean_press, uint_zsubmean_depress);
 	TEST(P11, "flat uintx subtract min", flat_uint_submin_bound, flat_uint_submin_press, flat_uint_submin_depress);
 	*/
+	TEST_NBYTES(P11, "zlib", zlib_bound, zlib_press, zlib_depress);
 
 	/*
 	TEST(P11_SHORT, "none", none_bound, none_press, none_depress);
@@ -92,13 +97,14 @@ int main(void)
 	TEST(P11_SHORT, "uintx subtract min", uint_submin_bound, uint_submin_press, uint_submin_depress);
 	TEST(P11_SHORT, "uintx zigzag delta", uint_zd_bound, uint_zd_press, uint_zd_depress);
 	TEST(P11_SHORT, "uintx zigzag subtract mean", uint_zsubmean_bound, uint_zsubmean_press, uint_zsubmean_depress);
+	TEST_NBYTES(P11_SHORT, "zlib", zlib_bound, zlib_press, zlib_depress);
 	*/
 
 	/*
 	TEST(P11_SHORT, "flat uintx subtract min", flat_uint_submin_bound, flat_uint_submin_press, flat_uint_submin_depress);
 	TEST(P11_MEDIUM, "flat uintx subtract min", flat_uint_submin_bound, flat_uint_submin_press, flat_uint_submin_depress);
-	*/
 	TEST(P11_LONG, "flat uintx subtract min", flat_uint_submin_bound, flat_uint_submin_press, flat_uint_submin_depress);
+	*/
 
 	/*
 	TEST(ONE, "none", none_bound, none_press, none_depress);
@@ -108,7 +114,10 @@ int main(void)
 	TEST(ONE, "uintx zigzag delta", uint_zd_bound, uint_zd_press, uint_zd_depress);
 	TEST(ONE, "uintx zigzag subtract mean", uint_zsubmean_bound, uint_zsubmean_press, uint_zsubmean_depress);
 	TEST(ONE, "flat uintx subtract min", flat_uint_submin_bound, flat_uint_submin_press, flat_uint_submin_depress);
+	*/
+	TEST_NBYTES(ONE, "zlib", zlib_bound, zlib_press, zlib_depress);
 
+	/*
 	TEST(SAME, "none", none_bound, none_press, none_depress);
 	TEST(SAME, "uint11", uint11_bound, uint11_press, uint11_depress);
 	TEST(SAME, "uintx", uint_bound, uint_press, uint_depress);
@@ -116,7 +125,10 @@ int main(void)
 	TEST(SAME, "uintx zigzag delta", uint_zd_bound, uint_zd_press, uint_zd_depress);
 	TEST(SAME, "uintx zigzag subtract mean", uint_zsubmean_bound, uint_zsubmean_press, uint_zsubmean_depress);
 	TEST(SAME, "flat uintx subtract min", flat_uint_submin_bound, flat_uint_submin_press, flat_uint_submin_depress);
+	*/
+	TEST_NBYTES(SAME, "zlib", zlib_bound, zlib_press, zlib_depress);
 
+	/*
 	TEST(ZERO, "none", none_bound, none_press, none_depress);
 	TEST(ZERO, "uint11", uint11_bound, uint11_press, uint11_depress);
 	TEST(ZERO, "uintx", uint_bound, uint_press, uint_depress);
@@ -125,6 +137,7 @@ int main(void)
 	TEST(ZERO, "uintx zigzag subtract mean", uint_zsubmean_bound, uint_zsubmean_press, uint_zsubmean_depress);
 	TEST(ZERO, "flat uintx subtract min", flat_uint_submin_bound, flat_uint_submin_press, flat_uint_submin_depress);
 	*/
+	TEST_NBYTES(ZERO, "zlib", zlib_bound, zlib_press, zlib_depress);
 
 	return 0;
 }
