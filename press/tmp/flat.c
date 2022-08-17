@@ -9,7 +9,7 @@
 #include "bitmap.h"
 
 #define INDEX_2D(i, j, imax) ((i) + (j) * (imax))
-#define INDEX_2D_TRIANGLE(i, j) ((i) + (j) * (j + 1) / 2)
+#define INDEX_2D_TRIANGLE(i, j) ((i) + ((j) * (j + 1)) / 2)
 #define I2(i, j) INDEX_2D_TRIANGLE(i, j)
 
 /* metadata for a signal sequence */
@@ -175,7 +175,7 @@ void fill_meta_flat(uint32_t i, uint32_t j, uint32_t nin,
 	cur->flats_nbits = cur->nbits;
 
 	fill_meta_flat_disjoint(i, j, nin, meta);
-	fill_meta_flat_union(i, j, nin, meta);
+	/*fill_meta_flat_union(i, j, nin, meta);*/
 }
 
 void fill_meta_flat_disjoint(uint32_t i, uint32_t j, uint32_t nin,

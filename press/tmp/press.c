@@ -451,15 +451,18 @@ uint32_t flat_uint_submin_depress(const uint8_t *in, uint32_t nin, int16_t *out)
 	nout_total = 0;
 
 	while (nin_total < nin) {
+
 		(void) memcpy(&nin_cur, in, sizeof nin_cur);
 		in += sizeof nin_cur;
 		nout = uint_submin_depress(in, nin_cur, out);
-		/*fprintf(stderr, "nout:\t%" PRIu32 "\n", nout);*/
 
 		/* TODO nicer way of moving in to next flat? */
 		in += sizeof st.min;
 		x = in[0];
-		in += sizeof x + BITS_TO_BYTES(nin_cur * x);
+		if (!x)
+			in += sizeof x;
+		else
+			in += sizeof x + BITS_TO_BYTES(nin_cur * x);
 
 		nin_total += nin_cur;
 		nout_total += nout;

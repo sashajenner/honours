@@ -75,6 +75,7 @@ int test(const int16_t *sigs,
 
 int main(void)
 {
+	/*
 	TEST(P11, "none", none_bound, none_press, none_depress);
 	TEST(P11, "uint11", uint11_bound, uint11_press, uint11_depress);
 	TEST(P11, "uintx", uint_bound, uint_press, uint_depress);
@@ -82,15 +83,24 @@ int main(void)
 	TEST(P11, "uintx zigzag delta", uint_zd_bound, uint_zd_press, uint_zd_depress);
 	TEST(P11, "uintx zigzag subtract mean", uint_zsubmean_bound, uint_zsubmean_press, uint_zsubmean_depress);
 	TEST(P11, "flat uintx subtract min", flat_uint_submin_bound, flat_uint_submin_press, flat_uint_submin_depress);
+	*/
 
+	/*
 	TEST(P11_SHORT, "none", none_bound, none_press, none_depress);
 	TEST(P11_SHORT, "uint11", uint11_bound, uint11_press, uint11_depress);
 	TEST(P11_SHORT, "uintx", uint_bound, uint_press, uint_depress);
 	TEST(P11_SHORT, "uintx subtract min", uint_submin_bound, uint_submin_press, uint_submin_depress);
 	TEST(P11_SHORT, "uintx zigzag delta", uint_zd_bound, uint_zd_press, uint_zd_depress);
 	TEST(P11_SHORT, "uintx zigzag subtract mean", uint_zsubmean_bound, uint_zsubmean_press, uint_zsubmean_depress);
-	TEST(P11_SHORT, "flat uintx subtract min", flat_uint_submin_bound, flat_uint_submin_press, flat_uint_submin_depress);
+	*/
 
+	/*
+	TEST(P11_SHORT, "flat uintx subtract min", flat_uint_submin_bound, flat_uint_submin_press, flat_uint_submin_depress);
+	TEST(P11_MEDIUM, "flat uintx subtract min", flat_uint_submin_bound, flat_uint_submin_press, flat_uint_submin_depress);
+	*/
+	TEST(P11_LONG, "flat uintx subtract min", flat_uint_submin_bound, flat_uint_submin_press, flat_uint_submin_depress);
+
+	/*
 	TEST(ONE, "none", none_bound, none_press, none_depress);
 	TEST(ONE, "uint11", uint11_bound, uint11_press, uint11_depress);
 	TEST(ONE, "uintx", uint_bound, uint_press, uint_depress);
@@ -114,6 +124,7 @@ int main(void)
 	TEST(ZERO, "uintx zigzag delta", uint_zd_bound, uint_zd_press, uint_zd_depress);
 	TEST(ZERO, "uintx zigzag subtract mean", uint_zsubmean_bound, uint_zsubmean_press, uint_zsubmean_depress);
 	TEST(ZERO, "flat uintx subtract min", flat_uint_submin_bound, flat_uint_submin_press, flat_uint_submin_depress);
+	*/
 
 	return 0;
 }
