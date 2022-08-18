@@ -135,7 +135,8 @@
 
 \def\@sid#1{\textsc{sid}: #1}
 \def\@supervisor#1{Supervisor: #1}
-\def\@assocsupervisor#1{Associate Supervisor: #1}
+\def\@assocsupervisora#1{Associate Supervisor: #1}
+\def\@assocsupervisorb#1{Associate Supervisor: #1}
 
 % thesis title page
 \def\@maketitle{
@@ -154,8 +155,11 @@
       \vfil
       \fontsize{12}{12}
       \centering\@supervisor{\supervisor}
-      \@ifundefined{assocsupervisor}{} {
-       \\ \centering\@assocsupervisor{\assocsupervisor}
+      \@ifundefined{assocsupervisora}{} {
+       \\ \centering\@assocsupervisora{\assocsupervisora}
+        }
+      \@ifundefined{assocsupervisorb}{} {
+       \\ \centering\@assocsupervisorb{\assocsupervisorb}
         }
       \par\bigskip
       This thesis is submitted in partial fulfillment of\\

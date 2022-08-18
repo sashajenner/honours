@@ -3,3 +3,30 @@
 \section{Data} \label{sec:data}
 
 The data consists of many sequences of unsigned integers known as \textit{reads}. Each integer represents the quantised ionic current recorded at a certain time step as a single-stranded DNA or RNA molecule is driven through a nanoscale protein pore (or \textit{nanopore}) \cite{Wang2021}. Disturbances in the ionic current caused by the molecule's biological structure can be used to determine its nucleic acid sequence.
+
+Let each read be represented by
+\[ x := (x_i\mid x_i \in \mathbb{Z} \cap [0, 2^{16})) \]
+where $i\in \mathbb{Z}\cap [0, n)$. Computationally, $x$ is an unsigned 16-bit integer array with $n$ elements. However, in practice the full range of $2^{16}$ integers is never met. Instead, each integer can be represented more space-efficiently by using $b<16$ bits where \[b(x)=\lceil\log_2(\max(x))\rceil.\] In this case, the compression ratio would be approximately $16/b$:
+\begin{align*}
+	\text{Compression Ratio} &= \frac{\text{Uncompressed Bytes}}{\text{Compressed Bytes}}\\
+	&=\frac{\frac{16}{8}n}{\lceil\frac{b}{8}n\rceil}\\
+	&\stackrel{n\to\infty}{\longrightarrow}\frac{16}{b}.
+\end{align*}
+A better strategy would be to initially transform the data such that its range is decreased.
+%Let \[T=\{t\mid t:X\to Y\}\] be the set of bijections from $X$, the set of reads, to $Y := \{(y_i\mid y_i\in \mathbb{N}_0)\}$. One such transformation is defined by
+Let \[T=\{t\mid t:X\to X\}\] be the set of functions from $X$, the set of reads, to itself. One such transformation subtracts the minimum of $x$ from each integer and is defined by \[ submin(x) := (x_i-\min(x)). \] Each transformed integer can then be represented using fewer than or the same number of bits:
+%A better strategy would be to first transform $x$ by subtracting the minimum of $x$ from each integer. That is, $x\mapsto(x_i-\min(x))$. Then,
+\begin{align*}
+	b(submin(x))&=\lceil\log_2(\max(submin(x)))\rceil\\
+	&=\lceil\log_2(\max(x-\min(x)))\rceil\\
+	&=\lceil\log_2(\max(x)-\min(x))\rceil\\
+	&\le b(x)
+\end{align*}
+since $\log$ is an increasing function.
+%However, in practice each integer lies within $[2^7,2^{11}]$. This means each integer can be represented using 11 bits rather than 16. If each integer is stored using $b$ bits, the compression ratio would be approximately $16/b$ as follows:
+%Hence, using 11 bits per integer results in a compression ratio of approximately $1.\overline{45}$. Note that the optimal $b$ is given by
+Another transformation takes the differences between successive signals and is defined by
+\[ \delta(x):=(x_{i+1}-x_i\mid 0\le i\le n-2).\]
+% TODO analyse delta
+The next idea is to divide $x$ into subsequences with small range and compress each subsequence separately. Let $OPT(i, j)$ be the minimum number of bytes after compressing $(x_i,\dots, x_j)$. Then,
+\[ OPT(i, j) = \min(bytes(i, j),\min_{i\le k<j}(OPT(i, k) + OPT(k+1, j))) \]
