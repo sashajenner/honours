@@ -210,9 +210,17 @@ void fill_meta_flat_disjoint(uint32_t i, uint32_t j, uint32_t nin,
 				     sizeof(*cur->flats));
 		for (k = 0; k < left_min->nflats; k++) {
 			cur->flats[k] = left_min->flats[k];
+			/*
+			if (k > 0)
+				printf("flat_idx:\t%" PRIu32 "\n", left_min->flats[k]);
+				*/
 		}
 		for (k = 0; k < right_min->nflats; k++) {
 			cur->flats[left_min->nflats + k] = right_min->flats[k];
+			/*
+			if (k > 0)
+				printf("flat_idx:\t%" PRIu32 "\n", right_min->flats[k]);
+				*/
 		}
 	}
 }

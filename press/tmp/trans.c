@@ -27,7 +27,7 @@ void shift_x_inplace(int16_t x, int16_t *in, uint32_t nin)
 
 static inline uint16_t zigzag_one(int16_t x)
 {
-	return (x + x) ^ (x >> 31);
+	return (x + x) ^ (x >> 15);
 }
 
 static inline uint16_t unzigzag_one(int16_t x)

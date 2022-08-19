@@ -3,13 +3,9 @@
 
 #include <stdio.h>
 
-#define TEST(signals, name, bound, press, depress, is_depress_nin_nbytes) \
-	puts("-----\n" #signals ": " name); \
-	ASSERT(test((signals), LENGTH(signals), (bound), (press), (depress), \
-		    (is_depress_nin_nbytes)) == EXIT_SUCCESS);
-
-#define TEST_NBYTES(signals, name, bound, press, depress) TEST(signals, name, bound, press, depress, 1)
-#define TEST_NSIGS(signals, name, bound, press, depress) TEST(signals, name, bound, press, depress, 0)
+#define TEST(signals, method) \
+	printf("-----\n" #signals ": %s\n", (method).name); \
+	ASSERT(test((signals), LENGTH(signals), (method)) == EXIT_SUCCESS);
 
 #define ASSERT(statement) \
 if (!(statement)) { \

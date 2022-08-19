@@ -11,7 +11,7 @@
 
 #define MAX_NBITS_PER_SIG (12)
 
-uint32_t uint0_depress(uint32_t nin, int16_t *out);
+uint32_t uint0_depress(uint32_t nin_elems, int16_t *out);
 
 uint32_t none_bound(const int16_t *in, uint32_t nin)
 {
@@ -24,10 +24,11 @@ uint32_t none_press(const int16_t *in, uint32_t nin, uint8_t *out)
 	return nin * sizeof *in;
 }
 
-uint32_t none_depress(const uint8_t *in, uint32_t nin, int16_t *out)
+uint32_t none_depress(const uint8_t *in, uint32_t nin_elems,
+		      uint32_t nin_bytes, int16_t *out)
 {
-	(void) memcpy(out, in, nin * sizeof *out);
-	return nin;
+	(void) memcpy(out, in, nin_elems * sizeof *out);
+	return nin_elems;
 }
 
 uint32_t uintx_bound(uint8_t x, const int16_t *in, uint32_t nin)
@@ -97,7 +98,8 @@ uint32_t uintx_press(uint8_t x, const int16_t *in, uint32_t nin, uint8_t *out)
 	return out_i;
 }
 
-uint32_t uintx_depress(uint8_t x, const uint8_t *in, uint32_t nin, int16_t *out)
+uint32_t uintx_depress(uint8_t x, const uint8_t *in, uint32_t nin_elems,
+		       uint32_t nin_bytes, int16_t *out)
 {
 	/*
 	 * x = 11
@@ -114,7 +116,7 @@ uint32_t uintx_depress(uint8_t x, const uint8_t *in, uint32_t nin, int16_t *out)
 	int16_t mask;
 
 	if (!x)
-		return uint0_depress(nin, out);
+		return uint0_depress(nin_elems, out);
 
 	cur_out = 0;
 	in_free_bits = BITS_PER_BYTE;
@@ -123,7 +125,7 @@ uint32_t uintx_depress(uint8_t x, const uint8_t *in, uint32_t nin, int16_t *out)
 	out_i = 0;
 
 	/* the last input must have enough free bits to fill the output */
-	while (out_i < nin) {
+	while (out_i < nin_elems) {
 
 		/*
 		if (out_i == 2) {
@@ -177,14 +179,14 @@ uint32_t uintx_depress(uint8_t x, const uint8_t *in, uint32_t nin, int16_t *out)
 	return out_i;
 }
 
-uint32_t uint0_depress(uint32_t nin, int16_t *out)
+uint32_t uint0_depress(uint32_t nin_elems, int16_t *out)
 {
 	uint32_t i;
 
-	for (i = 0; i < nin; i++)
+	for (i = 0; i < nin_elems; i++)
 		out[i] = 0;
 
-	return nin;
+	return nin_elems;
 }
 
 uint32_t uint_bound(const int16_t *in, uint32_t nin)
@@ -217,12 +219,14 @@ uint32_t uint_press(const int16_t *in, uint32_t nin, uint8_t *out)
 	return nout;
 }
 
-uint32_t uint_depress(const uint8_t *in, uint32_t nin, int16_t *out)
+uint32_t uint_depress(const uint8_t *in, uint32_t nin_elems,
+		      uint32_t nin_bytes, int16_t *out)
 {
 	uint8_t x;
 
 	x = in[0];
-	return uintx_depress(x, in + sizeof x, nin, out);
+	return uintx_depress(x, in + sizeof x, nin_elems, nin_bytes - sizeof x,
+			     out);
 }
 
 uint32_t uint_submin_bound(const int16_t *in, uint32_t nin)
@@ -256,13 +260,15 @@ uint32_t uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out)
 	return nout;
 }
 
-uint32_t uint_submin_depress(const uint8_t *in, uint32_t nin, int16_t *out)
+uint32_t uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
+			     uint32_t nin_bytes, int16_t *out)
 {
 	struct stats st;
 	uint32_t nout;
 
 	(void) memcpy(&st.min, in, sizeof st.min);
-	nout = uint_depress(in + sizeof st.min, nin, out);
+	nout = uint_depress(in + sizeof st.min, nin_elems,
+			    nin_bytes - sizeof st.min, out);
 	/*fprintf(stderr, "min: %" PRId16 "\n", st.min);*/
 	shift_x_inplace(st.min, out, nout);
 
@@ -299,13 +305,15 @@ uint32_t uint_zd_press(const int16_t *in, uint32_t nin, uint8_t *out)
 	return nout;
 }
 
-uint32_t uint_zd_depress(const uint8_t *in, uint32_t nin, int16_t *out)
+uint32_t uint_zd_depress(const uint8_t *in, uint32_t nin_elems,
+			 uint32_t nin_bytes, int16_t *out)
 {
 	uint32_t nout;
 
 	(void) memcpy(out, in, sizeof *out);
 	nout = 1;
-	nout += uint_depress(in + sizeof *out, nin - 1, out + nout);
+	nout += uint_depress(in + sizeof *out, nin_elems - 1,
+			     nin_bytes - sizeof *out, out + nout);
 
 	unzigdelta_inplace(out, nout);
 
@@ -352,13 +360,15 @@ uint32_t uint_zsubmean_press(const int16_t *in, uint32_t nin, uint8_t *out)
 	return nout;
 }
 
-uint32_t uint_zsubmean_depress(const uint8_t *in, uint32_t nin, int16_t *out)
+uint32_t uint_zsubmean_depress(const uint8_t *in, uint32_t nin_elems,
+			       uint32_t nin_bytes, int16_t *out)
 {
 	int16_t mean;
 	uint32_t nout;
 
 	(void) memcpy(&mean, in, sizeof mean);
-	nout = uint_depress(in + sizeof mean, nin, out);
+	nout = uint_depress(in + sizeof mean, nin_elems,
+			    nin_bytes - sizeof mean, out);
 
 	unzigzag_inplace(out, nout);
 	shift_x_inplace(mean, out, nout);
@@ -420,6 +430,7 @@ uint32_t flat_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out)
 
 	/*nout_total = 0;*/
 	for (i = 0; i < nflats; i++) {
+		/*fprintf(stderr, "%" PRIu32 "\n", flats[i]);*/
 		in_cur = in + flats[i];
 		if (i < nflats - 1)
 			nin_cur = flats[i + 1] - flats[i];
@@ -438,7 +449,8 @@ uint32_t flat_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out)
 	/*return nout_total;*/
 }
 
-uint32_t flat_uint_submin_depress(const uint8_t *in, uint32_t nin, int16_t *out)
+uint32_t flat_uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
+				  uint32_t nin_bytes, int16_t *out)
 {
 	struct stats st;
 	uint32_t nin_cur;
@@ -450,11 +462,12 @@ uint32_t flat_uint_submin_depress(const uint8_t *in, uint32_t nin, int16_t *out)
 	nin_total = 0;
 	nout_total = 0;
 
-	while (nin_total < nin) {
+	while (nin_total < nin_elems) {
 
 		(void) memcpy(&nin_cur, in, sizeof nin_cur);
 		in += sizeof nin_cur;
-		nout = uint_submin_depress(in, nin_cur, out);
+		/* nin_bytes is not correct here */
+		nout = uint_submin_depress(in, nin_cur, nin_bytes, out);
 
 		/* TODO nicer way of moving in to next flat? */
 		in += sizeof st.min;
@@ -491,7 +504,7 @@ uint32_t zlib_press(const int16_t *in, uint32_t nin, uint8_t *out)
 	/* TODO nout is already calculated when allocating out */
 	nout = zlib_bound(in, nin);
 	ret = compress2(out, &nout, (const uint8_t *) in, nin * sizeof *in,
-			Z_DEFAULT_COMPRESSION);
+			9);
 	switch (ret) {
 		case Z_MEM_ERROR:
 			fprintf(stderr, "error: zlib compress2 out of memory\n");
@@ -507,14 +520,13 @@ uint32_t zlib_press(const int16_t *in, uint32_t nin, uint8_t *out)
 	return nout;
 }
 
-uint32_t zlib_depress(const uint8_t *in, uint32_t nin, int16_t *out)
+uint32_t zlib_depress(const uint8_t *in, uint32_t nin_elems,
+		      uint32_t nin_bytes, int16_t *out)
 {
 	uint64_t nout;
 	int ret;
 
-	/* TODO this is dodgy but works... */
-	nout = nin * 4;
-	ret = uncompress((uint8_t *) out, &nout, in, nin);
+	ret = uncompress((uint8_t *) out, &nout, in, nin_bytes);
 
 	switch (ret) {
 		case Z_MEM_ERROR:
