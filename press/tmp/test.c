@@ -30,7 +30,7 @@ int test(const int16_t *sigs,
 	ASSERT(sigs_press);
 
 	/* compress sigs */
-	press_len = method.press(sigs, nr_sigs, sigs_press);
+	press_len = method.press(sigs, nr_sigs, sigs_press, press_bound);
 	printf("press len:\t%" PRIu32 "\n", press_len);
 	ASSERT(press_len <= press_bound);
 	printf("press ratio:\t%f\n", (float) nr_sigs_bytes / press_len);

@@ -2,6 +2,7 @@
 #include <stdio.h> /* TODO testing */
 #include <inttypes.h> /* TODO testing */
 #include <zlib.h>
+#include <zstd.h>
 #include "press.h"
 #include "bitmap.h"
 #include "stats.h"
@@ -18,7 +19,8 @@ uint32_t none_bound(const int16_t *in, uint32_t nin)
 	return nin * sizeof *in;
 }
 
-uint32_t none_press(const int16_t *in, uint32_t nin, uint8_t *out)
+uint32_t none_press(const int16_t *in, uint32_t nin, uint8_t *out,
+		    uint32_t nout_bytes)
 {
 	(void) memcpy(out, in, nin * sizeof *in);
 	return nin * sizeof *in;
@@ -39,7 +41,8 @@ uint32_t uintx_bound(uint8_t x, const int16_t *in, uint32_t nin)
 	return BITS_TO_BYTES(nbits);
 }
 
-uint32_t uintx_press(uint8_t x, const int16_t *in, uint32_t nin, uint8_t *out)
+uint32_t uintx_press(uint8_t x, const int16_t *in, uint32_t nin, uint8_t *out,
+		     uint32_t nout_bytes)
 {
 	/*
 	 * x = 11
@@ -200,7 +203,8 @@ uint32_t uint_bound(const int16_t *in, uint32_t nin)
 	return sizeof x + uintx_bound(x, in, nin);
 }
 
-uint32_t uint_press(const int16_t *in, uint32_t nin, uint8_t *out)
+uint32_t uint_press(const int16_t *in, uint32_t nin, uint8_t *out,
+		    uint32_t nout_bytes)
 {
 	struct stats st;
 	uint32_t nout;
@@ -214,7 +218,7 @@ uint32_t uint_press(const int16_t *in, uint32_t nin, uint8_t *out)
 	out[0] = x;
 
 	nout = sizeof x;
-	nout += uintx_press(x, in, nin, out + nout);
+	nout += uintx_press(x, in, nin, out + nout, nout_bytes);
 
 	return nout;
 }
@@ -240,7 +244,8 @@ uint32_t uint_submin_bound(const int16_t *in, uint32_t nin)
 	return sizeof st.min + sizeof x + uintx_bound(x, in, nin);
 }
 
-uint32_t uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out)
+uint32_t uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			   uint32_t nout_bytes)
 {
 	struct stats st;
 	int16_t *in_submin;
@@ -254,7 +259,7 @@ uint32_t uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out)
 
 	nout = sizeof st.min;
 	/* TODO pass stats as argument */
-	nout += uint_press(in_submin, nin, out + nout);
+	nout += uint_press(in_submin, nin, out + nout, nout_bytes);
 	free(in_submin);
 
 	return nout;
@@ -289,7 +294,8 @@ uint32_t uint_zd_bound(const int16_t *in, uint32_t nin)
 	return nout;
 }
 
-uint32_t uint_zd_press(const int16_t *in, uint32_t nin, uint8_t *out)
+uint32_t uint_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+		       uint32_t nout_bytes)
 {
 	int16_t *in_zd;
 	uint32_t nin_zd;
@@ -299,7 +305,7 @@ uint32_t uint_zd_press(const int16_t *in, uint32_t nin, uint8_t *out)
 
 	(void) memcpy(out, in, sizeof *in);
 	nout = sizeof *in;
-	nout += uint_press(in_zd, nin_zd, out + nout);
+	nout += uint_press(in_zd, nin_zd, out + nout, nout_bytes);
 
 	free(in_zd);
 	return nout;
@@ -339,7 +345,8 @@ uint32_t uint_zsubmean_bound(const int16_t *in, uint32_t nin)
 	return nout;
 }
 
-uint32_t uint_zsubmean_press(const int16_t *in, uint32_t nin, uint8_t *out)
+uint32_t uint_zsubmean_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			     uint32_t nout_bytes)
 {
 	int16_t *in_zsm;
 	int16_t mean;
@@ -354,7 +361,7 @@ uint32_t uint_zsubmean_press(const int16_t *in, uint32_t nin, uint8_t *out)
 
 	(void) memcpy(out, &mean, sizeof mean);
 	nout = sizeof mean;
-	nout += uint_press(in_zsm, nin, out + nout);
+	nout += uint_press(in_zsm, nin, out + nout, nout_bytes);
 	free(in_zsm);
 
 	return nout;
@@ -415,7 +422,8 @@ uint32_t flat_uint_submin_bound(const int16_t *in, uint32_t nin)
 	return NBYTES_FLAT_UINT_HDR + BITS_TO_BYTES(nin * MAX_NBITS_PER_SIG);
 }
 
-uint32_t flat_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out)
+uint32_t flat_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out,
+				uint32_t nout_bytes)
 {
 	const int16_t *in_cur;
 	uint32_t *flats;
@@ -439,7 +447,8 @@ uint32_t flat_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out)
 
 		(void) memcpy(out, &nin_cur, sizeof nin_cur);
 		nout = sizeof nin_cur;
-		nout += uint_submin_press(in_cur, nin_cur, out + nout);
+		nout += uint_submin_press(in_cur, nin_cur, out + nout,
+					  nout_bytes);
 		out += nout;
 		/*nout_total += nout;*/
 	}
@@ -496,15 +505,15 @@ uint32_t zlib_bound(const int16_t *in, uint32_t nin)
 	return compressBound(nin * sizeof *in);
 }
 
-uint32_t zlib_press(const int16_t *in, uint32_t nin, uint8_t *out)
+uint32_t zlib_press(const int16_t *in, uint32_t nin, uint8_t *out,
+		    uint32_t nout_bytes)
 {
 	int ret;
 	uint64_t nout;
 
-	/* TODO nout is already calculated when allocating out */
-	nout = zlib_bound(in, nin);
+	nout = nout_bytes;
 	ret = compress2(out, &nout, (const uint8_t *) in, nin * sizeof *in,
-			9);
+			Z_BEST_COMPRESSION);
 	switch (ret) {
 		case Z_MEM_ERROR:
 			fprintf(stderr, "error: zlib compress2 out of memory\n");
@@ -542,3 +551,42 @@ uint32_t zlib_depress(const uint8_t *in, uint32_t nin_elems,
 
 	return nout / sizeof *out;
 }
+
+/*
+uint32_t zstd_bound(const int16_t *in, uint32_t nin)
+{
+	return ZSTD_compressBound(nin * sizeof *in);
+}
+*/
+
+/* TODO Hint : compression runs faster if `dstCapacity` >=  `ZSTD_compressBound(srcSize)` */
+/*
+uint32_t zstd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+		    uint32_t nout_bytes)
+{
+	uint32_t nout;
+
+	nout = ZSTD_compress(out, nout_bytes, in, nin * sizeof *in, 1);
+	if (ZSTD_isError(nout)) {
+		fprintf(stderr, "error: zstd compress\n");
+	}
+
+	return nout;
+}
+
+uint32_t zstd_depress(const uint8_t *in, uint32_t nin_elems,
+		      uint32_t nin_bytes, int16_t *out)
+{
+	uint32_t nout;
+
+	nout = ZSTD_decompress(out, , ptr, count);
+	if (ZSTD_isError(*n)) {
+		SLOW5_ERROR("zstd decompress failed with error code %zu.", *n);
+		free(out);
+		slow5_errno = SLOW5_ERR_PRESS;
+		return NULL;
+	}
+
+	return out;
+}
+*/
