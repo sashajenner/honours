@@ -84,7 +84,7 @@ uint64_t get_flats(const int16_t *in, uint32_t nin, uint32_t **flats,
 	struct flat_meta *meta;
 	uint64_t nbits;
 
-	meta = malloc(nin * (nin + 1) / 2 * sizeof *meta);
+	meta = malloc((uint64_t) nin * (nin + 1) / 2 * sizeof *meta);
 	fprintf(stderr, "%p\n", meta);
 	fill_meta(in, nin, meta);
 

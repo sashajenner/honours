@@ -17,6 +17,9 @@ static const struct press_method ALL_METHODS[] = {
 	zlib_method,
 	zstd_method,
 	svb_method,
+	svb_zd_method,
+	zlib_svb_zd_method,
+	zstd_svb_zd_method,
 };
 
 static const struct press_method NO_FLAT_METHODS[] = {
@@ -29,6 +32,9 @@ static const struct press_method NO_FLAT_METHODS[] = {
 	zlib_method,
 	zstd_method,
 	svb_method,
+	svb_zd_method,
+	zlib_svb_zd_method,
+	zstd_svb_zd_method,
 };
 
 int test(const int16_t *sigs,
@@ -65,7 +71,8 @@ int test(const int16_t *sigs,
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
-	depress_len = method.depress(sigs_press, nr_sigs, press_len, sigs_depress);
+	depress_len = method.depress(sigs_press, nr_sigs, press_len,
+				     sigs_depress, nr_sigs_bytes);
 	/*
 	fprintf(stderr, "depress_len:\t%" PRIu32 "\n", depress_len);
 	fprintf(stderr, "nr_sigs:\t%" PRIu32 "\n", nr_sigs);
@@ -99,13 +106,14 @@ int test(const int16_t *sigs,
 int main(void)
 {
 
-	TEST_FOR(P11, NO_FLAT_METHODS);
-	TEST_ALL(P11_SHORT);
-	TEST_FOR(P11_MEDIUM, NO_FLAT_METHODS);
-	TEST_FOR(P11_LONG, NO_FLAT_METHODS);
 	TEST_ALL(ONE);
 	TEST_ALL(SAME);
 	TEST_ALL(ZERO);
+
+	TEST_ALL(P11_SHORT);
+	TEST_FOR(P11_MEDIUM, NO_FLAT_METHODS);
+	TEST_FOR(P11_LONG, NO_FLAT_METHODS);
+	TEST_FOR(P11, NO_FLAT_METHODS);
 
 	return 0;
 }

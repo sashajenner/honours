@@ -17,6 +17,7 @@
 		method = methods[i]; \
 		TEST(signals, method); \
 	} \
+	puts("===================="); \
 }
 #define TEST_ALL(signals) TEST_FOR(signals, ALL_METHODS);
 
