@@ -535,6 +535,7 @@ uint32_t zlib_depress(const uint8_t *in, uint32_t nin_elems,
 	uint64_t nout;
 	int ret;
 
+	nout = nin_elems * sizeof *out;
 	ret = uncompress((uint8_t *) out, &nout, in, nin_bytes);
 
 	switch (ret) {
@@ -552,24 +553,20 @@ uint32_t zlib_depress(const uint8_t *in, uint32_t nin_elems,
 	return nout / sizeof *out;
 }
 
-/*
 uint32_t zstd_bound(const int16_t *in, uint32_t nin)
 {
 	return ZSTD_compressBound(nin * sizeof *in);
 }
-*/
 
 /* TODO Hint : compression runs faster if `dstCapacity` >=  `ZSTD_compressBound(srcSize)` */
-/*
 uint32_t zstd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 		    uint32_t nout_bytes)
 {
 	uint32_t nout;
 
-	nout = ZSTD_compress(out, nout_bytes, in, nin * sizeof *in, 1);
-	if (ZSTD_isError(nout)) {
+	nout = ZSTD_compress(out, nout_bytes, in, nin * sizeof *in, ZSTD_CLEVEL_DEFAULT);
+	if (ZSTD_isError(nout))
 		fprintf(stderr, "error: zstd compress\n");
-	}
 
 	return nout;
 }
@@ -578,15 +575,12 @@ uint32_t zstd_depress(const uint8_t *in, uint32_t nin_elems,
 		      uint32_t nin_bytes, int16_t *out)
 {
 	uint32_t nout;
+	uint32_t nout_bytes;
 
-	nout = ZSTD_decompress(out, , ptr, count);
-	if (ZSTD_isError(*n)) {
-		SLOW5_ERROR("zstd decompress failed with error code %zu.", *n);
-		free(out);
-		slow5_errno = SLOW5_ERR_PRESS;
-		return NULL;
-	}
+	nout_bytes = nin_elems * sizeof *out;
+	nout = ZSTD_decompress(out, nout_bytes, in, nin_bytes);
+	if (ZSTD_isError(nout))
+		fprintf(stderr, "error: zstd decompress\n");
 
-	return out;
+	return nout / sizeof *out;
 }
-*/

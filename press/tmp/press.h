@@ -169,7 +169,6 @@ uint32_t zlib_depress(const uint8_t *in, uint32_t nin_elems,
 DEFINE_PRESS_METHOD(zlib, "zlib");
 
 /* zstd */
-/*
 uint32_t zstd_bound(const int16_t *in, uint32_t nin);
 uint32_t zstd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 		    uint32_t nout_bytes);
@@ -177,7 +176,6 @@ uint32_t zstd_depress(const uint8_t *in, uint32_t nin_elems,
 		      uint32_t nin_bytes, int16_t *out);
 
 DEFINE_PRESS_METHOD(zstd, "zstd");
-*/
 
 /* TODO
  * svb

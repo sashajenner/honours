@@ -81,6 +81,7 @@ int main(void)
 	TEST(P11, uint_zsubmean_method);
 	//TEST(P11, flat_uint_submin_method);
 	TEST(P11, zlib_method);
+	TEST(P11, zstd_method);
 
 	TEST(P11_SHORT, none_method);
 	TEST(P11_SHORT, uint11_method);
@@ -90,6 +91,7 @@ int main(void)
 	TEST(P11_SHORT, uint_zsubmean_method);
 	TEST(P11_SHORT, flat_uint_submin_method);
 	TEST(P11_SHORT, zlib_method);
+	TEST(P11_SHORT, zstd_method);
 
 	TEST(P11_MEDIUM, none_method);
 	TEST(P11_MEDIUM, uint11_method);
@@ -99,6 +101,7 @@ int main(void)
 	TEST(P11_MEDIUM, uint_zsubmean_method);
 	//TEST(P11_MEDIUM, flat_uint_submin_method);
 	TEST(P11_MEDIUM, zlib_method);
+	TEST(P11_MEDIUM, zstd_method);
 
 	TEST(P11_LONG, none_method);
 	TEST(P11_LONG, uint11_method);
@@ -108,6 +111,7 @@ int main(void)
 	TEST(P11_LONG, uint_zsubmean_method);
 	//TEST(P11_LONG, flat_uint_submin_method);
 	TEST(P11_LONG, zlib_method);
+	TEST(P11_LONG, zstd_method);
 
 	TEST(ONE, none_method);
 	TEST(ONE, uint11_method);
@@ -117,6 +121,7 @@ int main(void)
 	TEST(ONE, uint_zsubmean_method);
 	TEST(ONE, flat_uint_submin_method);
 	TEST(ONE, zlib_method);
+	TEST(ONE, zstd_method);
 
 	TEST(SAME, none_method);
 	TEST(SAME, uint11_method);
@@ -126,6 +131,7 @@ int main(void)
 	TEST(SAME, uint_zsubmean_method);
 	TEST(SAME, flat_uint_submin_method);
 	TEST(SAME, zlib_method);
+	TEST(SAME, zstd_method);
 
 	TEST(ZERO, none_method);
 	TEST(ZERO, uint11_method);
@@ -135,6 +141,7 @@ int main(void)
 	TEST(ZERO, uint_zsubmean_method);
 	TEST(ZERO, flat_uint_submin_method);
 	TEST(ZERO, zlib_method);
+	TEST(ZERO, zstd_method);
 
 	return 0;
 }
