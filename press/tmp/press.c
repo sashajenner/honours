@@ -547,7 +547,7 @@ uint32_t zlib_press_uint8(const uint8_t *in, uint32_t nin, uint8_t *out,
 	uint64_t nout;
 
 	nout = nout_bytes;
-	ret = compress2(out, &nout, in, nin, Z_BEST_COMPRESSION);
+	ret = compress2(out, &nout, in, nin, PRESS_LVL_ZLIB);
 	switch (ret) {
 		case Z_MEM_ERROR:
 			fprintf(stderr, "error: zlib compress2 out of memory\n");
@@ -607,7 +607,7 @@ uint32_t zstd_press_uint8(const uint8_t *in, uint32_t nin, uint8_t *out,
 {
 	uint32_t nout;
 
-	nout = ZSTD_compress(out, nout_bytes, in, nin, ZSTD_CLEVEL_DEFAULT);
+	nout = ZSTD_compress(out, nout_bytes, in, nin, PRESS_LVL_ZSTD);
 	if (ZSTD_isError(nout))
 		fprintf(stderr, "error: zstd compress\n");
 

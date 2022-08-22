@@ -6,37 +6,6 @@
 #include <stdio.h> /* TODO remove */
 #include <inttypes.h> /* TODO remove */
 
-static const struct press_method ALL_METHODS[] = {
-	none_method,
-	uint11_method,
-	uint_method,
-	uint_submin_method,
-	uint_zd_method,
-	uint_zsubmean_method,
-	flat_uint_submin_method,
-	zlib_method,
-	zstd_method,
-	svb_method,
-	svb_zd_method,
-	zlib_svb_zd_method,
-	zstd_svb_zd_method,
-};
-
-static const struct press_method NO_FLAT_METHODS[] = {
-	none_method,
-	uint11_method,
-	uint_method,
-	uint_submin_method,
-	uint_zd_method,
-	uint_zsubmean_method,
-	zlib_method,
-	zstd_method,
-	svb_method,
-	svb_zd_method,
-	zlib_svb_zd_method,
-	zstd_svb_zd_method,
-};
-
 int test(const int16_t *sigs,
 	 const uint32_t nr_sigs,
 	 struct press_method method)
@@ -105,6 +74,36 @@ int test(const int16_t *sigs,
 
 int main(void)
 {
+	const struct press_method ALL_METHODS[] = {
+		none_method,
+		uint11_method,
+		uint_method,
+		uint_submin_method,
+		uint_zd_method,
+		uint_zsubmean_method,
+		flat_uint_submin_method,
+		zlib_method,
+		zstd_method,
+		svb_method,
+		svb_zd_method,
+		zlib_svb_zd_method,
+		zstd_svb_zd_method,
+	};
+
+	const struct press_method NO_FLAT_METHODS[] = {
+		none_method,
+		uint11_method,
+		uint_method,
+		uint_submin_method,
+		uint_zd_method,
+		uint_zsubmean_method,
+		zlib_method,
+		zstd_method,
+		svb_method,
+		svb_zd_method,
+		zlib_svb_zd_method,
+		zstd_svb_zd_method,
+	};
 
 	TEST_ALL(ONE);
 	TEST_ALL(SAME);
