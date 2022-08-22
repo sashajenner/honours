@@ -4,8 +4,21 @@
 #include <stdio.h>
 
 #define TEST(signals, method) \
+{ \
 	printf("-----\n" #signals ": %s\n", (method).name); \
-	ASSERT(test((signals), LENGTH(signals), (method)) == EXIT_SUCCESS);
+	ASSERT(test((signals), LENGTH(signals), (method)) == EXIT_SUCCESS); \
+}
+#define TEST_FOR(signals, methods) \
+{ \
+	struct press_method method; \
+	uint32_t i; \
+\
+	for (i = 0; i < LENGTH(methods); i++) { \
+		method = methods[i]; \
+		TEST(signals, method); \
+	} \
+}
+#define TEST_ALL(signals) TEST_FOR(signals, ALL_METHODS);
 
 #define ASSERT(statement) \
 if (!(statement)) { \

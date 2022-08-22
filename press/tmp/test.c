@@ -6,6 +6,31 @@
 #include <stdio.h> /* TODO remove */
 #include <inttypes.h> /* TODO remove */
 
+static const struct press_method ALL_METHODS[] = {
+	none_method,
+	uint11_method,
+	uint_method,
+	uint_submin_method,
+	uint_zd_method,
+	uint_zsubmean_method,
+	flat_uint_submin_method,
+	zlib_method,
+	zstd_method,
+	svb_method,
+};
+
+static const struct press_method NO_FLAT_METHODS[] = {
+	none_method,
+	uint11_method,
+	uint_method,
+	uint_submin_method,
+	uint_zd_method,
+	uint_zsubmean_method,
+	zlib_method,
+	zstd_method,
+	svb_method,
+};
+
 int test(const int16_t *sigs,
 	 const uint32_t nr_sigs,
 	 struct press_method method)
@@ -73,75 +98,14 @@ int test(const int16_t *sigs,
 
 int main(void)
 {
-	TEST(P11, none_method);
-	TEST(P11, uint11_method);
-	TEST(P11, uint_method);
-	TEST(P11, uint_submin_method);
-	TEST(P11, uint_zd_method);
-	TEST(P11, uint_zsubmean_method);
-	//TEST(P11, flat_uint_submin_method);
-	TEST(P11, zlib_method);
-	TEST(P11, zstd_method);
 
-	TEST(P11_SHORT, none_method);
-	TEST(P11_SHORT, uint11_method);
-	TEST(P11_SHORT, uint_method);
-	TEST(P11_SHORT, uint_submin_method);
-	TEST(P11_SHORT, uint_zd_method);
-	TEST(P11_SHORT, uint_zsubmean_method);
-	TEST(P11_SHORT, flat_uint_submin_method);
-	TEST(P11_SHORT, zlib_method);
-	TEST(P11_SHORT, zstd_method);
-
-	TEST(P11_MEDIUM, none_method);
-	TEST(P11_MEDIUM, uint11_method);
-	TEST(P11_MEDIUM, uint_method);
-	TEST(P11_MEDIUM, uint_submin_method);
-	TEST(P11_MEDIUM, uint_zd_method);
-	TEST(P11_MEDIUM, uint_zsubmean_method);
-	//TEST(P11_MEDIUM, flat_uint_submin_method);
-	TEST(P11_MEDIUM, zlib_method);
-	TEST(P11_MEDIUM, zstd_method);
-
-	TEST(P11_LONG, none_method);
-	TEST(P11_LONG, uint11_method);
-	TEST(P11_LONG, uint_method);
-	TEST(P11_LONG, uint_submin_method);
-	TEST(P11_LONG, uint_zd_method);
-	TEST(P11_LONG, uint_zsubmean_method);
-	//TEST(P11_LONG, flat_uint_submin_method);
-	TEST(P11_LONG, zlib_method);
-	TEST(P11_LONG, zstd_method);
-
-	TEST(ONE, none_method);
-	TEST(ONE, uint11_method);
-	TEST(ONE, uint_method);
-	TEST(ONE, uint_submin_method);
-	TEST(ONE, uint_zd_method);
-	TEST(ONE, uint_zsubmean_method);
-	TEST(ONE, flat_uint_submin_method);
-	TEST(ONE, zlib_method);
-	TEST(ONE, zstd_method);
-
-	TEST(SAME, none_method);
-	TEST(SAME, uint11_method);
-	TEST(SAME, uint_method);
-	TEST(SAME, uint_submin_method);
-	TEST(SAME, uint_zd_method);
-	TEST(SAME, uint_zsubmean_method);
-	TEST(SAME, flat_uint_submin_method);
-	TEST(SAME, zlib_method);
-	TEST(SAME, zstd_method);
-
-	TEST(ZERO, none_method);
-	TEST(ZERO, uint11_method);
-	TEST(ZERO, uint_method);
-	TEST(ZERO, uint_submin_method);
-	TEST(ZERO, uint_zd_method);
-	TEST(ZERO, uint_zsubmean_method);
-	TEST(ZERO, flat_uint_submin_method);
-	TEST(ZERO, zlib_method);
-	TEST(ZERO, zstd_method);
+	TEST_FOR(P11, NO_FLAT_METHODS);
+	TEST_ALL(P11_SHORT);
+	TEST_FOR(P11_MEDIUM, NO_FLAT_METHODS);
+	TEST_FOR(P11_LONG, NO_FLAT_METHODS);
+	TEST_ALL(ONE);
+	TEST_ALL(SAME);
+	TEST_ALL(ZERO);
 
 	return 0;
 }

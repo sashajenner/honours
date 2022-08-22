@@ -9,10 +9,13 @@
 #include "trans.h"
 #include "util.h"
 #include "flat.h"
+#include "streamvbyte/include/streamvbyte.h"
 
 #define MAX_NBITS_PER_SIG (12)
 
 uint32_t uint0_depress(uint32_t nin_elems, int16_t *out);
+
+/* none */
 
 uint32_t none_bound(const int16_t *in, uint32_t nin)
 {
@@ -32,6 +35,8 @@ uint32_t none_depress(const uint8_t *in, uint32_t nin_elems,
 	(void) memcpy(out, in, nin_elems * sizeof *out);
 	return nin_elems;
 }
+
+/* uintx */
 
 uint32_t uintx_bound(uint8_t x, const int16_t *in, uint32_t nin)
 {
@@ -192,6 +197,8 @@ uint32_t uint0_depress(uint32_t nin_elems, int16_t *out)
 	return nin_elems;
 }
 
+/* uint */
+
 uint32_t uint_bound(const int16_t *in, uint32_t nin)
 {
 	struct stats st;
@@ -232,6 +239,8 @@ uint32_t uint_depress(const uint8_t *in, uint32_t nin_elems,
 	return uintx_depress(x, in + sizeof x, nin_elems, nin_bytes - sizeof x,
 			     out);
 }
+
+/* subtract min | uint */
 
 uint32_t uint_submin_bound(const int16_t *in, uint32_t nin)
 {
@@ -280,6 +289,8 @@ uint32_t uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
 	return nout;
 }
 
+/* delta | zigzag | uint */
+
 uint32_t uint_zd_bound(const int16_t *in, uint32_t nin)
 {
 	int16_t *in_zd;
@@ -325,6 +336,8 @@ uint32_t uint_zd_depress(const uint8_t *in, uint32_t nin_elems,
 
 	return nout;
 }
+
+/* subtract mean | zigzag | uint */
 
 uint32_t uint_zsubmean_bound(const int16_t *in, uint32_t nin)
 {
@@ -382,6 +395,8 @@ uint32_t uint_zsubmean_depress(const uint8_t *in, uint32_t nin_elems,
 
 	return nout;
 }
+
+/* optimal subsequences | subtract min | uint */
 
 uint32_t flat_uint_submin_bound(const int16_t *in, uint32_t nin)
 {
@@ -500,6 +515,8 @@ uint32_t flat_uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
 	return nout_total;
 }
 
+/* zlib */
+
 uint32_t zlib_bound(const int16_t *in, uint32_t nin)
 {
 	return compressBound(nin * sizeof *in);
@@ -553,6 +570,8 @@ uint32_t zlib_depress(const uint8_t *in, uint32_t nin_elems,
 	return nout / sizeof *out;
 }
 
+/* zstd */
+
 uint32_t zstd_bound(const int16_t *in, uint32_t nin)
 {
 	return ZSTD_compressBound(nin * sizeof *in);
@@ -583,4 +602,47 @@ uint32_t zstd_depress(const uint8_t *in, uint32_t nin_elems,
 		fprintf(stderr, "error: zstd decompress\n");
 
 	return nout / sizeof *out;
+}
+
+/* svb */
+
+uint32_t svb_bound(const int16_t *in, uint32_t nin)
+{
+	return streamvbyte_max_compressedbytes(nin);
+}
+
+uint32_t svb_press(const int16_t *in, uint32_t nin, uint8_t *out,
+		   uint32_t nout_bytes)
+{
+	uint32_t *in_32;
+	uint32_t i;
+	uint32_t nout;
+
+	in_32 = malloc(nin * sizeof *in_32);
+	for (i = 0; i < nin; i++) {
+		in_32[i] = in[i];
+	}
+
+	nout = streamvbyte_encode(in_32, nin, out);
+	free(in_32);
+
+	return nout;
+}
+
+uint32_t svb_depress(const uint8_t *in, uint32_t nin_elems,
+		      uint32_t nin_bytes, int16_t *out)
+{
+	uint32_t *out_32;
+	uint32_t i;
+
+	out_32 = malloc(nin_elems * sizeof *out_32);
+
+	(void) streamvbyte_decode(in, out_32, nin_elems);
+
+	for (i = 0; i < nin_elems; i++) {
+		out[i] = out_32[i];
+	}
+	free(out_32);
+
+	return nin_elems;
 }
