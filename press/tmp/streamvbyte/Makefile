@@ -43,7 +43,8 @@ uninstall:
 	ldconfig
 
 
-OBJECTS= streamvbyte_decode.o streamvbyte_encode.o streamvbytedelta_decode.o streamvbytedelta_encode.o streamvbyte_0124_encode.o  streamvbyte_0124_decode.o streamvbyte_zigzag.o
+OBJECTS= streamvbyte_decode.o streamvbyte_encode.o streamvbytedelta_decode.o streamvbytedelta_encode.o streamvbyte_0124_encode.o  streamvbyte_0124_decode.o streamvbyte_zigzag.o streamvbyte_12_encode.o streamvbyte_12_decode.o
+
 
 streamvbyte_zigzag.o: ./src/streamvbyte_zigzag.c $(HEADERS)
 	$(CC) $(CFLAGS) -c ./src/streamvbyte_zigzag.c -Iinclude
@@ -60,6 +61,12 @@ streamvbyte_0124_encode.o: ./src/streamvbyte_0124_encode.c $(HEADERS)
 
 streamvbyte_0124_decode.o: ./src/streamvbyte_0124_decode.c $(HEADERS)
 	$(CC) $(CFLAGS) -c ./src/streamvbyte_0124_decode.c -Iinclude
+
+streamvbyte_12_encode.o: ./src/streamvbyte_12_encode.c $(HEADERS)
+	$(CC) $(CFLAGS) -c ./src/streamvbyte_12_encode.c -Iinclude
+
+streamvbyte_12_decode.o: ./src/streamvbyte_12_decode.c $(HEADERS)
+	$(CC) $(CFLAGS) -c ./src/streamvbyte_12_decode.c -Iinclude
 
 streamvbyte_decode.o: ./src/streamvbyte_decode.c $(HEADERS)
 	$(CC) $(CFLAGS) -c ./src/streamvbyte_decode.c -Iinclude
