@@ -333,7 +333,7 @@ uint32_t zlib_uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
 	uint32_t nout_bytes_tmp;
 	uint8_t *out_tmp;
 
-	nout_bytes_tmp = uint_upper_bound(nin_elems);
+	nout_bytes_tmp = MAX(uint_upper_bound(nin_elems), 8);
 	out_tmp = malloc(nout_bytes_tmp);
 
 	nout_bytes_tmp = zlib_depress(in, nin_elems, nin_bytes,
@@ -472,7 +472,7 @@ uint32_t zlib_uint_zd_depress(const uint8_t *in, uint32_t nin_elems,
 	uint32_t nout_bytes_tmp;
 	uint8_t *out_tmp;
 
-	nout_bytes_tmp = uint_upper_bound(nin_elems);
+	nout_bytes_tmp = MAX(uint_upper_bound(nin_elems), 8);
 	out_tmp = malloc(nout_bytes_tmp);
 
 	nout_bytes_tmp = zlib_depress(in, nin_elems, nin_bytes,
@@ -621,7 +621,7 @@ uint32_t zlib_uint_zsubmean_depress(const uint8_t *in, uint32_t nin_elems,
 	uint32_t nout_bytes_tmp;
 	uint8_t *out_tmp;
 
-	nout_bytes_tmp = uint_upper_bound(nin_elems);
+	nout_bytes_tmp = MAX(uint_upper_bound(nin_elems), 8);
 	out_tmp = malloc(nout_bytes_tmp);
 
 	nout_bytes_tmp = zlib_depress(in, nin_elems, nin_bytes,

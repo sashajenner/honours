@@ -35,3 +35,6 @@ uint8_t get_bit(uint64_t bit, const uint8_t *addr)
 
 	return onoff;
 }
+
+DEFINE_TYPE_TO_BIN(int16_t);
+DEFINE_TYPE_TO_BIN(uint8_t);

@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define DIV_ROUND_UP(n, d)	((n + d - 1) / d)
+#define DIV_ROUND_UP(n, d)	((n - 1) / d + 1)
 #define BITS_PER_BYTE		(8)
 #define BITS_TO_BYTES(n)	DIV_ROUND_UP(n, BITS_PER_BYTE)
 #define BYTES_TO_BITS(n)	(n * BITS_PER_BYTE)
@@ -15,6 +15,36 @@
 
 #define BIT_MASK(n)		((uint8_t)(1) << ((n) % BITS_PER_BYTE))
 #define BIT_WORD(n)		((n) / BITS_PER_BYTE)
+
+#define DECLARE_TYPE_TO_BIN(type) char *type ## _to_bin(type val)
+#define DEFINE_TYPE_TO_BIN(type) \
+char *type ## _to_bin(type val) \
+{ \
+	char *buf; \
+	int32_t i; \
+	int8_t j; \
+	uint16_t bits; \
+\
+	/* +1 for spaces and trailing '\0' */ \
+	bits = sizeof (type) * (BITS_PER_BYTE + 1); \
+	buf = malloc(bits); \
+	i = bits - 1; \
+	buf[i--] = '\0'; \
+\
+	while (i >= 0) { \
+		for (j = 0; j < BITS_PER_BYTE; j++) { \
+			buf[i--] = (val & 1) + '0'; \
+			val >>= 1; \
+		} \
+		if (i >= 0) \
+			buf[i--] = ' '; \
+	} \
+\
+	return buf; \
+}
+
+DECLARE_TYPE_TO_BIN(int16_t);
+DECLARE_TYPE_TO_BIN(uint8_t);
 
 /* Init a bitmap of length nbits (malloced) */
 static inline uint8_t *bitmap_init(uint64_t nbits)
