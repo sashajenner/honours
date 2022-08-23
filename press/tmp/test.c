@@ -97,6 +97,7 @@ int main(void)
 		svb0124_zd_method,
 		zlib_svb0124_zd_method,
 		zstd_svb0124_zd_method,
+		svb12_method,
 	};
 
 	const struct press_method NO_FLAT_METHODS[] = {
@@ -122,6 +123,7 @@ int main(void)
 		svb0124_zd_method,
 		zlib_svb0124_zd_method,
 		zstd_svb0124_zd_method,
+		svb12_method,
 	};
 
 	TEST_ALL(ONE);
