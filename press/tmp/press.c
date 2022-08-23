@@ -944,22 +944,24 @@ uint32_t svb0124_depress(const uint8_t *in, uint32_t nin_elems,
 
 /* svb12 */
 
-/*
-uint32_t svb16_bound(const int16_t *in, uint32_t nin)
+uint32_t svb12_bound(const int16_t *in, uint32_t nin)
 {
-	return svb16_max_encoded_length(nin);
+	return streamvbyte_max_compressedbytes_12(nin);
 }
 
-uint32_t svb16_press(const int16_t *in, uint32_t nin, uint8_t *out,
+uint32_t svb12_press(const int16_t *in, uint32_t nin, uint8_t *out,
 		     uint32_t nout_bytes)
 {
+	return streamvbyte_encode_12((const uint16_t *) in, nin, out);
 }
 
-uint32_t svb16_depress(const uint8_t *in, uint32_t nin_elems,
+uint32_t svb12_depress(const uint8_t *in, uint32_t nin_elems,
 		       uint32_t nin_bytes, int16_t *out, uint32_t nout_bytes)
 {
+	(void) streamvbyte_decode_12(in, (uint16_t *) out, nin_elems);
+
+	return nin_elems;
 }
-*/
 
 /* delta | zigzag | svb */
 
@@ -1067,6 +1069,26 @@ uint32_t svb0124_zd_depress(const uint8_t *in, uint32_t nin_elems,
 
 	return nin_elems;
 }
+
+/* delta | zigzag | svb12 */
+
+/*
+uint32_t svb12_zd_bound(const int16_t *in, uint32_t nin)
+{
+	return svb12_bound(in, nin);
+}
+
+uint32_t svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+	       		uint32_t nout_bytes)
+{
+}
+
+uint32_t svb12_zd_depress(const uint8_t *in, uint32_t nin_elems,
+			  uint32_t nin_bytes, int16_t *out,
+			  uint32_t nout_bytes)
+{
+}
+*/
 
 /* delta | zigzag | svb | zlib */
 
