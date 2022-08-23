@@ -14,6 +14,7 @@
 
 #define MAX_NBITS_PER_SIG (12)
 
+uint32_t uint_upper_bound(uint32_t nin);
 uint32_t uint0_depress(uint32_t nin_elems, int16_t *out);
 uint32_t zlib_press_uint8(const uint8_t *in, uint32_t nin, uint8_t *out,
 			  uint32_t nout_bytes);
@@ -204,6 +205,11 @@ uint32_t uint0_depress(uint32_t nin_elems, int16_t *out)
 
 /* uint */
 
+uint32_t uint_upper_bound(uint32_t nin)
+{
+	return nin * sizeof (int16_t);
+}
+
 uint32_t uint_bound(const int16_t *in, uint32_t nin)
 {
 	struct stats st;
@@ -225,7 +231,7 @@ uint32_t uint_press(const int16_t *in, uint32_t nin, uint8_t *out,
 	/* TODO have this as an argument */
 	get_stats(in, nin, &st);
 	x = get_uint_bound(st.min, st.max);
-	print_stats(&st);
+	/*print_stats(&st);*/
 	printf("bits per sig: %" PRIu8 "\n", x);
 	out[0] = x;
 
@@ -295,6 +301,95 @@ uint32_t uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
 	return nout;
 }
 
+/* subtract min | uint | zlib */
+
+uint32_t zlib_uint_submin_bound(const int16_t *in, uint32_t nin)
+{
+	return compressBound(uint_submin_bound(in, nin));
+}
+
+uint32_t zlib_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out,
+				uint32_t nout_bytes)
+{
+	uint32_t nout;
+	uint32_t nout_bytes_tmp;
+	uint8_t *out_tmp;
+
+	nout_bytes_tmp = uint_submin_bound(in, nin);
+	out_tmp = malloc(nout_bytes_tmp);
+
+	nout = uint_submin_press(in, nin, out_tmp, nout_bytes_tmp);
+	nout = zlib_press_uint8(out_tmp, nout, out, nout_bytes);
+	free(out_tmp);
+
+	return nout;
+}
+
+uint32_t zlib_uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
+				  uint32_t nin_bytes, int16_t *out,
+				  uint32_t nout_bytes)
+{
+	uint32_t nout;
+	uint32_t nout_bytes_tmp;
+	uint8_t *out_tmp;
+
+	nout_bytes_tmp = uint_upper_bound(nin_elems);
+	out_tmp = malloc(nout_bytes_tmp);
+
+	nout_bytes_tmp = zlib_depress(in, nin_elems, nin_bytes,
+				      (int16_t *) out_tmp, nout_bytes_tmp);
+	nout = uint_submin_depress(out_tmp, nin_elems, nout_bytes_tmp, out,
+				   nout_bytes);
+	free(out_tmp);
+
+	return nout;
+}
+
+/* subtract min | uint | zstd */
+
+uint32_t zstd_uint_submin_bound(const int16_t *in, uint32_t nin)
+{
+	return ZSTD_compressBound(uint_submin_bound(in, nin));
+}
+
+uint32_t zstd_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out,
+				uint32_t nout_bytes)
+{
+	uint32_t nout;
+	uint32_t nout_bytes_tmp;
+	uint8_t *out_tmp;
+
+	nout_bytes_tmp = uint_submin_bound(in, nin);
+	out_tmp = malloc(nout_bytes_tmp);
+
+	nout = uint_submin_press(in, nin, out_tmp, nout_bytes_tmp);
+	nout = zstd_press_uint8(out_tmp, nout, out, nout_bytes);
+	free(out_tmp);
+
+	return nout;
+}
+
+uint32_t zstd_uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
+				  uint32_t nin_bytes, int16_t *out,
+				  uint32_t nout_bytes)
+{
+	uint32_t nout;
+	uint32_t nout_bytes_tmp;
+	uint8_t *out_tmp;
+
+	/* dodgy lower limit */
+	nout_bytes_tmp = MAX(uint_upper_bound(nin_elems), 8);
+	out_tmp = malloc(nout_bytes_tmp);
+
+	nout_bytes_tmp = zstd_depress(in, nin_elems, nin_bytes,
+				      (int16_t *) out_tmp, nout_bytes_tmp);
+	nout = uint_submin_depress(out_tmp, nin_elems, nout_bytes_tmp, out,
+				   nout_bytes);
+	free(out_tmp);
+
+	return nout;
+}
+
 /* delta | zigzag | uint */
 
 uint32_t uint_zd_bound(const int16_t *in, uint32_t nin)
@@ -341,6 +436,95 @@ uint32_t uint_zd_depress(const uint8_t *in, uint32_t nin_elems,
 			     nout_bytes - nout);
 
 	unzigdelta_inplace(out, nout);
+
+	return nout;
+}
+
+/* delta | zigzag | uint | zlib */
+
+uint32_t zlib_uint_zd_bound(const int16_t *in, uint32_t nin)
+{
+	return compressBound(uint_zd_bound(in, nin));
+}
+
+uint32_t zlib_uint_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			    uint32_t nout_bytes)
+{
+	uint32_t nout;
+	uint32_t nout_bytes_tmp;
+	uint8_t *out_tmp;
+
+	nout_bytes_tmp = uint_zd_bound(in, nin);
+	out_tmp = malloc(nout_bytes_tmp);
+
+	nout = uint_zd_press(in, nin, out_tmp, nout_bytes_tmp);
+	nout = zlib_press_uint8(out_tmp, nout, out, nout_bytes);
+	free(out_tmp);
+
+	return nout;
+}
+
+uint32_t zlib_uint_zd_depress(const uint8_t *in, uint32_t nin_elems,
+			      uint32_t nin_bytes, int16_t *out,
+			      uint32_t nout_bytes)
+{
+	uint32_t nout;
+	uint32_t nout_bytes_tmp;
+	uint8_t *out_tmp;
+
+	nout_bytes_tmp = uint_upper_bound(nin_elems);
+	out_tmp = malloc(nout_bytes_tmp);
+
+	nout_bytes_tmp = zlib_depress(in, nin_elems, nin_bytes,
+				      (int16_t *) out_tmp, nout_bytes_tmp);
+	nout = uint_zd_depress(out_tmp, nin_elems, nout_bytes_tmp, out,
+			       nout_bytes);
+	free(out_tmp);
+
+	return nout;
+}
+
+/* delta | zigzag | uint | zstd */
+
+uint32_t zstd_uint_zd_bound(const int16_t *in, uint32_t nin)
+{
+	return ZSTD_compressBound(uint_zd_bound(in, nin));
+}
+
+uint32_t zstd_uint_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			    uint32_t nout_bytes)
+{
+	uint32_t nout;
+	uint32_t nout_bytes_tmp;
+	uint8_t *out_tmp;
+
+	nout_bytes_tmp = uint_zd_bound(in, nin);
+	out_tmp = malloc(nout_bytes_tmp);
+
+	nout = uint_zd_press(in, nin, out_tmp, nout_bytes_tmp);
+	nout = zstd_press_uint8(out_tmp, nout, out, nout_bytes);
+	free(out_tmp);
+
+	return nout;
+}
+
+uint32_t zstd_uint_zd_depress(const uint8_t *in, uint32_t nin_elems,
+			      uint32_t nin_bytes, int16_t *out,
+			      uint32_t nout_bytes)
+{
+	uint32_t nout;
+	uint32_t nout_bytes_tmp;
+	uint8_t *out_tmp;
+
+	/* dodgy lower limit */
+	nout_bytes_tmp = MAX(uint_upper_bound(nin_elems), 8);
+	out_tmp = malloc(nout_bytes_tmp);
+
+	nout_bytes_tmp = zstd_depress(in, nin_elems, nin_bytes,
+				      (int16_t *) out_tmp, nout_bytes_tmp);
+	nout = uint_zd_depress(out_tmp, nin_elems, nout_bytes_tmp, out,
+			       nout_bytes);
+	free(out_tmp);
 
 	return nout;
 }
@@ -401,6 +585,50 @@ uint32_t uint_zsubmean_depress(const uint8_t *in, uint32_t nin_elems,
 
 	unzigzag_inplace(out, nout);
 	shift_x_inplace(mean, out, nout);
+
+	return nout;
+}
+
+/* subtract mean | zigzag | uint | zlib */
+
+uint32_t zlib_uint_zsubmean_bound(const int16_t *in, uint32_t nin)
+{
+	return compressBound(uint_zsubmean_bound(in, nin));
+}
+
+uint32_t zlib_uint_zsubmean_press(const int16_t *in, uint32_t nin,
+				  uint8_t *out, uint32_t nout_bytes)
+{
+	uint32_t nout;
+	uint32_t nout_bytes_tmp;
+	uint8_t *out_tmp;
+
+	nout_bytes_tmp = uint_zsubmean_bound(in, nin);
+	out_tmp = malloc(nout_bytes_tmp);
+
+	nout = uint_zsubmean_press(in, nin, out_tmp, nout_bytes_tmp);
+	nout = zlib_press_uint8(out_tmp, nout, out, nout_bytes);
+	free(out_tmp);
+
+	return nout;
+}
+
+uint32_t zlib_uint_zsubmean_depress(const uint8_t *in, uint32_t nin_elems,
+				    uint32_t nin_bytes, int16_t *out,
+				    uint32_t nout_bytes)
+{
+	uint32_t nout;
+	uint32_t nout_bytes_tmp;
+	uint8_t *out_tmp;
+
+	nout_bytes_tmp = uint_upper_bound(nin_elems);
+	out_tmp = malloc(nout_bytes_tmp);
+
+	nout_bytes_tmp = zlib_depress(in, nin_elems, nin_bytes,
+				      (int16_t *) out_tmp, nout_bytes_tmp);
+	nout = uint_zsubmean_depress(out_tmp, nin_elems, nout_bytes_tmp, out,
+				     nout_bytes);
+	free(out_tmp);
 
 	return nout;
 }
@@ -669,7 +897,71 @@ uint32_t svb_depress(const uint8_t *in, uint32_t nin_elems, uint32_t nin_bytes,
 	return nin_elems;
 }
 
-/* zigzag delta svb */
+/* svb0124 */
+
+uint32_t svb0124_bound(const int16_t *in, uint32_t nin)
+{
+	/*return streamvbyte_compressedbytes_0124(in, nin);*/
+	return svb_bound(in, nin);
+}
+
+uint32_t svb0124_press(const int16_t *in, uint32_t nin, uint8_t *out,
+		       uint32_t nout_bytes)
+{
+	uint32_t *in_32;
+	uint32_t i;
+	uint32_t nout;
+
+	in_32 = malloc(nin * sizeof *in_32);
+	for (i = 0; i < nin; i++) {
+		in_32[i] = in[i];
+	}
+
+	nout = streamvbyte_encode_0124(in_32, nin, out);
+	free(in_32);
+
+	return nout;
+}
+
+uint32_t svb0124_depress(const uint8_t *in, uint32_t nin_elems,
+			 uint32_t nin_bytes, int16_t *out,
+			 uint32_t nout_bytes)
+{
+	uint32_t *out_32;
+	uint32_t i;
+
+	out_32 = malloc(nin_elems * sizeof *out_32);
+
+	(void) streamvbyte_decode_0124(in, out_32, nin_elems);
+
+	for (i = 0; i < nin_elems; i++) {
+		out[i] = out_32[i];
+	}
+	free(out_32);
+
+	return nin_elems;
+}
+
+/* svb12 */
+
+/*
+uint32_t svb16_bound(const int16_t *in, uint32_t nin)
+{
+	return svb16_max_encoded_length(nin);
+}
+
+uint32_t svb16_press(const int16_t *in, uint32_t nin, uint8_t *out,
+		     uint32_t nout_bytes)
+{
+}
+
+uint32_t svb16_depress(const uint8_t *in, uint32_t nin_elems,
+		       uint32_t nin_bytes, int16_t *out, uint32_t nout_bytes)
+{
+}
+*/
+
+/* delta | zigzag | svb */
 
 uint32_t svb_zd_bound(const int16_t *in, uint32_t nin)
 {
@@ -722,7 +1014,61 @@ uint32_t svb_zd_depress(const uint8_t *in, uint32_t nin_elems,
 	return nin_elems;
 }
 
-/* zigzag delta svb zlib */
+/* delta | zigzag | svb0124 */
+
+uint32_t svb0124_zd_bound(const int16_t *in, uint32_t nin)
+{
+	return svb0124_bound(in, nin);
+}
+
+uint32_t svb0124_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			  uint32_t nout_bytes)
+{
+	int32_t *in_32;
+	uint32_t *in_zd;
+	uint32_t i;
+	uint32_t nout;
+
+	in_32 = malloc(nin * sizeof *in_32);
+	for (i = 0; i < nin; i++) {
+		in_32[i] = in[i];
+	}
+
+	in_zd = malloc(nin * sizeof *in_zd);
+	zigzag_delta_encode(in_32, in_zd, nin, 0);
+	free(in_32);
+
+	nout = streamvbyte_encode_0124(in_zd, nin, out);
+	free(in_zd);
+
+	return nout;
+}
+
+uint32_t svb0124_zd_depress(const uint8_t *in, uint32_t nin_elems,
+			    uint32_t nin_bytes, int16_t *out,
+			    uint32_t nout_bytes)
+{
+	int32_t *out_32;
+	uint32_t *out_zd;
+	uint32_t i;
+
+	out_zd = malloc(nin_elems * sizeof *out_zd);
+
+	(void) streamvbyte_decode_0124(in, out_zd, nin_elems);
+
+	out_32 = malloc(nin_elems * sizeof *out_32);
+	zigzag_delta_decode(out_zd, out_32, nin_elems, 0);
+	free(out_zd);
+
+	for (i = 0; i < nin_elems; i++) {
+		out[i] = out_32[i];
+	}
+	free(out_32);
+
+	return nin_elems;
+}
+
+/* delta | zigzag | svb | zlib */
 
 uint32_t zlib_svb_zd_bound(const int16_t *in, uint32_t nin)
 {
@@ -766,7 +1112,51 @@ uint32_t zlib_svb_zd_depress(const uint8_t *in, uint32_t nin_elems,
 	return nout;
 }
 
-/* zigzag delta svb zstd */
+/* delta | zigzag | svb0124 | zlib */
+
+uint32_t zlib_svb0124_zd_bound(const int16_t *in, uint32_t nin)
+{
+	return compressBound(svb0124_bound(in, nin));
+}
+
+uint32_t zlib_svb0124_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			       uint32_t nout_bytes)
+{
+	uint32_t nout;
+	uint32_t nout_bytes_svb;
+	uint8_t *out_svb;
+
+	nout_bytes_svb = svb_zd_bound(in, nin);
+	out_svb = malloc(nout_bytes_svb);
+
+	nout = svb0124_zd_press(in, nin, out_svb, nout_bytes_svb);
+	nout = zlib_press_uint8(out_svb, nout, out, nout_bytes);
+	free(out_svb);
+
+	return nout;
+}
+
+uint32_t zlib_svb0124_zd_depress(const uint8_t *in, uint32_t nin_elems,
+				 uint32_t nin_bytes, int16_t *out,
+				 uint32_t nout_bytes)
+{
+	uint32_t nout;
+	uint32_t nout_bytes_svb;
+	uint8_t *out_svb;
+
+	nout_bytes_svb = svb0124_zd_bound(NULL, nout_bytes);
+	out_svb = malloc(nout_bytes_svb);
+
+	nout_bytes_svb = zlib_depress(in, nin_elems, nin_bytes,
+				      (int16_t *) out_svb, nout_bytes_svb);
+	nout = svb0124_zd_depress(out_svb, nin_elems, nout_bytes_svb, out,
+				  nout_bytes);
+	free(out_svb);
+
+	return nout;
+}
+
+/* delta | zigzag | svb | zstd */
 
 uint32_t zstd_svb_zd_bound(const int16_t *in, uint32_t nin)
 {
@@ -808,6 +1198,53 @@ uint32_t zstd_svb_zd_depress(const uint8_t *in, uint32_t nin_elems,
 				      (int16_t *) out_svb, nout_bytes_svb);
 	nout = svb_zd_depress(out_svb, nin_elems, nout_bytes_svb, out,
 			      nout_bytes);
+	free(out_svb);
+
+	return nout;
+}
+
+/* delta | zigzag | svb0124 | zstd */
+
+uint32_t zstd_svb0124_zd_bound(const int16_t *in, uint32_t nin)
+{
+	uint32_t out_bound;
+
+	out_bound = svb0124_bound(in, nin);
+	return zstd_bound(in, out_bound / sizeof *in);
+}
+
+uint32_t zstd_svb0124_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			       uint32_t nout_bytes)
+{
+	uint32_t nout;
+	uint32_t nout_bytes_svb;
+	uint8_t *out_svb;
+
+	nout_bytes_svb = svb0124_zd_bound(in, nin);
+	out_svb = malloc(nout_bytes_svb);
+
+	nout = svb0124_zd_press(in, nin, out_svb, nout_bytes_svb);
+	nout = zstd_press_uint8(out_svb, nout, out, nout_bytes);
+	free(out_svb);
+
+	return nout;
+}
+
+uint32_t zstd_svb0124_zd_depress(const uint8_t *in, uint32_t nin_elems,
+				 uint32_t nin_bytes, int16_t *out,
+				 uint32_t nout_bytes)
+{
+	uint32_t nout;
+	uint32_t nout_bytes_svb;
+	uint8_t *out_svb;
+
+	nout_bytes_svb = svb0124_zd_bound(NULL, nout_bytes);
+	out_svb = malloc(nout_bytes_svb);
+
+	nout_bytes_svb = zstd_depress(in, nin_elems, nin_bytes,
+				      (int16_t *) out_svb, nout_bytes_svb);
+	nout = svb0124_zd_depress(out_svb, nin_elems, nout_bytes_svb, out,
+				  nout_bytes);
 	free(out_svb);
 
 	return nout;

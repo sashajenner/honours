@@ -110,6 +110,34 @@ uint32_t uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
 DEFINE_PRESS_METHOD(uint_submin, "subtract min | uintx");
 
 /*
+ * subtract min from all sigs
+ * compressed: [min, x, sigs - min as uintx_t]
+ * zlib compress the result
+ */
+uint32_t zlib_uint_submin_bound(const int16_t *in, uint32_t nin);
+uint32_t zlib_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out,
+				uint32_t nout_bytes);
+uint32_t zlib_uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
+				  uint32_t nin_bytes, int16_t *out,
+				  uint32_t nout_bytes);
+
+DEFINE_PRESS_METHOD(zlib_uint_submin, "subtract min | uintx | zlib");
+
+/*
+ * subtract min from all sigs
+ * compressed: [min, x, sigs - min as uintx_t]
+ * zstd compress the result
+ */
+uint32_t zstd_uint_submin_bound(const int16_t *in, uint32_t nin);
+uint32_t zstd_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out,
+				uint32_t nout_bytes);
+uint32_t zstd_uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
+				  uint32_t nin_bytes, int16_t *out,
+				  uint32_t nout_bytes);
+
+DEFINE_PRESS_METHOD(zstd_uint_submin, "subtract min | uintx | zstd");
+
+/*
  * zigzag delta: take successive differences and map to unsigned integers
  * compressed: [start, x, sigs zigzag delta as uintx_t]
  */
@@ -123,6 +151,34 @@ uint32_t uint_zd_depress(const uint8_t *in, uint32_t nin_elems,
 DEFINE_PRESS_METHOD(uint_zd, "delta | zigzag | uintx");
 
 /*
+ * zigzag delta: take successive differences and map to unsigned integers
+ * compressed: [start, x, sigs zigzag delta as uintx_t]
+ * zlib compress the result
+ */
+uint32_t zlib_uint_zd_bound(const int16_t *in, uint32_t nin);
+uint32_t zlib_uint_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			    uint32_t nout_bytes);
+uint32_t zlib_uint_zd_depress(const uint8_t *in, uint32_t nin_elems,
+			      uint32_t nin_bytes, int16_t *out,
+			      uint32_t nout_bytes);
+
+DEFINE_PRESS_METHOD(zlib_uint_zd, "delta | zigzag | uintx | zlib");
+
+/*
+ * zigzag delta: take successive differences and map to unsigned integers
+ * compressed: [start, x, sigs zigzag delta as uintx_t]
+ * zstd compress the result
+ */
+uint32_t zstd_uint_zd_bound(const int16_t *in, uint32_t nin);
+uint32_t zstd_uint_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			    uint32_t nout_bytes);
+uint32_t zstd_uint_zd_depress(const uint8_t *in, uint32_t nin_elems,
+			      uint32_t nin_bytes, int16_t *out,
+			      uint32_t nout_bytes);
+
+DEFINE_PRESS_METHOD(zstd_uint_zd, "delta | zigzag | uintx | zstd");
+
+/*
  * zigzag subtract mean: subtract mean from all sigs and map to unsigned integers
  * compressed: [mean, x, zigzag(sigs - mean) as uintx_t]
  */
@@ -134,6 +190,20 @@ uint32_t uint_zsubmean_depress(const uint8_t *in, uint32_t nin_elems,
 			       uint32_t nout_bytes);
 
 DEFINE_PRESS_METHOD(uint_zsubmean, "subtract mean | zigzag | uintx");
+
+/*
+ * zigzag subtract mean: subtract mean from all sigs and map to unsigned integers
+ * compressed: [mean, x, zigzag(sigs - mean) as uintx_t]
+ * zlib compress the result
+ */
+uint32_t zlib_uint_zsubmean_bound(const int16_t *in, uint32_t nin);
+uint32_t zlib_uint_zsubmean_press(const int16_t *in, uint32_t nin,
+				  uint8_t *out, uint32_t nout_bytes);
+uint32_t zlib_uint_zsubmean_depress(const uint8_t *in, uint32_t nin_elems,
+				    uint32_t nin_bytes, int16_t *out,
+				    uint32_t nout_bytes);
+
+DEFINE_PRESS_METHOD(zlib_uint_zsubmean, "subtract mean | zigzag | uintx | zlib");
 
 /* num_sigs + min/start + x */
 #define NBYTES_FLAT_UINT_HDR (sizeof (uint32_t) + sizeof (int16_t) + \
@@ -187,7 +257,7 @@ uint32_t zstd_depress(const uint8_t *in, uint32_t nin_elems,
 
 DEFINE_PRESS_METHOD(zstd, "zstd");
 
-/* svb */
+/* classical svb 1,2,3,4 bytes */
 uint32_t svb_bound(const int16_t *in, uint32_t nin);
 uint32_t svb_press(const int16_t *in, uint32_t nin, uint8_t *out,
 		   uint32_t nout_bytes);
@@ -196,15 +266,25 @@ uint32_t svb_depress(const uint8_t *in, uint32_t nin_elems, uint32_t nin_bytes,
 
 DEFINE_PRESS_METHOD(svb, "svb");
 
-/* svb16 */
-/*
-uint32_t svb16_bound(const int16_t *in, uint32_t nin);
-uint32_t svb16_press(const int16_t *in, uint32_t nin, uint8_t *out,
-		     uint32_t nout_bytes);
-uint32_t svb16_depress(const uint8_t *in, uint32_t nin_elems, uint32_t nin_bytes,
-		     int16_t *out, uint32_t nout_bytes);
+/* svb 0,1,2,4 bytes */
+uint32_t svb0124_bound(const int16_t *in, uint32_t nin);
+uint32_t svb0124_press(const int16_t *in, uint32_t nin, uint8_t *out,
+		       uint32_t nout_bytes);
+uint32_t svb0124_depress(const uint8_t *in, uint32_t nin_elems,
+			 uint32_t nin_bytes, int16_t *out,
+			 uint32_t nout_bytes);
 
-DEFINE_PRESS_METHOD(svb16, "svb16");
+DEFINE_PRESS_METHOD(svb0124, "svb0124");
+
+/* svb(16) 1,2 bytes */
+/*
+uint32_t svb12_bound(const int16_t *in, uint32_t nin);
+uint32_t svb12_press(const int16_t *in, uint32_t nin, uint8_t *out,
+		     uint32_t nout_bytes);
+uint32_t svb12_depress(const uint8_t *in, uint32_t nin_elems,
+		       uint32_t nin_bytes, int16_t *out, uint32_t nout_bytes);
+
+DEFINE_PRESS_METHOD(svb12, "svb12");
 */
 
 /* zigzag delta svb */
@@ -216,6 +296,16 @@ uint32_t svb_zd_depress(const uint8_t *in, uint32_t nin_elems,
 
 DEFINE_PRESS_METHOD(svb_zd, "delta | zigzag | svb");
 
+/* zigzag delta svb0124 */
+uint32_t svb0124_zd_bound(const int16_t *in, uint32_t nin);
+uint32_t svb0124_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			  uint32_t nout_bytes);
+uint32_t svb0124_zd_depress(const uint8_t *in, uint32_t nin_elems,
+			    uint32_t nin_bytes, int16_t *out,
+			    uint32_t nout_bytes);
+
+DEFINE_PRESS_METHOD(svb0124_zd, "delta | zigzag | svb0124");
+
 /* zigzag delta svb zlib */
 uint32_t zlib_svb_zd_bound(const int16_t *in, uint32_t nin);
 uint32_t zlib_svb_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
@@ -226,6 +316,16 @@ uint32_t zlib_svb_zd_depress(const uint8_t *in, uint32_t nin_elems,
 
 DEFINE_PRESS_METHOD(zlib_svb_zd, "delta | zigzag | svb | zlib");
 
+/* zigzag delta svb0124 zlib */
+uint32_t zlib_svb0124_zd_bound(const int16_t *in, uint32_t nin);
+uint32_t zlib_svb0124_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			       uint32_t nout_bytes);
+uint32_t zlib_svb0124_zd_depress(const uint8_t *in, uint32_t nin_elems,
+				 uint32_t nin_bytes, int16_t *out,
+				 uint32_t nout_bytes);
+
+DEFINE_PRESS_METHOD(zlib_svb0124_zd, "delta | zigzag | svb0124 | zlib");
+
 /* zigzag delta svb zstd */
 uint32_t zstd_svb_zd_bound(const int16_t *in, uint32_t nin);
 uint32_t zstd_svb_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
@@ -235,6 +335,16 @@ uint32_t zstd_svb_zd_depress(const uint8_t *in, uint32_t nin_elems,
 			     uint32_t nout_bytes);
 
 DEFINE_PRESS_METHOD(zstd_svb_zd, "delta | zigzag | svb | zstd");
+
+/* zigzag delta svb0124 zstd */
+uint32_t zstd_svb0124_zd_bound(const int16_t *in, uint32_t nin);
+uint32_t zstd_svb0124_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			       uint32_t nout_bytes);
+uint32_t zstd_svb0124_zd_depress(const uint8_t *in, uint32_t nin_elems,
+				 uint32_t nin_bytes, int16_t *out,
+				 uint32_t nout_bytes);
+
+DEFINE_PRESS_METHOD(zstd_svb0124_zd, "delta | zigzag | svb0124 | zstd");
 
 /* TODO
  * svb16

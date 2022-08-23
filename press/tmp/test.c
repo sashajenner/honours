@@ -22,7 +22,7 @@ int test(const int16_t *sigs,
 
 	/* bound sigs_press */
 	press_bound = method.bound(sigs, nr_sigs);
-	printf("press bound:\t%" PRIu32 "\n", press_bound);
+	/*printf("press bound:\t%" PRIu32 "\n", press_bound);*/
 	/*ASSERT(press_bound <= nr_sigs_bytes);*/
 
 	/* init sigs_press */
@@ -31,7 +31,7 @@ int test(const int16_t *sigs,
 
 	/* compress sigs */
 	press_len = method.press(sigs, nr_sigs, sigs_press, press_bound);
-	printf("press len:\t%" PRIu32 "\n", press_len);
+	/*printf("press len:\t%" PRIu32 "\n", press_len);*/
 	ASSERT(press_len <= press_bound);
 	printf("press ratio:\t%f\n", (float) nr_sigs_bytes / press_len);
 
@@ -76,33 +76,52 @@ int main(void)
 {
 	const struct press_method ALL_METHODS[] = {
 		none_method,
-		uint11_method,
-		uint_method,
-		uint_submin_method,
-		uint_zd_method,
-		uint_zsubmean_method,
-		flat_uint_submin_method,
 		zlib_method,
 		zstd_method,
+		/*uint11_method,*/
+		uint_method,
+		uint_submin_method,
+		zlib_uint_submin_method,
+		zstd_uint_submin_method,
+		uint_zd_method,
+		zlib_uint_zd_method,
+		zstd_uint_zd_method,
+		uint_zsubmean_method,
+		zlib_uint_zsubmean_method,
+		flat_uint_submin_method,
 		svb_method,
 		svb_zd_method,
 		zlib_svb_zd_method,
 		zstd_svb_zd_method,
+		svb0124_method,
+		svb0124_zd_method,
+		zlib_svb0124_zd_method,
+		zstd_svb0124_zd_method,
 	};
 
 	const struct press_method NO_FLAT_METHODS[] = {
 		none_method,
-		uint11_method,
-		uint_method,
-		uint_submin_method,
-		uint_zd_method,
-		uint_zsubmean_method,
 		zlib_method,
 		zstd_method,
+		/*uint11_method,*/
+		uint_method,
+		uint_submin_method,
+		zlib_uint_submin_method,
+		zstd_uint_submin_method,
+		uint_zd_method,
+		zlib_uint_zd_method,
+		zstd_uint_zd_method,
+		uint_zsubmean_method,
+		zlib_uint_zsubmean_method,
+		/*flat_uint_submin_method,*/
 		svb_method,
 		svb_zd_method,
 		zlib_svb_zd_method,
 		zstd_svb_zd_method,
+		svb0124_method,
+		svb0124_zd_method,
+		zlib_svb0124_zd_method,
+		zstd_svb0124_zd_method,
 	};
 
 	TEST_ALL(ONE);
