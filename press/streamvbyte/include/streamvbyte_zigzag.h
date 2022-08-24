@@ -35,6 +35,30 @@ void zigzag_decode(const uint32_t * in, int32_t * out, size_t N);
  */
 void zigzag_delta_decode(const uint32_t * in, int32_t * out, size_t N, int32_t prev);
 
+/**
+ * Convert N signed integers to N unsigned integers, using zigzag
+ * encoding.
+ */
+void zigzag_encode_16(const int16_t * in, uint16_t * out, size_t N);
+
+/**
+ * Convert N signed integers to N unsigned integers, using zigzag
+ * delta encoding.
+ */
+void zigzag_delta_encode_16(const int16_t * in, uint16_t * out, size_t N, int16_t prev);
+
+/**
+ * Convert N unsigned integers to N signed integers, using zigzag
+ * encoding.
+ */
+void zigzag_decode_16(const uint16_t * in, int16_t * out, size_t N);
+
+/**
+ * Convert N unsigned integers to N signed integers, using zigzag
+ * delta encoding.
+ */
+void zigzag_delta_decode_16(const uint16_t * in, int16_t * out, size_t N, int16_t prev);
+
 
 #if defined(__cplusplus)
 };

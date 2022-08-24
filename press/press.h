@@ -305,7 +305,6 @@ uint32_t svb0124_zd_depress(const uint8_t *in, uint32_t nin_elems,
 DEFINE_PRESS_METHOD(svb0124_zd, "delta | zigzag | svb0124");
 
 /* zigzag delta svb12 */
-/*
 uint32_t svb12_zd_bound(const int16_t *in, uint32_t nin);
 uint32_t svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 	       		uint32_t nout_bytes);
@@ -314,7 +313,6 @@ uint32_t svb12_zd_depress(const uint8_t *in, uint32_t nin_elems,
 			  uint32_t nout_bytes);
 
 DEFINE_PRESS_METHOD(svb12_zd, "delta | zigzag | svb12");
-*/
 
 /* zigzag delta svb zlib */
 uint32_t zlib_svb_zd_bound(const int16_t *in, uint32_t nin);
@@ -336,6 +334,16 @@ uint32_t zlib_svb0124_zd_depress(const uint8_t *in, uint32_t nin_elems,
 
 DEFINE_PRESS_METHOD(zlib_svb0124_zd, "delta | zigzag | svb0124 | zlib");
 
+/* zigzag delta svb12 zlib */
+uint32_t zlib_svb12_zd_bound(const int16_t *in, uint32_t nin);
+uint32_t zlib_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			     uint32_t nout_bytes);
+uint32_t zlib_svb12_zd_depress(const uint8_t *in, uint32_t nin_elems,
+			       uint32_t nin_bytes, int16_t *out,
+			       uint32_t nout_bytes);
+
+DEFINE_PRESS_METHOD(zlib_svb12_zd, "delta | zigzag | svb12 | zlib");
+
 /* zigzag delta svb zstd */
 uint32_t zstd_svb_zd_bound(const int16_t *in, uint32_t nin);
 uint32_t zstd_svb_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
@@ -356,8 +364,17 @@ uint32_t zstd_svb0124_zd_depress(const uint8_t *in, uint32_t nin_elems,
 
 DEFINE_PRESS_METHOD(zstd_svb0124_zd, "delta | zigzag | svb0124 | zstd");
 
+/* zigzag delta svb12 zstd */
+uint32_t zstd_svb12_zd_bound(const int16_t *in, uint32_t nin);
+uint32_t zstd_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			     uint32_t nout_bytes);
+uint32_t zstd_svb12_zd_depress(const uint8_t *in, uint32_t nin_elems,
+			       uint32_t nin_bytes, int16_t *out,
+			       uint32_t nout_bytes);
+
+DEFINE_PRESS_METHOD(zstd_svb12_zd, "delta | zigzag | svb12 | zstd");
+
 /* TODO
- * svb16
  * variable byte
  * huffman
  * peak-picking flat approximation

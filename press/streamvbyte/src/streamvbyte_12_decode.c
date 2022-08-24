@@ -66,7 +66,7 @@ static const uint8_t *svb_decode_scalar(uint16_t *outPtr, const uint8_t *keyPtr,
       shift = 0;
       key = *keyPtr++;
     }
-    uint32_t val = _decode_data(&dataPtr, (key >> shift) & 0x3);
+    uint16_t val = _decode_data(&dataPtr, (key >> shift) & 0x1);
     *outPtr++ = val;
     shift += 1;
   }
