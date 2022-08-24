@@ -1,15 +1,18 @@
 CC = cc
 CFLAGS = -g -Wall -Werror
-LDFLAGS = -lm -lz -lzstd
+LDFLAGS = -lm -lz -lzstd -lpthread
 OBJ = test.o press.o trans.o flat.o bitmap.o stats.o util.o
 SVB = streamvbyte
 SVBLIB = $(SVB)/libstreamvbyte.so.0.0.1
 BZIP2 = bzip2
 BZIP2LIB = $(BZIP2)/libbz2.a
+FLZMA2 = fast-lzma2
+FLZMA2LIB = $(FLZMA2)/libfast-lzma2.a
+LIB = $(SVBLIB) $(BZIP2LIB) $(FLZMA2LIB)
 
-.PHONY = clean
+.PHONY = clean $(LIB)
 
-test: $(OBJ) $(SVBLIB) $(BZIP2LIB)
+test: $(OBJ) $(LIB)
 	$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
 
 $(SVBLIB):
@@ -17,6 +20,9 @@ $(SVBLIB):
 
 $(BZIP2LIB):
 	make -C $(BZIP2)
+
+$(FLZMA2LIB):
+	make -C $(FLZMA2)
 
 test.o: test.c test.h press.h bitmap.h
 	$(CC) $< $(CFLAGS) -c -o $@
@@ -42,3 +48,5 @@ util.o: util.c util.h
 clean:
 	rm $(OBJ) test
 	make -C $(SVB) clean
+	make -C $(BZIP2) clean
+	make -C $(FLZMA2) clean

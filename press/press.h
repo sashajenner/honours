@@ -2,6 +2,7 @@
 #define PRESS_H
 
 #include <stdint.h>
+#include <zlib.h>
 
 #define DEFINE_PRESS_METHOD(name, full_name) \
 	static const struct press_method name ## _method = { \
@@ -270,6 +271,18 @@ uint32_t zstd_depress(const uint8_t *in, uint32_t nin_elems,
 		      uint32_t nin_bytes, int16_t *out, uint32_t nout_bytes);
 
 DEFINE_PRESS_METHOD(zstd, "zstd");
+
+/* fast lzma2 */
+#define PRESS_LVL_FAST_LZMA2 (6)
+#define PRESS_NTHREADS_FAST_LZMA2 (0)
+uint32_t fast_lzma2_bound(const int16_t *in, uint32_t nin);
+uint32_t fast_lzma2_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			  uint32_t nout_bytes);
+uint32_t fast_lzma2_depress(const uint8_t *in, uint32_t nin_elems,
+			    uint32_t nin_bytes, int16_t *out,
+			    uint32_t nout_bytes);
+
+DEFINE_PRESS_METHOD(fast_lzma2, "fast lzma2");
 
 /* classical svb 1,2,3,4 bytes */
 uint32_t svb_bound(const int16_t *in, uint32_t nin);

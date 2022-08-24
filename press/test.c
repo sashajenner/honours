@@ -79,6 +79,7 @@ int main(void)
 		zlib_method,
 		zstd_method,
 		bzip2_method,
+		fast_lzma2_method,
 		/*uint11_method,*/
 		uint_method,
 		uint_submin_method,
@@ -109,6 +110,7 @@ int main(void)
 		zlib_method,
 		zstd_method,
 		bzip2_method,
+		fast_lzma2_method,
 		/*uint11_method,*/
 		uint_method,
 		uint_submin_method,

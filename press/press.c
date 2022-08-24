@@ -13,6 +13,7 @@
 #include "streamvbyte/include/streamvbyte_zigzag.h"
 #include "streamvbyte/include/streamvbytedelta.h"
 #include "bzip2/bzlib.h"
+#include "fast-lzma2/fast-lzma2.h"
 
 #define MAX_NBITS_PER_SIG (12)
 
@@ -934,6 +935,42 @@ uint32_t zstd_depress(const uint8_t *in, uint32_t nin_elems,
 		fprintf(stderr, "error: zstd decompress\n");
 
 	return nout / sizeof *out;
+}
+
+/* fast lzma2 */
+
+uint32_t fast_lzma2_bound(const int16_t *in, uint32_t nin)
+{
+	return FL2_compressBound(nin * sizeof *in);
+}
+
+uint32_t fast_lzma2_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			  uint32_t nout_bytes)
+{
+	size_t nout;
+
+	nout = FL2_compressMt(out, nout_bytes, in, nin * sizeof *in,
+			      PRESS_LVL_FAST_LZMA2, PRESS_NTHREADS_FAST_LZMA2);
+
+	if (FL2_isError(nout))
+		fprintf(stderr, "error: fast-lzma2 compress\n");
+
+	return nout;
+}
+
+uint32_t fast_lzma2_depress(const uint8_t *in, uint32_t nin_elems,
+			    uint32_t nin_bytes, int16_t *out,
+			    uint32_t nout_bytes)
+{
+	size_t nout;
+
+	nout = FL2_decompressMt(out, nout_bytes, in, nin_bytes,
+				PRESS_NTHREADS_FAST_LZMA2);
+
+	if (FL2_isError(nout))
+		fprintf(stderr, "error: fast-lzma2 decompress\n");
+
+	return nin_elems;
 }
 
 /* svb */
