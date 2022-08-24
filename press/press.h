@@ -247,6 +247,20 @@ uint32_t zlib_depress(const uint8_t *in, uint32_t nin_elems,
 
 DEFINE_PRESS_METHOD(zlib, "zlib");
 
+/* bzip2 */
+#define PRESS_LVL_BZIP2 (9)
+#define PRESS_VERBOSE_BZIP2 (0)
+#define PRESS_WORKFACTOR_BZIP2 (30)
+#define PRESS_SMALL_BZIP2 (0)
+uint32_t bzip2_bound(const int16_t *in, uint32_t nin);
+uint32_t bzip2_press(const int16_t *in, uint32_t nin, uint8_t *out,
+		     uint32_t nout_bytes);
+uint32_t bzip2_depress(const uint8_t *in, uint32_t nin_elems,
+		       uint32_t nin_bytes, int16_t *out,
+		       uint32_t nout_bytes);
+
+DEFINE_PRESS_METHOD(bzip2, "bzip2");
+
 /* zstd */
 #define PRESS_LVL_ZSTD (1)
 uint32_t zstd_bound(const int16_t *in, uint32_t nin);

@@ -12,6 +12,7 @@
 #include "streamvbyte/include/streamvbyte.h"
 #include "streamvbyte/include/streamvbyte_zigzag.h"
 #include "streamvbyte/include/streamvbytedelta.h"
+#include "bzip2/bzlib.h"
 
 #define MAX_NBITS_PER_SIG (12)
 
@@ -810,6 +811,86 @@ uint32_t zlib_depress(const uint8_t *in, uint32_t nin_elems,
 			break;
 		case Z_DATA_ERROR:
 			fprintf(stderr, "error: zlib uncompress input corrupted\n");
+			break;
+	}
+
+	return nout / sizeof *out;
+}
+
+/* bzip2 */
+
+uint32_t bzip2_bound(const int16_t *in, uint32_t nin)
+{
+	/* To guarantee that the compressed data will fit in its buffer,
+	 * allocate an output buffer of size 1% larger than the uncompressed
+	 * data, plus six hundred extra bytes.
+	 */
+	return 1.01 * (nin * sizeof *in) + 600;
+}
+
+uint32_t bzip2_press(const int16_t *in, uint32_t nin, uint8_t *out,
+		     uint32_t nout_bytes)
+{
+	unsigned int nout;
+	int ret;
+
+	nout = nout_bytes;
+	ret = BZ2_bzBuffToBuffCompress((char *) out, &nout, (char *) in,
+				       nin * sizeof *in, PRESS_LVL_BZIP2,
+				       PRESS_VERBOSE_BZIP2,
+				       PRESS_WORKFACTOR_BZIP2);
+
+	switch (ret) {
+		case BZ_CONFIG_ERROR:
+			fprintf(stderr, "error: bzip2 library mis-compiled\n");
+			break;
+		case BZ_PARAM_ERROR:
+			fprintf(stderr, "error: bzip2 compress parameter wrong\n");
+			break;
+		case BZ_MEM_ERROR:
+			fprintf(stderr, "error: bzip2 compress insufficient memory\n");
+			break;
+		case BZ_OUTBUFF_FULL:
+			fprintf(stderr, "error: bzip2 compress not enough room in out\n");
+			break;
+	}
+
+	return nout;
+}
+
+uint32_t bzip2_depress(const uint8_t *in, uint32_t nin_elems,
+		       uint32_t nin_bytes, int16_t *out,
+		       uint32_t nout_bytes)
+{
+	unsigned int nout;
+	int ret;
+
+	nout = nout_bytes;
+	ret = BZ2_bzBuffToBuffDecompress((char *) out, &nout, (char *) in,
+					 nin_bytes, PRESS_SMALL_BZIP2,
+					 PRESS_VERBOSE_BZIP2);
+
+	switch (ret) {
+		case BZ_CONFIG_ERROR:
+			fprintf(stderr, "error: bzip2 library mis-compiled\n");
+			break;
+		case BZ_PARAM_ERROR:
+			fprintf(stderr, "error: bzip2 decompress parameter wrong\n");
+			break;
+		case BZ_MEM_ERROR:
+			fprintf(stderr, "error: bzip2 decompress insufficient memory\n");
+			break;
+		case BZ_OUTBUFF_FULL:
+			fprintf(stderr, "error: bzip2 decompress not enough room in out\n");
+			break;
+		case BZ_DATA_ERROR:
+			fprintf(stderr, "error: bzip2 decompress data integrity error\n");
+			break;
+		case BZ_DATA_ERROR_MAGIC:
+			fprintf(stderr, "error: bzip2 decompress magic number wrong\n");
+			break;
+		case BZ_UNEXPECTED_EOF:
+			fprintf(stderr, "error: bzip2 decompress data ends unexpectedly\n");
 			break;
 	}
 

@@ -4,14 +4,19 @@ LDFLAGS = -lm -lz -lzstd
 OBJ = test.o press.o trans.o flat.o bitmap.o stats.o util.o
 SVB = streamvbyte
 SVBLIB = $(SVB)/libstreamvbyte.so.0.0.1
+BZIP2 = bzip2
+BZIP2LIB = $(BZIP2)/libbz2.a
 
 .PHONY = clean
 
-test: $(OBJ) $(SVBLIB)
+test: $(OBJ) $(SVBLIB) $(BZIP2LIB)
 	$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
 
 $(SVBLIB):
 	make -C $(SVB)
+
+$(BZIP2LIB):
+	make -C $(BZIP2)
 
 test.o: test.c test.h press.h bitmap.h
 	$(CC) $< $(CFLAGS) -c -o $@

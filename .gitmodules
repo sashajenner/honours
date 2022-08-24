@@ -1,0 +1,3 @@
+[submodule "press/bzip2"]
+	path = press/bzip2
+	url = git://sourceware.org/git/bzip2.git

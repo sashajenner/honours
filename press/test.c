@@ -78,6 +78,7 @@ int main(void)
 		none_method,
 		zlib_method,
 		zstd_method,
+		bzip2_method,
 		/*uint11_method,*/
 		uint_method,
 		uint_submin_method,
@@ -107,6 +108,7 @@ int main(void)
 		none_method,
 		zlib_method,
 		zstd_method,
+		bzip2_method,
 		/*uint11_method,*/
 		uint_method,
 		uint_submin_method,
