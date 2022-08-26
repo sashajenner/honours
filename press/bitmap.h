@@ -10,7 +10,7 @@
 #define DIV_ROUND_UP(n, d)	((n - 1) / d + 1)
 #define BITS_PER_BYTE		(8)
 #define BITS_TO_BYTES(n)	DIV_ROUND_UP(n, BITS_PER_BYTE)
-#define BYTES_TO_BITS(n)	(n * BITS_PER_BYTE)
+#define BYTES_TO_BITS(n)	((n) * BITS_PER_BYTE)
 #define SIZEOF_BITMAP(n)	BITS_TO_BYTES(n)
 
 #define BIT_MASK(n)		((uint8_t)(1) << ((n) % BITS_PER_BYTE))

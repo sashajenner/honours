@@ -7,22 +7,22 @@
 #include <inttypes.h> /* TODO remove */
 
 int test(const int16_t *sigs,
-	 const uint32_t nr_sigs,
-	 struct press_method method)
+	 const uint32_t nr_sigs)
 {
 	uint32_t i;
 	uint32_t nr_sigs_bytes;
 	uint32_t press_bound;
-	uint32_t press_len;
-	uint32_t depress_len;
+	uint64_t press_len;
+	uint64_t depress_len;
 	uint8_t *sigs_press;
 	int16_t *sigs_depress;
+	int ret;
 
 	nr_sigs_bytes = sizeof *sigs * nr_sigs;
 
 	/* bound sigs_press */
-	press_bound = method.bound(sigs, nr_sigs);
-	/*printf("press bound:\t%" PRIu32 "\n", press_bound);*/
+	press_bound = uintx_bound_16(11, nr_sigs_bytes);
+	printf("press bound:\t%" PRIu32 "\n", press_bound);
 	/*ASSERT(press_bound <= nr_sigs_bytes);*/
 
 	/* init sigs_press */
@@ -30,8 +30,12 @@ int test(const int16_t *sigs,
 	ASSERT(sigs_press);
 
 	/* compress sigs */
-	press_len = method.press(sigs, nr_sigs, sigs_press, press_bound);
-	/*printf("press len:\t%" PRIu32 "\n", press_len);*/
+	press_len = press_bound;
+	ret = uintx_press_16(11, (const uint8_t *) sigs, nr_sigs_bytes,
+			     sigs_press, &press_len);
+	ASSERT(ret == 0);
+
+	printf("press len:\t%" PRIu64 "\n", press_len);
 	ASSERT(press_len <= press_bound);
 	printf("press ratio:\t%f\n", (float) nr_sigs_bytes / press_len);
 
@@ -40,16 +44,16 @@ int test(const int16_t *sigs,
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
-	depress_len = method.depress(sigs_press, nr_sigs, press_len,
-				     sigs_depress, nr_sigs_bytes);
-	/*
-	fprintf(stderr, "depress_len:\t%" PRIu32 "\n", depress_len);
-	fprintf(stderr, "nr_sigs:\t%" PRIu32 "\n", nr_sigs);
-	*/
-	ASSERT(depress_len == nr_sigs);
+	depress_len = nr_sigs_bytes;
+	ret = uintx_depress_16(11, sigs_press, press_len, (uint8_t *)
+			       sigs_depress, &depress_len);
+	ASSERT(ret == 0);
+	fprintf(stderr, "depress len:\t%" PRIu64 "\n", depress_len);
+	fprintf(stderr, "nr sigs:\t%" PRIu32 "\n", nr_sigs);
+	ASSERT(depress_len / sizeof *sigs == nr_sigs);
 
 	/* ensure decompressed == original */
-	for (i = 0; i < depress_len; i++) {
+	for (i = 0; i < depress_len / sizeof *sigs; i++) {
 		/*
 		if (sigs_depress[i] != sigs[i]) {
 			char *buf;
@@ -74,76 +78,5 @@ int test(const int16_t *sigs,
 
 int main(void)
 {
-	const struct press_method ALL_METHODS[] = {
-		none_method,
-		zlib_method,
-		zstd_method,
-		bzip2_method,
-		fast_lzma2_method,
-		/*uint11_method,*/
-		uint_method,
-		uint_submin_method,
-		zlib_uint_submin_method,
-		zstd_uint_submin_method,
-		uint_zd_method,
-		zlib_uint_zd_method,
-		zstd_uint_zd_method,
-		uint_zsubmean_method,
-		zlib_uint_zsubmean_method,
-		flat_uint_submin_method,
-		svb_method,
-		svb_zd_method,
-		zlib_svb_zd_method,
-		zstd_svb_zd_method,
-		svb0124_method,
-		svb0124_zd_method,
-		zlib_svb0124_zd_method,
-		zstd_svb0124_zd_method,
-		svb12_method,
-		svb12_zd_method,
-		zlib_svb12_zd_method,
-		zstd_svb12_zd_method,
-	};
-
-	const struct press_method NO_FLAT_METHODS[] = {
-		none_method,
-		zlib_method,
-		zstd_method,
-		bzip2_method,
-		fast_lzma2_method,
-		/*uint11_method,*/
-		uint_method,
-		uint_submin_method,
-		zlib_uint_submin_method,
-		zstd_uint_submin_method,
-		uint_zd_method,
-		zlib_uint_zd_method,
-		zstd_uint_zd_method,
-		uint_zsubmean_method,
-		zlib_uint_zsubmean_method,
-		/*flat_uint_submin_method,*/
-		svb_method,
-		svb_zd_method,
-		zlib_svb_zd_method,
-		zstd_svb_zd_method,
-		svb0124_method,
-		svb0124_zd_method,
-		zlib_svb0124_zd_method,
-		zstd_svb0124_zd_method,
-		svb12_method,
-		svb12_zd_method,
-		zlib_svb12_zd_method,
-		zstd_svb12_zd_method,
-	};
-
-	TEST_ALL(ONE);
-	TEST_ALL(SAME);
-	TEST_ALL(ZERO);
-
-	TEST_ALL(P11_SHORT);
-	TEST_FOR(P11_MEDIUM, NO_FLAT_METHODS);
-	TEST_FOR(P11_LONG, NO_FLAT_METHODS);
-	TEST_FOR(P11, NO_FLAT_METHODS);
-
-	return 0;
+	return test(P11, LENGTH(P11));
 }

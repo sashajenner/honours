@@ -45,19 +45,13 @@ int none_depress(const uint8_t *in, uint64_t nin, uint8_t *out, uint64_t *nout)
 	return none_press(in, nin, out, nout);
 }
 
-/* convert from in_bits per element to out_bits */
+/* convert from 16 bits per element to out_bits */
 
-uint64_t uintx_bound(uint8_t in_bits, uint8_t out_bits, uint64_t nin);
-
-int uintx_press(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
-		uint64_t nin, uint8_t *out, uint64_t *nout);
-
-static inline
-int uintx_depress(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
-		  uint64_t nin, uint8_t *out, uint64_t *nout)
-{
-	return uintx_press(in_bits, out_bits, in, nin, out, nout);
-}
+uint64_t uintx_bound_16(uint8_t out_bits, uint64_t nin);
+int uintx_press_16(uint8_t out_bits, const uint8_t *in, uint64_t nin,
+		   uint8_t *out, uint64_t *nout);
+int uintx_depress_16(uint8_t out_bits, const uint8_t *in, uint64_t nin,
+		     uint8_t *out, uint64_t *nout);
 
 /*
 static inline uint32_t uint11_bound(const int16_t *in, uint32_t nin)

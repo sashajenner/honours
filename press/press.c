@@ -3,6 +3,7 @@
 #include <inttypes.h> /* TODO testing */
 #include <zlib.h>
 #include <zstd.h>
+#include <endian.h>
 #include "press.h"
 #include "bitmap.h"
 #include "stats.h"
@@ -17,12 +18,38 @@
 
 #define MAX_NBITS_PER_SIG (12)
 
-uint32_t uint_upper_bound(uint32_t nin);
-uint32_t uint0_depress(uint32_t nin_elems, int16_t *out);
-uint32_t zlib_press_uint8(const uint8_t *in, uint32_t nin, uint8_t *out,
-			  uint32_t nout_bytes);
-uint32_t zstd_press_uint8(const uint8_t *in, uint32_t nin, uint8_t *out,
-			  uint32_t nout_bytes);
+uint64_t uintx_bound(uint8_t in_bits, uint8_t out_bits, uint64_t nin);
+void uintx_htobe(uint8_t in_bits, const uint8_t *h, uint8_t *be, uint64_t n);
+void uintx_betoh(uint8_t out_bits, const uint8_t *be, uint8_t *h, uint64_t n);
+void uintx_update(uint8_t in_bits, uint8_t out_bits, uint64_t *in_i,
+		  uint64_t *out_i, uint8_t *in_bits_free,
+		  uint8_t *out_bits_free, uint8_t *bits_left);
+int uintx_press_core(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
+		     uint64_t nin, uint8_t *out, uint64_t *nout);
+/* in_bits must be a multiple of BITS_PER_BYTE */
+int uintx_press(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
+		uint64_t nin, uint8_t *out, uint64_t *nout);
+/* out_bits must be multiple of BITS_PER_BYTE */
+int uintx_depress(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
+		  uint64_t nin, uint8_t *out, uint64_t *nout);
+
+#define DEFINE_UINTX(bits) \
+uint64_t uintx_bound_##bits(uint8_t out_bits, uint64_t nin) \
+{ \
+	return uintx_bound(bits, out_bits, nin); \
+} \
+int uintx_press_##bits(uint8_t out_bits, const uint8_t *in, uint64_t nin, \
+		       uint8_t *out, uint64_t *nout) \
+{ \
+	return uintx_press(bits, out_bits, in, nin, out, nout); \
+} \
+int uintx_depress_##bits(uint8_t in_bits, const uint8_t *in, uint64_t nin, \
+			 uint8_t *out, uint64_t *nout) \
+{ \
+	return uintx_depress(in_bits, bits, in, nin, out, nout); \
+} \
+
+DEFINE_UINTX(16);
 
 /* none */
 
@@ -47,9 +74,53 @@ uint64_t uintx_bound(uint8_t in_bits, uint8_t out_bits, uint64_t nin)
 	return BITS_TO_BYTES(nin_elems * out_bits);
 }
 
-void uintx_press_update(uint8_t in_bits, uint8_t out_bits, uint64_t *in_i,
-			uint64_t *out_i, uint8_t *in_bits_free,
-			uint8_t *out_bits_free, uint8_t *bits_left)
+/* copy h from host endian into be as big endian */
+void uintx_htobe(uint8_t in_bits, const uint8_t *h, uint8_t *be, uint64_t n)
+{
+	uint64_t i;
+
+	if (in_bits <= BYTES_TO_BITS(sizeof (uint8_t))) {
+		return;
+	} else if (in_bits <= BYTES_TO_BITS(sizeof (uint16_t))) {
+		for (i = 0; i < n / sizeof (uint16_t); i++) {
+			((uint16_t *) be)[i] = htobe16(((uint16_t *) h)[i]);
+		}
+	} else if (in_bits <= BYTES_TO_BITS(sizeof (uint32_t))) {
+		for (i = 0; i < n / sizeof (uint32_t); i++) {
+			((uint32_t *) be)[i] = htobe32(((uint32_t *) h)[i]);
+		}
+	} else if (in_bits <= BYTES_TO_BITS(sizeof (uint64_t))) {
+		for (i = 0; i < n / sizeof (uint64_t); i++) {
+			((uint64_t *) be)[i] = htobe64(((uint64_t *) h)[i]);
+		}
+	}
+}
+
+/* copy be from big endian into h as host endian */
+void uintx_betoh(uint8_t out_bits, const uint8_t *be, uint8_t *h, uint64_t n)
+{
+	uint64_t i;
+
+	if (out_bits <= BYTES_TO_BITS(sizeof (uint8_t))) {
+		return;
+	} else if (out_bits <= BYTES_TO_BITS(sizeof (uint16_t))) {
+		for (i = 0; i < n / sizeof (uint16_t); i++) {
+			((uint16_t *) h)[i] = be16toh(((uint16_t *) be)[i]);
+		}
+	} else if (out_bits <= BYTES_TO_BITS(sizeof (uint32_t))) {
+		for (i = 0; i < n / sizeof (uint32_t); i++) {
+			((uint32_t *) h)[i] = be32toh(((uint32_t *) be)[i]);
+		}
+	} else if (out_bits <= BYTES_TO_BITS(sizeof (uint64_t))) {
+		for (i = 0; i < n / sizeof (uint64_t); i++) {
+			((uint64_t *) h)[i] = be64toh(((uint64_t *) be)[i]);
+		}
+	}
+}
+
+void uintx_update(uint8_t in_bits, uint8_t out_bits, uint64_t *in_i,
+		  uint64_t *out_i, uint8_t *in_bits_free,
+		  uint8_t *out_bits_free, uint8_t *bits_left)
 {
 	int8_t gap;
 
@@ -75,23 +146,21 @@ void uintx_press_update(uint8_t in_bits, uint8_t out_bits, uint64_t *in_i,
 	}
 }
 
-int uintx_press(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
-		uint64_t nin, uint8_t *out, uint64_t *nout)
+/* if in_bits > out_bits: in must be in big endian format */
+int uintx_press_core(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
+		     uint64_t nin, uint8_t *out, uint64_t *nout)
 {
 	/*
 	 * in_bits = 16
 	 * out_bits = 11
 	 * gap = 5
 	 * in_free_bits = 8
-	 *
 	 * in = [00000{010, 10001011}, ...]
 	 * out = [{01010001, 011}..., ...]
+	 *
 	 * press operations on P11:
 	 * out[0] = in[0] << 5 | in[1] >> 3;
 	 * out[1] = in[1] << 5 | in[2] >> 3;
-	 *
-	 * in = [10001011}, 00000{010, ...]
-	 * out = [10001011}, {010..., ...]
 	 * ...
 	 *
 	 * in_bits = 14
@@ -115,11 +184,11 @@ int uintx_press(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 	 * ...
 	 */
 
+	int8_t gap;
 	uint64_t in_i;
 	uint64_t out_i;
 	uint8_t bits_left;
 	uint8_t cur_out;
-	int8_t gap;
 	uint8_t in_bits_free;
 	uint8_t mask;
 	uint8_t out_bits_free;
@@ -133,9 +202,9 @@ int uintx_press(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 
 	while (in_i < nin) {
 		if (!bits_left)
-			uintx_press_update(in_bits, out_bits, &in_i, &out_i,
-					   &in_bits_free, &out_bits_free,
-					   &bits_left);
+			uintx_update(in_bits, out_bits, &in_i, &out_i,
+				     &in_bits_free, &out_bits_free,
+				     &bits_left);
 
 		mask = 0xFF >> (BITS_PER_BYTE - in_bits_free);
 		gap = in_bits_free - out_bits_free;
@@ -172,4 +241,40 @@ int uintx_press(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 	*nout = out_i;
 
 	return 0;
+}
+
+int uintx_press(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
+		uint64_t nin, uint8_t *out, uint64_t *nout)
+{
+	int ret;
+	uint8_t *in_be;
+
+	in_be = malloc(nin);
+	if (!in_be)
+		return -1;
+	uintx_htobe(in_bits, in, in_be, nin);
+
+	ret = uintx_press_core(in_bits, out_bits, in_be, nin, out, nout);
+	free(in_be);
+
+	return ret;
+}
+
+int uintx_depress(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
+		  uint64_t nin, uint8_t *out, uint64_t *nout)
+{
+	int ret;
+	uint8_t *out_be;
+
+	out_be = malloc(*nout);
+	if (!out_be)
+		return -1;
+
+	ret = uintx_press_core(in_bits, out_bits, in, nin, out_be, nout);
+
+	if (ret == 0)
+		uintx_betoh(out_bits, out_be, out, *nout);
+
+	free(out_be);
+	return ret;
 }
