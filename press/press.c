@@ -209,6 +209,10 @@ int uintx_press_core(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 	uint8_t mask;
 	uint8_t out_bits_free;
 
+	/* when decompressing some of out may be skipped */
+	if (in_bits < out_bits)
+		(void) memset(out, 0, *nout);
+
 	bits_left = 0;
 	cur_out = 0;
 	dirty = 0;
@@ -400,4 +404,196 @@ int uint_depress_16(const uint8_t *in, uint64_t nin, uint16_t *out,
 
 	*nout = nout_uintx / sizeof *out;
 	return ret;
+}
+
+/* uint submin */
+
+uint8_t uint_submin_get_minbits_16(const uint16_t *in, uint64_t nin,
+				   uint16_t *min)
+{
+	uint16_t max;
+
+	get_minmax_u16(in, nin, min, &max);
+	return uint_get_minbits(max - *min);
+}
+
+uint64_t uint_submin_bound_16(uint8_t out_bits, uint64_t nin)
+{
+	return sizeof (uint16_t) + uint_bound_16(out_bits, nin);
+}
+
+int uint_submin_press_16(uint8_t out_bits, uint16_t min, const uint16_t *in,
+			 uint64_t nin, uint8_t *out, uint64_t *nout)
+{
+	int ret;
+	uint16_t *in_submin;
+	uint64_t nout_tmp;
+
+	in_submin = u16_shift_x_u16(-1 * min, in, nin);
+
+	(void) memcpy(out, &min, sizeof min);
+
+	nout_tmp = *nout - sizeof min;
+	ret = uint_press_16(out_bits, in_submin, nin, out + sizeof min, &nout_tmp);
+	free(in_submin);
+
+	*nout = nout_tmp + sizeof min;
+	return ret;
+}
+
+int uint_submin_depress_16(const uint8_t *in, uint64_t nin, uint16_t *out,
+			   uint64_t *nout)
+{
+	int ret;
+	uint16_t min;
+
+	(void) memcpy(&min, in, sizeof min);
+	ret = uint_depress_16(in + sizeof min, nin, out, nout);
+
+	shift_x_inplace_u16(min, out, *nout);
+
+	return ret;
+}
+
+/* zlib */
+
+uint64_t zlib_bound(uint64_t nin)
+{
+	return compressBound(nin);
+}
+
+int zlib_press(const uint8_t *in, uint64_t nin, uint8_t *out, uint64_t *nout)
+{
+	int ret;
+
+	ret = compress2(out, nout, in, nin, PRESS_LVL_ZLIB);
+	if (ret != Z_OK)
+		return -1;
+
+	return 0;
+}
+
+int zlib_depress(const uint8_t *in, uint64_t nin, uint8_t *out, uint64_t *nout)
+{
+	int ret;
+
+	ret = uncompress(out, nout, in, nin);
+	if (ret != Z_OK)
+		return -1;
+
+	return 0;
+}
+
+/* bzip2 */
+
+uint64_t bzip2_bound(uint64_t nin)
+{
+	/* To guarantee that the compressed data will fit in its buffer,
+	 * allocate an output buffer of size 1% larger than the uncompressed
+	 * data, plus six hundred extra bytes.
+	 */
+	return 1.01 * nin + 600;
+}
+
+int bzip2_press(const uint8_t *in, uint64_t nin, uint8_t *out, uint64_t *nout)
+{
+	int ret;
+
+	ret = BZ2_bzBuffToBuffCompress((char *) out, (unsigned int *) nout,
+				       (char *) in, (unsigned int) nin,
+				       PRESS_LVL_BZIP2, PRESS_VERBOSE_BZIP2,
+				       PRESS_WORKFACTOR_BZIP2);
+	if (ret != BZ_OK)
+		return -1;
+
+	return 0;
+}
+
+int bzip2_depress(const uint8_t *in, uint64_t nin, uint8_t *out,
+		  uint64_t *nout)
+{
+	int ret;
+
+	ret = BZ2_bzBuffToBuffDecompress((char *) out, (unsigned int *) nout,
+					 (char *) in, (unsigned int) nin,
+					 PRESS_SMALL_BZIP2,
+					 PRESS_VERBOSE_BZIP2);
+	if (ret != BZ_OK)
+		return -1;
+
+	return 0;
+}
+
+/* zstd */
+
+uint64_t zstd_bound(uint64_t nin)
+{
+	return ZSTD_compressBound(nin);
+}
+
+int zstd_press(const uint8_t *in, uint64_t nin, uint8_t *out, uint64_t *nout)
+{
+	*nout = ZSTD_compress(out, *nout, in, nin, PRESS_LVL_ZSTD);
+	if (ZSTD_isError(*nout))
+		return -1;
+
+	return 0;
+}
+
+int zstd_depress(const uint8_t *in, uint64_t nin, uint8_t *out,
+		 uint64_t *nout)
+{
+	*nout = ZSTD_decompress(out, *nout, in, nin);
+	if (ZSTD_isError(*nout))
+		return -1;
+
+	return 0;
+}
+
+/* fast lzma2 */
+
+uint64_t fast_lzma2_bound(uint64_t nin)
+{
+	return FL2_compressBound(nin);
+}
+
+int fast_lzma2_press(const uint8_t *in, uint64_t nin, uint8_t *out,
+		     uint64_t *nout)
+{
+	*nout = FL2_compressMt(out, *nout, in, nin, PRESS_LVL_FAST_LZMA2,
+			       PRESS_NTHREADS_FAST_LZMA2);
+
+	if (FL2_isError(*nout))
+		return -1;
+
+	return 0;
+}
+
+int fast_lzma2_depress(const uint8_t *in, uint64_t nin, uint8_t *out,
+		       uint64_t *nout)
+{
+	*nout = FL2_decompressMt(out, *nout, in, nin,
+				 PRESS_NTHREADS_FAST_LZMA2);
+
+	if (FL2_isError(*nout))
+		return -1;
+
+	return 0;
+}
+
+/* classical svb 1,2,3,4 bytes */
+
+uint64_t svb_bound(uint64_t nin)
+{
+	return streamvbyte_max_compressedbytes(nin);
+}
+
+void svb_press(const uint32_t *in, uint64_t nin, uint8_t *out, uint64_t *nout)
+{
+	*nout = streamvbyte_encode(in, nin, out);
+}
+
+void svb_depress(const uint8_t *in, uint64_t nin, uint32_t *out)
+{
+	(void) streamvbyte_decode(in, out, nin);
 }

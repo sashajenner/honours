@@ -91,40 +91,41 @@ uint32_t uint_outliers_depress(const uint8_t *in, uint32_t nin_elems,
  * subtract min from all sigs
  * compressed: [min, x, sigs - min as uintx_t]
  */
-uint32_t uint_submin_bound(const int16_t *in, uint32_t nin);
-uint32_t uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out,
-			   uint32_t nout_bytes);
-uint32_t uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
-			     uint32_t nin_bytes, int16_t *out,
-			     uint32_t nout_bytes);
+uint8_t uint_submin_get_minbits_16(const uint16_t *in, uint64_t nin,
+				   uint16_t *min);
+uint64_t uint_submin_bound_16(uint8_t out_bits, uint64_t nin);
+int uint_submin_press_16(uint8_t out_bits, uint16_t min, const uint16_t *in,
+			 uint64_t nin, uint8_t *out, uint64_t *nout);
+int uint_submin_depress_16(const uint8_t *in, uint64_t nin, uint16_t *out,
+			   uint64_t *nout);
 
 /*
  * subtract min from all sigs
  * compressed: [min, x, sigs - min as uintx_t]
  * zlib compress the result
  */
+/*
 uint32_t zlib_uint_submin_bound(const int16_t *in, uint32_t nin);
 uint32_t zlib_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out,
 				uint32_t nout_bytes);
 uint32_t zlib_uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
 				  uint32_t nin_bytes, int16_t *out,
 				  uint32_t nout_bytes);
-
-/*//DEFINE_PRESS_METHOD(zlib_uint_submin, "subtract min | uintx | zlib");*/
+				  */
 
 /*
  * subtract min from all sigs
  * compressed: [min, x, sigs - min as uintx_t]
  * zstd compress the result
  */
+/*
 uint32_t zstd_uint_submin_bound(const int16_t *in, uint32_t nin);
 uint32_t zstd_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out,
 				uint32_t nout_bytes);
 uint32_t zstd_uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
 				  uint32_t nin_bytes, int16_t *out,
 				  uint32_t nout_bytes);
-
-/*//DEFINE_PRESS_METHOD(zstd_uint_submin, "subtract min | uintx | zstd");*/
+				  */
 
 /*
  * zigzag delta: take successive differences and map to unsigned integers
@@ -137,35 +138,34 @@ uint32_t uint_zd_depress(const uint8_t *in, uint32_t nin_elems,
 			 uint32_t nin_bytes, int16_t *out,
 			 uint32_t nout_bytes);
 
-/*//DEFINE_PRESS_METHOD(uint_zd, "delta | zigzag | uintx");*/
-
 /*
  * zigzag delta: take successive differences and map to unsigned integers
  * compressed: [start, x, sigs zigzag delta as uintx_t]
  * zlib compress the result
  */
+/*
 uint32_t zlib_uint_zd_bound(const int16_t *in, uint32_t nin);
 uint32_t zlib_uint_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 			    uint32_t nout_bytes);
 uint32_t zlib_uint_zd_depress(const uint8_t *in, uint32_t nin_elems,
 			      uint32_t nin_bytes, int16_t *out,
 			      uint32_t nout_bytes);
+			      */
 
-/*//DEFINE_PRESS_METHOD(zlib_uint_zd, "delta | zigzag | uintx | zlib");*/
 
 /*
  * zigzag delta: take successive differences and map to unsigned integers
  * compressed: [start, x, sigs zigzag delta as uintx_t]
  * zstd compress the result
  */
+/*
 uint32_t zstd_uint_zd_bound(const int16_t *in, uint32_t nin);
 uint32_t zstd_uint_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 			    uint32_t nout_bytes);
 uint32_t zstd_uint_zd_depress(const uint8_t *in, uint32_t nin_elems,
 			      uint32_t nin_bytes, int16_t *out,
 			      uint32_t nout_bytes);
-
-/*//DEFINE_PRESS_METHOD(zstd_uint_zd, "delta | zigzag | uintx | zstd");*/
+			      */
 
 /*
  * zigzag subtract mean: subtract mean from all sigs and map to unsigned integers
@@ -185,32 +185,34 @@ uint32_t uint_zsubmean_depress(const uint8_t *in, uint32_t nin_elems,
  * compressed: [mean, x, zigzag(sigs - mean) as uintx_t]
  * zlib compress the result
  */
+/*
 uint32_t zlib_uint_zsubmean_bound(const int16_t *in, uint32_t nin);
 uint32_t zlib_uint_zsubmean_press(const int16_t *in, uint32_t nin,
 				  uint8_t *out, uint32_t nout_bytes);
 uint32_t zlib_uint_zsubmean_depress(const uint8_t *in, uint32_t nin_elems,
 				    uint32_t nin_bytes, int16_t *out,
 				    uint32_t nout_bytes);
-
-/*//DEFINE_PRESS_METHOD(zlib_uint_zsubmean, "subtract mean | zigzag | uintx | zlib");*/
+				    */
 
 /* num_sigs + min/start + x */
+/*
 #define NBYTES_FLAT_UINT_HDR (sizeof (uint32_t) + sizeof (int16_t) + \
 			      sizeof (uint8_t))
 #define NBITS_FLAT_UINT_HDR BYTES_TO_BITS(NBYTES_FLAT_UINT_HDR)
+*/
 
 /*
  * separate into flat regions, compress using uint_submin
  * compressed: [[num_sigs, min, x, sigs - min as uintx_t]...]
  */
+/*
 uint32_t flat_uint_submin_bound(const int16_t *in, uint32_t nin);
 uint32_t flat_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out,
 				uint32_t nout_bytes);
 uint32_t flat_uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
 				  uint32_t nin_bytes, int16_t *out,
 				  uint32_t nout_bytes);
-
-/*//DEFINE_PRESS_METHOD(flat_uint_submin, "subtract min | uintx | flats");*/
+				  */
 
 /*
  * TODO
@@ -227,59 +229,49 @@ uint32_t flat_uint_zd_depress(const uint8_t *in, uint32_t nin_elems,
 */
 
 /* zlib */
-#define PRESS_LVL_ZLIB (Z_DEFAULT_COMPRESSION)
-uint32_t zlib_bound(const int16_t *in, uint32_t nin);
-uint32_t zlib_press(const int16_t *in, uint32_t nin, uint8_t *out,
-		    uint32_t nout_bytes);
-uint32_t zlib_depress(const uint8_t *in, uint32_t nin_elems,
-		      uint32_t nin_bytes, int16_t *out, uint32_t nout_bytes);
 
-//DEFINE_PRESS_METHOD(zlib, "zlib");
+#define PRESS_LVL_ZLIB (Z_DEFAULT_COMPRESSION)
+uint64_t zlib_bound(uint64_t nin);
+int zlib_press(const uint8_t *in, uint64_t nin, uint8_t *out, uint64_t *nout);
+int zlib_depress(const uint8_t *in, uint64_t nin, uint8_t *out,
+		 uint64_t *nout);
 
 /* bzip2 */
+
 #define PRESS_LVL_BZIP2 (9)
 #define PRESS_VERBOSE_BZIP2 (0)
 #define PRESS_WORKFACTOR_BZIP2 (30)
 #define PRESS_SMALL_BZIP2 (0)
-uint32_t bzip2_bound(const int16_t *in, uint32_t nin);
-uint32_t bzip2_press(const int16_t *in, uint32_t nin, uint8_t *out,
-		     uint32_t nout_bytes);
-uint32_t bzip2_depress(const uint8_t *in, uint32_t nin_elems,
-		       uint32_t nin_bytes, int16_t *out,
-		       uint32_t nout_bytes);
-
-//DEFINE_PRESS_METHOD(bzip2, "bzip2");
+uint64_t bzip2_bound(uint64_t nin);
+int bzip2_press(const uint8_t *in, uint64_t nin, uint8_t *out, uint64_t *nout);
+int bzip2_depress(const uint8_t *in, uint64_t nin, uint8_t *out,
+		  uint64_t *nout);
 
 /* zstd */
-#define PRESS_LVL_ZSTD (1)
-uint32_t zstd_bound(const int16_t *in, uint32_t nin);
-uint32_t zstd_press(const int16_t *in, uint32_t nin, uint8_t *out,
-		    uint32_t nout_bytes);
-uint32_t zstd_depress(const uint8_t *in, uint32_t nin_elems,
-		      uint32_t nin_bytes, int16_t *out, uint32_t nout_bytes);
 
-//DEFINE_PRESS_METHOD(zstd, "zstd");
+#define PRESS_LVL_ZSTD (1)
+uint64_t zstd_bound(uint64_t nin);
+int zstd_press(const uint8_t *in, uint64_t nin, uint8_t *out, uint64_t *nout);
+int zstd_depress(const uint8_t *in, uint64_t nin, uint8_t *out,
+		 uint64_t *nout);
 
 /* fast lzma2 */
+
 #define PRESS_LVL_FAST_LZMA2 (6)
 #define PRESS_NTHREADS_FAST_LZMA2 (0)
-uint32_t fast_lzma2_bound(const int16_t *in, uint32_t nin);
-uint32_t fast_lzma2_press(const int16_t *in, uint32_t nin, uint8_t *out,
-			  uint32_t nout_bytes);
-uint32_t fast_lzma2_depress(const uint8_t *in, uint32_t nin_elems,
-			    uint32_t nin_bytes, int16_t *out,
-			    uint32_t nout_bytes);
-
-//DEFINE_PRESS_METHOD(fast_lzma2, "fast lzma2");
+uint64_t fast_lzma2_bound(uint64_t nin);
+int fast_lzma2_press(const uint8_t *in, uint64_t nin, uint8_t *out,
+		     uint64_t *nout);
+int fast_lzma2_depress(const uint8_t *in, uint64_t nin, uint8_t *out,
+		       uint64_t *nout);
 
 /* classical svb 1,2,3,4 bytes */
-uint32_t svb_bound(const int16_t *in, uint32_t nin);
-uint32_t svb_press(const int16_t *in, uint32_t nin, uint8_t *out,
-		   uint32_t nout_bytes);
-uint32_t svb_depress(const uint8_t *in, uint32_t nin_elems, uint32_t nin_bytes,
-		     int16_t *out, uint32_t nout_bytes);
 
-//DEFINE_PRESS_METHOD(svb, "svb");
+/* nin: number of elements in in */
+uint64_t svb_bound(uint64_t nin);
+void svb_press(const uint32_t *in, uint64_t nin, uint8_t *out, uint64_t *nout);
+/* nin: number of elements in the original in */
+void svb_depress(const uint8_t *in, uint64_t nin, uint32_t *out);
 
 /* svb 0,1,2,4 bytes */
 uint32_t svb0124_bound(const int16_t *in, uint32_t nin);

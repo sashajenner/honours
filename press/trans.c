@@ -2,10 +2,10 @@
 #include <stdint.h>
 #include "trans.h"
 
-int16_t *shift_x(int16_t x, const int16_t *in, uint32_t nin)
+uint16_t *u16_shift_x_u16(uint16_t x, const uint16_t *in, uint64_t nin)
 {
-	int16_t *out;
-	uint32_t i;
+	uint16_t *out;
+	uint64_t i;
 
 	out = malloc(nin * sizeof *out);
 
@@ -16,9 +16,9 @@ int16_t *shift_x(int16_t x, const int16_t *in, uint32_t nin)
 	return out;
 }
 
-void shift_x_inplace(int16_t x, int16_t *in, uint32_t nin)
+void shift_x_inplace_u16(uint16_t x, uint16_t *in, uint64_t nin)
 {
-	uint32_t i;
+	uint64_t i;
 
 	for (i = 0; i < nin; i++) {
 		in[i] += x;
