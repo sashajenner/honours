@@ -4,6 +4,7 @@
 #include <zlib.h>
 #include <zstd.h>
 #include <endian.h>
+#include <math.h>
 #include "press.h"
 #include "bitmap.h"
 #include "stats.h"
@@ -16,22 +17,26 @@
 #include "bzip2/bzlib.h"
 #include "fast-lzma2/fast-lzma2.h"
 
-#define MAX_NBITS_PER_SIG (12)
-
 uint64_t uintx_bound(uint8_t in_bits, uint8_t out_bits, uint64_t nin);
 void uintx_htobe(uint8_t in_bits, const uint8_t *h, uint8_t *be, uint64_t n);
 void uintx_betoh(uint8_t out_bits, const uint8_t *be, uint8_t *h, uint64_t n);
 void uintx_update(uint8_t in_bits, uint8_t out_bits, uint64_t *in_i,
 		  uint64_t *out_i, uint8_t *in_bits_free,
 		  uint8_t *out_bits_free, uint8_t *bits_left);
+/* nin: number of elements in in
+ * nout: number of bytes in out */
 int uintx_press_core(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 		     uint64_t nin, uint8_t *out, uint64_t *nout);
-/* in_bits must be a multiple of BITS_PER_BYTE */
+/* in_bits: must be a multiple of BITS_PER_BYTE
+ * nin: number of in_bits elements in in */
 int uintx_press(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 		uint64_t nin, uint8_t *out, uint64_t *nout);
-/* out_bits must be multiple of BITS_PER_BYTE */
+/* out_bits must be multiple of BITS_PER_BYTE
+ * nin: number of out_bits elements in in */
 int uintx_depress(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 		  uint64_t nin, uint8_t *out, uint64_t *nout);
+
+uint8_t uint_get_minbits(uint64_t max);
 
 #define DEFINE_UINTX(bits) \
 uint64_t uintx_bound_##bits(uint8_t out_bits, uint64_t nin) \
@@ -184,7 +189,9 @@ int uintx_press_core(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 	 * ...
 	 */
 
+	int dirty;
 	int8_t gap;
+	uint64_t i;
 	uint64_t in_i;
 	uint64_t out_i;
 	uint8_t bits_left;
@@ -195,17 +202,17 @@ int uintx_press_core(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 
 	bits_left = 0;
 	cur_out = 0;
+	dirty = 0;
+	i = 0;
 	in_bits_free = BITS_PER_BYTE;
 	in_i = 0;
 	out_bits_free = BITS_PER_BYTE;
 	out_i = 0;
 
-	while (in_i < nin) {
-		if (!bits_left)
-			uintx_update(in_bits, out_bits, &in_i, &out_i,
-				     &in_bits_free, &out_bits_free,
-				     &bits_left);
+	uintx_update(in_bits, out_bits, &in_i, &out_i, &in_bits_free,
+		     &out_bits_free, &bits_left);
 
+	while (i < nin) {
 		mask = 0xFF >> (BITS_PER_BYTE - in_bits_free);
 		gap = in_bits_free - out_bits_free;
 		if (gap > 0) {
@@ -219,6 +226,7 @@ int uintx_press_core(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 			bits_left -= in_bits_free;
 			in_bits_free = 0;
 		}
+		dirty = 1;
 
 		if (!in_bits_free) {
 			in_bits_free = BITS_PER_BYTE;
@@ -231,12 +239,23 @@ int uintx_press_core(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 			out[out_i++] = cur_out;
 			out_bits_free = BITS_PER_BYTE;
 			cur_out = 0;
+			dirty = 0;
+		}
+
+		if (!bits_left) {
+			uintx_update(in_bits, out_bits, &in_i, &out_i,
+				     &in_bits_free, &out_bits_free,
+				     &bits_left);
+			i++;
 		}
 	}
 
 	/* if there is still data to flush */
-	if (!bits_left)
+	if (dirty) {
+		if (out_i == *nout)
+			return -1;
 		out[out_i++] = cur_out;
+	}
 
 	*nout = out_i;
 
@@ -247,12 +266,15 @@ int uintx_press(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 		uint64_t nin, uint8_t *out, uint64_t *nout)
 {
 	int ret;
+	uint64_t nin_bytes;
 	uint8_t *in_be;
 
-	in_be = malloc(nin);
+	nin_bytes = nin * BITS_TO_BYTES(in_bits);
+
+	in_be = malloc(nin_bytes);
 	if (!in_be)
 		return -1;
-	uintx_htobe(in_bits, in, in_be, nin);
+	uintx_htobe(in_bits, in, in_be, nin_bytes);
 
 	ret = uintx_press_core(in_bits, out_bits, in_be, nin, out, nout);
 	free(in_be);
@@ -276,5 +298,76 @@ int uintx_depress(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 		uintx_betoh(out_bits, out_be, out, *nout);
 
 	free(out_be);
+	return ret;
+}
+
+/* uint */
+
+uint8_t uint_get_minbits(uint64_t max)
+{
+	uint8_t i;
+
+	for (i = 0; i <= BYTES_TO_BITS(sizeof max); i++) {
+		if (max < pow(2, i))
+			return i;
+	}
+
+	return BYTES_TO_BITS(sizeof max);
+}
+
+uint8_t uint_get_minbits_16(const uint16_t *in, uint64_t nin)
+{
+	uint16_t max;
+
+	max = get_max_u16(in, nin);
+	return uint_get_minbits(max);
+}
+
+uint64_t uint_bound_16(uint8_t out_bits, uint64_t nin)
+{
+	uint64_t nin_bytes;
+	nin_bytes = nin * sizeof (uint16_t);
+
+	return sizeof out_bits + uintx_bound_16(out_bits, nin_bytes);
+}
+
+int uint_press_16(uint8_t out_bits, const uint16_t *in, uint64_t nin,
+		  uint8_t *out, uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_uintx;
+	const uint8_t *in_uintx;
+	uint8_t *out_uintx;
+
+	in_uintx = (const uint8_t *) in;
+
+	out[0] = out_bits;
+	out_uintx = out + 1;
+	nout_uintx = *nout - sizeof *out;
+
+	ret = uintx_press_16(out_bits, in_uintx, nin, out_uintx, &nout_uintx);
+
+	*nout = 1 + nout_uintx;
+	return ret;
+}
+
+int uint_depress_16(const uint8_t *in, uint64_t nin, uint16_t *out,
+		    uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_uintx;
+	const uint8_t *in_uintx;
+	uint8_t *out_uintx;
+	uint8_t in_bits;
+
+	in_bits = in[0];
+	in_uintx = in + 1;
+
+	out_uintx = (uint8_t *) out;
+	nout_uintx = *nout * sizeof *out;
+
+	ret = uintx_depress_16(in_bits, in_uintx, nin, out_uintx, &nout_uintx);
+
+	*nout = nout_uintx / sizeof *out;
 	return ret;
 }

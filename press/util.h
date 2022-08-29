@@ -6,6 +6,7 @@
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
 
-uint8_t get_uint_bound(int16_t min, int16_t max);
+/* nin: number of elements in in */
+uint16_t get_max_u16(const uint16_t *in, uint64_t nin);
 
 #endif /* util.h */

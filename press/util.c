@@ -1,20 +1,17 @@
 #include <stdint.h>
-#include <math.h>
 #include "util.h"
 
-uint8_t get_uint_bound(int16_t min, int16_t max)
+uint16_t get_max_u16(const uint16_t *in, uint64_t nin)
 {
-	uint8_t i;
+	uint16_t max;
+	uint64_t i;
 
-	/* can't unsigned bound if min < 0 */
-	if (min < 0)
-		return 0;
+	max = 0;
 
-	for (i = 0; i <= 16; i++) {
-		if (max < pow(2, i))
-			return i;
+	for (i = 0; i < nin; i++) {
+		if (in[i] > max)
+			max = in[i];
 	}
 
-	return 0;
+	return max;
 }
-

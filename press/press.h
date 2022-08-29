@@ -48,40 +48,27 @@ int none_depress(const uint8_t *in, uint64_t nin, uint8_t *out, uint64_t *nout)
 /* convert from 16 bits per element to out_bits */
 
 uint64_t uintx_bound_16(uint8_t out_bits, uint64_t nin);
+/* nin: number of uint16_t elements in in */
 int uintx_press_16(uint8_t out_bits, const uint8_t *in, uint64_t nin,
 		   uint8_t *out, uint64_t *nout);
-int uintx_depress_16(uint8_t out_bits, const uint8_t *in, uint64_t nin,
+/* nin: number of in_bits elements in in */
+int uintx_depress_16(uint8_t in_bits, const uint8_t *in, uint64_t nin,
 		     uint8_t *out, uint64_t *nout);
 
 /*
-static inline uint32_t uint11_bound(const int16_t *in, uint32_t nin)
-{
-	return uintx_bound(11, in, nin);
-}
-static inline uint32_t uint11_press(const int16_t *in, uint32_t nin,
-				    uint8_t *out, uint32_t nout_bytes)
-{
-	return uintx_press(11, in, nin, out, nout_bytes);
-}
-static inline uint32_t uint11_depress(const uint8_t *in, uint32_t nin_elems,
-				      uint32_t nin_bytes, int16_t *out,
-				      uint32_t nout_bytes)
-{
-	return uintx_depress(11, in, nin_elems, nin_bytes, out, nout_bytes);
-}
-
-//DEFINE_PRESS_METHOD(uint11, "uint11");
-*/
-
-/*
- * store each int16_t as uintx_t where x is decided after one pass
+ * store each uint16_t as uintx_t where x is decided after one pass
  * compressed: [x, sigs as uintx_t]
  */
-uint32_t uint_bound(const int16_t *in, uint32_t nin);
-uint32_t uint_press(const int16_t *in, uint32_t nin, uint8_t *out,
-		    uint32_t nout_bytes);
-uint32_t uint_depress(const uint8_t *in, uint32_t nin_elems,
-		      uint32_t nin_bytes, int16_t *out, uint32_t nout_bytes);
+
+/* nin: number of elements in in */
+uint8_t uint_get_minbits_16(const uint16_t *in, uint64_t nin);
+uint64_t uint_bound_16(uint8_t out_bits, uint64_t nin);
+/* TODO use digitisation
+ * uint64_t uint_bound_16_loose(uint64_t nin);*/
+int uint_press_16(uint8_t out_bits, const uint16_t *in, uint64_t nin,
+		  uint8_t *out, uint64_t *nout);
+int uint_depress_16(const uint8_t *in, uint64_t nin, uint16_t *out,
+		    uint64_t *nout);
 
 /*//DEFINE_PRESS_METHOD(uint, "uintx");*/
 
