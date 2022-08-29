@@ -23,16 +23,21 @@ void uintx_betoh(uint8_t out_bits, const uint8_t *be, uint8_t *h, uint64_t n);
 void uintx_update(uint8_t in_bits, uint8_t out_bits, uint64_t *in_i,
 		  uint64_t *out_i, uint8_t *in_bits_free,
 		  uint8_t *out_bits_free, uint8_t *bits_left);
+
 /* nin: number of elements in in
  * nout: number of bytes in out */
 int uintx_press_core(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 		     uint64_t nin, uint8_t *out, uint64_t *nout);
+
 /* in_bits: must be a multiple of BITS_PER_BYTE
  * nin: number of in_bits elements in in */
 int uintx_press(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 		uint64_t nin, uint8_t *out, uint64_t *nout);
-/* out_bits must be multiple of BITS_PER_BYTE
+
+/* out_bits: must be multiple of BITS_PER_BYTE
  * nin: number of out_bits elements in in */
+int uint0_depress(uint8_t out_bits, uint64_t nin, uint8_t *out,
+		  uint64_t *nout);
 int uintx_depress(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 		  uint64_t nin, uint8_t *out, uint64_t *nout);
 
@@ -76,6 +81,10 @@ uint64_t uintx_bound(uint8_t in_bits, uint8_t out_bits, uint64_t nin)
 	uint64_t nin_elems;
 
 	nin_elems = BYTES_TO_BITS(nin) / in_bits;
+
+	if (!out_bits)
+		return 0;
+
 	return BITS_TO_BYTES(nin_elems * out_bits);
 }
 
@@ -269,8 +278,12 @@ int uintx_press(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 	uint64_t nin_bytes;
 	uint8_t *in_be;
 
-	nin_bytes = nin * BITS_TO_BYTES(in_bits);
+	if (!out_bits) {
+		*nout = 0;
+		return 0;
+	}
 
+	nin_bytes = nin * BITS_TO_BYTES(in_bits);
 	in_be = malloc(nin_bytes);
 	if (!in_be)
 		return -1;
@@ -282,11 +295,28 @@ int uintx_press(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 	return ret;
 }
 
+int uint0_depress(uint8_t out_bits, uint64_t nin, uint8_t *out, uint64_t *nout)
+{
+	uint64_t nout_bytes;
+
+	nout_bytes = nin * BITS_TO_BYTES(out_bits);
+	if (*nout < nout_bytes)
+		return -1;
+
+	(void) memset(out, 0, nout_bytes);
+	*nout = nout_bytes;
+
+	return 0;
+}
+
 int uintx_depress(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 		  uint64_t nin, uint8_t *out, uint64_t *nout)
 {
 	int ret;
 	uint8_t *out_be;
+
+	if (!in_bits)
+		return uint0_depress(out_bits, nin, out, nout);
 
 	out_be = malloc(*nout);
 	if (!out_be)

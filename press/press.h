@@ -70,8 +70,6 @@ int uint_press_16(uint8_t out_bits, const uint16_t *in, uint64_t nin,
 int uint_depress_16(const uint8_t *in, uint64_t nin, uint16_t *out,
 		    uint64_t *nout);
 
-/*//DEFINE_PRESS_METHOD(uint, "uintx");*/
-
 /*
  * TODO store outliers separately
  * where to store?
@@ -99,8 +97,6 @@ uint32_t uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out,
 uint32_t uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
 			     uint32_t nin_bytes, int16_t *out,
 			     uint32_t nout_bytes);
-
-/*//DEFINE_PRESS_METHOD(uint_submin, "subtract min | uintx");*/
 
 /*
  * subtract min from all sigs
