@@ -25,9 +25,10 @@ if (!(statement)) { \
 
 #define RESULTS_HDR ("method\t" \
 		     "data\t" \
-		     "press_bound_bytes\t" \
+		     "pressbound_bytes\t" \
 		     "press_bytes\t" \
 		     "depress_bytes\t" \
+		     "pressbound_time\t" \
 		     "press_time\t" \
 		     "depress_time\n")
 #define RESULTS_FORMAT ("%s\t" \
@@ -36,15 +37,17 @@ if (!(statement)) { \
 			"%" PRIu64 "\t" \
 			"%" PRIu64 "\t" \
 			"%f\t" \
+			"%f\t" \
 			"%f\n")
 
 struct result {
 	const char *data_name;
 	const char *method_name;
+	double pressbound_clocktime;
 	double depress_clocktime;
 	double press_clocktime;
 	uint64_t depress_bytes;
-	uint64_t press_bound_bytes;
+	uint64_t pressbound_bytes;
 	uint64_t press_bytes;
 };
 

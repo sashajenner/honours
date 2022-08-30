@@ -25,55 +25,55 @@ void shift_x_inplace_u16(uint16_t x, uint16_t *in, uint64_t nin)
 	}
 }
 
-static inline uint16_t zigzag_one(int16_t x)
+static inline uint16_t zigzag_one_16(int16_t x)
 {
 	return (x + x) ^ (x >> 15);
 }
 
-static inline uint16_t unzigzag_one(int16_t x)
+static inline int16_t unzigzag_one_16(uint16_t x)
 {
 	return (x >> 1) ^ -(x & 1);
 }
 
-void zigzag_inplace(int16_t *in, uint32_t nin)
+void zigzag_inplace_16(int16_t *in, uint64_t nin)
 {
-	uint32_t i;
+	uint64_t i;
 
 	for (i = 0; i < nin; i++) {
-		in[i] = zigzag_one(in[i]);
+		in[i] = zigzag_one_16(in[i]);
 	}
 }
 
-void unzigzag_inplace(int16_t *in, uint32_t nin)
+void unzigzag_inplace_16(uint16_t *in, uint64_t nin)
 {
-	uint32_t i;
+	uint64_t i;
 
 	for (i = 0; i < nin; i++) {
-		in[i] = unzigzag_one(in[i]);
+		in[i] = unzigzag_one_16(in[i]);
 	}
 }
 
-int16_t *zigdelta(const int16_t *in, uint32_t nin, uint32_t *nout)
+/* return zigzag delta of in with nin - 1 elements */
+uint16_t *zigdelta_16(const int16_t *in, uint64_t nin)
 {
-	int16_t *out;
-	uint32_t i;
+	uint16_t *out;
+	uint64_t i;
 
 	out = malloc(nin * sizeof *out);
 
 	for (i = 0; i < nin - 1; i++) {
-		out[i] = zigzag_one(in[i + 1] - in[i]);
+		out[i] = zigzag_one_16(in[i + 1] - in[i]);
 	}
 
-	*nout = nin - 1;
 	return out;
 }
 
 /* in[0] must be the first signal */
-void unzigdelta_inplace(int16_t *in, uint32_t nin)
+void unzigdelta_inplace_16(int16_t *in, uint64_t nin)
 {
-	uint32_t i;
+	uint64_t i;
 
 	for (i = 1; i < nin; i++) {
-		in[i] = in[i - 1] + unzigzag_one(in[i]);
+		in[i] = in[i - 1] + unzigzag_one_16(in[i]);
 	}
 }

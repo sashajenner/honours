@@ -455,6 +455,59 @@ int uint_submin_depress_16(const uint8_t *in, uint64_t nin, uint16_t *out,
 	return ret;
 }
 
+/* zigzag delta */
+
+/* in_zd: malloced zigzag delta of in with nin - 1 elements */
+uint8_t uint_zd_get_minbits_16(const int16_t *in, uint64_t nin,
+			       uint16_t **in_zd)
+{
+	uint16_t max;
+
+	*in_zd = zigdelta_16(in, nin);
+
+	max = get_max_u16(*in_zd, nin - 1);
+	return uint_get_minbits(max);
+}
+
+uint64_t uint_zd_bound_16(uint8_t out_bits, uint64_t nin)
+{
+	return sizeof (int16_t) + uint_bound_16(out_bits, nin - 1);
+}
+
+int uint_zd_press_16(uint8_t out_bits, int16_t in0, uint64_t nin,
+		     const uint16_t *in_zd, uint8_t *out, uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_tmp;
+
+	(void) memcpy(out, &in0, sizeof in0);
+
+	nout_tmp = *nout - sizeof in0;
+	ret = uint_press_16(out_bits, in_zd, nin - 1, out + sizeof in0,
+			    &nout_tmp);
+
+	*nout = nout_tmp + sizeof in0;
+	return ret;
+}
+
+int uint_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+		       uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_tmp;
+
+	(void) memcpy(out, in, sizeof *out);
+
+	nout_tmp = *nout - 1;
+	ret = uint_depress_16(in + sizeof *out, nin - 1,
+			      (uint16_t *) (out + 1), &nout_tmp);
+
+	*nout = 1 + nout_tmp;
+	unzigdelta_inplace_16(out, *nout);
+
+	return ret;
+}
+
 /* zlib */
 
 uint64_t zlib_bound(uint64_t nin)
@@ -596,4 +649,41 @@ void svb_press(const uint32_t *in, uint64_t nin, uint8_t *out, uint64_t *nout)
 void svb_depress(const uint8_t *in, uint64_t nin, uint32_t *out)
 {
 	(void) streamvbyte_decode(in, out, nin);
+}
+
+/* svb 0,1,2,4 bytes */
+
+uint64_t svb0124_bound(uint64_t nin)
+{
+	/*return streamvbyte_compressedbytes_0124(in, nin);*/
+	return streamvbyte_max_compressedbytes(nin);
+}
+
+void svb0124_press(const uint32_t *in, uint64_t nin, uint8_t *out,
+		   uint64_t *nout)
+{
+	*nout = streamvbyte_encode_0124(in, nin, out);
+}
+
+void svb0124_depress(const uint8_t *in, uint64_t nin, uint32_t *out)
+{
+	(void) streamvbyte_decode_0124(in, out, nin);
+}
+
+/* svb(16) 1,2 bytes */
+
+uint64_t svb12_bound(uint64_t nin)
+{
+	return streamvbyte_max_compressedbytes_12(nin);
+}
+
+void svb12_press(const uint16_t *in, uint32_t nin, uint8_t *out,
+		 uint64_t *nout)
+{
+	*nout = streamvbyte_encode_12(in, nin, out);
+}
+
+void svb12_depress(const uint8_t *in, uint64_t nin, uint16_t *out)
+{
+	(void) streamvbyte_decode_12(in, out, nin);
 }

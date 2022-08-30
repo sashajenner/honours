@@ -131,12 +131,14 @@ uint32_t zstd_uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
  * zigzag delta: take successive differences and map to unsigned integers
  * compressed: [start, x, sigs zigzag delta as uintx_t]
  */
-uint32_t uint_zd_bound(const int16_t *in, uint32_t nin);
-uint32_t uint_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
-		       uint32_t nout_bytes);
-uint32_t uint_zd_depress(const uint8_t *in, uint32_t nin_elems,
-			 uint32_t nin_bytes, int16_t *out,
-			 uint32_t nout_bytes);
+
+uint8_t uint_zd_get_minbits_16(const int16_t *in, uint64_t nin,
+			       uint16_t **in_zd);
+uint64_t uint_zd_bound_16(uint8_t out_bits, uint64_t nin);
+int uint_zd_press_16(uint8_t out_bits, int16_t in0, uint64_t nin,
+		     const uint16_t *in_zd, uint8_t *out, uint64_t *nout);
+int uint_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+		       uint64_t *nout);
 
 /*
  * zigzag delta: take successive differences and map to unsigned integers
@@ -274,112 +276,108 @@ void svb_press(const uint32_t *in, uint64_t nin, uint8_t *out, uint64_t *nout);
 void svb_depress(const uint8_t *in, uint64_t nin, uint32_t *out);
 
 /* svb 0,1,2,4 bytes */
-uint32_t svb0124_bound(const int16_t *in, uint32_t nin);
-uint32_t svb0124_press(const int16_t *in, uint32_t nin, uint8_t *out,
-		       uint32_t nout_bytes);
-uint32_t svb0124_depress(const uint8_t *in, uint32_t nin_elems,
-			 uint32_t nin_bytes, int16_t *out,
-			 uint32_t nout_bytes);
 
-//DEFINE_PRESS_METHOD(svb0124, "svb0124");
+/* nin: number of elements in in */
+uint64_t svb0124_bound(uint64_t nin);
+void svb0124_press(const uint32_t *in, uint64_t nin, uint8_t *out,
+		   uint64_t *nout);
+/* nin: number of elements in the original in */
+void svb0124_depress(const uint8_t *in, uint64_t nin, uint32_t *out);
 
 /* svb(16) 1,2 bytes */
-uint32_t svb12_bound(const int16_t *in, uint32_t nin);
-uint32_t svb12_press(const int16_t *in, uint32_t nin, uint8_t *out,
-		     uint32_t nout_bytes);
-uint32_t svb12_depress(const uint8_t *in, uint32_t nin_elems,
-		       uint32_t nin_bytes, int16_t *out, uint32_t nout_bytes);
-
-//DEFINE_PRESS_METHOD(svb12, "svb12");
+uint64_t svb12_bound(uint64_t nin);
+void svb12_press(const uint16_t *in, uint32_t nin, uint8_t *out,
+		 uint64_t *nout);
+void svb12_depress(const uint8_t *in, uint64_t nin, uint16_t *out);
 
 /* zigzag delta svb */
+/*
 uint32_t svb_zd_bound(const int16_t *in, uint32_t nin);
 uint32_t svb_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 		      uint32_t nout_bytes);
 uint32_t svb_zd_depress(const uint8_t *in, uint32_t nin_elems,
 			uint32_t nin_bytes, int16_t *out, uint32_t nout_bytes);
-
-//DEFINE_PRESS_METHOD(svb_zd, "delta | zigzag | svb");
+			*/
 
 /* zigzag delta svb0124 */
+/*
 uint32_t svb0124_zd_bound(const int16_t *in, uint32_t nin);
 uint32_t svb0124_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 			  uint32_t nout_bytes);
 uint32_t svb0124_zd_depress(const uint8_t *in, uint32_t nin_elems,
 			    uint32_t nin_bytes, int16_t *out,
 			    uint32_t nout_bytes);
-
-//DEFINE_PRESS_METHOD(svb0124_zd, "delta | zigzag | svb0124");
+			    */
 
 /* zigzag delta svb12 */
+/*
 uint32_t svb12_zd_bound(const int16_t *in, uint32_t nin);
 uint32_t svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 	       		uint32_t nout_bytes);
 uint32_t svb12_zd_depress(const uint8_t *in, uint32_t nin_elems,
 			  uint32_t nin_bytes, int16_t *out,
 			  uint32_t nout_bytes);
-
-//DEFINE_PRESS_METHOD(svb12_zd, "delta | zigzag | svb12");
+			  */
 
 /* zigzag delta svb zlib */
+/*
 uint32_t zlib_svb_zd_bound(const int16_t *in, uint32_t nin);
 uint32_t zlib_svb_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 			   uint32_t nout_bytes);
 uint32_t zlib_svb_zd_depress(const uint8_t *in, uint32_t nin_elems,
 			     uint32_t nin_bytes, int16_t *out,
 			     uint32_t nout_bytes);
-
-//DEFINE_PRESS_METHOD(zlib_svb_zd, "delta | zigzag | svb | zlib");
+			     */
 
 /* zigzag delta svb0124 zlib */
+/*
 uint32_t zlib_svb0124_zd_bound(const int16_t *in, uint32_t nin);
 uint32_t zlib_svb0124_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 			       uint32_t nout_bytes);
 uint32_t zlib_svb0124_zd_depress(const uint8_t *in, uint32_t nin_elems,
 				 uint32_t nin_bytes, int16_t *out,
 				 uint32_t nout_bytes);
-
-//DEFINE_PRESS_METHOD(zlib_svb0124_zd, "delta | zigzag | svb0124 | zlib");
+				 */
 
 /* zigzag delta svb12 zlib */
+/*
 uint32_t zlib_svb12_zd_bound(const int16_t *in, uint32_t nin);
 uint32_t zlib_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 			     uint32_t nout_bytes);
 uint32_t zlib_svb12_zd_depress(const uint8_t *in, uint32_t nin_elems,
 			       uint32_t nin_bytes, int16_t *out,
 			       uint32_t nout_bytes);
-
-//DEFINE_PRESS_METHOD(zlib_svb12_zd, "delta | zigzag | svb12 | zlib");
+			       */
 
 /* zigzag delta svb zstd */
+/*
 uint32_t zstd_svb_zd_bound(const int16_t *in, uint32_t nin);
 uint32_t zstd_svb_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 			   uint32_t nout_bytes);
 uint32_t zstd_svb_zd_depress(const uint8_t *in, uint32_t nin_elems,
 			     uint32_t nin_bytes, int16_t *out,
 			     uint32_t nout_bytes);
-
-//DEFINE_PRESS_METHOD(zstd_svb_zd, "delta | zigzag | svb | zstd");
+			     */
 
 /* zigzag delta svb0124 zstd */
+/*
 uint32_t zstd_svb0124_zd_bound(const int16_t *in, uint32_t nin);
 uint32_t zstd_svb0124_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 			       uint32_t nout_bytes);
 uint32_t zstd_svb0124_zd_depress(const uint8_t *in, uint32_t nin_elems,
 				 uint32_t nin_bytes, int16_t *out,
 				 uint32_t nout_bytes);
-
-//DEFINE_PRESS_METHOD(zstd_svb0124_zd, "delta | zigzag | svb0124 | zstd");
+				 */
 
 /* zigzag delta svb12 zstd */
+/*
 uint32_t zstd_svb12_zd_bound(const int16_t *in, uint32_t nin);
 uint32_t zstd_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 			     uint32_t nout_bytes);
 uint32_t zstd_svb12_zd_depress(const uint8_t *in, uint32_t nin_elems,
 			       uint32_t nin_bytes, int16_t *out,
 			       uint32_t nout_bytes);
-
-//DEFINE_PRESS_METHOD(zstd_svb12_zd, "delta | zigzag | svb12 | zstd");
+			       */
 
 /* TODO
  * variable byte
