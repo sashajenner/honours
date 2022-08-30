@@ -36,3 +36,19 @@ void get_minmax_u16(const uint16_t *in, uint64_t nin, uint16_t *min,
 	*max = max_tmp;
 	*min = min_tmp;
 }
+
+int16_t get_mean_16(const int16_t *in, uint64_t nin)
+{
+	double delta;
+	double mean;
+	uint64_t i;
+
+	mean = 0;
+
+	for (i = 0; i < nin; i++) {
+		delta = in[i] - mean;
+		mean += delta / (i + 1);
+	}
+
+	return (int16_t) mean;
+}

@@ -173,14 +173,14 @@ uint32_t zstd_uint_zd_depress(const uint8_t *in, uint32_t nin_elems,
  * zigzag subtract mean: subtract mean from all sigs and map to unsigned integers
  * compressed: [mean, x, zigzag(sigs - mean) as uintx_t]
  */
-uint32_t uint_zsubmean_bound(const int16_t *in, uint32_t nin);
-uint32_t uint_zsubmean_press(const int16_t *in, uint32_t nin, uint8_t *out,
-			    uint32_t nout_bytes);
-uint32_t uint_zsubmean_depress(const uint8_t *in, uint32_t nin_elems,
-			       uint32_t nin_bytes, int16_t *out,
-			       uint32_t nout_bytes);
 
-/*//DEFINE_PRESS_METHOD(uint_zsubmean, "subtract mean | zigzag | uintx");*/
+uint8_t uint_zsm_get_minbits_16(const int16_t *in, uint64_t nin,
+				uint16_t **in_zsm, int16_t *in_mean);
+uint64_t uint_zsm_bound_16(uint8_t out_bits, uint64_t nin);
+int uint_zsm_press_16(uint8_t out_bits, int16_t in_mean, uint64_t nin,
+		      const uint16_t *in_zsm, uint8_t *out, uint64_t *nout);
+int uint_zsm_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+			uint64_t *nout);
 
 /*
  * zigzag subtract mean: subtract mean from all sigs and map to unsigned integers
@@ -285,6 +285,7 @@ void svb0124_press(const uint32_t *in, uint64_t nin, uint8_t *out,
 void svb0124_depress(const uint8_t *in, uint64_t nin, uint32_t *out);
 
 /* svb(16) 1,2 bytes */
+
 uint64_t svb12_bound(uint64_t nin);
 void svb12_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		 uint64_t *nout);

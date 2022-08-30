@@ -406,7 +406,7 @@ int uint_depress_16(const uint8_t *in, uint64_t nin, uint16_t *out,
 	return ret;
 }
 
-/* uint submin */
+/* submin | uint */
 
 uint8_t uint_submin_get_minbits_16(const uint16_t *in, uint64_t nin,
 				   uint16_t *min)
@@ -429,7 +429,7 @@ int uint_submin_press_16(uint8_t out_bits, uint16_t min, const uint16_t *in,
 	uint16_t *in_submin;
 	uint64_t nout_tmp;
 
-	in_submin = u16_shift_x_u16(-1 * min, in, nin);
+	in_submin = shift_x_u16(-1 * min, in, nin);
 
 	(void) memcpy(out, &min, sizeof min);
 
@@ -455,18 +455,18 @@ int uint_submin_depress_16(const uint8_t *in, uint64_t nin, uint16_t *out,
 	return ret;
 }
 
-/* zigzag delta */
+/* delta | zigzag | uint */
 
 /* in_zd: malloced zigzag delta of in with nin - 1 elements */
 uint8_t uint_zd_get_minbits_16(const int16_t *in, uint64_t nin,
 			       uint16_t **in_zd)
 {
-	uint16_t max;
+	uint16_t max_zd;
 
 	*in_zd = zigdelta_16(in, nin);
 
-	max = get_max_u16(*in_zd, nin - 1);
-	return uint_get_minbits(max);
+	max_zd = get_max_u16(*in_zd, nin - 1);
+	return uint_get_minbits(max_zd);
 }
 
 uint64_t uint_zd_bound_16(uint8_t out_bits, uint64_t nin)
@@ -504,6 +504,57 @@ int uint_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
 
 	*nout = 1 + nout_tmp;
 	unzigdelta_inplace_16(out, *nout);
+
+	return ret;
+}
+
+/* subtract mean | zigzag | uint */
+
+uint8_t uint_zsm_get_minbits_16(const int16_t *in, uint64_t nin,
+				uint16_t **in_zsm, int16_t *in_mean)
+{
+	uint16_t max_zsm;
+
+	*in_mean = get_mean_16(in, nin);
+	*in_zsm = (uint16_t *) shift_x_16(-1 * (*in_mean), in, nin);
+	zigzag_inplace_16((int16_t *) (*in_zsm), nin);
+
+	max_zsm = get_max_u16(*in_zsm, nin);
+	return uint_get_minbits(max_zsm);
+}
+
+uint64_t uint_zsm_bound_16(uint8_t out_bits, uint64_t nin)
+{
+	return sizeof (int16_t) + uint_bound_16(out_bits, nin);
+}
+
+int uint_zsm_press_16(uint8_t out_bits, int16_t in_mean, uint64_t nin,
+		      const uint16_t *in_zsm, uint8_t *out, uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_tmp;
+
+	(void) memcpy(out, &in_mean, sizeof in_mean);
+
+	nout_tmp = *nout - sizeof in_mean;
+	ret = uint_press_16(out_bits, in_zsm, nin, out + sizeof in_mean,
+			    &nout_tmp);
+
+	*nout = nout_tmp + sizeof in_mean;
+	return ret;
+}
+
+int uint_zsm_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+			uint64_t *nout)
+{
+	int ret;
+	int16_t mean;
+
+	(void) memcpy(&mean, in, sizeof mean);
+	ret = uint_depress_16(in + sizeof mean, nin, (uint16_t *) out, nout);
+
+	unzigzag_inplace_16((uint16_t *) out, *nout);
+	shift_x_inplace_16(mean, out, *nout);
 
 	return ret;
 }
