@@ -1021,6 +1021,21 @@ int main(void)
 	TEST(svb0124, P11, &res, fp);
 	TEST(svb12, P11, &res, fp);
 
+	TEST(none, P11_LONG, &res, fp);
+	TEST(uint11_16, P11_LONG, &res, fp);
+	TEST(uint_16, P11_LONG, &res, fp);
+	TEST(uint_submin_16, P11_LONG, &res, fp);
+	TEST(uint_zd_16, P11_LONG, &res, fp);
+	TEST(uint_zsm_16, P11_LONG, &res, fp);
+	/*TEST(flat_uint_submin_16, P11_LONG, &res, fp);*/
+	TEST(zlib, P11_LONG, &res, fp);
+	TEST(zstd, P11_LONG, &res, fp);
+	TEST(bzip2, P11_LONG, &res, fp);
+	TEST(fast_lzma2, P11_LONG, &res, fp);
+	TEST(svb, P11_LONG, &res, fp);
+	TEST(svb0124, P11_LONG, &res, fp);
+	TEST(svb12, P11_LONG, &res, fp);
+
 	TEST(none, P11_MEDIUM, &res, fp);
 	TEST(uint11_16, P11_MEDIUM, &res, fp);
 	TEST(uint_16, P11_MEDIUM, &res, fp);
