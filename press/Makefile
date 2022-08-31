@@ -1,8 +1,7 @@
 CC = cc
 CFLAGS = -g -Wall -Werror
 LDFLAGS = -lm -lz -lzstd -lpthread
-#OBJ = test.o press.o trans.o flat.o bitmap.o stats.o util.o
-OBJ = test.o press.o trans.o bitmap.o stats.o util.o
+OBJ = test.o press.o trans.o flat.o bitmap.o stats.o util.o
 SVB = streamvbyte
 SVBLIB = $(SVB)/libstreamvbyte.so.0.0.1
 BZIP2 = bzip2

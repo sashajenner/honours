@@ -3,22 +3,7 @@
 
 #include <stdint.h>
 #include <zlib.h>
-
-#define DEFINE_PRESS_METHOD(name, full_name) \
-	static const struct press_method name ## _method = { \
-		full_name, \
-		name ## _bound, \
-		name ## _press, \
-		name ## _depress, \
-	};
-
-struct press_method {
-	const char *name;
-	uint64_t (*bound)(const uint8_t *, uint64_t);
-	uint32_t (*press)(const uint8_t *, uint32_t, uint8_t *, uint32_t);
-	uint32_t (*depress)(const uint8_t *, uint32_t, uint32_t, uint8_t *,
-			    uint32_t);
-};
+#include "flat.h"
 
 /* no compression */
 
@@ -195,26 +180,27 @@ uint32_t zlib_uint_zsubmean_depress(const uint8_t *in, uint32_t nin_elems,
 				    uint32_t nin_bytes, int16_t *out,
 				    uint32_t nout_bytes);
 				    */
-
-/* num_sigs + min/start + x */
 /*
-#define NBYTES_FLAT_UINT_HDR (sizeof (uint32_t) + sizeof (int16_t) + \
-			      sizeof (uint8_t))
-#define NBITS_FLAT_UINT_HDR BYTES_TO_BITS(NBYTES_FLAT_UINT_HDR)
-*/
+ * separate into flat regions, compress each using the same method
+ * compressed: [[num_sigs, [compressed]]...]
+ */
+
+uint64_t flat_bound_16(uint32_t nin, const struct flat_method *method);
+int flat_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+		  uint32_t *nout, const struct flat_method *method);
+int flat_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
+		    uint32_t *nout, const struct flat_method *method);
 
 /*
  * separate into flat regions, compress using uint_submin
  * compressed: [[num_sigs, min, x, sigs - min as uintx_t]...]
  */
-/*
-uint32_t flat_uint_submin_bound(const int16_t *in, uint32_t nin);
-uint32_t flat_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out,
-				uint32_t nout_bytes);
-uint32_t flat_uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
-				  uint32_t nin_bytes, int16_t *out,
-				  uint32_t nout_bytes);
-				  */
+
+uint64_t flat_uint_submin_bound_16(uint32_t nin);
+int flat_uint_submin_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			      uint32_t *nout);
+int flat_uint_submin_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
+				uint32_t *nout);
 
 /*
  * TODO

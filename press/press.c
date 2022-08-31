@@ -61,6 +61,20 @@ int uintx_depress_##bits(uint8_t in_bits, const uint8_t *in, uint64_t nin, \
 
 DEFINE_UINTX(16);
 
+uint64_t bound_uint_submin_16(uint64_t nin);
+struct meta_uint_submin_16;
+int init_meta_uint_submin_16(const int16_t *in, uint32_t nin,
+			     struct flat_meta *meta);
+void free_meta_uint_submin_16(struct flat_meta *meta, uint32_t nin);
+void fill_meta_uint_submin_16(const int16_t *in, uint32_t nin,
+			      struct flat_meta *meta);
+uint32_t get_nbytes_uint_submin_16(uint32_t i, uint32_t j,
+				   struct flat_meta *meta);
+int press_uint_submin_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			 uint32_t *nout);
+int depress_uint_submin_16(const uint8_t *in, uint32_t nin, int16_t *out,
+			   uint32_t *nout);
+
 /* none */
 
 int none_press(const uint8_t *in, uint64_t nin, uint8_t *out, uint64_t *nout)
@@ -557,6 +571,287 @@ int uint_zsm_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
 	shift_x_inplace_16(mean, out, *nout);
 
 	return ret;
+}
+
+/* flat */
+
+/* worst case the whole input is compressed as one */
+uint64_t flat_bound_16(uint32_t nin, const struct flat_method *method)
+{
+	return sizeof nin + method->bound(nin);
+}
+
+int flat_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+		  uint32_t *nout, const struct flat_method *method)
+{
+	const int16_t *in_cur;
+	int ret;
+	uint32_t *flats;
+	uint32_t i;
+	uint32_t flat_nbytes;
+	uint32_t nflats;
+	uint32_t nin_cur;
+	uint32_t nout_cur;
+	uint32_t nout_total;
+
+	ret = get_flats(in, nin, &flats, &nflats, &flat_nbytes, method);
+	if (ret)
+		return ret;
+
+	nout_total = 0;
+	for (i = 0; i < nflats; i++) {
+		/*fprintf(stderr, "%" PRIu32 "\n", flats[i]);*/
+		in_cur = in + flats[i];
+		if (i < nflats - 1)
+			nin_cur = flats[i + 1] - flats[i];
+		else
+			nin_cur = nin - flats[i];
+
+		/*
+		(void) memcpy(out, &nin_cur, sizeof nin_cur);
+		nout_total += sizeof nin_cur;
+		*/
+		nout_cur = *nout - nout_total;
+		ret = method->press(in_cur, nin_cur, out + nout_total,
+				    &nout_cur);
+
+		if (ret) {
+			free(flats);
+			return ret;
+		}
+
+		nout_total += nout_cur;
+	}
+	free(flats);
+
+	if (flat_nbytes != nout_total)
+		return -1;
+	*nout = flat_nbytes;
+
+	return 0;
+}
+
+int flat_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
+		    uint32_t *nout, const struct flat_method *method)
+{
+	int ret;
+	uint32_t nin_cur;
+	uint32_t nin_total;
+	uint32_t nout_cur;
+	uint32_t nout_total;
+
+	nin_total = 0;
+	nout_total = 0;
+
+	while (nin_total < nin) {
+
+		(void) memcpy(&nin_cur, in + nin_total, sizeof nin_cur);
+		nin_total += sizeof nin_cur;
+
+		nout_cur = *nout - nout_total;
+		ret = method->depress(in + nin_total, nin_cur,
+				      out + nout_total, &nout_cur);
+		if (ret)
+			return ret;
+
+		nin_total += method->ntobytes(in + nin_total, nin_cur);
+		nout_total += nout_cur;
+	}
+
+	*nout = nout_total;
+	return 0;
+}
+
+/* submin | uint | flat */
+
+/* loose upper bound */
+uint64_t bound_uint_submin_16(uint64_t nin)
+{
+	/* min + bits_per_sig + sigs */
+	return sizeof (int16_t) + sizeof (uint8_t) + nin * sizeof (uint16_t);
+}
+
+struct meta_uint_submin_16 {
+	int16_t min;
+	int16_t max;
+};
+
+int init_meta_uint_submin_16(const int16_t *in, uint32_t nin,
+			     struct flat_meta *meta)
+{
+	uint32_t i;
+	uint32_t j;
+	struct meta_uint_submin_16 *method_meta;
+
+	for (j = 0; j < nin; j++) {
+		for (i = 0; i <= j; i++) {
+			method_meta = malloc(sizeof *method_meta);
+			if (!method_meta)
+				return -1;
+			meta[I2(i, j)].method_meta = method_meta;
+		}
+	}
+
+	return 0;
+}
+
+void free_meta_uint_submin_16(struct flat_meta *meta, uint32_t nin)
+{
+	uint32_t i;
+	uint32_t j;
+
+	for (j = 0; j < nin; j++) {
+		for (i = 0; i <= j; i++) {
+			free(meta[I2(i, j)].method_meta);
+		}
+	}
+}
+
+void fill_meta_uint_submin_16(const int16_t *in, uint32_t nin,
+			      struct flat_meta *meta)
+{
+	int16_t max;
+	int16_t min;
+	struct flat_meta *cur;
+	struct meta_uint_submin_16 *cur_method_meta;
+	uint32_t i;
+	uint32_t j;
+
+	for (j = 0; j < nin; j++) {
+		/*
+		 * min(in[i, j]) = min(in[j], min(in[i, j - 1]))
+		 * max(in[i, j]) = max(in[j], max(in[i, j - 1]))
+		 */
+		for (i = 0; i < j; i++) {
+			cur = meta + I2(i, j - 1);
+			cur_method_meta = (struct meta_uint_submin_16 *)
+				cur->method_meta;
+
+			min = MIN(in[j], cur_method_meta->min);
+			max = MAX(in[j], cur_method_meta->max);
+
+			cur = meta + I2(i, j);
+			cur_method_meta = (struct meta_uint_submin_16 *)
+				cur->method_meta;
+
+			cur_method_meta->min = min;
+			cur_method_meta->max = max;
+			cur->nbytes = get_nbytes_uint_submin_16(i, j, meta);
+		}
+		/* min(in[j, j]) = max(in[j, j]) = in[j] */
+		cur = meta + I2(j, j);
+		cur_method_meta = (struct meta_uint_submin_16 *)
+			cur->method_meta;
+
+		cur_method_meta->min = in[j];
+		cur_method_meta->max = in[j];
+		cur->nbytes = get_nbytes_uint_submin_16(j, j, meta);
+	}
+}
+
+uint32_t get_nbytes_uint_submin_16(uint32_t i, uint32_t j,
+				   struct flat_meta *meta)
+{
+	struct flat_meta *cur;
+	struct meta_uint_submin_16 *cur_method_meta;
+	uint16_t range;
+	uint8_t minbits;
+
+	cur = meta + I2(i, j);
+	cur_method_meta = (struct meta_uint_submin_16 *) cur->method_meta;
+
+	range = cur_method_meta->max - cur_method_meta->min;
+	minbits = uint_get_minbits(range);
+
+	return sizeof (uint32_t) + uint_submin_bound_16(minbits, j - i + 1);
+}
+
+int press_uint_submin_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			 uint32_t *nout)
+{
+	int ret;
+	uint16_t min;
+	uint64_t nout_tmp;
+	uint8_t minbits;
+
+	/* TODO use meta */
+	minbits = uint_submin_get_minbits_16((const uint16_t *) in, nin, &min);
+
+	nout_tmp = *nout - sizeof nin;
+	ret = uint_submin_press_16(minbits, min, (const uint16_t *) in, nin,
+				   out + sizeof nin, &nout_tmp);
+	(void) memcpy(out, &nin, sizeof nin);
+
+	*nout = nout_tmp + sizeof nin;
+	return ret;
+}
+
+int depress_uint_submin_16(const uint8_t *in, uint32_t nin, int16_t *out,
+			   uint32_t *nout)
+{
+	int ret;
+	uint64_t nout_tmp;
+
+	nout_tmp = *nout;
+	ret = uint_submin_depress_16(in, nin, (uint16_t *) out, &nout_tmp);
+
+	*nout = nout_tmp;
+	return ret;
+}
+
+uint32_t ntobytes_uint_submin_16(const uint8_t *in, uint32_t n)
+{
+	uint8_t minbits;
+
+	minbits = in[sizeof (int16_t)];
+	return uint_submin_bound_16(minbits, n);
+}
+
+uint64_t flat_uint_submin_bound_16(uint32_t nin)
+{
+	struct flat_method method = {
+		bound_uint_submin_16,
+		init_meta_uint_submin_16,
+		free_meta_uint_submin_16,
+		fill_meta_uint_submin_16,
+		press_uint_submin_16,
+		depress_uint_submin_16,
+		ntobytes_uint_submin_16,
+	};
+
+	return flat_bound_16(nin, &method);
+}
+
+int flat_uint_submin_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			      uint32_t *nout)
+{
+	struct flat_method method = {
+		bound_uint_submin_16,
+		init_meta_uint_submin_16,
+		free_meta_uint_submin_16,
+		fill_meta_uint_submin_16,
+		press_uint_submin_16,
+		depress_uint_submin_16,
+		ntobytes_uint_submin_16,
+	};
+
+	return flat_press_16(in, nin, out, nout, &method);
+}
+
+int flat_uint_submin_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
+				uint32_t *nout)
+{
+	struct flat_method method = {
+		bound_uint_submin_16,
+		init_meta_uint_submin_16,
+		free_meta_uint_submin_16,
+		fill_meta_uint_submin_16,
+		press_uint_submin_16,
+		depress_uint_submin_16,
+		ntobytes_uint_submin_16,
+	};
+
+	return flat_depress_16(in, nin, out, nout, &method);
 }
 
 /* zlib */
