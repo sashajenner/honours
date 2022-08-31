@@ -3,6 +3,7 @@
 #include "test.h"
 #include "press.h"
 #include "bitmap.h"
+#include "util.h"
 #include <stdio.h> /* TODO remove */
 #include <inttypes.h> /* TODO remove */
 
@@ -18,6 +19,10 @@ void fwrite_res_hdr(FILE *fp)
 
 void fwrite_res(FILE *fp, struct result *res)
 {
+	char *flats_str;
+
+	flats_str = array_to_str(res->flats, res->nflats);
+
 	(void) fprintf(fp, RESULTS_FORMAT,
 		       res->method_name,
 		       res->data_name,
@@ -26,7 +31,11 @@ void fwrite_res(FILE *fp, struct result *res)
 		       res->depress_bytes,
 		       res->pressbound_clocktime,
 		       res->press_clocktime,
-		       res->depress_clocktime);
+		       res->depress_clocktime,
+		       res->nflats,
+		       flats_str);
+
+	free(flats_str);
 }
 
 int test_none(const int16_t *sigs, const uint32_t nr_sigs, struct result *res)
@@ -478,8 +487,10 @@ int test_flat_uint_submin_16(const int16_t *sigs, const uint32_t nr_sigs,
 	clock_t before;
 	int ret;
 	int16_t *sigs_depress;
+	uint32_t *flats;
 	uint32_t depress_len;
 	uint32_t i;
+	uint32_t nflats;
 	uint32_t nr_sigs_bytes;
 	uint32_t press_len;
 	uint32_t pressbound;
@@ -500,7 +511,8 @@ int test_flat_uint_submin_16(const int16_t *sigs, const uint32_t nr_sigs,
 	/* compress sigs */
 	press_len = pressbound;
 	before = clock();
-	ret = flat_uint_submin_press_16(sigs, nr_sigs, sigs_press, &press_len);
+	ret = flat_uint_submin_press_16(sigs, nr_sigs, sigs_press, &press_len,
+					&flats, &nflats);
 	after = clock();
 	res->press_clocktime = GET_CLOCK_SECS(before, after);
 	ASSERT(ret == 0);
@@ -534,6 +546,9 @@ int test_flat_uint_submin_16(const int16_t *sigs, const uint32_t nr_sigs,
 	res->depress_bytes = nr_sigs_bytes;
 	res->pressbound_bytes = pressbound;
 	res->press_bytes = press_len;
+
+	res->nflats = nflats;
+	res->flats = flats;
 
 	return EXIT_SUCCESS;
 }
@@ -1021,50 +1036,65 @@ int main(void)
 	TEST(svb0124, P11, &res, fp);
 	TEST(svb12, P11, &res, fp);
 
-	TEST(none, P11_LONG, &res, fp);
-	TEST(uint11_16, P11_LONG, &res, fp);
-	TEST(uint_16, P11_LONG, &res, fp);
-	TEST(uint_submin_16, P11_LONG, &res, fp);
-	TEST(uint_zd_16, P11_LONG, &res, fp);
-	TEST(uint_zsm_16, P11_LONG, &res, fp);
-	/*TEST(flat_uint_submin_16, P11_LONG, &res, fp);*/
-	TEST(zlib, P11_LONG, &res, fp);
-	TEST(zstd, P11_LONG, &res, fp);
-	TEST(bzip2, P11_LONG, &res, fp);
-	TEST(fast_lzma2, P11_LONG, &res, fp);
-	TEST(svb, P11_LONG, &res, fp);
-	TEST(svb0124, P11_LONG, &res, fp);
-	TEST(svb12, P11_LONG, &res, fp);
+	TEST(none, P11_0_28997, &res, fp);
+	TEST(uint11_16, P11_0_28997, &res, fp);
+	TEST(uint_16, P11_0_28997, &res, fp);
+	TEST(uint_submin_16, P11_0_28997, &res, fp);
+	TEST(uint_zd_16, P11_0_28997, &res, fp);
+	TEST(uint_zsm_16, P11_0_28997, &res, fp);
+	/*TEST(flat_uint_submin_16, P11_0_28997, &res, fp);*/
+	TEST(zlib, P11_0_28997, &res, fp);
+	TEST(zstd, P11_0_28997, &res, fp);
+	TEST(bzip2, P11_0_28997, &res, fp);
+	TEST(fast_lzma2, P11_0_28997, &res, fp);
+	TEST(svb, P11_0_28997, &res, fp);
+	TEST(svb0124, P11_0_28997, &res, fp);
+	TEST(svb12, P11_0_28997, &res, fp);
 
-	TEST(none, P11_MEDIUM, &res, fp);
-	TEST(uint11_16, P11_MEDIUM, &res, fp);
-	TEST(uint_16, P11_MEDIUM, &res, fp);
-	TEST(uint_submin_16, P11_MEDIUM, &res, fp);
-	TEST(uint_zd_16, P11_MEDIUM, &res, fp);
-	TEST(uint_zsm_16, P11_MEDIUM, &res, fp);
-	TEST(flat_uint_submin_16, P11_MEDIUM, &res, fp);
-	TEST(zlib, P11_MEDIUM, &res, fp);
-	TEST(zstd, P11_MEDIUM, &res, fp);
-	TEST(bzip2, P11_MEDIUM, &res, fp);
-	TEST(fast_lzma2, P11_MEDIUM, &res, fp);
-	TEST(svb, P11_MEDIUM, &res, fp);
-	TEST(svb0124, P11_MEDIUM, &res, fp);
-	TEST(svb12, P11_MEDIUM, &res, fp);
+	TEST(none, P11_0_1995, &res, fp);
+	TEST(uint11_16, P11_0_1995, &res, fp);
+	TEST(uint_16, P11_0_1995, &res, fp);
+	TEST(uint_submin_16, P11_0_1995, &res, fp);
+	TEST(uint_zd_16, P11_0_1995, &res, fp);
+	TEST(uint_zsm_16, P11_0_1995, &res, fp);
+	TEST(flat_uint_submin_16, P11_0_1995, &res, fp);
+	TEST(zlib, P11_0_1995, &res, fp);
+	TEST(zstd, P11_0_1995, &res, fp);
+	TEST(bzip2, P11_0_1995, &res, fp);
+	TEST(fast_lzma2, P11_0_1995, &res, fp);
+	TEST(svb, P11_0_1995, &res, fp);
+	TEST(svb0124, P11_0_1995, &res, fp);
+	TEST(svb12, P11_0_1995, &res, fp);
 
-	TEST(none, P11_SHORT, &res, fp);
-	TEST(uint11_16, P11_SHORT, &res, fp);
-	TEST(uint_16, P11_SHORT, &res, fp);
-	TEST(uint_submin_16, P11_SHORT, &res, fp);
-	TEST(uint_zd_16, P11_SHORT, &res, fp);
-	TEST(uint_zsm_16, P11_SHORT, &res, fp);
-	TEST(flat_uint_submin_16, P11_SHORT, &res, fp);
-	TEST(zlib, P11_SHORT, &res, fp);
-	TEST(zstd, P11_SHORT, &res, fp);
-	TEST(bzip2, P11_SHORT, &res, fp);
-	TEST(fast_lzma2, P11_SHORT, &res, fp);
-	TEST(svb, P11_SHORT, &res, fp);
-	TEST(svb0124, P11_SHORT, &res, fp);
-	TEST(svb12, P11_SHORT, &res, fp);
+	TEST(none, P11_0_285, &res, fp);
+	TEST(uint11_16, P11_0_285, &res, fp);
+	TEST(uint_16, P11_0_285, &res, fp);
+	TEST(uint_submin_16, P11_0_285, &res, fp);
+	TEST(uint_zd_16, P11_0_285, &res, fp);
+	TEST(uint_zsm_16, P11_0_285, &res, fp);
+	TEST(flat_uint_submin_16, P11_0_285, &res, fp);
+	TEST(zlib, P11_0_285, &res, fp);
+	TEST(zstd, P11_0_285, &res, fp);
+	TEST(bzip2, P11_0_285, &res, fp);
+	TEST(fast_lzma2, P11_0_285, &res, fp);
+	TEST(svb, P11_0_285, &res, fp);
+	TEST(svb0124, P11_0_285, &res, fp);
+	TEST(svb12, P11_0_285, &res, fp);
+
+	TEST(none, P11_999_1999, &res, fp);
+	TEST(uint11_16, P11_999_1999, &res, fp);
+	TEST(uint_16, P11_999_1999, &res, fp);
+	TEST(uint_submin_16, P11_999_1999, &res, fp);
+	TEST(uint_zd_16, P11_999_1999, &res, fp);
+	TEST(uint_zsm_16, P11_999_1999, &res, fp);
+	TEST(flat_uint_submin_16, P11_999_1999, &res, fp);
+	TEST(zlib, P11_999_1999, &res, fp);
+	TEST(zstd, P11_999_1999, &res, fp);
+	TEST(bzip2, P11_999_1999, &res, fp);
+	TEST(fast_lzma2, P11_999_1999, &res, fp);
+	TEST(svb, P11_999_1999, &res, fp);
+	TEST(svb0124, P11_999_1999, &res, fp);
+	TEST(svb12, P11_999_1999, &res, fp);
 
 	TEST(none, ONE, &res, fp);
 	TEST(uint11_16, ONE, &res, fp);

@@ -582,30 +582,29 @@ uint64_t flat_bound_16(uint32_t nin, const struct flat_method *method)
 }
 
 int flat_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
-		  uint32_t *nout, const struct flat_method *method)
+		  uint32_t *nout, const struct flat_method *method,
+		  uint32_t **flats, uint32_t *nflats)
 {
 	const int16_t *in_cur;
 	int ret;
-	uint32_t *flats;
 	uint32_t i;
 	uint32_t flat_nbytes;
-	uint32_t nflats;
 	uint32_t nin_cur;
 	uint32_t nout_cur;
 	uint32_t nout_total;
 
-	ret = get_flats(in, nin, &flats, &nflats, &flat_nbytes, method);
+	ret = get_flats(in, nin, flats, nflats, &flat_nbytes, method);
 	if (ret)
 		return ret;
 
 	nout_total = 0;
-	for (i = 0; i < nflats; i++) {
+	for (i = 0; i < *nflats; i++) {
 		/*fprintf(stderr, "%" PRIu32 "\n", flats[i]);*/
-		in_cur = in + flats[i];
-		if (i < nflats - 1)
-			nin_cur = flats[i + 1] - flats[i];
+		in_cur = in + (*flats)[i];
+		if (i < *nflats - 1)
+			nin_cur = (*flats)[i + 1] - (*flats)[i];
 		else
-			nin_cur = nin - flats[i];
+			nin_cur = nin - (*flats)[i];
 
 		/*
 		(void) memcpy(out, &nin_cur, sizeof nin_cur);
@@ -616,13 +615,11 @@ int flat_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 				    &nout_cur);
 
 		if (ret) {
-			free(flats);
 			return ret;
 		}
 
 		nout_total += nout_cur;
 	}
-	free(flats);
 
 	if (flat_nbytes != nout_total)
 		return -1;
@@ -823,7 +820,8 @@ uint64_t flat_uint_submin_bound_16(uint32_t nin)
 }
 
 int flat_uint_submin_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
-			      uint32_t *nout)
+			      uint32_t *nout, uint32_t **flats,
+			      uint32_t *nflats)
 {
 	struct flat_method method = {
 		bound_uint_submin_16,
@@ -835,7 +833,7 @@ int flat_uint_submin_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 		ntobytes_uint_submin_16,
 	};
 
-	return flat_press_16(in, nin, out, nout, &method);
+	return flat_press_16(in, nin, out, nout, &method, flats, nflats);
 }
 
 int flat_uint_submin_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,

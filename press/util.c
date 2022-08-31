@@ -1,5 +1,10 @@
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <inttypes.h>
 #include "util.h"
+
+#define UINT32_MAX_LENGTH (10)
 
 uint16_t get_max_u16(const uint16_t *in, uint64_t nin)
 {
@@ -51,4 +56,24 @@ int16_t get_mean_16(const int16_t *in, uint64_t nin)
 	}
 
 	return (int16_t) mean;
+}
+
+char *array_to_str(const uint32_t *x, uint32_t n)
+{
+	char *str;
+	int nout;
+	int32_t i;
+
+	if (!n)
+		return NULL;
+
+	str = malloc(n * UINT32_MAX_LENGTH + 1);
+	nout = 0;
+
+	for (i = 0; i < n - 1; i++) {
+		nout += sprintf(str + nout, "%" PRIu32 ",", x[i]);
+	}
+	sprintf(str + nout, "%" PRIu32, x[n - 1]);
+
+	return str;
 }
