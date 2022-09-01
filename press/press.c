@@ -66,7 +66,7 @@ struct meta_uint_submin_16;
 int init_meta_uint_submin_16(const int16_t *in, uint32_t nin,
 			     struct flat_meta *meta);
 void free_meta_uint_submin_16(struct flat_meta *meta, uint32_t nin);
-void fill_meta_uint_submin_16(const int16_t *in, uint32_t nin,
+void fill_meta_uint_submin_16(const int16_t *in, uint32_t nin, uint32_t step,
 			      struct flat_meta *meta);
 uint32_t get_nbytes_uint_submin_16(uint32_t i, uint32_t j,
 				   struct flat_meta *meta);
@@ -581,7 +581,7 @@ uint64_t flat_bound_16(uint32_t nin, const struct flat_method *method)
 	return sizeof nin + method->bound(nin);
 }
 
-int flat_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+int flat_press_16(const int16_t *in, uint32_t nin, uint32_t step, uint8_t *out,
 		  uint32_t *nout, const struct flat_method *method,
 		  uint32_t **flats, uint32_t *nflats)
 {
@@ -593,7 +593,7 @@ int flat_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint32_t nout_cur;
 	uint32_t nout_total;
 
-	ret = get_flats(in, nin, flats, nflats, &flat_nbytes, method);
+	ret = get_flats(in, nin, step, flats, nflats, &flat_nbytes, method);
 	if (ret)
 		return ret;
 
@@ -704,7 +704,7 @@ void free_meta_uint_submin_16(struct flat_meta *meta, uint32_t nin)
 	}
 }
 
-void fill_meta_uint_submin_16(const int16_t *in, uint32_t nin,
+void fill_meta_uint_submin_16(const int16_t *in, uint32_t nin, uint32_t step,
 			      struct flat_meta *meta)
 {
 	int16_t max;
@@ -819,8 +819,8 @@ uint64_t flat_uint_submin_bound_16(uint32_t nin)
 	return flat_bound_16(nin, &method);
 }
 
-int flat_uint_submin_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
-			      uint32_t *nout, uint32_t **flats,
+int flat_uint_submin_press_16(const int16_t *in, uint32_t nin, uint32_t step,
+			      uint8_t *out, uint32_t *nout, uint32_t **flats,
 			      uint32_t *nflats)
 {
 	struct flat_method method = {
@@ -833,7 +833,7 @@ int flat_uint_submin_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 		ntobytes_uint_submin_16,
 	};
 
-	return flat_press_16(in, nin, out, nout, &method, flats, nflats);
+	return flat_press_16(in, nin, step, out, nout, &method, flats, nflats);
 }
 
 int flat_uint_submin_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,

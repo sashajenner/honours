@@ -186,7 +186,7 @@ uint32_t zlib_uint_zsubmean_depress(const uint8_t *in, uint32_t nin_elems,
  */
 
 uint64_t flat_bound_16(uint32_t nin, const struct flat_method *method);
-int flat_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+int flat_press_16(const int16_t *in, uint32_t nin, uint32_t step, uint8_t *out,
 		  uint32_t *nout, const struct flat_method *method,
 		  uint32_t **flats, uint32_t *nflats);
 int flat_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
@@ -199,8 +199,8 @@ int flat_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
 
 uint64_t flat_uint_submin_bound_16(uint32_t nin);
 /* *flats: malloced array of starting indices of each flat */
-int flat_uint_submin_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
-			      uint32_t *nout, uint32_t **flats,
+int flat_uint_submin_press_16(const int16_t *in, uint32_t nin, uint32_t step,
+			      uint8_t *out, uint32_t *nout, uint32_t **flats,
 			      uint32_t *nflats);
 int flat_uint_submin_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
 				uint32_t *nout);

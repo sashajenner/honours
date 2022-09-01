@@ -24,7 +24,8 @@ struct flat_method {
 	uint64_t (*bound)(uint64_t);
 	int (*init_meta)(const int16_t *, uint32_t, struct flat_meta *);
 	void (*free_meta)(struct flat_meta *, uint32_t);
-	void (*fill_meta)(const int16_t *, uint32_t, struct flat_meta *);
+	void (*fill_meta)(const int16_t *, uint32_t, uint32_t,
+			  struct flat_meta *);
 	/* write the length before the compressed data as uint32_t */
 	int (*press)(const int16_t *, uint32_t, uint8_t *, uint32_t *);
 	int (*depress)(const uint8_t *, uint32_t, int16_t *, uint32_t *);
@@ -40,7 +41,7 @@ uint32_t end_flat(const int16_t *in, uint32_t nin, struct stats *st);
 */
 
 /* dynamic programming */
-int get_flats(const int16_t *in, uint32_t nin, uint32_t **flats,
+int get_flats(const int16_t *in, uint32_t nin, uint32_t step, uint32_t **flats,
 	      uint32_t *nflats, uint32_t *flats_nbytes,
 	      const struct flat_method *method);
 

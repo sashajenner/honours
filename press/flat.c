@@ -13,19 +13,16 @@
 uint32_t get_flats_between(const int16_t *in, uint32_t nin, uint32_t i,
 			   uint32_t j, uint32_t **flats, uint32_t *nflats,
 			   struct flat_meta *meta);
-void fill_meta(const int16_t *in, uint32_t nin, struct flat_meta *meta,
-	       void (*fill_meta_nbytes)(const int16_t *, uint32_t,
-					struct flat_meta *));
-void fill_meta_flats(uint32_t nin, struct flat_meta *meta);
-void fill_meta_flat(uint32_t i, uint32_t j, uint32_t nin,
+void fill_meta_flats(uint32_t nin, uint32_t step, struct flat_meta *meta);
+void fill_meta_flat(uint32_t i, uint32_t j, uint32_t nin, uint32_t step,
 		    struct flat_meta *meta);
 void fill_meta_flat_disjoint(uint32_t i, uint32_t j, uint32_t nin,
-			     struct flat_meta *meta);
+			     uint32_t step, struct flat_meta *meta);
 /*
 void fill_meta_flat_union(uint32_t i, uint32_t j, uint32_t nin,
 			  struct flat_meta *meta);
 			  */
-void free_meta(struct flat_meta *meta, uint32_t nin);
+void free_meta(struct flat_meta *meta, uint32_t nin, uint32_t step);
 void print_meta_minmax(struct flat_meta *meta, uint32_t nin);
 void print_meta_nbytes(struct flat_meta *meta, uint32_t nin);
 
@@ -66,7 +63,7 @@ uint32_t end_flat(const int16_t *in, uint32_t nin, struct stats *st)
 }
 */
 
-int get_flats(const int16_t *in, uint32_t nin, uint32_t **flats,
+int get_flats(const int16_t *in, uint32_t nin, uint32_t step, uint32_t **flats,
 	      uint32_t *nflats, uint32_t *flats_nbytes,
 	      const struct flat_method *method)
 {
@@ -79,15 +76,16 @@ int get_flats(const int16_t *in, uint32_t nin, uint32_t **flats,
 
 	ret = method->init_meta(in, nin, meta);
 	if (ret) {
-		free_meta(meta, nin);
+		free_meta(meta, nin, step);
 		return ret;
 	}
 
-	fill_meta(in, nin, meta, method->fill_meta);
+	method->fill_meta(in, nin, step, meta);
+	fill_meta_flats(nin, step, meta);
 	*flats_nbytes = get_flats_between(in, nin, 0, nin - 1, flats, nflats,
 					  meta);
 	method->free_meta(meta, nin);
-	free_meta(meta, nin);
+	free_meta(meta, nin, step);
 
 	return 0;
 }
@@ -109,27 +107,19 @@ uint32_t get_flats_between(const int16_t *in, uint32_t nin, uint32_t i,
 	return meta->flats_nbytes;
 }
 
-void fill_meta(const int16_t *in, uint32_t nin, struct flat_meta *meta,
-	       void (*fill_meta_nbytes)(const int16_t *, uint32_t,
-					struct flat_meta *))
-{
-	fill_meta_nbytes(in, nin, meta);
-	fill_meta_flats(nin, meta);
-}
-
-void fill_meta_flats(uint32_t nin, struct flat_meta *meta)
+void fill_meta_flats(uint32_t nin, uint32_t step, struct flat_meta *meta)
 {
 	uint32_t i;
 	uint32_t len;
 
-	for (len = 1; len <= nin; len++) {
-		for (i = 0; i <= nin - len; i++) {
-			fill_meta_flat(i, i + len - 1, nin, meta);
+	for (len = step; len <= nin; len += step) {
+		for (i = 0; i <= nin - len; i += step) {
+			fill_meta_flat(i, i + len - 1, nin, step, meta);
 		}
 	}
 }
 
-void fill_meta_flat(uint32_t i, uint32_t j, uint32_t nin,
+void fill_meta_flat(uint32_t i, uint32_t j, uint32_t nin, uint32_t step,
 		    struct flat_meta *meta)
 {
 	struct flat_meta *cur;
@@ -141,12 +131,12 @@ void fill_meta_flat(uint32_t i, uint32_t j, uint32_t nin,
 	cur->flats[0] = i;
 	cur->flats_nbytes = cur->nbytes;
 
-	fill_meta_flat_disjoint(i, j, nin, meta);
+	fill_meta_flat_disjoint(i, j, nin, step, meta);
 	/*fill_meta_flat_union(i, j, nin, meta);*/
 }
 
 void fill_meta_flat_disjoint(uint32_t i, uint32_t j, uint32_t nin,
-			     struct flat_meta *meta)
+			     uint32_t step, struct flat_meta *meta)
 {
 	struct flat_meta *cur;
 	struct flat_meta *left;
@@ -160,7 +150,7 @@ void fill_meta_flat_disjoint(uint32_t i, uint32_t j, uint32_t nin,
 	left_min = NULL;
 	right_min = NULL;
 
-	for (k = i; k < j; k++) {
+	for (k = i + step - 1; k < j; k += step) {
 		left = meta + I2(i, k);
 		right = meta + I2(k + 1, j);
 		flats_nbytes = left->flats_nbytes + right->flats_nbytes;
@@ -250,13 +240,13 @@ void fill_meta_flat_union(uint32_t i, uint32_t j, uint32_t nin,
 }
 */
 
-void free_meta(struct flat_meta *meta, uint32_t nin)
+void free_meta(struct flat_meta *meta, uint32_t nin, uint32_t step)
 {
 	uint32_t i;
 	uint32_t j;
 
-	for (j = 0; j < nin; j++) {
-		for (i = 0; i <= j; i++) {
+	for (j = step - 1; j < nin; j += step) {
+		for (i = 0; i <= j; i += step) {
 			free(meta[I2(i, j)].flats);
 		}
 	}
