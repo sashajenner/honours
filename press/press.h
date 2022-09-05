@@ -280,14 +280,13 @@ void svb12_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		 uint64_t *nout);
 void svb12_depress(const uint8_t *in, uint64_t nin, uint16_t *out);
 
-/* zigzag delta svb */
-/*
-uint32_t svb_zd_bound(const int16_t *in, uint32_t nin);
-uint32_t svb_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
-		      uint32_t nout_bytes);
-uint32_t svb_zd_depress(const uint8_t *in, uint32_t nin_elems,
-			uint32_t nin_bytes, int16_t *out, uint32_t nout_bytes);
-			*/
+/* svb zigzag delta */
+
+uint64_t svb_zd_bound_16(uint64_t nin);
+int svb_zd_press_16(const int16_t *in, uint64_t nin, uint8_t *out,
+		    uint64_t *nout);
+int svb_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+		      uint64_t *nout);
 
 /* zigzag delta svb0124 */
 /*
@@ -368,6 +367,16 @@ uint32_t zstd_svb12_zd_depress(const uint8_t *in, uint32_t nin_elems,
 			       uint32_t nin_bytes, int16_t *out,
 			       uint32_t nout_bytes);
 			       */
+
+/* flac */
+
+#define PRESS_LVL_FLAC (5)
+#define PRESS_CHANNELS_FLAC (1)
+uint64_t flac_bound(uint64_t nin);
+int flac_press(const int32_t *in, uint64_t nin, uint8_t *out, uint64_t *nout,
+	       uint32_t bps, uint32_t sample_rate);
+int flac_depress(const uint8_t *in, uint64_t nin, int32_t *out,
+		 uint64_t *nout);
 
 /* TODO
  * variable byte

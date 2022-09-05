@@ -16,6 +16,8 @@
 #include "streamvbyte/include/streamvbytedelta.h"
 #include "bzip2/bzlib.h"
 #include "fast-lzma2/fast-lzma2.h"
+#include "flac-1.3.4/include/FLAC/stream_encoder.h"
+#include "flac-1.3.4/include/FLAC/stream_decoder.h"
 
 uint64_t uintx_bound(uint8_t in_bits, uint8_t out_bits, uint64_t nin);
 void uintx_htobe(uint8_t in_bits, const uint8_t *h, uint8_t *be, uint64_t n);
@@ -74,6 +76,75 @@ int press_uint_submin_16(const int16_t *in, uint32_t nin, uint8_t *out,
 			 uint32_t *nout);
 int depress_uint_submin_16(const uint8_t *in, uint32_t nin, int16_t *out,
 			   uint32_t *nout);
+
+struct flac_data_u8 {
+	uint8_t *data;
+	uint64_t cap;
+	uint64_t n;
+	uint64_t offset;
+};
+
+struct flac_press_data {
+	struct flac_data_u8 out;
+};
+
+FLAC__StreamEncoderWriteStatus
+flac_press_write_callback(const FLAC__StreamEncoder *encoder,
+			  const FLAC__byte buffer[], size_t bytes,
+			  uint32_t samples, uint32_t current_frame,
+			  void *client_data);
+FLAC__StreamEncoderSeekStatus
+flac_press_seek_callback(const FLAC__StreamEncoder *encoder,
+			 FLAC__uint64 absolute_byte_offset, void *client_data);
+FLAC__StreamEncoderTellStatus
+flac_press_tell_callback(const FLAC__StreamEncoder *encoder,
+			 FLAC__uint64 *absolute_byte_offset, void *client_data);
+
+struct flac_data_const_u8 {
+	const uint8_t *data;
+	uint64_t cap;
+	uint64_t n;
+	uint64_t offset;
+};
+
+struct flac_data_32 {
+	int32_t *data;
+	uint64_t cap;
+	uint64_t n;
+	uint64_t offset;
+};
+
+struct flac_depress_data {
+	struct flac_data_const_u8 in;
+	struct flac_data_32 out;
+	int error;
+};
+
+FLAC__StreamDecoderReadStatus
+flac_depress_read_callback(const FLAC__StreamDecoder *decoder,
+			   FLAC__byte buffer[], size_t *bytes,
+			   void *client_data);
+FLAC__StreamDecoderSeekStatus
+flac_depress_seek_callback(const FLAC__StreamDecoder *decoder,
+			   FLAC__uint64 absolute_byte_offset,
+			   void *client_data);
+FLAC__StreamDecoderTellStatus
+flac_depress_tell_callback(const FLAC__StreamDecoder *decoder,
+			   FLAC__uint64 *absolute_byte_offset,
+			   void *client_data);
+FLAC__StreamDecoderLengthStatus
+flac_depress_length_callback(const FLAC__StreamDecoder *decoder,
+			     FLAC__uint64 *stream_length, void *client_data);
+FLAC__bool flac_depress_eof_callback(const FLAC__StreamDecoder *decoder,
+				     void *client_data);
+FLAC__StreamDecoderWriteStatus
+flac_depress_write_callback(const FLAC__StreamDecoder *decoder,
+			    const FLAC__Frame *frame,
+			    const FLAC__int32 *const buffer[],
+			    void *client_data);
+void flac_depress_error_callback(const FLAC__StreamDecoder *decoder,
+				 FLAC__StreamDecoderErrorStatus status,
+				 void *client_data);
 
 /* none */
 
@@ -1030,4 +1101,330 @@ void svb12_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 void svb12_depress(const uint8_t *in, uint64_t nin, uint16_t *out)
 {
 	(void) streamvbyte_decode_12(in, out, nin);
+}
+
+/* svb | zigzag delta */
+
+/*
+uint64_t svb_zd_bound_16(uint64_t nin)
+{
+	return svb_bound(nin);
+}
+
+int svb_zd_press_16(const int16_t *in, uint64_t nin, uint8_t *out,
+		    uint64_t *nout)
+{
+	uint32_t *in_zd;
+
+	zigdelta_16_32(in, nin);
+}
+
+int svb_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+		      uint64_t *nout);
+		      */
+
+/* flac */
+
+uint64_t flac_bound(uint64_t nin)
+{
+	/* TODO properly bound */
+	return nin * 1.5;
+}
+
+int flac_press(const int32_t *in, uint64_t nin, uint8_t *out, uint64_t *nout,
+	       uint32_t bps, uint32_t sample_rate)
+{
+	FLAC__StreamEncoder *encoder;
+	FLAC__StreamEncoderInitStatus init_status;
+	FLAC__bool ok;
+	FLAC__int32 *in_flac;
+	int ret;
+	struct flac_press_data client_data;
+	uint64_t i;
+
+	ret = 0;
+	client_data.out.data = out;
+	client_data.out.cap = *nout;
+	client_data.out.n = 0;
+	client_data.out.offset = 0;
+
+	encoder = FLAC__stream_encoder_new();
+	if (!encoder)
+		return -1;
+
+	/*ok = FLAC__stream_encoder_set_verify(encoder, true);*/
+	ok = FLAC__stream_encoder_set_compression_level(encoder, PRESS_LVL_FLAC);
+	ok &= FLAC__stream_encoder_set_channels(encoder, PRESS_CHANNELS_FLAC);
+	ok &= FLAC__stream_encoder_set_bits_per_sample(encoder, bps);
+	ok &= FLAC__stream_encoder_set_sample_rate(encoder, sample_rate);
+	ok &= FLAC__stream_encoder_set_total_samples_estimate(encoder, nin);
+
+	if (!ok)
+		return -1;
+
+	init_status =
+		FLAC__stream_encoder_init_stream(encoder,
+						 flac_press_write_callback,
+						 flac_press_seek_callback,
+						 flac_press_tell_callback,
+						 NULL, &client_data);
+
+	if (init_status != FLAC__STREAM_ENCODER_INIT_STATUS_OK) {
+		FLAC__stream_encoder_delete(encoder);
+		return -1;
+	}
+
+	in_flac = malloc(nin * sizeof *in_flac);
+	if (!in_flac) {
+		FLAC__stream_encoder_delete(encoder);
+		return -1;
+	}
+
+	for (i = 0; i < nin; i++) {
+		in_flac[i] = (FLAC__int32) in[i];
+	}
+
+	ok = FLAC__stream_encoder_process_interleaved(encoder, in_flac, nin);
+	ok &= FLAC__stream_encoder_finish(encoder);
+	free(in_flac);
+
+	if (!ok)
+		ret = -1;
+	else
+		*nout = client_data.out.n;
+
+	FLAC__stream_encoder_delete(encoder);
+	return ret;
+}
+
+FLAC__StreamEncoderWriteStatus
+flac_press_write_callback(const FLAC__StreamEncoder *encoder,
+			  const FLAC__byte buffer[], size_t bytes,
+			  uint32_t samples, uint32_t current_frame,
+			  void *client_data)
+{
+	struct flac_data_u8 *out;
+	struct flac_press_data *press_data;
+
+	press_data = client_data;
+	out = &(press_data->out);
+
+	if (bytes + out->offset > out->cap)
+		return FLAC__STREAM_ENCODER_WRITE_STATUS_FATAL_ERROR;
+
+	(void) memcpy(out->data + out->offset, buffer, bytes);
+	out->offset += bytes;
+
+	if (out->offset > out->n)
+		out->n = out->offset;
+
+	return FLAC__STREAM_ENCODER_WRITE_STATUS_OK;
+}
+
+FLAC__StreamEncoderSeekStatus
+flac_press_seek_callback(const FLAC__StreamEncoder *encoder,
+			 FLAC__uint64 absolute_byte_offset, void *client_data)
+{
+	struct flac_data_u8 *out;
+	struct flac_press_data *press_data;
+
+	press_data = client_data;
+	out = &(press_data->out);
+
+	if (absolute_byte_offset > out->cap || absolute_byte_offset < 0)
+		return FLAC__STREAM_ENCODER_SEEK_STATUS_ERROR;
+
+	out->offset = absolute_byte_offset;
+
+	return FLAC__STREAM_ENCODER_SEEK_STATUS_OK;
+}
+
+FLAC__StreamEncoderTellStatus
+flac_press_tell_callback(const FLAC__StreamEncoder *encoder,
+			 FLAC__uint64 *absolute_byte_offset, void *client_data)
+{
+	struct flac_data_u8 *out;
+	struct flac_press_data *press_data;
+
+	press_data = client_data;
+	out = &(press_data->out);
+
+	*absolute_byte_offset = out->offset;
+
+	return FLAC__STREAM_ENCODER_TELL_STATUS_OK;
+}
+
+int flac_depress(const uint8_t *in, uint64_t nin, int32_t *out,
+		 uint64_t *nout)
+{
+	FLAC__StreamDecoder *decoder;
+	FLAC__StreamDecoderInitStatus init_status;
+	FLAC__bool ok;
+	int ret;
+	struct flac_depress_data client_data;
+
+	ret = 0;
+
+	client_data.in.data = in;
+	client_data.in.cap = nin;
+	client_data.in.n = nin;
+	client_data.in.offset = 0;
+
+	client_data.out.data = out;
+	client_data.out.cap = *nout;
+	client_data.out.n = 0;
+	client_data.out.offset = 0;
+
+	client_data.error = 0;
+
+	decoder = FLAC__stream_decoder_new();
+	if (!decoder)
+		return -1;
+
+	init_status =
+		FLAC__stream_decoder_init_stream(decoder,
+						 flac_depress_read_callback,
+						 flac_depress_seek_callback,
+						 flac_depress_tell_callback,
+						 flac_depress_length_callback,
+						 flac_depress_eof_callback,
+						 flac_depress_write_callback,
+						 NULL,
+						 flac_depress_error_callback,
+						 &client_data);
+	if (init_status != FLAC__STREAM_DECODER_INIT_STATUS_OK) {
+		FLAC__stream_decoder_delete(decoder);
+		return -1;
+	}
+
+	ok = FLAC__stream_decoder_process_until_end_of_stream(decoder);
+	if (!ok || client_data.error)
+		ret = -1;
+	else
+		*nout = client_data.out.n;
+
+	FLAC__stream_decoder_delete(decoder);
+	return ret;
+}
+
+
+FLAC__StreamDecoderReadStatus
+flac_depress_read_callback(const FLAC__StreamDecoder *decoder,
+			   FLAC__byte buffer[], size_t *bytes,
+			   void *client_data)
+{
+	struct flac_data_const_u8 *in;
+	struct flac_depress_data *depress_data;
+	uint64_t bytes_to_cp;
+
+	depress_data = client_data;
+	in = &(depress_data->in);
+
+	bytes_to_cp = MIN(*bytes, in->cap - in->n);
+
+	(void) memcpy(buffer, in->data + in->offset, bytes_to_cp);
+
+	in->offset += bytes_to_cp;
+	*bytes = bytes_to_cp;
+
+	if (bytes_to_cp)
+		return FLAC__STREAM_DECODER_READ_STATUS_CONTINUE;
+	else
+		return FLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM;
+}
+
+
+FLAC__StreamDecoderSeekStatus
+flac_depress_seek_callback(const FLAC__StreamDecoder *decoder,
+			   FLAC__uint64 absolute_byte_offset,
+			   void *client_data)
+{
+	struct flac_data_const_u8 *in;
+	struct flac_depress_data *depress_data;
+
+	depress_data = client_data;
+	in = &(depress_data->in);
+
+	if (absolute_byte_offset > in->n || absolute_byte_offset < 0)
+		return FLAC__STREAM_ENCODER_SEEK_STATUS_ERROR;
+
+	in->offset = absolute_byte_offset;
+
+	return FLAC__STREAM_ENCODER_SEEK_STATUS_OK;
+}
+
+FLAC__StreamDecoderTellStatus
+flac_depress_tell_callback(const FLAC__StreamDecoder *decoder,
+			   FLAC__uint64 *absolute_byte_offset,
+			   void *client_data)
+{
+	struct flac_data_const_u8 *in;
+	struct flac_depress_data *depress_data;
+
+	depress_data = client_data;
+	in = &(depress_data->in);
+
+	*absolute_byte_offset = in->offset;
+
+	return FLAC__STREAM_DECODER_TELL_STATUS_OK;
+}
+
+
+FLAC__StreamDecoderLengthStatus
+flac_depress_length_callback(const FLAC__StreamDecoder *decoder,
+			     FLAC__uint64 *stream_length, void *client_data)
+{
+	struct flac_data_const_u8 *in;
+	struct flac_depress_data *depress_data;
+
+	depress_data = client_data;
+	in = &(depress_data->in);
+
+	*stream_length = in->n;
+
+	return FLAC__STREAM_DECODER_LENGTH_STATUS_OK;
+}
+
+FLAC__bool flac_depress_eof_callback(const FLAC__StreamDecoder *decoder,
+				     void *client_data)
+{
+	struct flac_data_const_u8 *in;
+	struct flac_depress_data *depress_data;
+
+	depress_data = client_data;
+	in = &(depress_data->in);
+
+	return in->offset == in->n;
+}
+
+FLAC__StreamDecoderWriteStatus
+flac_depress_write_callback(const FLAC__StreamDecoder *decoder,
+			    const FLAC__Frame *frame,
+			    const FLAC__int32 *const buffer[],
+			    void *client_data)
+{
+	struct flac_data_32 *out;
+	struct flac_depress_data *depress_data;
+
+	depress_data = client_data;
+	out = &(depress_data->out);
+
+	(void) memcpy(out + out->offset, buffer[0],
+		      frame->header.blocksize * sizeof *out);
+	out->offset += frame->header.blocksize;
+
+	if (out->offset > out->n)
+		out->n = out->offset;
+
+	return FLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE;
+}
+
+void flac_depress_error_callback(const FLAC__StreamDecoder *decoder,
+				 FLAC__StreamDecoderErrorStatus status,
+				 void *client_data)
+{
+	struct flac_depress_data *depress_data;
+
+	depress_data = client_data;
+	depress_data->error = 1;
 }

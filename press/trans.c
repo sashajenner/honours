@@ -91,6 +91,20 @@ uint16_t *zigdelta_16(const int16_t *in, uint64_t nin)
 	return out;
 }
 
+uint32_t *zigdelta_16_32(const int16_t *in, uint64_t nin)
+{
+	uint32_t *out;
+	uint64_t i;
+
+	out = malloc(nin * sizeof *out);
+
+	for (i = 0; i < nin - 1; i++) {
+		out[i] = zigzag_one_16(in[i + 1] - in[i]);
+	}
+
+	return out;
+}
+
 /* in[0] must be the first signal */
 void unzigdelta_inplace_16(int16_t *in, uint64_t nin)
 {

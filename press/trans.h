@@ -10,6 +10,7 @@ void shift_x_inplace_16(int16_t x, int16_t *in, uint64_t nin);
 void zigzag_inplace_16(int16_t *in, uint64_t nin);
 void unzigzag_inplace_16(uint16_t *in, uint64_t nin);
 uint16_t *zigdelta_16(const int16_t *in, uint64_t nin);
+uint32_t *zigdelta_16_32(const int16_t *in, uint64_t nin);
 void unzigdelta_inplace_16(int16_t *in, uint64_t nin);
 
 #endif /* trans.h */

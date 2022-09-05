@@ -1036,6 +1036,86 @@ int test_svb12(const int16_t *sigs, const uint32_t nr_sigs, struct result *res)
 	return EXIT_SUCCESS;
 }
 
+int test_flac(const int16_t *sigs, const uint32_t nr_sigs, uint32_t bps,
+	      uint32_t sample_rate, struct result *res)
+{
+	clock_t after;
+	clock_t before;
+	int ret;
+	int32_t *sigs_32;
+	int32_t *sigs_depress_32;
+	uint32_t i;
+	uint64_t depress_len;
+	uint64_t nr_sigs_bytes;
+	uint64_t press_len;
+	uint64_t pressbound;
+	uint8_t *sigs_press;
+
+	nr_sigs_bytes = sizeof *sigs * nr_sigs;
+
+	sigs_32 = malloc(nr_sigs * sizeof *sigs_32);
+	ASSERT(sigs_32);
+	for (i = 0; i < nr_sigs; i++) {
+		sigs_32[i] = sigs[i];
+	}
+
+	/* bound sigs_press */
+	before = clock();
+	pressbound = flac_bound(nr_sigs);
+	after = clock();
+	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
+
+	/* init sigs_press */
+	sigs_press = malloc(pressbound);
+	ASSERT(sigs_press);
+
+	/* compress sigs */
+	press_len = pressbound;
+	before = clock();
+	ret = flac_press(sigs_32, nr_sigs, sigs_press, &press_len, bps,
+			 sample_rate);
+	after = clock();
+	res->press_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	ASSERT(press_len <= pressbound);
+
+	/* init sigs_depress */
+	depress_len = nr_sigs * sizeof *sigs_depress_32;
+	sigs_depress_32 = malloc(depress_len);
+	ASSERT(sigs_depress_32);
+
+	/* decompress sigs_press */
+	before = clock();
+	ret = flac_depress(sigs_press, nr_sigs, sigs_depress_32, &depress_len);
+	after = clock();
+	res->depress_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	/* ensure decompressed == original */
+	for (i = 0; i < nr_sigs; i++) {
+		ASSERT(sigs_depress_32[i] == sigs[i]);
+	}
+
+	/* let it go */
+	free(sigs_32);
+	free(sigs_press);
+	free(sigs_depress_32);
+
+	res->depress_bytes = nr_sigs_bytes;
+	res->pressbound_bytes = pressbound;
+	res->press_bytes = press_len;
+
+	return EXIT_SUCCESS;
+}
+
+int test_flac_P11(const int16_t *sigs, const uint32_t nr_sigs,
+		  struct result *res)
+{
+	return test_flac(sigs, nr_sigs, P11_BITS_PER_SAMPLE, P11_SAMPLING_RATE,
+			 res);
+}
+
 int main(void)
 {
 	FILE *fp;
@@ -1059,6 +1139,7 @@ int main(void)
 	TEST(svb, P11, &res, fp);
 	TEST(svb0124, P11, &res, fp);
 	TEST(svb12, P11, &res, fp);
+	TEST(flac_P11, P11, &res, fp);
 
 	TEST(none, P11_0_66999, &res, fp);
 	TEST(uint11_16, P11_0_66999, &res, fp);
@@ -1067,7 +1148,7 @@ int main(void)
 	TEST(uint_zd_16, P11_0_66999, &res, fp);
 	TEST(uint_zsm_16, P11_0_66999, &res, fp);
 	/*TEST(flat_uint_submin_16_step1, P11_0_66999, &res, fp);*/
-	TEST(flat_uint_submin_16_step100, P11_0_66999, &res, fp);
+	/*TEST(flat_uint_submin_16_step100, P11_0_66999, &res, fp);*/
 	TEST(zlib, P11_0_66999, &res, fp);
 	TEST(zstd, P11_0_66999, &res, fp);
 	TEST(bzip2, P11_0_66999, &res, fp);
