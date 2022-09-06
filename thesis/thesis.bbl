@@ -1,13 +1,172 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{25}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \providecommand{\urlprefix}{URL }
 \providecommand{\href}[2]{#2}
+
+\bibitem[{Burrows and Wheeler(1994)}]{bwt}
+Michael Burrows and David~J. Wheeler. 1994.
+\newblock A block-sorting lossless data compression algorithm.
+\newblock Digital Equipment Corporation.
+
+\bibitem[{Chandak et~al.(2020{\natexlab{a}})Chandak, Tatwawadi, Sridhar, and
+  Weissman}]{lossy-nano}
+Shubham Chandak, Kedar Tatwawadi, Srivatsan Sridhar, and Tsachy Weissman.
+  2020{\natexlab{a}}.
+\newblock
+  \href{https://www.scopus.com/inward/record.uri?eid=2-s2.0-85106710570&doi=10.1093%2fbioinformatics%2fbtaa1017&partnerID=40&md5=2cf4f822a7c10dcaa5c234808a7b31a0}{Impact
+  of lossy compression of nanopore raw signal data on basecalling and consensus
+  accuracy}.
+\newblock \emph{Bioinformatics}, 36(22-23):5313--5321.
+
+\bibitem[{Chandak et~al.(2020{\natexlab{b}})Chandak, Tatwawadi, Wen, Wang,
+  Aparicio~Ojea, and Weissman}]{lfzip}
+Shubham Chandak, Kedar Tatwawadi, Chengtao Wen, Lingyun Wang, Juan
+  Aparicio~Ojea, and Tsachy Weissman. 2020{\natexlab{b}}.
+\newblock
+  \href{https://www.scopus.com/inward/record.uri?eid=2-s2.0-85086841081&doi=10.1109%2fDCC47342.2020.00042&partnerID=40&md5=65b7c6cea3e31d1d00c9d2d5f598f4cb}{Lfzip:
+  Lossy compression of multivariate floating-point time series data via
+  improved prediction}.
+\newblock In \emph{2020 Data Compression Conference Proceedings (DCC)}, volume
+  2020-March, pages 342--351.
+
+\bibitem[{Chen et~al.(2021)Chen, Wu, and Luo}]{mcdrc}
+Qianhao Chen, Wenqi Wu, and Wei Luo. 2021.
+\newblock \href{https://www.mdpi.com/2076-3417/11/21/10240}{Lossless
+  compression of sensor signals using an untrained multi-channel recurrent
+  neural predictor}.
+\newblock \emph{Applied Sciences}, 11(21).
+
+\bibitem[{Collet and Kucherawy(2018)}]{zstd}
+Yann Collet and Murray Kucherawy. 2018.
+\newblock \href{https://www.rfc-editor.org/info/rfc8478}{{Zstandard Compression
+  and the application/zstd Media Type}}.
+\newblock RFC 8478.
+
+\bibitem[{Cover and Thomas(1991)}]{info-book}
+Thomas~M. Cover and Joy~A. Thomas. 1991.
+\newblock \emph{Elements of Information Theory}.
+\newblock Wiley series in telecommunications. John Wiley \& Sons.
+
+\bibitem[{Cox et~al.(2012)Cox, Bauer, Jakobi, and Rosone}]{bwt-genomic}
+A.~J. Cox, M.~J. Bauer, T.~Jakobi, and G.~Rosone. 2012.
+\newblock \href{https://doi.org/10.1093%2Fbioinformatics%2Fbts173}{Large-scale
+  compression of genomic sequence databases with the burrows-wheeler
+  transform}.
+\newblock \emph{Bioinformatics}, 28(11):1415--1419.
+
+\bibitem[{Gage(1994)}]{byte-pair}
+Phillip Gage. 1994.
+\newblock
+  \href{http://www.pennelynn.com/Documents/CUJ/HTML/94HTML/19940045.HTM}{A new
+  algorithm for data compression}.
+\newblock \emph{The C User Journal}.
+
+\bibitem[{Gamaarachchi et~al.(2022)Gamaarachchi, Samarakoon, Jenner, Ferguson,
+  Amos, Hammond, Saadat, Smith, Parameswaran, and Deveson}]{slow5}
+Hasindu Gamaarachchi, Hiruna Samarakoon, Sasha~P. Jenner, James~M. Ferguson,
+  Timothy~G. Amos, Jillian~M. Hammond, Hassaan Saadat, Martin~A. Smith, Sri
+  Parameswaran, and Ira~W. Deveson. 2022.
+\newblock \href{https://doi.org/10.1038/s41587-021-01147-4}{Fast nanopore
+  sequencing data analysis with slow5}.
+\newblock \emph{Nature Biotechnology}.
+
+\bibitem[{Gigante(2017)}]{picopore}
+Scott Gigante. 2017.
+\newblock
+  \href{http://ezproxy.library.usyd.edu.au/login?url=https://www.proquest.com/scholarly-journals/picopore-tool-reducing-storage-size-oxford/docview/1952806284/se-2}{Picopore:
+  A tool for reducing the storage size of oxford nanopore technologies datasets
+  without loss of functionality}.
+\newblock \emph{F1000Research}, 6.
+
+\bibitem[{Hernaez et~al.(2019)Hernaez, Pavlichin, Weissman, and
+  Ochoa}]{genomic-comp}
+Mikel Hernaez, Dmitri Pavlichin, Tsachy Weissman, and Idoia Ochoa. 2019.
+\newblock
+  \href{https://doi.org/10.1146/annurev-biodatasci-072018-021229}{Genomic data
+  compression}.
+\newblock \emph{Annual Review of Biomedical Data Science}, 2(1):19--37.
+
+\bibitem[{Huffman(1952)}]{huffman}
+David~A. Huffman. 1952.
+\newblock \href{http://dx.doi.org/10.1109/JRPROC.1952.273898}{A method for the
+  construction of minimum-redundancy codes}.
+\newblock \emph{Proceedings of the IRE}, 40(9):1098--1101.
+
+\bibitem[{Knuth(1985)}]{fgk}
+Donald~E Knuth. 1985.
+\newblock
+  \href{https://www.sciencedirect.com/science/article/pii/0196677485900367}{Dynamic
+  huffman coding}.
+\newblock \emph{Journal of Algorithms}, 6(2):163--180.
+
+\bibitem[{Leeuwen(1976)}]{huffman-time}
+Jan~Van Leeuwen. 1976.
+\newblock On the construction of huffman trees.
+
+\bibitem[{Lemire et~al.(2018)Lemire, Kurz, and Rupp}]{svb}
+Daniel Lemire, Nathan Kurz, and Christoph Rupp. 2018.
+\newblock \href{https://doi.org/10.1016%2Fj.ipl.2017.09.011}{Stream {VByte} :
+  Faster byte-oriented integer compression}.
+\newblock \emph{Information Processing Letters}, 130:1--6.
+
+\bibitem[{Martin(1979)}]{range-coding}
+G.~Nigel~N. Martin. 1979.
+\newblock Range encoding: An algorithm for removing redundancy from a digitized
+  message.
+\newblock In \emph{Video \& Data Recording Conference}. Southampton, UK.
+
+\bibitem[{McMillan(1956)}]{mcmillan}
+B.~McMillan. 1956.
+\newblock \href{http://dx.doi.org/10.1109/TIT.1956.1056818}{Two inequalities
+  implied by unique decipherability}.
+\newblock \emph{IRE Transactions on Information Theory}, 2(4):115--116.
+
+\bibitem[{Rissanen(1976)}]{arithmetic-coding}
+J.~J. Rissanen. 1976.
+\newblock \href{http://dx.doi.org/10.1147/rd.203.0198}{Generalized kraft
+  inequality and arithmetic coding}.
+\newblock \emph{IBM Journal of Research and Development}, 20(3):198--203.
+
+\bibitem[{Robinson and Cherry(1967)}]{rle}
+A.H. Robinson and C.~Cherry. 1967.
+\newblock \href{http://dx.doi.org/10.1109/PROC.1967.5493}{Results of a
+  prototype television bandwidth compression scheme}.
+\newblock \emph{Proceedings of the IEEE}, 55(3):356--364.
+
+\bibitem[{Shannon(1948)}]{shannon}
+C.~E. Shannon. 1948.
+\newblock \href{http://dx.doi.org/10.1002/j.1538-7305.1948.tb01338.x}{A
+  mathematical theory of communication}.
+\newblock \emph{The Bell System Technical Journal}, 27(3):379--423.
+
+\bibitem[{Vitter(1987)}]{vitter}
+Jeffrey~Scott Vitter. 1987.
+\newblock Design and analysis of dynamic huffman codes.
+\newblock \emph{Journal of the ACM}.
 
 \bibitem[{Wang et~al.(2021)Wang, Zhao, Bollas, Wang, and Au}]{Wang2021}
 Yunhao Wang, Yue Zhao, Audrey Bollas, Yuru Wang, and Kin~Fai Au. 2021.
 \newblock \href{https://doi.org/10.1038/s41587-021-01108-x}{Nanopore sequencing
   technology, bioinformatics and applications}.
 \newblock \emph{Nature Biotechnology}, 39(11):1348--1365.
+
+\bibitem[{Welch(1984)}]{lzw}
+Terry Welch. 1984.
+\newblock \href{http://dx.doi.org/10.1109/MC.1984.1659158}{A technique for
+  high-performance data compression}.
+\newblock \emph{Computer}, 17(6):8--19.
+
+\bibitem[{Ziv and Lempel(1977)}]{lz77}
+Jacob Ziv and Abraham Lempel. 1977.
+\newblock \href{http://dx.doi.org/10.1109/TIT.1977.1055714}{A universal
+  algorithm for sequential data compression}.
+\newblock \emph{IEEE Transactions on Information Theory}, 23(3):337--343.
+
+\bibitem[{Ziv and Lempel(1978)}]{lz78}
+Jacob Ziv and Abraham Lempel. 1978.
+\newblock \href{http://dx.doi.org/10.1109/TIT.1978.1055934}{Compression of
+  individual sequences via variable-rate coding}.
+\newblock \emph{IEEE Transactions on Information Theory}, 24(5):530--536.
 
 \end{thebibliography}

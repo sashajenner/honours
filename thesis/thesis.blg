@@ -5,45 +5,47 @@ The style file: style/mybibstyle.bst
 Database file #1: references.bib
 Warning--I didn't find a database entry for "clark-curran:07"
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
-You've used 1 entry,
+Warning--empty booktitle in bwt
+Warning--empty journal in huffman-time
+You've used 25 entries,
             3070 wiz_defined-function locations,
-            657 strings with 5160 characters,
-and the built_in function-call counts, 783 in all, are:
-= -- 54
-> -- 44
-< -- 0
-+ -- 16
-- -- 15
-* -- 71
-:= -- 125
-add.period$ -- 4
-call.type$ -- 1
-change.case$ -- 10
-chr.to.int$ -- 1
-cite$ -- 1
-duplicate$ -- 48
-empty$ -- 54
-format.name$ -- 18
-if$ -- 147
-int.to.chr$ -- 1
+            827 strings with 9738 characters,
+and the built_in function-call counts, 14173 in all, are:
+= -- 1098
+> -- 574
+< -- 19
++ -- 224
+- -- 186
+* -- 1066
+:= -- 2242
+add.period$ -- 101
+call.type$ -- 25
+change.case$ -- 190
+chr.to.int$ -- 24
+cite$ -- 27
+duplicate$ -- 1023
+empty$ -- 1123
+format.name$ -- 251
+if$ -- 2793
+int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 12
-newline$ -- 12
-num.names$ -- 4
-pop$ -- 21
+missing$ -- 220
+newline$ -- 131
+num.names$ -- 100
+pop$ -- 401
 preamble$ -- 1
-purify$ -- 9
+purify$ -- 162
 quote$ -- 0
-skip$ -- 13
+skip$ -- 388
 stack$ -- 0
-substring$ -- 38
-swap$ -- 30
-text.length$ -- 0
+substring$ -- 638
+swap$ -- 520
+text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 9
-warning$ -- 0
-while$ -- 4
+type$ -- 222
+warning$ -- 2
+while$ -- 93
 width$ -- 0
-write$ -- 19
-(There was 1 warning)
+write$ -- 324
+(There were 3 warnings)

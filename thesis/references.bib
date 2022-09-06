@@ -17,3 +17,339 @@ issn={1546-1696},
 doi={10.1038/s41587-021-01108-x},
 url={https://doi.org/10.1038/s41587-021-01108-x}
 }
+
+@article{genomic-comp,
+author={Hernaez, Mikel
+and Pavlichin, Dmitri
+and Weissman, Tsachy
+and Ochoa, Idoia},
+title={Genomic Data Compression},
+journal={Annual Review of Biomedical Data Science},
+volume={2},
+number={1},
+pages={19-37},
+year={2019},
+doi={10.1146/annurev-biodatasci-072018-021229},
+URL={https://doi.org/10.1146/annurev-biodatasci-072018-021229},
+eprint={https://doi.org/10.1146/annurev-biodatasci-072018-021229},
+abstract={Recently, there has been growing interest in genome sequencing, driven by advances in sequencing technology, in terms of both efficiency and affordability. These developments have allowed many to envision whole-genome sequencing as an invaluable tool for both personalized medical care and public health. As a result, increasingly large and ubiquitous genomic data sets are being generated. This poses a significant challenge for the storage and transmission of these data. Already, it is more expensive to store genomic data for a decade than it is to obtain the data in the first place. This situation calls for efficient representations of genomic information. In this review, we emphasize the need for designing specialized compressors tailored to genomic data and describe the main solutions already proposed. We also give general guidelines for storing these data and conclude with our thoughts on the future of genomic formats and compressors.},
+annote={This paper gives an overview of the data compression methods used in next-generation sequencing (NGS) genomics. It focuses on the FASTQ, SAM and VCF file formats, which are found further down in the typical analysis pipeline than FAST5/SLOW5. The paper stresses the necessity for effective compressors tailored to genomic data in order to combat the cost of acquiring and maintaining massive amounts of genomic data. It highlights HARC and ORCOM as the state of the art FASTQ read compression strategies, improved upon by SPRING and FaStore respectively as full FASTQ file compressors. For the SAM file format, CRAMv3 (also known as Scrabble) and DeeZ are given as the noteworthy compressors. Finally, TGC and its extension GTRAC are noted as the state of the art compressors for the VCF file format. The authors leave the reader to discover the details about the algorithms of these compression strategies elsewhere. It is relevant as it shows what research has already been attempted in the non-signal space of genomic data.}
+}
+
+@ARTICLE{genozip,
+author={Lan, Divon
+and Tobler, Ray
+and Souilmi, Yassine
+and Llamas, Bastien},
+title={Genozip: A universal extensible genomic data compressor},
+journal={Bioinformatics},
+year={2021},
+volume={37},
+number={16},
+pages={2225-2230},
+doi={10.1093/bioinformatics/btab102},
+url={https://www.scopus.com/inward/record.uri?eid=2-s2.0-85112047769&doi=10.1093%2fbioinformatics%2fbtab102&partnerID=40&md5=c65af13e13df13dedbc7e0c0efa5ec6d},
+document_type={Article},
+source={Scopus},
+annote={This paper presents Genozip, a genomic data compressor designed to be used on common genomic data formats bar FAST5. It presents impressive compression results, even for files which have are already been compressed. It details its accompanying command line tool and central algorithm. The algorithm works by dividing the input file into blocks known as \textit{vblocks} comprising of a certain number of lines from the file. Each \textit{vblock} undergoes segmentation followed by compression. Segmentation divides each line into individual data components which are each stored in an amalgamated data structure described as a  \textit{context} which stores instructions for the compressor to follow. Compression is then performed on each \textit{context} buffer within a \textit{vblock} using various different codecs depending on the format or options provided. Genozip does not seem to provide a novel compression algorithm, but rather a generic segmenter of genomic data to which other well known compression strategies are employed. Furthermore, although it does not discuss the compression of nanopore signal data of FAST5 files, it does present another attempt at an efficient genomic data compressor which is useful in solving the research problems.}
+}
+
+@ARTICLE{lossy-nano,
+author={Chandak, Shubham
+and Tatwawadi, Kedar
+and Sridhar, Srivatsan
+and Weissman, Tsachy},
+title={Impact of lossy compression of nanopore raw signal data on basecalling and consensus accuracy},
+journal={Bioinformatics},
+year={2020},
+volume={36},
+number={22-23},
+pages={5313-5321},
+doi={10.1093/bioinformatics/btaa1017},
+url={https://www.scopus.com/inward/record.uri?eid=2-s2.0-85106710570&doi=10.1093%2fbioinformatics%2fbtaa1017&partnerID=40&md5=2cf4f822a7c10dcaa5c234808a7b31a0},
+document_type={Article},
+source={Scopus},
+annote={This paper evaluates the impact of two lossy time-series compressors (LFZip and SZ) for nanopore raw signal data on basecalling, consensus and methylation calling accuracy. It presents an extensive series of results, documenting the trade off between information loss and downstream analysis accuracy for four different datasets. Both of the lossy compressors used employ the maximum absolute deviation between each original and reconstructed data point as their distortion metric. Given a fixed maximum error rate, LFZip provides slightly better compression than SZ. The paper describes that LFZip differs from SZ by performing uniform scalar quantisation rather than a curve fitting approach before employing entropy encoding. Its results show that after reducing the lossless compressed size by 35-50\% (comparing to VBZ), basecalling and consensus accuracy are reduced by less than 0.2\% and 0.002\% respectively. These results are quite impressive and give confidence to an exploration of lossy compression in this project. They suggest that lossy compression does not lead to drastic structural changes in the read, but rather small disturbances which do not significantly affect downstream analysis.}
+}
+
+@CONFERENCE{lfzip,
+author={Chandak, Shubham and Tatwawadi, Kedar and Wen, Chengtao and Wang, Lingyun and Aparicio Ojea, Juan and Weissman, Tsachy},
+title={LFZip: Lossy compression of multivariate floating-point time series data via improved prediction},
+booktitle={2020 Data Compression Conference Proceedings (DCC)},
+year={2020},
+volume={2020-March},
+pages={342-351},
+doi={10.1109/DCC47342.2020.00042},
+art_number={9105816},
+url={https://www.scopus.com/inward/record.uri?eid=2-s2.0-85086841081&doi=10.1109%2fDCC47342.2020.00042&partnerID=40&md5=65b7c6cea3e31d1d00c9d2d5f598f4cb},
+document_type={Conference Paper},
+source={Scopus},
+annote={This paper presents LFZip, a lossy compressor of multivariate floating-point time series data based on the prediction-quantisation-entropy encoder framework. It uses the maximum absolute error as its distortion function. The encoder first predicts the symbol at time $t$ using the previous reconstructions (i.e. $P(\hat x_1,\dots,\hat x_{t-1})=y_t$). The paper describes two methods for doing this, namely the Normalised Least Mean Square (NLMS) and neural network based predictors. The error $\Delta_t=x_t-y_t$ is then 16-bit quantised with a step of size $2\epsilon$ such that $|\hat\Delta_t-\Delta_t|\le \epsilon$. The final entropy coder step involves applying the lossless compression method BSC to the quantised time series of the differences $\hat\Delta_1,\dots,\hat\Delta_n$. The same steps are applied in reverse to decode the compressed stream. The paper presents unremarkable compression results for nanopore raw signal data when using NLMS but outperforms the state of the art, SZ, when using a neural network based predictor. It points to several other lossy compression methods in the literature; Swing door and Critical Aperture are said to retain a subset of the data points; SZ, ISABELA and NUMARCK are most similar to LFZip and use polynomial or regression models to predict to next point followed by quantisation. The paper also notes an efficient lossless compressor of multivariate floating-point data known as FPZIP which seems to be the inspiration for naming LFZip.}
+}
+
+@article{simd-pfor,
+author={Lemire, Daniel
+and Boytsov, Leonid},
+title={Decoding billions of integers per second through vectorization},
+journal={Software: Practice and Experience},
+volume={45},
+number={1},
+pages={1-29},
+keywords={performance, measurement, index compression, vector processing},
+doi={https://doi.org/10.1002/spe.2203},
+url={https://onlinelibrary.wiley.com/doi/abs/10.1002/spe.2203},
+eprint={https://onlinelibrary.wiley.com/doi/pdf/10.1002/spe.2203},
+abstract={SUMMARYIn many important applications—such as search engines and relational database systems—data are stored in the form of arrays of integers. Encoding and, most importantly, decoding of these arrays consumes considerable CPU time. Therefore, substantial effort has been made to reduce costs associated with compression and decompression. In particular, researchers have exploited the superscalar nature of modern processors and single-instruction, multiple-data (SIMD) instructions. Nevertheless, we introduce a novel vectorized scheme called SIMD-BP128⋆ that improves over previously proposed vectorized approaches. It is nearly twice as fast as the previously fastest schemes on desktop processors (varint-G8IU and PFOR). At the same time, SIMD-BP128⋆ saves up to 2 bits/int. For even better compression, we propose another new vectorized scheme (SIMD-FastPFOR) that has a compression ratio within 10\% of a state-of-the-art scheme (Simple-8b) while being two times faster during decoding. © 2013 The Authors. Software: Practice and Experience Published by John Wiley \& Sons, Ltd.},
+year={2015},
+annote={This paper introduces new efficient integer encoding schemes SIMD-BP128$^\star$ and SIMD-FastPFOR which exploit vectorisation on modern processors to reduce costs associated with (de)compression. It gives a detailed review of previous integer encoding schemes including Golomb coding, Rice coding, Elias gamma and delta coding. As well as more modern techniques including Simple family, binary packing and patched coding. The paper also describes the variable byte encoding scheme which is closely related to VBZ: the current state of the art lossless compression technique for raw nanopore signal data. All the presented schemes are designed for a general array of 32-bit unsigned integers, with no particular focus on the nature of the data. These techniques should be considered in parallel with other studies which exploit the signal nature of their data. Nonetheless, this paper delves into architecture-specific optimisations, like exploiting SIMD operations, which might be of interest further along in the project when considering time optimisations.}
+}
+
+@article{picopore,
+author={Gigante, Scott},
+year={2017},
+title={Picopore: A tool for reducing the storage size of Oxford Nanopore Technologies datasets without loss of functionality},
+journal={F1000Research},
+volume={6},
+abstract={Oxford Nanopore Technologies' (ONT) MinION and PromethION long-read sequencing technologies are emerging as genuine alternatives to established Next-Generation Sequencing technologies. A combination of the highly redundant file format and a rapid increase in data generation have created a significant problem both for immediate data storage on MinION-capable laptops, and for long-term storage on lab data servers.  We developed Picopore, a software suite offering three methods of compression. Picopore's lossless and deep lossless methods provide a 25\% and 44\% average reduction in size, respectively, without removing any data from the files. Picopore's raw method provides an 88\% average reduction in size, while retaining biologically relevant data for the end-user. All methods have the capacity to run in real-time in parallel to a sequencing run, reducing demand for both immediate and long-term storage space.},
+keywords={Medical Sciences; DNA Sequencing; Genome Informatics; Nanopore Sequencing; Compression; Data Storage},
+language={English},
+url={http://ezproxy.library.usyd.edu.au/login?url=https://www.proquest.com/scholarly-journals/picopore-tool-reducing-storage-size-oxford/docview/1952806284/se-2},
+annote={This paper presents Picopore, a Python2 tool for reducing the size of FAST5 files. Unfortunately, the paper presents nothing of interest except for marking an attempt at compressing nanopore data. It mostly reduces the size of FAST5 files by removing redundancies in the storage format or using gzip at level 9, rather than attempting any novel compression techniques on the signal data. It is relevant to the research problem however, since it highlights methodology which has already been conducted towards its solution.}
+}
+
+@Article{mcdrc,
+AUTHOR={Chen, Qianhao and Wu, Wenqi and Luo, Wei},
+TITLE={Lossless Compression of Sensor Signals Using an Untrained Multi-Channel Recurrent Neural Predictor},
+JOURNAL={Applied Sciences},
+VOLUME={11},
+YEAR={2021},
+NUMBER={21},
+ARTICLE-NUMBER={10240},
+URL={https://www.mdpi.com/2076-3417/11/21/10240},
+ISSN={2076-3417},
+ABSTRACT={The use of sensor applications has been steadily increasing, leading to an urgent need for efficient data compression techniques to facilitate the storage, transmission, and processing of digital signals generated by sensors. Unlike other sequential data such as text sequences, sensor signals have more complex statistical characteristics. Specifically, in every signal point, each bit, which corresponds to a specific precision scale, follows its own conditional distribution depending on its history and even other bits. Therefore, applying existing general-purpose data compressors usually leads to a relatively low compression ratio, since these compressors do not fully exploit such internal features. What is worse, partitioning a bit stream into groups with a preset size will sometimes break the integrity of each signal point. In this paper, we present a lossless data compressor dedicated to compressing sensor signals which is built upon a novel recurrent neural architecture named multi-channel recurrent unit (MCRU). Each channel in the proposed MCRU models a specific precision range of each signal point without breaking data integrity. During compressing and decompressing, the mirrored network will be trained on observed data; thus, no pre-training is needed. The superiority of our approach over other compressors is demonstrated experimentally on various types of sensor signals.},
+DOI={10.3390/app112110240},
+annote={This paper presents a new lossless compressor dedicated to sensor signal data called MCDRC. It is built upon a recurrent neural network architecture known as a multi-channel recurrent unit (MCRU) and does not require pre-training. The data it is designed to compress is of great similarity to nanopore raw signal data. The paper compares MCDRC to gzip, BSC, PAQ and CMIX on four different datasets. The results are fairly promising, especially on more complex data with fewer patterns where it outperforms all other compressors. However, for signal data with simple patterns, such as energy measurements from a typical office environment, CMIX outperforms MCDRC. On the whole, the ideas in this paper present an interesting avenue to pursue when designing a more efficient lossless compressor of nanopore signal data.}
+}
+
+@ARTICLE{shannon,
+author={Shannon, C. E.},
+journal={The Bell System Technical Journal},
+title={A mathematical theory of communication},
+year={1948},
+volume={27},
+number={3},
+pages={379-423},
+doi={10.1002/j.1538-7305.1948.tb01338.x}
+}
+
+@ARTICLE{huffman,
+author={Huffman, David A.},
+journal={Proceedings of the IRE},
+title={A Method for the Construction of Minimum-Redundancy Codes},
+year={1952},
+volume={40},
+number={9},
+pages={1098-1101},
+doi={10.1109/JRPROC.1952.273898}
+}
+
+@ARTICLE{arithmetic-coding,
+author={Rissanen, J. J.},
+journal={IBM Journal of Research and Development},
+title={Generalized Kraft Inequality and Arithmetic Coding},
+year={1976},
+volume={20},
+number={3},
+pages={198-203},
+doi={10.1147/rd.203.0198}
+}
+
+@ARTICLE{rle,
+author={Robinson, A.H. and Cherry, C.},
+journal={Proceedings of the IEEE},
+title={Results of a prototype television bandwidth compression scheme},
+year={1967},
+volume={55},
+number={3},
+pages={356-364},
+doi={10.1109/PROC.1967.5493}
+}
+
+@inproceedings{bwt,
+title={A Block-sorting Lossless Data Compression Algorithm},
+author={Michael Burrows and David J. Wheeler},
+year={1994},
+publisher={Digital Equipment Corporation},
+}
+
+@article{bwt-genomic,
+doi={10.1093/bioinformatics/bts173},
+url={https://doi.org/10.1093%2Fbioinformatics%2Fbts173},
+year=2012,
+month=may,
+publisher={Oxford University Press ({OUP})},
+volume={28},
+number={11},
+pages={1415--1419},
+author={A. J. Cox
+and M. J. Bauer
+and T. Jakobi
+and G. Rosone},
+title={Large-scale compression of genomic sequence databases with the Burrows-Wheeler transform},
+journal={Bioinformatics}
+}
+
+@article{byte-pair,
+url={http://www.pennelynn.com/Documents/CUJ/HTML/94HTML/19940045.HTM},
+author={Phillip Gage},
+title={A New Algorithm for Data Compression},
+journal={The C User Journal},
+year=1994
+}
+
+@book{info-book,
+author={Thomas M. Cover
+and Joy A. Thomas},
+title={Elements of Information Theory},
+publisher={John Wiley \& Sons},
+year=1991,
+series={Wiley series in telecommunications}
+}
+
+@ARTICLE{mcmillan,
+author={McMillan, B.},
+journal={IRE Transactions on Information Theory},
+title={Two inequalities implied by unique decipherability},
+year={1956},
+volume={2},
+number={4},
+pages={115-116},
+doi={10.1109/TIT.1956.1056818}
+}
+
+@article{huffman-time,
+author={Jan Van Leeuwen},
+journal={},
+title={On the construction of Huffman trees},
+year=1976,
+month=Jan
+}
+
+@article{vitter,
+author={Jeffrey Scott Vitter},
+journal={Journal of the ACM},
+title={Design and Analysis of Dynamic Huffman Codes},
+year=1987,
+month=Oct
+}
+
+@article{fgk,
+title={Dynamic huffman coding},
+journal={Journal of Algorithms},
+volume={6},
+number={2},
+pages={163-180},
+year={1985},
+issn={0196-6774},
+doi={https://doi.org/10.1016/0196-6774(85)90036-7},
+url={https://www.sciencedirect.com/science/article/pii/0196677485900367},
+author={Donald E Knuth},
+abstract={This note shows how to maintain a prefix code that remains optimum as the weights change. A Huffman tree with nonnegative integer weights can be represented in such a way that any weight w at level l can be increased or decreased by unity in O(l) steps, preserving minimality of the weighted path length. One-pass algorithms for file compression can be based on such a representation.}
+}
+
+@inproceedings{range-coding,
+author={G. Nigel N. Martin},
+title={Range encoding: An algorithm for removing redundancy from a digitized message},
+booktitle={Video \& Data Recording Conference},
+year=1979,
+month=Jul,
+address={Southampton, UK}
+}
+
+@article{lzw,
+author={Terry Welch},
+title={A Technique for High-Performance Data Compression},
+journal={Computer},
+year=1984,
+volume=17,
+number=6,
+pages={8-19},
+doi={10.1109/MC.1984.1659158}
+}
+
+@article{lz77,
+author={Jacob Ziv
+and Abraham Lempel},
+title={A Universal Algorithm for Sequential Data Compression},
+journal={IEEE Transactions on Information Theory},
+year=1977,
+month=May,
+volume=23,
+number=3,
+pages={337-343},
+doi={10.1109/TIT.1977.1055714}
+}
+
+@article{lz78,
+author={Jacob Ziv
+and Abraham Lempel},
+title={Compression of Individual Sequences via Variable-Rate Coding},
+journal={IEEE Transactions on Information Theory},
+year=1978,
+month=Sep,
+volume=24,
+number=5,
+pages={530-536},
+doi={10.1109/TIT.1978.1055934}
+}
+
+@article{svb,
+doi={10.1016/j.ipl.2017.09.011},
+url={https://doi.org/10.1016%2Fj.ipl.2017.09.011},
+year=2018,
+month=feb,
+publisher={Elsevier {BV}},
+volume={130},
+pages={1--6},
+author={Daniel Lemire
+and Nathan Kurz
+and Christoph Rupp},
+title={Stream {VByte} : Faster byte-oriented integer compression},
+journal={Information Processing Letters}
+}
+
+@misc{zstd,
+series={Request for Comments},
+number=8478,
+howpublished={RFC 8478},
+publisher={RFC Editor},
+doi={10.17487/RFC8478},
+url={https://www.rfc-editor.org/info/rfc8478},
+author={Yann Collet
+and Murray Kucherawy},
+title={{Zstandard Compression and the application/zstd Media Type}},
+pagetotal=54,
+year=2018,
+month=oct,
+abstract={Zstandard, or "zstd" (pronounced "zee standard"), is a data compression mechanism. This document describes the mechanism and registers a media type and content encoding to be used when transporting zstd-compressed content via Multipurpose Internet Mail Extensions (MIME). Despite use of the word "standard" as part of its name, readers are advised that this document is not an Internet Standards Track specification; it is being published for informational purposes only.},
+}
+
+@article{slow5,
+title={Fast nanopore sequencing data analysis with SLOW5},
+author={Hasindu Gamaarachchi
+and Hiruna Samarakoon
+and Sasha P. Jenner
+and James M. Ferguson
+and Timothy G. Amos
+and Jillian M. Hammond
+and Hassaan Saadat
+and Martin A. Smith
+and Sri Parameswaran
+and Ira W. Deveson},
+journal={Nature Biotechnology},
+year=2022,
+month=Jan,
+doi={10.1038/s41587-021-01147-4},
+url={https://doi.org/10.1038/s41587-021-01147-4}
+}
