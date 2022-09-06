@@ -488,6 +488,310 @@ int test_uint_zsm_16(const int16_t *sigs, const uint32_t nr_sigs,
 	return EXIT_SUCCESS;
 }
 
+int test_zlib_uint_zd_16(const int16_t *sigs, const uint32_t nr_sigs,
+			 struct result *res)
+{
+	clock_t after;
+	clock_t before;
+	int ret;
+	int16_t *sigs_depress;
+	uint16_t *sigs_zd;
+	uint32_t depress_len;
+	uint32_t i;
+	uint64_t nr_sigs_bytes;
+	uint64_t press_len;
+	uint64_t pressbound;
+	uint8_t *sigs_press;
+	uint8_t minbits;
+
+	nr_sigs_bytes = sizeof *sigs * nr_sigs;
+
+	/* bound sigs_press */
+	before = clock();
+	minbits = zlib_uint_zd_get_minbits_16(sigs, nr_sigs, &sigs_zd);
+	pressbound = zlib_uint_zd_bound_16(minbits, nr_sigs);
+	after = clock();
+	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
+
+	/* TODO store this info */
+	/*printf("min bits out:\t%" PRIu8 "\n", minbits);*/
+
+	/* init sigs_press */
+	sigs_press = malloc(pressbound);
+	ASSERT(sigs_press);
+
+	/* compress sigs */
+	press_len = pressbound;
+	before = clock();
+	ret = zlib_uint_zd_press_16(minbits, sigs[0], nr_sigs, sigs_zd,
+				    sigs_press, &press_len);
+	after = clock();
+	res->press_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	free(sigs_zd);
+
+	ASSERT(press_len <= pressbound);
+
+	/* init sigs_depress */
+	sigs_depress = malloc(nr_sigs_bytes);
+	ASSERT(sigs_depress);
+
+	/* decompress sigs_press */
+	depress_len = nr_sigs;
+	before = clock();
+	ret = zlib_uint_zd_depress_16(sigs_press, press_len, sigs_depress,
+				      &depress_len);
+	after = clock();
+	res->depress_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	ASSERT(depress_len == nr_sigs);
+
+	/* ensure decompressed == original */
+	for (i = 0; i < depress_len; i++) {
+		ASSERT(sigs_depress[i] == sigs[i]);
+	}
+
+	/* let it go */
+	free(sigs_press);
+	free(sigs_depress);
+
+	res->depress_bytes = nr_sigs_bytes;
+	res->pressbound_bytes = pressbound;
+	res->press_bytes = press_len;
+
+	return EXIT_SUCCESS;
+}
+
+int test_zstd_uint_zd_16(const int16_t *sigs, const uint32_t nr_sigs,
+			 struct result *res)
+{
+	clock_t after;
+	clock_t before;
+	int ret;
+	int16_t *sigs_depress;
+	uint16_t *sigs_zd;
+	uint32_t depress_len;
+	uint32_t i;
+	uint64_t nr_sigs_bytes;
+	uint64_t press_len;
+	uint64_t pressbound;
+	uint8_t *sigs_press;
+	uint8_t minbits;
+
+	nr_sigs_bytes = sizeof *sigs * nr_sigs;
+
+	/* bound sigs_press */
+	before = clock();
+	minbits = zstd_uint_zd_get_minbits_16(sigs, nr_sigs, &sigs_zd);
+	pressbound = zstd_uint_zd_bound_16(minbits, nr_sigs);
+	after = clock();
+	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
+
+	/* TODO store this info */
+	/*printf("min bits out:\t%" PRIu8 "\n", minbits);*/
+
+	/* init sigs_press */
+	sigs_press = malloc(pressbound);
+	ASSERT(sigs_press);
+
+	/* compress sigs */
+	press_len = pressbound;
+	before = clock();
+	ret = zstd_uint_zd_press_16(minbits, sigs[0], nr_sigs, sigs_zd,
+				    sigs_press, &press_len);
+	after = clock();
+	res->press_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	free(sigs_zd);
+
+	ASSERT(press_len <= pressbound);
+
+	/* init sigs_depress */
+	sigs_depress = malloc(nr_sigs_bytes);
+	ASSERT(sigs_depress);
+
+	/* decompress sigs_press */
+	depress_len = nr_sigs;
+	before = clock();
+	ret = zstd_uint_zd_depress_16(sigs_press, press_len, sigs_depress,
+				      &depress_len);
+	after = clock();
+	res->depress_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	ASSERT(depress_len == nr_sigs);
+
+	/* ensure decompressed == original */
+	for (i = 0; i < depress_len; i++) {
+		ASSERT(sigs_depress[i] == sigs[i]);
+	}
+
+	/* let it go */
+	free(sigs_press);
+	free(sigs_depress);
+
+	res->depress_bytes = nr_sigs_bytes;
+	res->pressbound_bytes = pressbound;
+	res->press_bytes = press_len;
+
+	return EXIT_SUCCESS;
+}
+
+int test_bzip2_uint_zd_16(const int16_t *sigs, const uint32_t nr_sigs,
+			  struct result *res)
+{
+	clock_t after;
+	clock_t before;
+	int ret;
+	int16_t *sigs_depress;
+	uint16_t *sigs_zd;
+	uint32_t depress_len;
+	uint32_t i;
+	uint64_t nr_sigs_bytes;
+	uint64_t press_len;
+	uint64_t pressbound;
+	uint8_t *sigs_press;
+	uint8_t minbits;
+
+	nr_sigs_bytes = sizeof *sigs * nr_sigs;
+
+	/* bound sigs_press */
+	before = clock();
+	minbits = bzip2_uint_zd_get_minbits_16(sigs, nr_sigs, &sigs_zd);
+	pressbound = bzip2_uint_zd_bound_16(minbits, nr_sigs);
+	after = clock();
+	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
+
+	/* TODO store this info */
+	/*printf("min bits out:\t%" PRIu8 "\n", minbits);*/
+
+	/* init sigs_press */
+	sigs_press = malloc(pressbound);
+	ASSERT(sigs_press);
+
+	/* compress sigs */
+	press_len = pressbound;
+	before = clock();
+	ret = bzip2_uint_zd_press_16(minbits, sigs[0], nr_sigs, sigs_zd,
+				     sigs_press, &press_len);
+	after = clock();
+	res->press_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	free(sigs_zd);
+
+	ASSERT(press_len <= pressbound);
+
+	/* init sigs_depress */
+	sigs_depress = malloc(nr_sigs_bytes);
+	ASSERT(sigs_depress);
+
+	/* decompress sigs_press */
+	depress_len = nr_sigs;
+	before = clock();
+	ret = bzip2_uint_zd_depress_16(sigs_press, press_len, sigs_depress,
+				       &depress_len);
+	after = clock();
+	res->depress_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	ASSERT(depress_len == nr_sigs);
+
+	/* ensure decompressed == original */
+	for (i = 0; i < depress_len; i++) {
+		ASSERT(sigs_depress[i] == sigs[i]);
+	}
+
+	/* let it go */
+	free(sigs_press);
+	free(sigs_depress);
+
+	res->depress_bytes = nr_sigs_bytes;
+	res->pressbound_bytes = pressbound;
+	res->press_bytes = press_len;
+
+	return EXIT_SUCCESS;
+}
+
+int test_fast_lzma2_uint_zd_16(const int16_t *sigs, const uint32_t nr_sigs,
+			       struct result *res)
+{
+	clock_t after;
+	clock_t before;
+	int ret;
+	int16_t *sigs_depress;
+	uint16_t *sigs_zd;
+	uint32_t depress_len;
+	uint32_t i;
+	uint64_t nr_sigs_bytes;
+	uint64_t press_len;
+	uint64_t pressbound;
+	uint8_t *sigs_press;
+	uint8_t minbits;
+
+	nr_sigs_bytes = sizeof *sigs * nr_sigs;
+
+	/* bound sigs_press */
+	before = clock();
+	minbits = fast_lzma2_uint_zd_get_minbits_16(sigs, nr_sigs, &sigs_zd);
+	pressbound = fast_lzma2_uint_zd_bound_16(minbits, nr_sigs);
+	after = clock();
+	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
+
+	/* TODO store this info */
+	/*printf("min bits out:\t%" PRIu8 "\n", minbits);*/
+
+	/* init sigs_press */
+	sigs_press = malloc(pressbound);
+	ASSERT(sigs_press);
+
+	/* compress sigs */
+	press_len = pressbound;
+	before = clock();
+	ret = fast_lzma2_uint_zd_press_16(minbits, sigs[0], nr_sigs, sigs_zd,
+					  sigs_press, &press_len);
+	after = clock();
+	res->press_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	free(sigs_zd);
+
+	ASSERT(press_len <= pressbound);
+
+	/* init sigs_depress */
+	sigs_depress = malloc(nr_sigs_bytes);
+	ASSERT(sigs_depress);
+
+	/* decompress sigs_press */
+	depress_len = nr_sigs;
+	before = clock();
+	ret = fast_lzma2_uint_zd_depress_16(sigs_press, press_len,
+					    sigs_depress, &depress_len);
+	after = clock();
+	res->depress_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	ASSERT(depress_len == nr_sigs);
+
+	/* ensure decompressed == original */
+	for (i = 0; i < depress_len; i++) {
+		ASSERT(sigs_depress[i] == sigs[i]);
+	}
+
+	/* let it go */
+	free(sigs_press);
+	free(sigs_depress);
+
+	res->depress_bytes = nr_sigs_bytes;
+	res->pressbound_bytes = pressbound;
+	res->press_bytes = press_len;
+
+	return EXIT_SUCCESS;
+}
+
 int test_flat_uint_submin_16(uint32_t step, const int16_t *sigs,
 			     const uint32_t nr_sigs, struct result *res)
 {
@@ -1814,6 +2118,10 @@ int main(void)
 	TEST(uint_submin_16, P11, &res, fp);
 	TEST(uint_zd_16, P11, &res, fp);
 	TEST(uint_zsm_16, P11, &res, fp);
+	TEST(zlib_uint_zd_16, P11, &res, fp);
+	TEST(zstd_uint_zd_16, P11, &res, fp);
+	TEST(bzip2_uint_zd_16, P11, &res, fp);
+	TEST(fast_lzma2_uint_zd_16, P11, &res, fp);
 	/*TEST(flat_uint_submin_16_step1, P11, &res, fp);*/
 	TEST(zlib, P11, &res, fp);
 	TEST(zstd, P11, &res, fp);
@@ -1840,6 +2148,10 @@ int main(void)
 	TEST(uint_submin_16, P11_0_66999, &res, fp);
 	TEST(uint_zd_16, P11_0_66999, &res, fp);
 	TEST(uint_zsm_16, P11_0_66999, &res, fp);
+	TEST(zlib_uint_zd_16, P11_0_66999, &res, fp);
+	TEST(zstd_uint_zd_16, P11_0_66999, &res, fp);
+	TEST(bzip2_uint_zd_16, P11_0_66999, &res, fp);
+	TEST(fast_lzma2_uint_zd_16, P11_0_66999, &res, fp);
 	/*TEST(flat_uint_submin_16_step1, P11_0_66999, &res, fp);*/
 	/*TEST(flat_uint_submin_16_step100, P11_0_66999, &res, fp);*/
 	TEST(zlib, P11_0_66999, &res, fp);
@@ -1867,6 +2179,10 @@ int main(void)
 	TEST(uint_submin_16, P11_0_28997, &res, fp);
 	TEST(uint_zd_16, P11_0_28997, &res, fp);
 	TEST(uint_zsm_16, P11_0_28997, &res, fp);
+	TEST(zlib_uint_zd_16, P11_0_28997, &res, fp);
+	TEST(zstd_uint_zd_16, P11_0_28997, &res, fp);
+	TEST(bzip2_uint_zd_16, P11_0_28997, &res, fp);
+	TEST(fast_lzma2_uint_zd_16, P11_0_28997, &res, fp);
 	/*TEST(flat_uint_submin_16_step1, P11_0_28997, &res, fp);
 	TEST(flat_uint_submin_16_step2, P11_0_28997, &res, fp);*/
 	TEST(zlib, P11_0_28997, &res, fp);
@@ -1894,6 +2210,10 @@ int main(void)
 	TEST(uint_submin_16, P11_0_1995, &res, fp);
 	TEST(uint_zd_16, P11_0_1995, &res, fp);
 	TEST(uint_zsm_16, P11_0_1995, &res, fp);
+	TEST(zlib_uint_zd_16, P11_0_1995, &res, fp);
+	TEST(zstd_uint_zd_16, P11_0_1995, &res, fp);
+	TEST(bzip2_uint_zd_16, P11_0_1995, &res, fp);
+	TEST(fast_lzma2_uint_zd_16, P11_0_1995, &res, fp);
 	TEST(flat_uint_submin_16_step1, P11_0_1995, &res, fp);
 	TEST(zlib, P11_0_1995, &res, fp);
 	TEST(zstd, P11_0_1995, &res, fp);
@@ -1920,6 +2240,10 @@ int main(void)
 	TEST(uint_submin_16, P11_0_285, &res, fp);
 	TEST(uint_zd_16, P11_0_285, &res, fp);
 	TEST(uint_zsm_16, P11_0_285, &res, fp);
+	TEST(zlib_uint_zd_16, P11_0_285, &res, fp);
+	TEST(zstd_uint_zd_16, P11_0_285, &res, fp);
+	TEST(bzip2_uint_zd_16, P11_0_285, &res, fp);
+	TEST(fast_lzma2_uint_zd_16, P11_0_285, &res, fp);
 	TEST(flat_uint_submin_16_step1, P11_0_285, &res, fp);
 	TEST(zlib, P11_0_285, &res, fp);
 	TEST(zstd, P11_0_285, &res, fp);
@@ -1946,6 +2270,10 @@ int main(void)
 	TEST(uint_submin_16, P11_999_1999, &res, fp);
 	TEST(uint_zd_16, P11_999_1999, &res, fp);
 	TEST(uint_zsm_16, P11_999_1999, &res, fp);
+	TEST(zlib_uint_zd_16, P11_999_1999, &res, fp);
+	TEST(zstd_uint_zd_16, P11_999_1999, &res, fp);
+	TEST(bzip2_uint_zd_16, P11_999_1999, &res, fp);
+	TEST(fast_lzma2_uint_zd_16, P11_999_1999, &res, fp);
 	TEST(flat_uint_submin_16_step1, P11_999_1999, &res, fp);
 	TEST(flat_uint_submin_16_step2, P11_999_1999, &res, fp);
 	TEST(flat_uint_submin_16_step50, P11_999_1999, &res, fp);
@@ -1975,6 +2303,10 @@ int main(void)
 	TEST(uint_submin_16, ONE, &res, fp);
 	TEST(uint_zd_16, ONE, &res, fp);
 	TEST(uint_zsm_16, ONE, &res, fp);
+	TEST(zlib_uint_zd_16, ONE, &res, fp);
+	TEST(zstd_uint_zd_16, ONE, &res, fp);
+	TEST(bzip2_uint_zd_16, ONE, &res, fp);
+	TEST(fast_lzma2_uint_zd_16, ONE, &res, fp);
 	TEST(flat_uint_submin_16_step1, ONE, &res, fp);
 	TEST(zlib, ONE, &res, fp);
 	TEST(zstd, ONE, &res, fp);
@@ -2001,6 +2333,10 @@ int main(void)
 	TEST(uint_submin_16, SAME, &res, fp);
 	TEST(uint_zd_16, SAME, &res, fp);
 	TEST(uint_zsm_16, SAME, &res, fp);
+	TEST(zlib_uint_zd_16, SAME, &res, fp);
+	TEST(zstd_uint_zd_16, SAME, &res, fp);
+	TEST(bzip2_uint_zd_16, SAME, &res, fp);
+	TEST(fast_lzma2_uint_zd_16, SAME, &res, fp);
 	TEST(flat_uint_submin_16_step1, SAME, &res, fp);
 	TEST(zlib, SAME, &res, fp);
 	TEST(zstd, SAME, &res, fp);
@@ -2027,6 +2363,10 @@ int main(void)
 	TEST(uint_submin_16, ZERO, &res, fp);
 	TEST(uint_zd_16, ZERO, &res, fp);
 	TEST(uint_zsm_16, ZERO, &res, fp);
+	TEST(zlib_uint_zd_16, ZERO, &res, fp);
+	TEST(zstd_uint_zd_16, ZERO, &res, fp);
+	TEST(bzip2_uint_zd_16, ZERO, &res, fp);
+	TEST(fast_lzma2_uint_zd_16, ZERO, &res, fp);
 	TEST(flat_uint_submin_16_step1, ZERO, &res, fp);
 	TEST(zlib, ZERO, &res, fp);
 	TEST(zstd, ZERO, &res, fp);
