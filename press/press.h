@@ -85,34 +85,6 @@ int uint_submin_depress_16(const uint8_t *in, uint64_t nin, uint16_t *out,
 			   uint64_t *nout);
 
 /*
- * subtract min from all sigs
- * compressed: [min, x, sigs - min as uintx_t]
- * zlib compress the result
- */
-/*
-uint32_t zlib_uint_submin_bound(const int16_t *in, uint32_t nin);
-uint32_t zlib_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out,
-				uint32_t nout_bytes);
-uint32_t zlib_uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
-				  uint32_t nin_bytes, int16_t *out,
-				  uint32_t nout_bytes);
-				  */
-
-/*
- * subtract min from all sigs
- * compressed: [min, x, sigs - min as uintx_t]
- * zstd compress the result
- */
-/*
-uint32_t zstd_uint_submin_bound(const int16_t *in, uint32_t nin);
-uint32_t zstd_uint_submin_press(const int16_t *in, uint32_t nin, uint8_t *out,
-				uint32_t nout_bytes);
-uint32_t zstd_uint_submin_depress(const uint8_t *in, uint32_t nin_elems,
-				  uint32_t nin_bytes, int16_t *out,
-				  uint32_t nout_bytes);
-				  */
-
-/*
  * zigzag delta: take successive differences and map to unsigned integers
  * compressed: [start, x, sigs zigzag delta as uintx_t]
  */
@@ -139,6 +111,21 @@ int uint_zsm_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
 			uint64_t *nout);
 
 /*
+ * subtract min from all sigs
+ * compressed: [min, x, sigs - min as uintx_t]
+ * zlib compress the result
+ */
+
+uint8_t zlib_uint_submin_get_minbits_16(const uint16_t *in, uint64_t nin,
+					uint16_t *min);
+uint64_t zlib_uint_submin_bound_16(uint8_t out_bits, uint64_t nin);
+int zlib_uint_submin_press_16(uint8_t out_bits, uint16_t min,
+			      const uint16_t *in, uint32_t nin, uint8_t *out,
+			      uint64_t *nout);
+int zlib_uint_submin_depress_16(const uint8_t *in, uint32_t nin, uint16_t *out,
+				uint32_t *nout);
+
+/*
  * zigzag delta: take successive differences and map to unsigned integers
  * compressed: [start, x, sigs zigzag delta as uintx_t]
  * zlib compress the result
@@ -149,8 +136,23 @@ uint8_t zlib_uint_zd_get_minbits_16(const int16_t *in, uint64_t nin,
 uint64_t zlib_uint_zd_bound_16(uint8_t out_bits, uint64_t nin);
 int zlib_uint_zd_press_16(uint8_t out_bits, int16_t in0, uint32_t nin,
 			  const uint16_t *in_zd, uint8_t *out, uint64_t *nout);
-int zlib_uint_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+int zlib_uint_zd_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
 			    uint32_t *nout);
+
+/*
+ * subtract min from all sigs
+ * compressed: [min, x, sigs - min as uintx_t]
+ * zstd compress the result
+ */
+
+uint8_t zstd_uint_submin_get_minbits_16(const uint16_t *in, uint64_t nin,
+					uint16_t *min);
+uint64_t zstd_uint_submin_bound_16(uint8_t out_bits, uint64_t nin);
+int zstd_uint_submin_press_16(uint8_t out_bits, uint16_t min,
+			      const uint16_t *in, uint32_t nin, uint8_t *out,
+			      uint64_t *nout);
+int zstd_uint_submin_depress_16(const uint8_t *in, uint32_t nin, uint16_t *out,
+				uint32_t *nout);
 
 /*
  * zigzag delta: take successive differences and map to unsigned integers
@@ -163,7 +165,7 @@ uint8_t zstd_uint_zd_get_minbits_16(const int16_t *in, uint64_t nin,
 uint64_t zstd_uint_zd_bound_16(uint8_t out_bits, uint64_t nin);
 int zstd_uint_zd_press_16(uint8_t out_bits, int16_t in0, uint32_t nin,
 			  const uint16_t *in_zd, uint8_t *out, uint64_t *nout);
-int zstd_uint_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+int zstd_uint_zd_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
 			    uint32_t *nout);
 
 /*
@@ -178,7 +180,7 @@ uint64_t bzip2_uint_zd_bound_16(uint8_t out_bits, uint64_t nin);
 int bzip2_uint_zd_press_16(uint8_t out_bits, int16_t in0, uint32_t nin,
 			   const uint16_t *in_zd, uint8_t *out,
 			   uint64_t *nout);
-int bzip2_uint_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+int bzip2_uint_zd_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
 			     uint32_t *nout);
 
 /*
@@ -193,7 +195,7 @@ uint64_t fast_lzma2_uint_zd_bound_16(uint8_t out_bits, uint64_t nin);
 int fast_lzma2_uint_zd_press_16(uint8_t out_bits, int16_t in0, uint32_t nin,
 				const uint16_t *in_zd, uint8_t *out,
 				uint64_t *nout);
-int fast_lzma2_uint_zd_depress_16(const uint8_t *in, uint64_t nin,
+int fast_lzma2_uint_zd_depress_16(const uint8_t *in, uint32_t nin,
 				  int16_t *out, uint32_t *nout);
 
 /*
@@ -390,8 +392,8 @@ int zstd_flac_depress(const uint8_t *in, uint64_t nin, int32_t *out,
  * determine flats more coarsely
  * flat using other methods
  * bzip/lzma svb_zd
- * zstd/zlib/bzip/lzma uint_submin
  * variable bit
+ * bzip/lzma uint_submin?
  * other variable byte
  * huffman
  * peak-picking flat approximation

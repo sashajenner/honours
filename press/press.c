@@ -644,6 +644,72 @@ int uint_zsm_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
 	return ret;
 }
 
+/* submin | uint | zlib */
+
+uint8_t zlib_uint_submin_get_minbits_16(const uint16_t *in, uint64_t nin,
+					uint16_t *min)
+{
+	return uint_submin_get_minbits_16(in, nin, min);
+}
+
+uint64_t zlib_uint_submin_bound_16(uint8_t out_bits, uint64_t nin)
+{
+	uint64_t nout_uint;
+
+	nout_uint = sizeof (uint32_t) + uint_submin_bound_16(out_bits, nin);
+	return zlib_bound(nout_uint);
+}
+
+int zlib_uint_submin_press_16(uint8_t out_bits, uint16_t min,
+			      const uint16_t *in, uint32_t nin, uint8_t *out,
+			      uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_uint;
+	uint8_t *out_uint;
+
+	nout_uint = sizeof nin + uint_submin_bound_16(out_bits, nin);
+	out_uint = malloc(nout_uint);
+
+	/* encode nin before uint_submin data */
+	(void) memcpy(out_uint, &nin, sizeof nin);
+	nout_uint -= sizeof nin;
+	ret = uint_submin_press_16(out_bits, min, in, nin,
+				   out_uint + sizeof nin, &nout_uint);
+	nout_uint += sizeof nin;
+
+	if (ret == 0)
+		ret = zlib_press(out_uint, nout_uint, out, nout);
+
+	free(out_uint);
+	return ret;
+}
+
+int zlib_uint_submin_depress_16(const uint8_t *in, uint32_t nin, uint16_t *out,
+				uint32_t *nout)
+{
+	int ret;
+	uint32_t nout_signals;
+	uint64_t nout_64;
+	uint64_t nout_zlib;
+	uint8_t *out_zlib;
+
+	nout_zlib = zlib_bound(*nout * sizeof *out);
+	out_zlib = malloc(nout_zlib);
+
+	ret = zlib_depress(in, nin, out_zlib, &nout_zlib);
+	if (ret == 0) {
+		memcpy(&nout_signals, out_zlib, sizeof nout_signals);
+		nout_64 = *nout;
+		ret = uint_submin_depress_16(out_zlib + sizeof nout_signals,
+					     nout_signals, out, &nout_64);
+		*nout = nout_64;
+	}
+
+	free(out_zlib);
+	return ret;
+}
+
 /* delta | zigzag | uint | zlib */
 
 uint8_t zlib_uint_zd_get_minbits_16(const int16_t *in, uint64_t nin,
@@ -684,7 +750,7 @@ int zlib_uint_zd_press_16(uint8_t out_bits, int16_t in0, uint32_t nin,
 	return ret;
 }
 
-int zlib_uint_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+int zlib_uint_zd_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
 			    uint32_t *nout)
 {
 	int ret;
@@ -706,6 +772,72 @@ int zlib_uint_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
 	}
 
 	free(out_zlib);
+	return ret;
+}
+
+/* submin | uint | zstd */
+
+uint8_t zstd_uint_submin_get_minbits_16(const uint16_t *in, uint64_t nin,
+					uint16_t *min)
+{
+	return uint_submin_get_minbits_16(in, nin, min);
+}
+
+uint64_t zstd_uint_submin_bound_16(uint8_t out_bits, uint64_t nin)
+{
+	uint64_t nout_uint;
+
+	nout_uint = sizeof (uint32_t) + uint_submin_bound_16(out_bits, nin);
+	return zstd_bound(nout_uint);
+}
+
+int zstd_uint_submin_press_16(uint8_t out_bits, uint16_t min,
+			      const uint16_t *in, uint32_t nin, uint8_t *out,
+			      uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_uint;
+	uint8_t *out_uint;
+
+	nout_uint = sizeof nin + uint_submin_bound_16(out_bits, nin);
+	out_uint = malloc(nout_uint);
+
+	/* encode nin before uint_submin data */
+	(void) memcpy(out_uint, &nin, sizeof nin);
+	nout_uint -= sizeof nin;
+	ret = uint_submin_press_16(out_bits, min, in, nin,
+				   out_uint + sizeof nin, &nout_uint);
+	nout_uint += sizeof nin;
+
+	if (ret == 0)
+		ret = zstd_press(out_uint, nout_uint, out, nout);
+
+	free(out_uint);
+	return ret;
+}
+
+int zstd_uint_submin_depress_16(const uint8_t *in, uint32_t nin, uint16_t *out,
+				uint32_t *nout)
+{
+	int ret;
+	uint32_t nout_signals;
+	uint64_t nout_64;
+	uint64_t nout_zstd;
+	uint8_t *out_zstd;
+
+	nout_zstd = zstd_bound(*nout * sizeof *out);
+	out_zstd = malloc(nout_zstd);
+
+	ret = zstd_depress(in, nin, out_zstd, &nout_zstd);
+	if (ret == 0) {
+		memcpy(&nout_signals, out_zstd, sizeof nout_signals);
+		nout_64 = *nout;
+		ret = uint_submin_depress_16(out_zstd + sizeof nout_signals,
+					     nout_signals, out, &nout_64);
+		*nout = nout_64;
+	}
+
+	free(out_zstd);
 	return ret;
 }
 
@@ -749,7 +881,7 @@ int zstd_uint_zd_press_16(uint8_t out_bits, int16_t in0, uint32_t nin,
 	return ret;
 }
 
-int zstd_uint_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+int zstd_uint_zd_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
 			    uint32_t *nout)
 {
 	int ret;
@@ -815,7 +947,7 @@ int bzip2_uint_zd_press_16(uint8_t out_bits, int16_t in0, uint32_t nin,
 	return ret;
 }
 
-int bzip2_uint_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+int bzip2_uint_zd_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
 			     uint32_t *nout)
 {
 	int ret;
@@ -881,7 +1013,7 @@ int fast_lzma2_uint_zd_press_16(uint8_t out_bits, int16_t in0, uint32_t nin,
 	return ret;
 }
 
-int fast_lzma2_uint_zd_depress_16(const uint8_t *in, uint64_t nin,
+int fast_lzma2_uint_zd_depress_16(const uint8_t *in, uint32_t nin,
 				  int16_t *out, uint32_t *nout)
 {
 	int ret;
