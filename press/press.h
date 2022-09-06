@@ -280,33 +280,29 @@ void svb12_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		 uint64_t *nout);
 void svb12_depress(const uint8_t *in, uint64_t nin, uint16_t *out);
 
-/* svb zigzag delta */
+/* zigzag delta classical svb */
 
 uint64_t svb_zd_bound_16(uint64_t nin);
-int svb_zd_press_16(const int16_t *in, uint64_t nin, uint8_t *out,
+void svb_zd_press_16(const int16_t *in, uint64_t nin, uint8_t *out,
+		     uint64_t *nout);
+void svb_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+		       uint64_t *nout);
+
+/* zigzag delta svb 0,1,2,4 bytes */
+
+uint64_t svb0124_zd_bound_16(uint64_t nin);
+void svb0124_zd_press_16(const int16_t *in, uint64_t nin, uint8_t *out,
+			 uint64_t *nout);
+void svb0124_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+			   uint64_t *nout);
+
+/* zigzag delta svb(16) 1,2 bytes */
+
+uint64_t svb12_zd_bound(uint64_t nin);
+void svb12_zd_press(const int16_t *in, uint64_t nin, uint8_t *out,
 		    uint64_t *nout);
-int svb_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+void svb12_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out,
 		      uint64_t *nout);
-
-/* zigzag delta svb0124 */
-/*
-uint32_t svb0124_zd_bound(const int16_t *in, uint32_t nin);
-uint32_t svb0124_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
-			  uint32_t nout_bytes);
-uint32_t svb0124_zd_depress(const uint8_t *in, uint32_t nin_elems,
-			    uint32_t nin_bytes, int16_t *out,
-			    uint32_t nout_bytes);
-			    */
-
-/* zigzag delta svb12 */
-/*
-uint32_t svb12_zd_bound(const int16_t *in, uint32_t nin);
-uint32_t svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
-	       		uint32_t nout_bytes);
-uint32_t svb12_zd_depress(const uint8_t *in, uint32_t nin_elems,
-			  uint32_t nin_bytes, int16_t *out,
-			  uint32_t nout_bytes);
-			  */
 
 /* zigzag delta svb zlib */
 /*

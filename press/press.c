@@ -1103,32 +1103,105 @@ void svb12_depress(const uint8_t *in, uint64_t nin, uint16_t *out)
 	(void) streamvbyte_decode_12(in, out, nin);
 }
 
-/* svb | zigzag delta */
+/* zigzag delta | svb */
 
-/*
 uint64_t svb_zd_bound_16(uint64_t nin)
 {
 	return svb_bound(nin);
 }
 
-int svb_zd_press_16(const int16_t *in, uint64_t nin, uint8_t *out,
-		    uint64_t *nout)
+void svb_zd_press_16(const int16_t *in, uint64_t nin, uint8_t *out,
+		     uint64_t *nout)
 {
 	uint32_t *in_zd;
+	in_zd = zigdelta_16_u32(in, nin);
 
-	zigdelta_16_32(in, nin);
+	svb_press(in_zd, nin, out, nout);
+	free(in_zd);
 }
 
-int svb_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
-		      uint64_t *nout);
-		      */
+void svb_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+		       uint64_t *nout)
+{
+	uint32_t *out_zd;
+	out_zd = malloc(nin * sizeof *out_zd);
+
+	svb_depress(in, nin, out_zd);
+
+	unzigdelta_u32_16(out_zd, nin, out);
+	free(out_zd);
+
+	*nout = nin;
+}
+
+/* zigzag delta | svb0124 */
+
+uint64_t svb0124_zd_bound_16(uint64_t nin)
+{
+	return svb0124_bound(nin);
+}
+
+void svb0124_zd_press_16(const int16_t *in, uint64_t nin, uint8_t *out,
+			 uint64_t *nout)
+{
+	uint32_t *in_zd;
+	in_zd = zigdelta_16_u32(in, nin);
+
+	svb0124_press(in_zd, nin, out, nout);
+	free(in_zd);
+}
+
+void svb0124_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+			   uint64_t *nout)
+{
+	uint32_t *out_zd;
+	out_zd = malloc(nin * sizeof *out_zd);
+
+	svb0124_depress(in, nin, out_zd);
+
+	unzigdelta_u32_16(out_zd, nin, out);
+	free(out_zd);
+
+	*nout = nin;
+}
+
+/* zigzag delta | svb12 */
+
+uint64_t svb12_zd_bound(uint64_t nin)
+{
+	return svb12_bound(nin);
+}
+
+void svb12_zd_press(const int16_t *in, uint64_t nin, uint8_t *out,
+		    uint64_t *nout)
+{
+	uint16_t *in_zd;
+	in_zd = zigdelta_16(in, nin);
+
+	svb12_press(in_zd, nin, out, nout);
+	free(in_zd);
+}
+
+void svb12_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out,
+		      uint64_t *nout)
+{
+	uint16_t *out_zd;
+	out_zd = malloc(nin * sizeof *out_zd);
+
+	svb12_depress(in, nin, out_zd);
+
+	unzigdelta_u16_16(out_zd, nin, out);
+	free(out_zd);
+
+	*nout = nin;
+}
 
 /* flac */
 
 uint64_t flac_bound(uint64_t nin)
 {
 	/* TODO properly bound */
-	return nin * 1.5;
+	return MAX(256, nin * 1.5);
 }
 
 int flac_press(const int32_t *in, uint64_t nin, uint8_t *out, uint64_t *nout,

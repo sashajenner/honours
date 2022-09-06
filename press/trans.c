@@ -91,15 +91,19 @@ uint16_t *zigdelta_16(const int16_t *in, uint64_t nin)
 	return out;
 }
 
-uint32_t *zigdelta_16_32(const int16_t *in, uint64_t nin)
+/* return zigzag delta of in with nin elements */
+uint32_t *zigdelta_16_u32(const int16_t *in, uint64_t nin)
 {
+	int16_t prev;
 	uint32_t *out;
 	uint64_t i;
 
 	out = malloc(nin * sizeof *out);
+	prev = 0;
 
-	for (i = 0; i < nin - 1; i++) {
-		out[i] = zigzag_one_16(in[i + 1] - in[i]);
+	for (i = 0; i < nin; i++) {
+		out[i] = zigzag_one_16(in[i] - prev);
+		prev = in[i];
 	}
 
 	return out;
@@ -112,5 +116,25 @@ void unzigdelta_inplace_16(int16_t *in, uint64_t nin)
 
 	for (i = 1; i < nin; i++) {
 		in[i] = in[i - 1] + unzigzag_one_16(in[i]);
+	}
+}
+
+void unzigdelta_u16_16(const uint16_t *in, uint64_t nin, int16_t *out)
+{
+	uint64_t i;
+
+	out[0] = in[0];
+	for (i = 1; i < nin; i++) {
+		out[i] = out[i - 1] + unzigzag_one_16(in[i]);
+	}
+}
+
+void unzigdelta_u32_16(const uint32_t *in, uint64_t nin, int16_t *out)
+{
+	uint64_t i;
+
+	out[0] = in[0];
+	for (i = 1; i < nin; i++) {
+		out[i] = out[i - 1] + unzigzag_one_16(in[i]);
 	}
 }
