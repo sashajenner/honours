@@ -1320,7 +1320,7 @@ flac_depress_read_callback(const FLAC__StreamDecoder *decoder,
 	depress_data = client_data;
 	in = &(depress_data->in);
 
-	bytes_to_cp = MIN(*bytes, in->cap - in->n);
+	bytes_to_cp = MIN(*bytes, in->n - in->offset);
 
 	(void) memcpy(buffer, in->data + in->offset, bytes_to_cp);
 
@@ -1409,8 +1409,8 @@ flac_depress_write_callback(const FLAC__StreamDecoder *decoder,
 	depress_data = client_data;
 	out = &(depress_data->out);
 
-	(void) memcpy(out + out->offset, buffer[0],
-		      frame->header.blocksize * sizeof *out);
+	(void) memcpy(out->data + out->offset, buffer[0],
+		      frame->header.blocksize * sizeof *(out->data));
 	out->offset += frame->header.blocksize;
 
 	if (out->offset > out->n)

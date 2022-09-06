@@ -1087,7 +1087,7 @@ int test_flac(const int16_t *sigs, const uint32_t nr_sigs, uint32_t bps,
 
 	/* decompress sigs_press */
 	before = clock();
-	ret = flac_depress(sigs_press, nr_sigs, sigs_depress_32, &depress_len);
+	ret = flac_depress(sigs_press, press_len, sigs_depress_32, &depress_len);
 	after = clock();
 	res->depress_clocktime = GET_CLOCK_SECS(before, after);
 	ASSERT(ret == 0);
