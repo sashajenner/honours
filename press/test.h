@@ -27,6 +27,7 @@ if (!(statement)) { \
 		     "data\t" \
 		     "pressbound_bytes\t" \
 		     "press_bytes\t" \
+		     "press_ratio\t" \
 		     "depress_bytes\t" \
 		     "pressbound_time\t" \
 		     "press_time\t" \
@@ -37,6 +38,7 @@ if (!(statement)) { \
 			"%s\t" \
 			"%" PRIu64 "\t" \
 			"%" PRIu64 "\t" \
+			"%f\t" \
 			"%" PRIu64 "\t" \
 			"%f\t" \
 			"%f\t" \
@@ -49,6 +51,7 @@ struct result {
 	const char *method_name;
 	double depress_clocktime;
 	double press_clocktime;
+	double press_ratio;
 	double pressbound_clocktime;
 	uint32_t *flats;
 	uint32_t nflats;

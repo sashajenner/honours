@@ -328,35 +328,29 @@ int zlib_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 int zlib_svb12_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out,
 			  uint32_t *nout);
 
-/* zigzag delta svb zstd */
-/*
-uint32_t zstd_svb_zd_bound(const int16_t *in, uint32_t nin);
-uint32_t zstd_svb_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
-			   uint32_t nout_bytes);
-uint32_t zstd_svb_zd_depress(const uint8_t *in, uint32_t nin_elems,
-			     uint32_t nin_bytes, int16_t *out,
-			     uint32_t nout_bytes);
-			     */
+/* zigzag delta classical svb zstd */
 
-/* zigzag delta svb0124 zstd */
-/*
-uint32_t zstd_svb0124_zd_bound(const int16_t *in, uint32_t nin);
-uint32_t zstd_svb0124_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
-			       uint32_t nout_bytes);
-uint32_t zstd_svb0124_zd_depress(const uint8_t *in, uint32_t nin_elems,
-				 uint32_t nin_bytes, int16_t *out,
-				 uint32_t nout_bytes);
-				 */
+uint64_t zstd_svb_zd_bound_16(uint32_t nin);
+int zstd_svb_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			 uint64_t *nout);
+int zstd_svb_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+			   uint32_t *nout);
 
-/* zigzag delta svb12 zstd */
-/*
-uint32_t zstd_svb12_zd_bound(const int16_t *in, uint32_t nin);
-uint32_t zstd_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
-			     uint32_t nout_bytes);
-uint32_t zstd_svb12_zd_depress(const uint8_t *in, uint32_t nin_elems,
-			       uint32_t nin_bytes, int16_t *out,
-			       uint32_t nout_bytes);
-			       */
+/* zigzag delta svb 0,1,2,4 bytes zstd */
+
+uint64_t zstd_svb0124_zd_bound_16(uint32_t nin);
+int zstd_svb0124_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			     uint64_t *nout);
+int zstd_svb0124_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+			       uint32_t *nout);
+
+/* zigzag delta svb(16) 1,2 bytes zstd */
+
+uint64_t zstd_svb12_zd_bound(uint32_t nin);
+int zstd_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			uint64_t *nout);
+int zstd_svb12_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out,
+			  uint32_t *nout);
 
 /* flac */
 
@@ -368,7 +362,16 @@ int flac_press(const int32_t *in, uint64_t nin, uint8_t *out, uint64_t *nout,
 int flac_depress(const uint8_t *in, uint64_t nin, int32_t *out,
 		 uint64_t *nout);
 
+/* flac zstd */
+uint64_t zstd_flac_bound(uint64_t nin);
+int zstd_flac_press(const int32_t *in, uint64_t nin, uint8_t *out,
+		    uint64_t *nout, uint32_t bps, uint32_t sample_rate);
+int zstd_flac_depress(const uint8_t *in, uint64_t nin, int32_t *out,
+		      uint64_t *nout);
+
 /* TODO
+ * bzip svb_zd
+ * zstd uint_submin
  * variable byte
  * huffman
  * peak-picking flat approximation

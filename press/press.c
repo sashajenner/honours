@@ -1355,6 +1355,165 @@ int zlib_svb12_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out,
 	return ret;
 }
 
+/* delta | zigzag | svb | zstd */
+
+uint64_t zstd_svb_zd_bound_16(uint32_t nin)
+{
+	return zstd_bound(sizeof nin + svb_zd_bound_16(nin));
+}
+
+int zstd_svb_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			 uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_svb;
+	uint8_t *out_svb;
+
+	nout_svb = sizeof nin + svb_zd_bound_16(nin);
+	out_svb = malloc(nout_svb);
+
+	/* encode nin before svb_zd data */
+	(void) memcpy(out_svb, &nin, sizeof nin);
+	nout_svb -= sizeof nin;
+	svb_zd_press_16(in, nin, out_svb + sizeof nin, &nout_svb);
+	nout_svb += sizeof nin;
+
+	ret = zstd_press(out_svb, nout_svb, out, nout);
+
+	free(out_svb);
+	return ret;
+}
+
+int zstd_svb_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+			   uint32_t *nout)
+{
+	int ret;
+	uint32_t nout_signals;
+	uint64_t nout_64;
+	uint64_t nout_zstd;
+	uint8_t *out_zstd;
+
+	nout_zstd = zstd_bound(*nout * sizeof *out);
+	out_zstd = malloc(nout_zstd);
+
+	ret = zstd_depress(in, nin, out_zstd, &nout_zstd);
+	if (ret == 0) {
+		memcpy(&nout_signals, out_zstd, sizeof nout_signals);
+		svb_zd_depress_16(out_zstd + sizeof nout_signals, nout_signals,
+				  out, &nout_64);
+		*nout = nout_64;
+	}
+
+	free(out_zstd);
+	return ret;
+}
+
+/* delta | zigzag | svb0124 | zstd */
+
+uint64_t zstd_svb0124_zd_bound_16(uint32_t nin)
+{
+	return zstd_bound(sizeof nin + svb0124_zd_bound_16(nin));
+}
+
+int zstd_svb0124_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			     uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_svb;
+	uint8_t *out_svb;
+
+	nout_svb = sizeof nin + svb0124_zd_bound_16(nin);
+	out_svb = malloc(nout_svb);
+
+	/* encode nin before svb_zd data */
+	(void) memcpy(out_svb, &nin, sizeof nin);
+	nout_svb -= sizeof nin;
+	svb0124_zd_press_16(in, nin, out_svb + sizeof nin, &nout_svb);
+	nout_svb += sizeof nin;
+
+	ret = zstd_press(out_svb, nout_svb, out, nout);
+
+	free(out_svb);
+	return ret;
+}
+
+int zstd_svb0124_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
+			       uint32_t *nout)
+{
+	int ret;
+	uint32_t nout_signals;
+	uint64_t nout_64;
+	uint64_t nout_zstd;
+	uint8_t *out_zstd;
+
+	nout_zstd = zstd_bound(*nout * sizeof *out);
+	out_zstd = malloc(nout_zstd);
+
+	ret = zstd_depress(in, nin, out_zstd, &nout_zstd);
+	if (ret == 0) {
+		memcpy(&nout_signals, out_zstd, sizeof nout_signals);
+		svb0124_zd_depress_16(out_zstd + sizeof nout_signals,
+				      nout_signals, out, &nout_64);
+		*nout = nout_64;
+	}
+
+	free(out_zstd);
+	return ret;
+}
+
+/* delta | zigzag | svb12 | zstd */
+
+uint64_t zstd_svb12_zd_bound(uint32_t nin)
+{
+	return zstd_bound(sizeof nin + svb12_zd_bound(nin));
+}
+
+int zstd_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_svb;
+	uint8_t *out_svb;
+
+	nout_svb = sizeof nin + svb12_zd_bound(nin);
+	out_svb = malloc(nout_svb);
+
+	/* encode nin before svb_zd data */
+	(void) memcpy(out_svb, &nin, sizeof nin);
+	nout_svb -= sizeof nin;
+	svb12_zd_press(in, nin, out_svb + sizeof nin, &nout_svb);
+	nout_svb += sizeof nin;
+
+	ret = zstd_press(out_svb, nout_svb, out, nout);
+
+	free(out_svb);
+	return ret;
+}
+
+int zstd_svb12_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out,
+			  uint32_t *nout)
+{
+	int ret;
+	uint32_t nout_signals;
+	uint64_t nout_64;
+	uint64_t nout_zstd;
+	uint8_t *out_zstd;
+
+	nout_zstd = zstd_bound(*nout * sizeof *out);
+	out_zstd = malloc(nout_zstd);
+
+	ret = zstd_depress(in, nin, out_zstd, &nout_zstd);
+	if (ret == 0) {
+		memcpy(&nout_signals, out_zstd, sizeof nout_signals);
+		svb12_zd_depress(out_zstd + sizeof nout_signals, nout_signals,
+				 out, &nout_64);
+		*nout = nout_64;
+	}
+
+	free(out_zstd);
+	return ret;
+}
+
 /* flac */
 
 uint64_t flac_bound(uint64_t nin)
@@ -1660,4 +1819,47 @@ void flac_depress_error_callback(const FLAC__StreamDecoder *decoder,
 
 	depress_data = client_data;
 	depress_data->error = 1;
+}
+
+/* flac | zstd */
+
+uint64_t zstd_flac_bound(uint64_t nin)
+{
+	return zstd_bound(flac_bound(nin));
+}
+
+int zstd_flac_press(const int32_t *in, uint64_t nin, uint8_t *out,
+		    uint64_t *nout, uint32_t bps, uint32_t sample_rate)
+{
+	int ret;
+	uint64_t nout_flac;
+	uint8_t *out_flac;
+
+	nout_flac = flac_bound(nin);
+	out_flac = malloc(nout_flac);
+
+	ret = flac_press(in, nin, out_flac, &nout_flac, bps, sample_rate);
+	if (ret == 0)
+		ret = zstd_press(out_flac, nout_flac, out, nout);
+
+	free(out_flac);
+	return ret;
+}
+
+int zstd_flac_depress(const uint8_t *in, uint64_t nin, int32_t *out,
+		      uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_zstd;
+	uint8_t *out_zstd;
+
+	nout_zstd = MAX(256, zstd_bound(*nout * sizeof *out));
+	out_zstd = malloc(nout_zstd);
+
+	ret = zstd_depress(in, nin, out_zstd, &nout_zstd);
+	if (ret == 0)
+		ret = flac_depress(out_zstd, nout_zstd, out, nout);
+
+	free(out_zstd);
+	return ret;
 }

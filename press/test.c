@@ -24,11 +24,14 @@ void fwrite_res(FILE *fp, struct result *res)
 	flats_str = array_to_str(res->flats, res->nflats);
 	free(res->flats);
 
+	res->press_ratio = (double) res->depress_bytes / res->press_bytes;
+
 	(void) fprintf(fp, RESULTS_FORMAT,
 		       res->method_name,
 		       res->data_name,
 		       res->pressbound_bytes,
 		       res->press_bytes,
+		       res->press_ratio,
 		       res->depress_bytes,
 		       res->pressbound_clocktime,
 		       res->press_clocktime,
@@ -1430,6 +1433,207 @@ int test_zlib_svb12_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	return EXIT_SUCCESS;
 }
 
+int test_zstd_svb_zd(const int16_t *sigs, const uint32_t nr_sigs,
+		     struct result *res)
+{
+	clock_t after;
+	clock_t before;
+	int ret;
+	int16_t *sigs_depress;
+	uint32_t depress_len;
+	uint32_t i;
+	uint64_t nr_sigs_bytes;
+	uint64_t press_len;
+	uint64_t pressbound;
+	uint8_t *sigs_press;
+
+	nr_sigs_bytes = sizeof *sigs * nr_sigs;
+
+	/* bound sigs_press */
+	before = clock();
+	pressbound = zstd_svb_zd_bound_16(nr_sigs);
+	after = clock();
+	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
+
+	/* init sigs_press */
+	sigs_press = malloc(pressbound);
+	ASSERT(sigs_press);
+
+	/* compress sigs */
+	press_len = pressbound;
+	before = clock();
+	ret = zstd_svb_zd_press_16(sigs, nr_sigs, sigs_press, &press_len);
+	after = clock();
+	res->press_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	ASSERT(press_len <= pressbound);
+
+	/* init sigs_depress */
+	sigs_depress = malloc(nr_sigs_bytes);
+	ASSERT(sigs_depress);
+
+	/* decompress sigs_press */
+	depress_len = nr_sigs;
+	before = clock();
+	ret = zstd_svb_zd_depress_16(sigs_press, press_len, sigs_depress,
+				     &depress_len);
+	after = clock();
+	res->depress_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	ASSERT(depress_len == nr_sigs);
+
+	/* ensure decompressed == original */
+	for (i = 0; i < depress_len / sizeof *sigs; i++) {
+		ASSERT(sigs_depress[i] == sigs[i]);
+	}
+
+	/* let it go */
+	free(sigs_press);
+	free(sigs_depress);
+
+	res->depress_bytes = nr_sigs_bytes;
+	res->pressbound_bytes = pressbound;
+	res->press_bytes = press_len;
+
+	return EXIT_SUCCESS;
+}
+
+int test_zstd_svb0124_zd(const int16_t *sigs, const uint32_t nr_sigs,
+			 struct result *res)
+{
+	clock_t after;
+	clock_t before;
+	int ret;
+	int16_t *sigs_depress;
+	uint32_t depress_len;
+	uint32_t i;
+	uint64_t nr_sigs_bytes;
+	uint64_t press_len;
+	uint64_t pressbound;
+	uint8_t *sigs_press;
+
+	nr_sigs_bytes = sizeof *sigs * nr_sigs;
+
+	/* bound sigs_press */
+	before = clock();
+	pressbound = zstd_svb0124_zd_bound_16(nr_sigs);
+	after = clock();
+	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
+
+	/* init sigs_press */
+	sigs_press = malloc(pressbound);
+	ASSERT(sigs_press);
+
+	/* compress sigs */
+	press_len = pressbound;
+	before = clock();
+	ret = zstd_svb0124_zd_press_16(sigs, nr_sigs, sigs_press, &press_len);
+	after = clock();
+	res->press_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	ASSERT(press_len <= pressbound);
+
+	/* init sigs_depress */
+	sigs_depress = malloc(nr_sigs_bytes);
+	ASSERT(sigs_depress);
+
+	/* decompress sigs_press */
+	depress_len = nr_sigs;
+	before = clock();
+	ret = zstd_svb0124_zd_depress_16(sigs_press, press_len, sigs_depress,
+					 &depress_len);
+	after = clock();
+	res->depress_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	ASSERT(depress_len == nr_sigs);
+
+	/* ensure decompressed == original */
+	for (i = 0; i < depress_len / sizeof *sigs; i++) {
+		ASSERT(sigs_depress[i] == sigs[i]);
+	}
+
+	/* let it go */
+	free(sigs_press);
+	free(sigs_depress);
+
+	res->depress_bytes = nr_sigs_bytes;
+	res->pressbound_bytes = pressbound;
+	res->press_bytes = press_len;
+
+	return EXIT_SUCCESS;
+}
+
+int test_zstd_svb12_zd(const int16_t *sigs, const uint32_t nr_sigs,
+		       struct result *res)
+{
+	clock_t after;
+	clock_t before;
+	int ret;
+	int16_t *sigs_depress;
+	uint32_t depress_len;
+	uint32_t i;
+	uint64_t nr_sigs_bytes;
+	uint64_t press_len;
+	uint64_t pressbound;
+	uint8_t *sigs_press;
+
+	nr_sigs_bytes = sizeof *sigs * nr_sigs;
+
+	/* bound sigs_press */
+	before = clock();
+	pressbound = zstd_svb12_zd_bound(nr_sigs);
+	after = clock();
+	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
+
+	/* init sigs_press */
+	sigs_press = malloc(pressbound);
+	ASSERT(sigs_press);
+
+	/* compress sigs */
+	press_len = pressbound;
+	before = clock();
+	ret = zstd_svb12_zd_press(sigs, nr_sigs, sigs_press, &press_len);
+	after = clock();
+	res->press_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	ASSERT(press_len <= pressbound);
+
+	/* init sigs_depress */
+	sigs_depress = malloc(nr_sigs_bytes);
+	ASSERT(sigs_depress);
+
+	/* decompress sigs_press */
+	depress_len = nr_sigs;
+	before = clock();
+	ret = zstd_svb12_zd_depress(sigs_press, press_len, sigs_depress,
+				    &depress_len);
+	after = clock();
+	res->depress_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	ASSERT(depress_len == nr_sigs);
+
+	/* ensure decompressed == original */
+	for (i = 0; i < depress_len / sizeof *sigs; i++) {
+		ASSERT(sigs_depress[i] == sigs[i]);
+	}
+
+	/* let it go */
+	free(sigs_press);
+	free(sigs_depress);
+
+	res->depress_bytes = nr_sigs_bytes;
+	res->pressbound_bytes = pressbound;
+	res->press_bytes = press_len;
+
+	return EXIT_SUCCESS;
+}
+
 int test_flac(const int16_t *sigs, const uint32_t nr_sigs, uint32_t bps,
 	      uint32_t sample_rate, struct result *res)
 {
@@ -1512,6 +1716,89 @@ int test_flac_P11(const int16_t *sigs, const uint32_t nr_sigs,
 			 res);
 }
 
+int test_zstd_flac(const int16_t *sigs, const uint32_t nr_sigs, uint32_t bps,
+		   uint32_t sample_rate, struct result *res)
+{
+	clock_t after;
+	clock_t before;
+	int ret;
+	int32_t *sigs_32;
+	int32_t *sigs_depress_32;
+	uint32_t i;
+	uint64_t depress_len;
+	uint64_t nr_sigs_bytes;
+	uint64_t press_len;
+	uint64_t pressbound;
+	uint8_t *sigs_press;
+
+	nr_sigs_bytes = sizeof *sigs * nr_sigs;
+
+	sigs_32 = malloc(nr_sigs * sizeof *sigs_32);
+	ASSERT(sigs_32);
+	for (i = 0; i < nr_sigs; i++) {
+		sigs_32[i] = sigs[i];
+	}
+
+	/* bound sigs_press */
+	before = clock();
+	pressbound = zstd_flac_bound(nr_sigs);
+	after = clock();
+	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
+
+	/* init sigs_press */
+	sigs_press = malloc(pressbound);
+	ASSERT(sigs_press);
+
+	/* compress sigs */
+	press_len = pressbound;
+	before = clock();
+	ret = zstd_flac_press(sigs_32, nr_sigs, sigs_press, &press_len, bps,
+			      sample_rate);
+	after = clock();
+	res->press_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	ASSERT(press_len <= pressbound);
+
+	/* init sigs_depress */
+	depress_len = nr_sigs;
+	sigs_depress_32 = malloc(depress_len * sizeof *sigs_depress_32);
+	ASSERT(sigs_depress_32);
+
+	/* decompress sigs_press */
+	before = clock();
+	ret = zstd_flac_depress(sigs_press, press_len, sigs_depress_32,
+				&depress_len);
+	after = clock();
+	res->depress_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	ASSERT(depress_len == nr_sigs);
+
+	/* ensure decompressed == original */
+	for (i = 0; i < nr_sigs; i++) {
+		ASSERT(sigs_depress_32[i] == sigs[i]);
+	}
+
+	/* let it go */
+	free(sigs_32);
+	free(sigs_press);
+	free(sigs_depress_32);
+
+	res->depress_bytes = nr_sigs_bytes;
+	res->pressbound_bytes = pressbound;
+	res->press_bytes = press_len;
+
+	return EXIT_SUCCESS;
+}
+
+int test_zstd_flac_P11(const int16_t *sigs, const uint32_t nr_sigs,
+		       struct result *res)
+{
+	return test_zstd_flac(sigs, nr_sigs, P11_BITS_PER_SAMPLE,
+			      P11_SAMPLING_RATE, res);
+}
+
 int main(void)
 {
 	FILE *fp;
@@ -1541,7 +1828,11 @@ int main(void)
 	TEST(zlib_svb_zd, P11, &res, fp);
 	TEST(zlib_svb0124_zd, P11, &res, fp);
 	TEST(zlib_svb12_zd, P11, &res, fp);
+	TEST(zstd_svb_zd, P11, &res, fp);
+	TEST(zstd_svb0124_zd, P11, &res, fp);
+	TEST(zstd_svb12_zd, P11, &res, fp);
 	TEST(flac_P11, P11, &res, fp);
+	TEST(zstd_flac_P11, P11, &res, fp);
 
 	TEST(none, P11_0_66999, &res, fp);
 	TEST(uint11_16, P11_0_66999, &res, fp);
@@ -1564,7 +1855,11 @@ int main(void)
 	TEST(zlib_svb_zd, P11_0_66999, &res, fp);
 	TEST(zlib_svb0124_zd, P11_0_66999, &res, fp);
 	TEST(zlib_svb12_zd, P11_0_66999, &res, fp);
+	TEST(zstd_svb_zd, P11_0_66999, &res, fp);
+	TEST(zstd_svb0124_zd, P11_0_66999, &res, fp);
+	TEST(zstd_svb12_zd, P11_0_66999, &res, fp);
 	TEST(flac_P11, P11_0_66999, &res, fp);
+	TEST(zstd_flac_P11, P11_0_66999, &res, fp);
 
 	TEST(none, P11_0_28997, &res, fp);
 	TEST(uint11_16, P11_0_28997, &res, fp);
@@ -1587,7 +1882,11 @@ int main(void)
 	TEST(zlib_svb_zd, P11_0_28997, &res, fp);
 	TEST(zlib_svb0124_zd, P11_0_28997, &res, fp);
 	TEST(zlib_svb12_zd, P11_0_28997, &res, fp);
+	TEST(zstd_svb_zd, P11_0_28997, &res, fp);
+	TEST(zstd_svb0124_zd, P11_0_28997, &res, fp);
+	TEST(zstd_svb12_zd, P11_0_28997, &res, fp);
 	TEST(flac_P11, P11_0_28997, &res, fp);
+	TEST(zstd_flac_P11, P11_0_28997, &res, fp);
 
 	TEST(none, P11_0_1995, &res, fp);
 	TEST(uint11_16, P11_0_1995, &res, fp);
@@ -1609,7 +1908,11 @@ int main(void)
 	TEST(zlib_svb_zd, P11_0_1995, &res, fp);
 	TEST(zlib_svb0124_zd, P11_0_1995, &res, fp);
 	TEST(zlib_svb12_zd, P11_0_1995, &res, fp);
+	TEST(zstd_svb_zd, P11_0_1995, &res, fp);
+	TEST(zstd_svb0124_zd, P11_0_1995, &res, fp);
+	TEST(zstd_svb12_zd, P11_0_1995, &res, fp);
 	TEST(flac_P11, P11_0_1995, &res, fp);
+	TEST(zstd_flac_P11, P11_0_1995, &res, fp);
 
 	TEST(none, P11_0_285, &res, fp);
 	TEST(uint11_16, P11_0_285, &res, fp);
@@ -1631,7 +1934,11 @@ int main(void)
 	TEST(zlib_svb_zd, P11_0_285, &res, fp);
 	TEST(zlib_svb0124_zd, P11_0_285, &res, fp);
 	TEST(zlib_svb12_zd, P11_0_285, &res, fp);
+	TEST(zstd_svb_zd, P11_0_285, &res, fp);
+	TEST(zstd_svb0124_zd, P11_0_285, &res, fp);
+	TEST(zstd_svb12_zd, P11_0_285, &res, fp);
 	TEST(flac_P11, P11_0_285, &res, fp);
+	TEST(zstd_flac_P11, P11_0_285, &res, fp);
 
 	TEST(none, P11_999_1999, &res, fp);
 	TEST(uint11_16, P11_999_1999, &res, fp);
@@ -1656,7 +1963,11 @@ int main(void)
 	TEST(zlib_svb_zd, P11_999_1999, &res, fp);
 	TEST(zlib_svb0124_zd, P11_999_1999, &res, fp);
 	TEST(zlib_svb12_zd, P11_999_1999, &res, fp);
+	TEST(zstd_svb_zd, P11_999_1999, &res, fp);
+	TEST(zstd_svb0124_zd, P11_999_1999, &res, fp);
+	TEST(zstd_svb12_zd, P11_999_1999, &res, fp);
 	TEST(flac_P11, P11_999_1999, &res, fp);
+	TEST(zstd_flac_P11, P11_999_1999, &res, fp);
 
 	TEST(none, ONE, &res, fp);
 	TEST(uint11_16, ONE, &res, fp);
@@ -1678,7 +1989,11 @@ int main(void)
 	TEST(zlib_svb_zd, ONE, &res, fp);
 	TEST(zlib_svb0124_zd, ONE, &res, fp);
 	TEST(zlib_svb12_zd, ONE, &res, fp);
+	TEST(zstd_svb_zd, ONE, &res, fp);
+	TEST(zstd_svb0124_zd, ONE, &res, fp);
+	TEST(zstd_svb12_zd, ONE, &res, fp);
 	TEST(flac_P11, ONE, &res, fp);
+	TEST(zstd_flac_P11, ONE, &res, fp);
 
 	TEST(none, SAME, &res, fp);
 	TEST(uint11_16, SAME, &res, fp);
@@ -1700,7 +2015,11 @@ int main(void)
 	TEST(zlib_svb_zd, SAME, &res, fp);
 	TEST(zlib_svb0124_zd, SAME, &res, fp);
 	TEST(zlib_svb12_zd, SAME, &res, fp);
+	TEST(zstd_svb_zd, SAME, &res, fp);
+	TEST(zstd_svb0124_zd, SAME, &res, fp);
+	TEST(zstd_svb12_zd, SAME, &res, fp);
 	TEST(flac_P11, SAME, &res, fp);
+	TEST(zstd_flac_P11, SAME, &res, fp);
 
 	TEST(none, ZERO, &res, fp);
 	TEST(uint11_16, ZERO, &res, fp);
@@ -1722,7 +2041,11 @@ int main(void)
 	TEST(zlib_svb_zd, ZERO, &res, fp);
 	TEST(zlib_svb0124_zd, ZERO, &res, fp);
 	TEST(zlib_svb12_zd, ZERO, &res, fp);
+	TEST(zstd_svb_zd, ZERO, &res, fp);
+	TEST(zstd_svb0124_zd, ZERO, &res, fp);
+	TEST(zstd_svb12_zd, ZERO, &res, fp);
 	TEST(flac_P11, ZERO, &res, fp);
+	TEST(zstd_flac_P11, ZERO, &res, fp);
 
 	(void) fclose(fp);
 
