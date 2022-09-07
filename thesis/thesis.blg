@@ -7,45 +7,45 @@ Warning--I didn't find a database entry for "clark-curran:07"
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 Warning--empty booktitle in bwt
 Warning--empty journal in huffman-time
-You've used 25 entries,
+You've used 26 entries,
             3070 wiz_defined-function locations,
-            827 strings with 9738 characters,
-and the built_in function-call counts, 14173 in all, are:
-= -- 1098
-> -- 574
-< -- 19
-+ -- 224
-- -- 186
-* -- 1066
-:= -- 2242
-add.period$ -- 101
-call.type$ -- 25
-change.case$ -- 190
+            831 strings with 9591 characters,
+and the built_in function-call counts, 13986 in all, are:
+= -- 1107
+> -- 510
+< -- 21
++ -- 202
+- -- 162
+* -- 1015
+:= -- 2225
+add.period$ -- 105
+call.type$ -- 26
+change.case$ -- 187
 chr.to.int$ -- 24
-cite$ -- 27
-duplicate$ -- 1023
-empty$ -- 1123
-format.name$ -- 251
-if$ -- 2793
-int.to.chr$ -- 2
+cite$ -- 28
+duplicate$ -- 1020
+empty$ -- 1136
+format.name$ -- 226
+if$ -- 2767
+int.to.chr$ -- 3
 int.to.str$ -- 1
-missing$ -- 220
-newline$ -- 131
-num.names$ -- 100
-pop$ -- 401
+missing$ -- 213
+newline$ -- 136
+num.names$ -- 104
+pop$ -- 382
 preamble$ -- 1
-purify$ -- 162
+purify$ -- 158
 quote$ -- 0
-skip$ -- 388
+skip$ -- 403
 stack$ -- 0
-substring$ -- 638
-swap$ -- 520
+substring$ -- 649
+swap$ -- 508
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 222
+type$ -- 231
 warning$ -- 2
-while$ -- 93
+while$ -- 96
 width$ -- 0
-write$ -- 324
+write$ -- 336
 (There were 3 warnings)

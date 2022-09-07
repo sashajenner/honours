@@ -1,4 +1,4 @@
-\begin{thebibliography}{25}
+\begin{thebibliography}{26}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \providecommand{\urlprefix}{URL }
@@ -62,15 +62,6 @@ Phillip Gage. 1994.
   algorithm for data compression}.
 \newblock \emph{The C User Journal}.
 
-\bibitem[{Gamaarachchi et~al.(2022)Gamaarachchi, Samarakoon, Jenner, Ferguson,
-  Amos, Hammond, Saadat, Smith, Parameswaran, and Deveson}]{slow5}
-Hasindu Gamaarachchi, Hiruna Samarakoon, Sasha~P. Jenner, James~M. Ferguson,
-  Timothy~G. Amos, Jillian~M. Hammond, Hassaan Saadat, Martin~A. Smith, Sri
-  Parameswaran, and Ira~W. Deveson. 2022.
-\newblock \href{https://doi.org/10.1038/s41587-021-01147-4}{Fast nanopore
-  sequencing data analysis with slow5}.
-\newblock \emph{Nature Biotechnology}.
-
 \bibitem[{Gigante(2017)}]{picopore}
 Scott Gigante. 2017.
 \newblock
@@ -121,6 +112,16 @@ B.~McMillan. 1956.
 \newblock \href{http://dx.doi.org/10.1109/TIT.1956.1056818}{Two inequalities
   implied by unique decipherability}.
 \newblock \emph{IRE Transactions on Information Theory}, 2(4):115--116.
+
+\bibitem[{nanoporetech(2022{\natexlab{a}})}]{pod5}
+nanoporetech. 2022{\natexlab{a}}.
+\newblock pod5-file-format.
+\newblock \url{https://github.com/nanoporetech/pod5-file-format}.
+
+\bibitem[{nanoporetech(2022{\natexlab{b}})}]{vbz}
+nanoporetech. 2022{\natexlab{b}}.
+\newblock vbz\_compression.
+\newblock \url{https://github.com/nanoporetech/vbz_compression}.
 
 \bibitem[{Rissanen(1976)}]{arithmetic-coding}
 J.~J. Rissanen. 1976.

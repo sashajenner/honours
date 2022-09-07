@@ -3,7 +3,10 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {2.1}{\ignorespaces A timeline of the major events in the literature.}}{8}{table.2.1}%
+\contentsline {table}{\numberline {2.1}{\ignorespaces The number of bytes used and their control word encoding for different integer ranges in classical Stream VByte. }}{7}{table.2.1}%
+\contentsline {table}{\numberline {2.2}{\ignorespaces The number of bytes used and their control word encoding for different integer ranges in the Stream VByte variation. }}{7}{table.2.2}%
+\contentsline {table}{\numberline {2.3}{\ignorespaces The number of bytes used and their control word encoding for different integer ranges in Stream VByte 16. }}{7}{table.2.3}%
+\contentsline {table}{\numberline {2.4}{\ignorespaces A timeline of the major events in the literature.}}{9}{table.2.4}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
