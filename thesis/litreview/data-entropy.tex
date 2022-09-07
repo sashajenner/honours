@@ -1,0 +1,20 @@
+\subsection{Entropy coding}
+
+Many lossless data compression methods have been proposed since Shannon's formative paper in 1948. Entropy coding is one such scheme that does not depend on the data's characteristics. It typically encodes each fixed-width symbol with a variable-length binary prefix code as described above. Fundamentally, it attempts to achieve a bit rate as close as possible to the entropy rate of the information source.
+%The length of each code is approximately equal to $-\log_2 P$ where $P$ is the symbol's probability of occurrence and bits are used.
+
+Huffman coding is a well-known entropy coding technique which minimises the expected length of prefix codes \cite{huffman}. It solves the following optimisation problem:
+\begin{align*}
+\underset{l_i}{\text{minimise}}&\sum_i p_il_i\\
+\text{subject to}&\sum_i 2^{-l_i}\le 1
+\end{align*}
+where $l_i\in\mathbb{N}^+$. The inequality constraint is known as the Kraft-McMillan inequality and defines a necessary condition for the existence of a uniquely decodable binary code \cite{mcmillan}. The Huffman coding algorithm is a greedy algorithm which constructs a binary tree from the bottom-up. Recursively, it takes the two symbols with the lowest probabilities and constructs a new node with these two as its children. This new node is considered to be a new symbol with the combined probability of its children. Once the tree is constructed, the edges to the left are labelled as 0 and those to the right as 1. A hash table mapping symbols to binary codewords is then constructed by traversing the tree from the root to each leaf node and concatenating the edge labels along the path taken. The time complexity for this algorithm is $O(n\log n)$ or $O(n)$ if the probabilities are already sorted, where $n$ is the number of symbols \cite{huffman-time}.
+
+However, perhaps a more appropriate measure of time complexity is the number of passes over an input string of length $m$. In this case, Huffman coding takes $O(m)$ time as it requires one pass if the probability distribution is already known. Otherwise, the probability distribution can be determined by a preliminary pass over the input. Or instead, an adaptive Huffman coding algorithm such as the Faller-Gallager-Knuth (FGK) or Vitter algorithm can be used \cite{fgk,vitter}. In the latter cases, the hash table or Huffman tree must also be encoded in the output.
+
+Among all source codes when the probability distribution of the alphabet is known beforehand, Huffman coding is indeed optimal. However, once these restrictions are relaxed, other techniques prove to be more compressible. In particular, Huffman coding tends to be inefficient on small alphabets such as the binary numbers $\{0,1\}$ wherein no compression is possible without an alphabet extension \cite{arithmetic-coding}. Similarly, if the probability distribution is not dyadic, other non--source-coding techniques are more optimal.
+
+Arithmetic coding is one such entropy coding technique which encodes the input string as a fraction in the range $[0,1)$ \cite{arithmetic-coding}. The starting interval $[0,1)$ is divided into sub-intervals corresponding to each symbol in the alphabet with the length of each sub-interval equal to its symbol's expected probability of occurrence. Each time a symbol is read from the input string its sub-interval is chosen and divided as before. Recursively, this process is repeated until the final symbol is read, at which point any fraction in the final interval can be returned. Arithmetic coding overcomes the weaknesses of Huffman coding described above and requires the same number of passes over the input. However, in practice it is more difficult to implement and face issues of computational accuracy. Range coding is an equivalent technique with a slightly different implementation \cite{range-coding}.
+
+% TODO golomb-rice coding
+% TODO ans

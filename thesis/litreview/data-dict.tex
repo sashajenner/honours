@@ -1,0 +1,9 @@
+\subsection{Dictionary coding}
+
+Dictionary coding is another lossless compression scheme which searches in the input data for strings stored in a dictionary and substitutes matches with a reference to their location in the dictionary. There are two main classes of dictionary coders; ones that use a static predetermined dictionary and others which dynamically update their dictionary.
+
+Byte-pair encoding falls under the second class and recursively replaces the most frequently occurring pair of adjacent bytes with a new byte not found in the input data \cite{byte-pair}. Despite being so simple, Gage claims it is on par with the Lempel, Ziv and Welch method \cite{lzw}. It is however quite slow at compression, requiring many passes of the data, but takes only one pass for decompression.
+
+Lempel-Ziv coding is another dictionary coding technique which is widely used in practice and has many variants. LZ77 is the first such algorithm to be introduced in the literature and replaces repeated occurrences of substrings with references to their original location in the input \cite{lz77}. It maintains a fixed-width sliding window represented as a circular buffer in order to keep track of the most recent data whilst keeping the algorithm's complexity under control. Each match is encoded by the substring's length and the distance to its original occurrence. LZ78 is very similar but instead constructs an explicit dictionary of substrings and replaces repeated occurrences with references to their location in the dictionary \cite{lz78}. Both variants require one pass over the input string and have been proven to be asymptotically optimal as the length of the string grows to infinity.
+
+%TODO mention what tools use which methods

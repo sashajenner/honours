@@ -1,0 +1,22 @@
+A rigorous evaluation process which determines what constitutes a `better' lossless encoding strategy must be outlined. There are many ways of evaluating an encoder. Fundamentally, these include the algorithm's
+\begin{itemize}
+\item data compression ratio;
+\item space and
+\item time complexity; and
+\item passes over the data.
+\end{itemize}
+The data compression ratio is a measure of how well the algorithm compressing the input data. It is simply defined as \[\text{Compression Ratio} = \frac{\text{Uncompressed Size}}{\text{Compressed Size}}.\] The space complexity of the algorithm measures how much memory it requires. Traditionally, this is expressed using big O notation but a more practical hard limit should be imposed. Considering the size of a nanopore read is usually around 256KB when stored in uncompressed binary, space is not usually a problem. In this case, streaming should not be a requirement on the algorithm and $O(n)$ is fine.
+
+Similarly, the time complexity of an algorithm measures how many computational operations it performs. This is also often described in big O notation as a function of the size of the input data. A similar more practical measure is the number of passes over the data or simply the time taken since most encoders are $O(n)$ anyway. One pass is optimal for nanopore signal data since it contains some degree of randomness. However, several passes may not be much slower and needs to be properly investigated.
+
+In addition, since the compression ratio and time taken is a trade-off for typical data compression techniques. A composite measure \textit{compression-time ratio} is introduced as \[\text{Compression-Time Ratio}=\frac{\text{Compression Ratio}}{\text{Time Taken}}.\] In this case, if the compression ratio and time taken are multiplied by a constant factor, the compression-time ratio remains constant. For example, an improvement in the compression ratio by a factor of two can be compensated by up to a doubling of the time taken before the compression-time ratio decreases. This is not an ideal measure but is useful for the comparison of techniques especially as a function of some tunable parameter such as the compression level.
+
+All of these metrics apart from the compression ratio may be different for compression and decompression and should be evaluated separately. In particular the following criterion is used to determine a `better' encoding strategy.
+\begin{enumerate}
+\item The strategy must be lossless.
+\item The best compression ratio is higher than that of VBZ on average across datasets.
+\item The compression-time ratio is higher than that of VBZ on average across both datasets and compression levels for both compression and decompression.
+\item $O(n)$ space complexity.
+\end{enumerate}
+
+The datasets used should represent typical nanopore signal data from a range of Oxford Nanopore machines; biopolymers such as DNA and RNA; and biological species. It should be large enough, at least several datasets, to conclude confidently the performance of the encoding strategies being tested.

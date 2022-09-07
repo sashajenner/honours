@@ -1,0 +1,22 @@
+\begin{tikzpicture}
+ 	%axis
+	\draw (0,0) -- coordinate (x axis mid) (429.4967296,0);
+    	\draw (0,0) -- coordinate (y axis mid) (0,4);
+    	%ticks
+    	\foreach \x in {0,0.0000256,0.0065536,1.6777216,429.4967296}
+     		\draw (\x,1pt) -- (\x,-3pt)
+			node[anchor=north] {\x};
+    	\foreach \y in {0,...,4}
+     		\draw (1pt,\y) -- (-3pt,\y)
+     			node[anchor=east] {\y};
+	%labels
+	\node[below=0.8cm] at (x axis mid) {Unsigned 32-bit Integer};
+	\node[rotate=90, above=0.8cm] at (y axis mid) {Bytes Used};
+
+	%plots
+	\draw (0,1) -- (0.0000256,1);
+	\draw (0.0000256,2) -- (0.0065536,2);
+	\draw (0.0065536,3) -- (1.6777216,3);
+	\draw (1.6777216,4) -- (429.4967296,4);
+
+\end{tikzpicture}

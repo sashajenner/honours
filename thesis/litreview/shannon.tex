@@ -1,0 +1,26 @@
+Shannon's ``A Mathematical Theory of Communication'' \cite{shannon} is the
+founding article for the field of information theory. It investigates the
+theoretical properties underpinning discrete and continuous communication
+systems with and without introduced noise.
+
+The nanopore sequencing pipeline can be decomposed to align with Shannon's
+general communication system. See Figure~\ref{fig:shannon-comm-sys}
+The \textit{information source} is the DNA/RNA sequence of a sample.
+The \textit{transmitter} is the nanopore sequencing machine which produces the
+signal. In our case, we desire to further encode this signal using fewer bits.
+This is known as data compression.
+The \textit{channel} is %TODO
+The \textit{receiver} is the software basecalling pipeline used to reconstruct
+the sequence.
+The \textit{destination} is a scientist or customer.
+
+%TODO
+\begin{figure}
+\caption{The nanopore sequencing pipeline.}
+\end{figure}
+
+The nanopore sequencing pipeline is comparable to Shannon's discrete noiseless
+system.
+
+A nanopore sequencer can be thought of as a stochastic process. It produces a
+discrete sequence of integers governed by a set of probabilities.

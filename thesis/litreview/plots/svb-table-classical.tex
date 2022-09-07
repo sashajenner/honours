@@ -1,0 +1,13 @@
+\begin{table}
+    \caption{The number of bytes used and their control word encoding for different integer ranges in classical Stream VByte. \label{tab:svb-classical}}
+    \begin{tabular}{|l|l|l|}%|p{4cm}|p{5.1cm}|}
+        \hline
+        Integer Range & Number of Bytes Used & Control Codeword\\
+        \hline
+	$[0,255]$ & 1 & 00\\
+	$[256,65535]$ & 2 & 01\\
+	$[65536,16777215]$ & 3 & 10\\
+	$[16777216,4294967295]$ & 4 & 11\\
+        \hline
+    \end{tabular}
+\end{table}
