@@ -398,6 +398,8 @@ int zstd_flac_depress(const uint8_t *in, uint64_t nin, int32_t *out,
  * huffman
  * peak-picking flat approximation
  * hasindu basecalled data method
+ * huffman/golomb-rice/arithmetic/elias-gamma on zigzag delta
+ * http://neurocline.github.io/dev/2015/09/17/zig-zag-encoding.html: Note that it would be possible to store negative numbers with a smaller number of bytes with a little more sophistication, and not require zigzag encoding: you store the number of bytes required by the absolute magnitude of the number, and on reading, you pick up the MSB of the sequence of stored bytes and recreate the number. I suspect that zig-zag encoding is used because the amount of code for encoding and decoding is actually less when expressed in a high-level language, and perhaps faster even in assembly.
  */
 
 #endif /* press.h */
