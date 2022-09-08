@@ -10,7 +10,9 @@ FLZMA2 = fast-lzma2
 FLZMA2LIB = $(FLZMA2)/libfast-lzma2.a
 FLAC = flac-1.3.4
 FLACLIB = $(FLAC)/src/libFLAC/.libs/libFLAC.so
-LIB = $(SVBLIB) $(BZIP2LIB) $(FLZMA2LIB) $(FLACLIB)
+TURBOPFOR = TurboPFor-Integer-Compression
+TURBOPFORLIB = $(TURBOPFOR)/libic.a
+LIB = $(SVBLIB) $(BZIP2LIB) $(FLZMA2LIB) $(FLACLIB) $(TURBOPFORLIB)
 
 .PHONY = clean $(LIB)
 

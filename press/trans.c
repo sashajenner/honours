@@ -76,6 +76,36 @@ void unzigzag_inplace_16(uint16_t *in, uint64_t nin)
 	}
 }
 
+int16_t *delta_16(const int16_t *in, uint64_t nin)
+{
+	int16_t prev;
+	int16_t *out;
+	uint64_t i;
+
+	prev = 0;
+	out = malloc(nin * sizeof *out);
+
+	for (i = 0; i < nin; i++) {
+		out[i] = in[i] - prev;
+		prev = in[i];
+	}
+
+	return out;
+}
+
+void undelta_inplace_16(int16_t *in, uint64_t nin)
+{
+	int16_t prev;
+	uint64_t i;
+
+	prev = 0;
+
+	for (i = 0; i < nin; i++) {
+		in[i] += prev;
+		prev = in[i];
+	}
+}
+
 /* return zigzag delta of in with nin - 1 elements */
 uint16_t *zigdelta_16(const int16_t *in, uint64_t nin)
 {

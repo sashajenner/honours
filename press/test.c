@@ -2255,6 +2255,68 @@ int test_zstd_flac_P11(const int16_t *sigs, const uint32_t nr_sigs,
 			      P11_SAMPLING_RATE, res);
 }
 
+int test_turbopfor(const int16_t *sigs, const uint32_t nr_sigs,
+		   struct result * res)
+{
+	clock_t after;
+	clock_t before;
+	int16_t *sigs_depress;
+	uint32_t i;
+	uint64_t depress_len;
+	uint64_t nr_sigs_bytes;
+	uint64_t press_len;
+	uint64_t pressbound;
+	uint8_t *sigs_press;
+
+	nr_sigs_bytes = sizeof *sigs * nr_sigs;
+
+	/* bound sigs_press */
+	before = clock();
+	pressbound = turbopfor_bound_16(nr_sigs);
+	after = clock();
+	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
+
+	/* init sigs_press */
+	sigs_press = malloc(pressbound);
+	ASSERT(sigs_press);
+
+	/* compress sigs */
+	press_len = pressbound;
+	before = clock();
+	turbopfor_press_16(sigs, nr_sigs, sigs_press, &press_len);
+	after = clock();
+	res->press_clocktime = GET_CLOCK_SECS(before, after);
+
+	ASSERT(press_len <= pressbound);
+
+	/* init sigs_depress */
+	sigs_depress = malloc(nr_sigs_bytes);
+	ASSERT(sigs_depress);
+
+	/* decompress sigs_press */
+	depress_len = nr_sigs;
+	before = clock();
+	turbopfor_depress_16(sigs_press, press_len, sigs_depress,
+			     depress_len);
+	after = clock();
+	res->depress_clocktime = GET_CLOCK_SECS(before, after);
+
+	/* ensure decompressed == original */
+	for (i = 0; i < depress_len / sizeof *sigs; i++) {
+		ASSERT(sigs_depress[i] == sigs[i]);
+	}
+
+	/* let it go */
+	free(sigs_press);
+	free(sigs_depress);
+
+	res->depress_bytes = nr_sigs_bytes;
+	res->pressbound_bytes = pressbound;
+	res->press_bytes = press_len;
+
+	return EXIT_SUCCESS;
+}
+
 int main(void)
 {
 	FILE *fp;
@@ -2295,6 +2357,7 @@ int main(void)
 	TEST(zstd_svb12_zd, P11, &res, fp);
 	TEST(flac_P11, P11, &res, fp);
 	TEST(zstd_flac_P11, P11, &res, fp);
+	TEST(turbopfor, P11, &res, fp);
 
 	TEST(none, P11_0_66999, &res, fp);
 	TEST(uint11_16, P11_0_66999, &res, fp);

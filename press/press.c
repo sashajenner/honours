@@ -18,6 +18,7 @@
 #include "fast-lzma2/fast-lzma2.h"
 #include "flac-1.3.4/include/FLAC/stream_encoder.h"
 #include "flac-1.3.4/include/FLAC/stream_decoder.h"
+#include "TurboPFor-Integer-Compression/vp4.h"
 
 uint64_t uintx_bound(uint8_t in_bits, uint8_t out_bits, uint64_t nin);
 void uintx_htobe(uint8_t in_bits, const uint8_t *h, uint8_t *be, uint64_t n);
@@ -2262,4 +2263,44 @@ int zstd_flac_depress(const uint8_t *in, uint64_t nin, int32_t *out,
 
 	free(out_zstd);
 	return ret;
+}
+
+/* turbopfor */
+
+uint64_t turbopfor_bound_16(uint64_t nin)
+{
+	/* hacky */
+	return MAX(nin, 128);
+}
+
+void turbopfor_press_16(const int16_t *in, uint64_t nin, uint8_t *out,
+			uint64_t *nout)
+{
+	int16_t *in_delta;
+
+	in_delta = delta_16(in, nin);
+	*nout = p4nzenc128v16((uint16_t *) in_delta, nin, out);
+
+	free(in_delta);
+
+	/*
+	uint16_t *in_zd;
+
+	in_zd = zigdelta_16_u16(in, nin);
+	*nout = p4nenc128v16(in_zd, nin, out);
+
+	free(in_zd);
+	*/
+}
+
+void turbopfor_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			  uint64_t nout)
+{
+	(void) p4nzdec128v16(in, nin, (uint16_t *) out);
+	undelta_inplace_16(out, nout);
+
+	/*
+	(void) p4ndec128v16(in, nin, (uint16_t *) out);
+	unzigdelta_inplace_16(out, nout);
+	*/
 }

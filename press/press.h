@@ -388,6 +388,14 @@ int zstd_flac_press(const int32_t *in, uint64_t nin, uint8_t *out,
 int zstd_flac_depress(const uint8_t *in, uint64_t nin, int32_t *out,
 		      uint64_t *nout);
 
+/* turbopfor */
+
+uint64_t turbopfor_bound_16(uint64_t nin);
+void turbopfor_press_16(const int16_t *in, uint64_t nin, uint8_t *out,
+			uint64_t *nout);
+void turbopfor_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			  uint64_t nout);
+
 /* TODO
  * determine flats more coarsely
  * flat using other methods
@@ -397,7 +405,7 @@ int zstd_flac_depress(const uint8_t *in, uint64_t nin, int32_t *out,
  * other variable byte
  * huffman
  * peak-picking flat approximation
- * hasindu basecalled data method
+ * hasindu basecalled data method (k-mer pore model)
  * huffman/golomb-rice/arithmetic/elias-gamma on zigzag delta
  * http://neurocline.github.io/dev/2015/09/17/zig-zag-encoding.html: Note that it would be possible to store negative numbers with a smaller number of bytes with a little more sophistication, and not require zigzag encoding: you store the number of bytes required by the absolute magnitude of the number, and on reading, you pick up the MSB of the sequence of stored bytes and recreate the number. I suspect that zig-zag encoding is used because the amount of code for encoding and decoding is actually less when expressed in a high-level language, and perhaps faster even in assembly.
  */
