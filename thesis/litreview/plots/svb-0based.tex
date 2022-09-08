@@ -1,0 +1,30 @@
+\begin{figure}
+\centering
+\centering\begin{tikzpicture}[node distance=0cm,start chain=1 going right,start chain=2 going right] \footnotesize
+  \tikzstyle{mytape}=[draw,minimum height=1.4cm]
+    \node(BIG1)  [on chain=1,mytape,fill=yellow!20] {$\overbracket{10|01|01|11}^{\text{control byte}}$};
+    \node(Z2)  [on chain=1,mytape,fill=yellow!35] {$\overbracket{00|01|01|10}^{\text{control byte}}$};
+
+    \node(A1)  [on chain=2,mytape,fill=green!20,below of=BIG1,node distance=2cm] {$\underbrace{\overbracket{\texttt{0x04}|\texttt{0x00}}^{\text{2 bytes}}}_{1024}$};
+    \node(A2)  [on chain=2,mytape,fill=green!20] {$\underbrace{\overbracket{\texttt{0x0c}}^{\text{1 byte}}}_{12}$};
+    \node(A3)  [on chain=2,mytape,fill=green!20] {$\underbrace{\overbracket{\texttt{0x0a}}^{\text{1 byte}}}_{10}$};
+	\node(A4)  [on chain=2,mytape,fill=green!20] {$\underbrace{\overbracket{\texttt{0x00}|\texttt{0x10}|\texttt{0x00}|\texttt{0x00}}^{\text{4 bytes}}}_{\num{1048576}}$};
+    \node(B1)  [on chain=2,mytape,fill=green!35] {};
+    \node(B2)  [on chain=2,mytape,fill=green!35] {$\underbrace{\overbracket{\texttt{0x01}}^{\text{1 byte}}}_{1}$};
+    \node(B3)  [on chain=2,mytape,fill=green!35] {$\underbrace{\overbracket{\texttt{0x02}}^{\text{1 byte}}}_{2}$};
+    \node(B4)  [on chain=2,mytape,fill=green!35] {$\underbrace{\overbracket{\texttt{0x04}|\texttt{0x00}}^{\text{2 bytes}}}_{\num{1024}}$};
+
+    \draw [fill=red!20]  (BIG1.south) --  (A1.north) --  (A4.north) -- cycle;
+
+    \draw [fill=red!35]  (Z2.south) --  (B1.north) --  (B4.north) -- cycle;
+    
+\draw [-] (BIG1.south) -- (A1.north);
+\draw [-] (BIG1.south) -- (A4.north);
+
+\draw [-] (Z2.south) -- (B1.north);
+\draw [-] (Z2.south) -- (B4.north);
+
+\end{tikzpicture}
+\caption{\label{fig:svb-0based}Compressed 0-based Stream VByte bytes
+for $1024,12,10,\num{1048576}, 0,1,2,1024$.}
+\end{figure}

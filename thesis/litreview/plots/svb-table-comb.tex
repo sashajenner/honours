@@ -1,0 +1,22 @@
+\begin{table}
+\centering
+    \caption{\label{tab:groupsvb}The number of bytes used and their control codeword for different supported integer ranges in classical 32-bit, 0-based and 16-bit Stream VByte.}
+    \begin{tabular}{|l|l|l|l|}%|p{4cm}|p{5.1cm}|}
+        \hline
+        Stream VByte Method & Integer Range & Number of Bytes Used & Control Codeword\\
+        \hline
+	    \multirow{4}{3cm}{Classical 32-bit} & $[0,255]$ & 1 & 00\\
+	    &$[256,65535]$ & 2 & 01\\
+	    &$[65536,16777215]$ & 3 & 10\\
+	    &$[16777216,4294967295]$ & 4 & 11\\
+        \hline
+	    \multirow{4}{4em}{0-based} &$\{0\}$ & 0 & 00\\
+	    &$[1,255]$ & 1 & 01\\
+	    &$[256,65535]$ & 2 & 10\\
+	    &$[65536,4294967295]$ & 4 & 11\\
+        \hline
+	    \multirow{2}{4em}{16-bit}    &$[0,255]$ & 1 & 0\\
+	    &$[256,65535]$ & 2 & 1\\
+        \hline
+    \end{tabular}
+\end{table}

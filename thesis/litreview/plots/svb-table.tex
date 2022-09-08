@@ -1,0 +1,29 @@
+\begin{figure}
+\centering
+\subfloat[\label{tab:svb}]{
+    \begin{tabular}{|l|l|l|}%|p{4cm}|p{5.1cm}|}
+        \hline
+        Integer Range & Number of Bytes Used & Control Codeword\\
+        \hline
+	$[0,255]$ & 1 & 00\\
+	$[256,65535]$ & 2 & 01\\
+	$[65536,16777215]$ & 3 & 10\\
+	$[16777216,4294967295]$ & 4 & 11\\
+        \hline
+    \end{tabular}
+}
+\\
+\subfloat[\label{tab:svb-0based}]{
+    \begin{tabular}{|l|l|l|}%|p{4cm}|p{5.1cm}|}
+        \hline
+        Integer Range & Number of Bytes Used & Control Codeword\\
+        \hline
+	$\{0\}$ & 0 & 00\\
+	$[1,255]$ & 1 & 01\\
+	$[256,65535]$ & 2 & 10\\
+	$[65536,4294967295]$ & 4 & 11\\
+        \hline
+    \end{tabular}
+}
+    \caption{\label{tab:groupsvb}The number of bytes used and their control word encoding for different integer ranges in classical (\ref{tab:svb}) and 0-based (\ref{tab:svb-0based}) Stream VByte.}
+\end{figure}

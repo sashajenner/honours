@@ -3,6 +3,10 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces An example of $1024,12,10,\num {1048576}, 0,1,2,1024$ compressed with classical and 0-based Stream VByte.}}{7}{figure.caption.8}%
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Compressed classical Stream VByte bytes}}}{7}{subfigure.1.1}%
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Compressed 0-based Stream VByte bytes}}}{7}{subfigure.1.2}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Compressed 16-bit Stream VByte bytes for $1024,12,10,4096, 0,1,2,1024$.}}{8}{figure.caption.9}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

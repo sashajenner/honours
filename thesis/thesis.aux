@@ -23,6 +23,7 @@
 \@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Abstract}}{iii}{chapter*.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
+\citation{svb}
 \@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Acknowledgements}}{iv}{chapter*.6}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -62,20 +63,31 @@
 \citation{pod5}
 \@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{2.1.4}{Other encodings}}{6}{subsection.2.1.4}\protected@file@percent }
 \newlabel{sec:data-other}{{2.1.4}{6}{Other encodings}{subsection.2.1.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\tocsubsubsection {}{2.1.4.1}{Integer compression schemes}}{6}{subsubsection.2.1.4.1}\protected@file@percent }
+\newlabel{sec:integer-comp}{{2.1.4.1}{6}{Integer compression schemes}{subsubsection.2.1.4.1}{}}
+\citation{svb}
+\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces The number of bytes used and their control codeword for different supported integer ranges in classical 32-bit, 0-based and 16-bit Stream VByte.\relax }}{7}{table.caption.7}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:groupsvb}{{2.1}{7}{The number of bytes used and their control codeword for different supported integer ranges in classical 32-bit, 0-based and 16-bit Stream VByte.\relax }{table.caption.7}{}}
+\newlabel{fig:svb}{{2.1a}{7}{Subfigure 2 2.1a}{subfigure.2.1.1}{}}
+\newlabel{sub@fig:svb}{{(a)}{a}{Subfigure 2 2.1a\relax }{subfigure.2.1.1}{}}
+\newlabel{fig:svb-0based}{{2.1b}{7}{Subfigure 2 2.1b}{subfigure.2.1.2}{}}
+\newlabel{sub@fig:svb-0based}{{(b)}{b}{Subfigure 2 2.1b\relax }{subfigure.2.1.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces  An example of $1024,12,10,\num {1048576}, 0,1,2,1024$ compressed with classical and 0-based Stream VByte.}}{7}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:groupsvb}{{2.1}{7}{An example of $1024,12,10,\num {1048576}, 0,1,2,1024$ compressed with classical and 0-based Stream VByte}{figure.caption.8}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {Compressed classical Stream VByte bytes}}}{7}{subfigure.1.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Compressed 0-based Stream VByte bytes}}}{7}{subfigure.1.2}\protected@file@percent }
 \citation{vbz}
 \citation{zstd}
-\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces The number of bytes used and their control word encoding for different integer ranges in classical Stream VByte. }}{7}{table.2.1}\protected@file@percent }
-\newlabel{tab:svb-classical}{{2.1}{7}{The number of bytes used and their control word encoding for different integer ranges in classical Stream VByte}{table.2.1}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces The number of bytes used and their control word encoding for different integer ranges in the Stream VByte variation. }}{7}{table.2.2}\protected@file@percent }
-\newlabel{tab:svb-0based}{{2.2}{7}{The number of bytes used and their control word encoding for different integer ranges in the Stream VByte variation}{table.2.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2.3}{\ignorespaces The number of bytes used and their control word encoding for different integer ranges in Stream VByte 16. }}{7}{table.2.3}\protected@file@percent }
-\newlabel{tab:svb-16}{{2.3}{7}{The number of bytes used and their control word encoding for different integer ranges in Stream VByte 16}{table.2.3}{}}
+\citation{lemire-simd}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Compressed 16-bit Stream VByte bytes for $1024,12,10,4096, 0,1,2,1024$.}}{8}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:svb-16}{{2.2}{8}{Compressed 16-bit Stream VByte bytes for $1024,12,10,4096, 0,1,2,1024$}{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{2.2}{Nanopore Signal Data}}{8}{section.2.2}\protected@file@percent }
 \citation{genomic-comp}
 \citation{picopore}
 \citation{lossy-nano,lfzip}
 \citation{lossy-nano}
 \citation{mcdrc}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{2.2}{Nanopore Signal Data}}{8}{section.2.2}\protected@file@percent }
 \citation{shannon}
 \citation{huffman}
 \citation{rle}
@@ -91,28 +103,28 @@
 \citation{svb}
 \citation{lossy-nano}
 \citation{mcdrc}
-\@writefile{lot}{\contentsline {table}{\numberline {2.4}{\ignorespaces A timeline of the major events in the literature.}}{9}{table.2.4}\protected@file@percent }
-\newlabel{tab:lit}{{2.4}{9}{A timeline of the major events in the literature}{table.2.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces A timeline of the major events in the literature.\relax }}{10}{table.caption.10}\protected@file@percent }
+\newlabel{tab:lit}{{2.2}{10}{A timeline of the major events in the literature.\relax }{table.caption.10}{}}
 \citation{Wang2021}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{3}{Evaluation}}{10}{chapter.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{3}{Evaluation}}{11}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:evaluation}{{3}{10}{Evaluation}{chapter.3}{}}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{3.1}{Data}}{10}{section.3.1}\protected@file@percent }
-\newlabel{sec:data}{{3.1}{10}{Data}{section.3.1}{}}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{4}{Experiments}}{12}{chapter.4}\protected@file@percent }
+\newlabel{chap:evaluation}{{3}{11}{Evaluation}{chapter.3}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{3.1}{Data}}{11}{section.3.1}\protected@file@percent }
+\newlabel{sec:data}{{3.1}{11}{Data}{section.3.1}{}}
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{4}{Experiments}}{13}{chapter.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:experiments}{{4}{12}{Experiments}{chapter.4}{}}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{13}{chapter.5}\protected@file@percent }
+\newlabel{chap:experiments}{{4}{13}{Experiments}{chapter.4}{}}
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{14}{chapter.5}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:results}{{5}{13}{Results}{chapter.5}{}}
+\newlabel{chap:results}{{5}{14}{Results}{chapter.5}{}}
 \bibstyle{style/mybibstyle}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{6}{Conclusion}}{14}{chapter.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{6}{Conclusion}}{15}{chapter.6}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:conclusion}{{6}{14}{Conclusion}{chapter.6}{}}
+\newlabel{chap:conclusion}{{6}{15}{Conclusion}{chapter.6}{}}
 \bibdata{references}
 \bibcite{bwt}{{1}{1994}{{Burrows and Wheeler}}{{}}}
 \bibcite{lossy-nano}{{2}{2020{a}}{{Chandak et~al.}}{{Chandak, Tatwawadi, Sridhar, and Weissman}}}
@@ -127,24 +139,25 @@
 \bibcite{huffman}{{11}{1952}{{Huffman}}{{}}}
 \bibcite{fgk}{{12}{1985}{{Knuth}}{{}}}
 \bibcite{huffman-time}{{13}{1976}{{Leeuwen}}{{}}}
-\bibcite{svb}{{14}{2018}{{Lemire et~al.}}{{Lemire, Kurz, and Rupp}}}
-\bibcite{range-coding}{{15}{1979}{{Martin}}{{}}}
-\bibcite{mcmillan}{{16}{1956}{{McMillan}}{{}}}
-\bibcite{pod5}{{17}{2022{a}}{{nanoporetech}}{{}}}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{15}{chapter*.8}\protected@file@percent }
+\bibcite{lemire-simd}{{14}{2014}{{Lemire et~al.}}{{Lemire, Boytsov, and Kurz}}}
+\bibcite{svb}{{15}{2018}{{Lemire et~al.}}{{Lemire, Kurz, and Rupp}}}
+\bibcite{range-coding}{{16}{1979}{{Martin}}{{}}}
+\bibcite{mcmillan}{{17}{1956}{{McMillan}}{{}}}
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{16}{chapter*.12}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\bibcite{vbz}{{18}{2022{b}}{{nanoporetech}}{{}}}
-\bibcite{arithmetic-coding}{{19}{1976}{{Rissanen}}{{}}}
-\bibcite{rle}{{20}{1967}{{Robinson and Cherry}}{{}}}
-\bibcite{shannon}{{21}{1948}{{Shannon}}{{}}}
-\bibcite{vitter}{{22}{1987}{{Vitter}}{{}}}
-\bibcite{Wang2021}{{23}{2021}{{Wang et~al.}}{{Wang, Zhao, Bollas, Wang, and Au}}}
-\bibcite{lzw}{{24}{1984}{{Welch}}{{}}}
-\bibcite{lz77}{{25}{1977}{{Ziv and Lempel}}{{}}}
-\bibcite{lz78}{{26}{1978}{{Ziv and Lempel}}{{}}}
+\bibcite{pod5}{{18}{2022{a}}{{nanoporetech}}{{}}}
+\bibcite{vbz}{{19}{2022{b}}{{nanoporetech}}{{}}}
+\bibcite{arithmetic-coding}{{20}{1976}{{Rissanen}}{{}}}
+\bibcite{rle}{{21}{1967}{{Robinson and Cherry}}{{}}}
+\bibcite{shannon}{{22}{1948}{{Shannon}}{{}}}
+\bibcite{vitter}{{23}{1987}{{Vitter}}{{}}}
+\bibcite{Wang2021}{{24}{2021}{{Wang et~al.}}{{Wang, Zhao, Bollas, Wang, and Au}}}
+\bibcite{lzw}{{25}{1984}{{Welch}}{{}}}
+\bibcite{lz77}{{26}{1977}{{Ziv and Lempel}}{{}}}
+\bibcite{lz78}{{27}{1978}{{Ziv and Lempel}}{{}}}
 \newlabel{tocindent-1}{0pt}
-\newlabel{tocindent0}{67.91135pt}
-\newlabel{tocindent1}{26.27997pt}
-\newlabel{tocindent2}{35.58745pt}
+\newlabel{tocindent0}{58.08931pt}
+\newlabel{tocindent1}{24.63747pt}
+\newlabel{tocindent2}{32.84995pt}
 \newlabel{tocindent3}{0pt}

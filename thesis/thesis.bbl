@@ -1,4 +1,4 @@
-\begin{thebibliography}{26}
+\begin{thebibliography}{27}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \providecommand{\urlprefix}{URL }
@@ -94,6 +94,12 @@ Donald~E Knuth. 1985.
 \bibitem[{Leeuwen(1976)}]{huffman-time}
 Jan~Van Leeuwen. 1976.
 \newblock On the construction of huffman trees.
+
+\bibitem[{Lemire et~al.(2014)Lemire, Boytsov, and Kurz}]{lemire-simd}
+Daniel Lemire, Leonid Boytsov, and Nathan Kurz. 2014.
+\newblock \href{http://arxiv.org/abs/1401.6399}{{SIMD} compression and the
+  intersection of sorted integers}.
+\newblock \emph{CoRR}, abs/1401.6399.
 
 \bibitem[{Lemire et~al.(2018)Lemire, Kurz, and Rupp}]{svb}
 Daniel Lemire, Nathan Kurz, and Christoph Rupp. 2018.
