@@ -70,7 +70,8 @@ int get_flats(const int16_t *in, uint32_t nin, uint32_t step, uint32_t **flats,
 	int ret;
 	struct flat_meta *meta;
 
-	meta = malloc((uint64_t) nin * (nin + 1) / 2 * sizeof *meta);
+	meta = (struct flat_meta *)
+		malloc((uint64_t) nin * (nin + 1) / 2 * sizeof *meta);
 	if (!meta)
 		return -1;
 
@@ -98,7 +99,7 @@ uint32_t get_flats_between(const int16_t *in, uint32_t nin, uint32_t i,
 
 	meta += I2(i, j);
 	*nflats = meta->nflats;
-	*flats = malloc(*nflats * sizeof *flats);
+	*flats = (uint32_t *) malloc(*nflats * sizeof *flats);
 
 	for (k = 0; k < *nflats; k++) {
 		(*flats)[k] = meta->flats[k];
@@ -127,7 +128,7 @@ void fill_meta_flat(uint32_t i, uint32_t j, uint32_t nin, uint32_t step,
 	cur = meta + I2(i, j);
 
 	cur->nflats = 1;
-	cur->flats = malloc(cur->nflats * sizeof *(cur->flats));
+	cur->flats = (uint32_t *) malloc(cur->nflats * sizeof *(cur->flats));
 	cur->flats[0] = i;
 	cur->flats_nbytes = cur->nbytes;
 
@@ -163,8 +164,8 @@ void fill_meta_flat_disjoint(uint32_t i, uint32_t j, uint32_t nin,
 
 	if (left_min && right_min) {
 		cur->nflats = left_min->nflats + right_min->nflats;
-		cur->flats = realloc(cur->flats, cur->nflats *
-				     sizeof(*cur->flats));
+		cur->flats = (uint32_t *) realloc(cur->flats, cur->nflats *
+				sizeof(*cur->flats));
 		for (k = 0; k < left_min->nflats; k++) {
 			cur->flats[k] = left_min->flats[k];
 			/*

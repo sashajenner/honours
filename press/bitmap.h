@@ -27,7 +27,7 @@ char *type ## _to_bin(type val) \
 \
 	/* +1 for spaces and trailing '\0' */ \
 	bits = sizeof (type) * (BITS_PER_BYTE + 1); \
-	buf = malloc(bits); \
+	buf = (char *) malloc(bits); \
 	i = bits - 1; \
 	buf[i--] = '\0'; \
 \
@@ -49,13 +49,13 @@ DECLARE_TYPE_TO_BIN(uint8_t);
 /* Init a bitmap of length nbits (malloced) */
 static inline uint8_t *bitmap_init(uint64_t nbits)
 {
-	return malloc(SIZEOF_BITMAP(nbits));
+	return (uint8_t *) malloc(SIZEOF_BITMAP(nbits));
 }
 
 /* Fill bitmap of length nbits with zeros */
 static inline void bitmap_zero(uint8_t *addr, uint64_t nbits)
 {
-	memset(addr, 0, SIZEOF_BITMAP(nbits));
+	(void) memset(addr, 0, SIZEOF_BITMAP(nbits));
 }
 
 void set_bit(uint64_t bit, uint8_t *addr);

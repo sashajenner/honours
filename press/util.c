@@ -62,12 +62,12 @@ char *array_to_str(const uint32_t *x, uint32_t n)
 {
 	char *str;
 	int nout;
-	int32_t i;
+	uint32_t i;
 
 	if (!n)
 		return NULL;
 
-	str = malloc(n * UINT32_MAX_LENGTH + 1);
+	str = (char *) malloc(n * UINT32_MAX_LENGTH + 1);
 	nout = 0;
 
 	for (i = 0; i < n - 1; i++) {

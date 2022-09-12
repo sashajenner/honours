@@ -19,6 +19,8 @@
 #include "flac-1.3.4/include/FLAC/stream_encoder.h"
 #include "flac-1.3.4/include/FLAC/stream_decoder.h"
 #include "TurboPFor-Integer-Compression/vp4.h"
+#include <vector>
+#include "FastPFor/headers/codecfactory.h"
 
 uint64_t uintx_bound(uint8_t in_bits, uint8_t out_bits, uint64_t nin);
 void uintx_htobe(uint8_t in_bits, const uint8_t *h, uint8_t *be, uint64_t n);
@@ -374,7 +376,7 @@ int uintx_press(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 	}
 
 	nin_bytes = nin * BITS_TO_BYTES(in_bits);
-	in_be = malloc(nin_bytes);
+	in_be = (uint8_t *) malloc(nin_bytes);
 	if (!in_be)
 		return -1;
 	uintx_htobe(in_bits, in, in_be, nin_bytes);
@@ -408,7 +410,7 @@ int uintx_depress(uint8_t in_bits, uint8_t out_bits, const uint8_t *in,
 	if (!in_bits)
 		return uint0_depress(out_bits, nin, out, nout);
 
-	out_be = malloc(*nout);
+	out_be = (uint8_t *) malloc(*nout);
 	if (!out_be)
 		return -1;
 
@@ -670,7 +672,7 @@ int zlib_uint_submin_press_16(uint8_t out_bits, uint16_t min,
 	uint8_t *out_uint;
 
 	nout_uint = sizeof nin + uint_submin_bound_16(out_bits, nin);
-	out_uint = malloc(nout_uint);
+	out_uint = (uint8_t *) malloc(nout_uint);
 
 	/* encode nin before uint_submin data */
 	(void) memcpy(out_uint, &nin, sizeof nin);
@@ -696,7 +698,7 @@ int zlib_uint_submin_depress_16(const uint8_t *in, uint32_t nin, uint16_t *out,
 	uint8_t *out_zlib;
 
 	nout_zlib = zlib_bound(*nout * sizeof *out);
-	out_zlib = malloc(nout_zlib);
+	out_zlib = (uint8_t *) malloc(nout_zlib);
 
 	ret = zlib_depress(in, nin, out_zlib, &nout_zlib);
 	if (ret == 0) {
@@ -735,7 +737,7 @@ int zlib_uint_zd_press_16(uint8_t out_bits, int16_t in0, uint32_t nin,
 	uint8_t *out_uint;
 
 	nout_uint = sizeof nin + uint_zd_bound_16(out_bits, nin);
-	out_uint = malloc(nout_uint);
+	out_uint = (uint8_t *) malloc(nout_uint);
 
 	/* encode nin before uint_zd data */
 	(void) memcpy(out_uint, &nin, sizeof nin);
@@ -761,7 +763,7 @@ int zlib_uint_zd_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
 	uint8_t *out_zlib;
 
 	nout_zlib = zlib_bound(*nout * sizeof *out);
-	out_zlib = malloc(nout_zlib);
+	out_zlib = (uint8_t *) malloc(nout_zlib);
 
 	ret = zlib_depress(in, nin, out_zlib, &nout_zlib);
 	if (ret == 0) {
@@ -801,7 +803,7 @@ int zstd_uint_submin_press_16(uint8_t out_bits, uint16_t min,
 	uint8_t *out_uint;
 
 	nout_uint = sizeof nin + uint_submin_bound_16(out_bits, nin);
-	out_uint = malloc(nout_uint);
+	out_uint = (uint8_t *) malloc(nout_uint);
 
 	/* encode nin before uint_submin data */
 	(void) memcpy(out_uint, &nin, sizeof nin);
@@ -827,7 +829,7 @@ int zstd_uint_submin_depress_16(const uint8_t *in, uint32_t nin, uint16_t *out,
 	uint8_t *out_zstd;
 
 	nout_zstd = zstd_bound(*nout * sizeof *out);
-	out_zstd = malloc(nout_zstd);
+	out_zstd = (uint8_t *) malloc(nout_zstd);
 
 	ret = zstd_depress(in, nin, out_zstd, &nout_zstd);
 	if (ret == 0) {
@@ -866,7 +868,7 @@ int zstd_uint_zd_press_16(uint8_t out_bits, int16_t in0, uint32_t nin,
 	uint8_t *out_uint;
 
 	nout_uint = sizeof nin + uint_zd_bound_16(out_bits, nin);
-	out_uint = malloc(nout_uint);
+	out_uint = (uint8_t *) malloc(nout_uint);
 
 	/* encode nin before uint_zd data */
 	(void) memcpy(out_uint, &nin, sizeof nin);
@@ -892,7 +894,7 @@ int zstd_uint_zd_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
 	uint8_t *out_zstd;
 
 	nout_zstd = zstd_bound(*nout * sizeof *out);
-	out_zstd = malloc(nout_zstd);
+	out_zstd = (uint8_t *) malloc(nout_zstd);
 
 	ret = zstd_depress(in, nin, out_zstd, &nout_zstd);
 	if (ret == 0) {
@@ -932,7 +934,7 @@ int bzip2_uint_zd_press_16(uint8_t out_bits, int16_t in0, uint32_t nin,
 	uint8_t *out_uint;
 
 	nout_uint = sizeof nin + uint_zd_bound_16(out_bits, nin);
-	out_uint = malloc(nout_uint);
+	out_uint = (uint8_t *) malloc(nout_uint);
 
 	/* encode nin before uint_zd data */
 	(void) memcpy(out_uint, &nin, sizeof nin);
@@ -958,7 +960,7 @@ int bzip2_uint_zd_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
 	uint8_t *out_bzip2;
 
 	nout_bzip2 = bzip2_bound(*nout * sizeof *out);
-	out_bzip2 = malloc(nout_bzip2);
+	out_bzip2 = (uint8_t *) malloc(nout_bzip2);
 
 	ret = bzip2_depress(in, nin, out_bzip2, &nout_bzip2);
 	if (ret == 0) {
@@ -998,7 +1000,7 @@ int fast_lzma2_uint_zd_press_16(uint8_t out_bits, int16_t in0, uint32_t nin,
 	uint8_t *out_uint;
 
 	nout_uint = sizeof nin + uint_zd_bound_16(out_bits, nin);
-	out_uint = malloc(nout_uint);
+	out_uint = (uint8_t *) malloc(nout_uint);
 
 	/* encode nin before uint_zd data */
 	(void) memcpy(out_uint, &nin, sizeof nin);
@@ -1024,7 +1026,7 @@ int fast_lzma2_uint_zd_depress_16(const uint8_t *in, uint32_t nin,
 	uint8_t *out_fast_lzma2;
 
 	nout_fast_lzma2 = fast_lzma2_bound(*nout * sizeof *out);
-	out_fast_lzma2 = malloc(nout_fast_lzma2);
+	out_fast_lzma2 = (uint8_t *) malloc(nout_fast_lzma2);
 
 	ret = fast_lzma2_depress(in, nin, out_fast_lzma2, &nout_fast_lzma2);
 	if (ret == 0) {
@@ -1148,7 +1150,8 @@ int init_meta_uint_submin_16(const int16_t *in, uint32_t nin,
 
 	for (j = 0; j < nin; j++) {
 		for (i = 0; i <= j; i++) {
-			method_meta = malloc(sizeof *method_meta);
+			method_meta = (struct meta_uint_submin_16 *)
+				malloc(sizeof *method_meta);
 			if (!method_meta)
 				return -1;
 			meta[I2(i, j)].method_meta = method_meta;
@@ -1519,7 +1522,7 @@ void svb_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
 		       uint64_t *nout)
 {
 	uint32_t *out_zd;
-	out_zd = malloc(nin * sizeof *out_zd);
+	out_zd = (uint32_t *) malloc(nin * sizeof *out_zd);
 
 	svb_depress(in, nin, out_zd);
 
@@ -1550,7 +1553,7 @@ void svb0124_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
 			   uint64_t *nout)
 {
 	uint32_t *out_zd;
-	out_zd = malloc(nin * sizeof *out_zd);
+	out_zd = (uint32_t *) malloc(nin * sizeof *out_zd);
 
 	svb0124_depress(in, nin, out_zd);
 
@@ -1581,7 +1584,7 @@ void svb12_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out,
 		      uint64_t *nout)
 {
 	uint16_t *out_zd;
-	out_zd = malloc(nin * sizeof *out_zd);
+	out_zd = (uint16_t *) malloc(nin * sizeof *out_zd);
 
 	svb12_depress(in, nin, out_zd);
 
@@ -1606,7 +1609,7 @@ int zlib_svb_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint8_t *out_svb;
 
 	nout_svb = sizeof nin + svb_zd_bound_16(nin);
-	out_svb = malloc(nout_svb);
+	out_svb = (uint8_t *) malloc(nout_svb);
 
 	/* encode nin before svb_zd data */
 	(void) memcpy(out_svb, &nin, sizeof nin);
@@ -1630,7 +1633,7 @@ int zlib_svb_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
 	uint8_t *out_zlib;
 
 	nout_zlib = zlib_bound(*nout * sizeof *out);
-	out_zlib = malloc(nout_zlib);
+	out_zlib = (uint8_t *) malloc(nout_zlib);
 
 	ret = zlib_depress(in, nin, out_zlib, &nout_zlib);
 	if (ret == 0) {
@@ -1660,7 +1663,7 @@ int zlib_svb0124_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint8_t *out_svb;
 
 	nout_svb = sizeof nin + svb0124_zd_bound_16(nin);
-	out_svb = malloc(nout_svb);
+	out_svb = (uint8_t *) malloc(nout_svb);
 
 	/* encode nin before svb_zd data */
 	(void) memcpy(out_svb, &nin, sizeof nin);
@@ -1684,7 +1687,7 @@ int zlib_svb0124_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
 	uint8_t *out_zlib;
 
 	nout_zlib = zlib_bound(*nout * sizeof *out);
-	out_zlib = malloc(nout_zlib);
+	out_zlib = (uint8_t *) malloc(nout_zlib);
 
 	ret = zlib_depress(in, nin, out_zlib, &nout_zlib);
 	if (ret == 0) {
@@ -1714,7 +1717,7 @@ int zlib_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint8_t *out_svb;
 
 	nout_svb = sizeof nin + svb12_zd_bound(nin);
-	out_svb = malloc(nout_svb);
+	out_svb = (uint8_t *) malloc(nout_svb);
 
 	/* encode nin before svb_zd data */
 	(void) memcpy(out_svb, &nin, sizeof nin);
@@ -1738,7 +1741,7 @@ int zlib_svb12_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out,
 	uint8_t *out_zlib;
 
 	nout_zlib = zlib_bound(*nout * sizeof *out);
-	out_zlib = malloc(nout_zlib);
+	out_zlib = (uint8_t *) malloc(nout_zlib);
 
 	ret = zlib_depress(in, nin, out_zlib, &nout_zlib);
 	if (ret == 0) {
@@ -1768,7 +1771,7 @@ int zstd_svb_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint8_t *out_svb;
 
 	nout_svb = sizeof nin + svb_zd_bound_16(nin);
-	out_svb = malloc(nout_svb);
+	out_svb = (uint8_t *) malloc(nout_svb);
 
 	/* encode nin before svb_zd data */
 	(void) memcpy(out_svb, &nin, sizeof nin);
@@ -1792,7 +1795,7 @@ int zstd_svb_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
 	uint8_t *out_zstd;
 
 	nout_zstd = zstd_bound(*nout * sizeof *out);
-	out_zstd = malloc(nout_zstd);
+	out_zstd = (uint8_t *) malloc(nout_zstd);
 
 	ret = zstd_depress(in, nin, out_zstd, &nout_zstd);
 	if (ret == 0) {
@@ -1822,7 +1825,7 @@ int zstd_svb0124_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint8_t *out_svb;
 
 	nout_svb = sizeof nin + svb0124_zd_bound_16(nin);
-	out_svb = malloc(nout_svb);
+	out_svb = (uint8_t *) malloc(nout_svb);
 
 	/* encode nin before svb_zd data */
 	(void) memcpy(out_svb, &nin, sizeof nin);
@@ -1846,7 +1849,7 @@ int zstd_svb0124_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
 	uint8_t *out_zstd;
 
 	nout_zstd = zstd_bound(*nout * sizeof *out);
-	out_zstd = malloc(nout_zstd);
+	out_zstd = (uint8_t *) malloc(nout_zstd);
 
 	ret = zstd_depress(in, nin, out_zstd, &nout_zstd);
 	if (ret == 0) {
@@ -1876,7 +1879,7 @@ int zstd_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint8_t *out_svb;
 
 	nout_svb = sizeof nin + svb12_zd_bound(nin);
-	out_svb = malloc(nout_svb);
+	out_svb = (uint8_t *) malloc(nout_svb);
 
 	/* encode nin before svb_zd data */
 	(void) memcpy(out_svb, &nin, sizeof nin);
@@ -1900,7 +1903,7 @@ int zstd_svb12_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out,
 	uint8_t *out_zstd;
 
 	nout_zstd = zstd_bound(*nout * sizeof *out);
-	out_zstd = malloc(nout_zstd);
+	out_zstd = (uint8_t *) malloc(nout_zstd);
 
 	ret = zstd_depress(in, nin, out_zstd, &nout_zstd);
 	if (ret == 0) {
@@ -1967,7 +1970,7 @@ int flac_press(const int32_t *in, uint64_t nin, uint8_t *out, uint64_t *nout,
 		return -1;
 	}
 
-	in_flac = malloc(nin * sizeof *in_flac);
+	in_flac = (FLAC__int32 *) malloc(nin * sizeof *in_flac);
 	if (!in_flac) {
 		FLAC__stream_encoder_delete(encoder);
 		return -1;
@@ -1999,7 +2002,7 @@ flac_press_write_callback(const FLAC__StreamEncoder *encoder,
 	struct flac_data_u8 *out;
 	struct flac_press_data *press_data;
 
-	press_data = client_data;
+	press_data = (struct flac_press_data *) client_data;
 	out = &(press_data->out);
 
 	if (bytes + out->offset > out->cap)
@@ -2021,7 +2024,7 @@ flac_press_seek_callback(const FLAC__StreamEncoder *encoder,
 	struct flac_data_u8 *out;
 	struct flac_press_data *press_data;
 
-	press_data = client_data;
+	press_data = (struct flac_press_data *) client_data;
 	out = &(press_data->out);
 
 	if (absolute_byte_offset > out->cap || absolute_byte_offset < 0)
@@ -2039,7 +2042,7 @@ flac_press_tell_callback(const FLAC__StreamEncoder *encoder,
 	struct flac_data_u8 *out;
 	struct flac_press_data *press_data;
 
-	press_data = client_data;
+	press_data = (struct flac_press_data *) client_data;
 	out = &(press_data->out);
 
 	*absolute_byte_offset = out->offset;
@@ -2110,7 +2113,7 @@ flac_depress_read_callback(const FLAC__StreamDecoder *decoder,
 	struct flac_depress_data *depress_data;
 	uint64_t bytes_to_cp;
 
-	depress_data = client_data;
+	depress_data = (struct flac_depress_data *) client_data;
 	in = &(depress_data->in);
 
 	bytes_to_cp = MIN(*bytes, in->n - in->offset);
@@ -2135,15 +2138,17 @@ flac_depress_seek_callback(const FLAC__StreamDecoder *decoder,
 	struct flac_data_const_u8 *in;
 	struct flac_depress_data *depress_data;
 
-	depress_data = client_data;
+	depress_data = (struct flac_depress_data *) client_data;
 	in = &(depress_data->in);
 
 	if (absolute_byte_offset > in->n || absolute_byte_offset < 0)
-		return FLAC__STREAM_ENCODER_SEEK_STATUS_ERROR;
+		return (FLAC__StreamDecoderSeekStatus)
+			FLAC__STREAM_ENCODER_SEEK_STATUS_ERROR;
 
 	in->offset = absolute_byte_offset;
 
-	return FLAC__STREAM_ENCODER_SEEK_STATUS_OK;
+	return (FLAC__StreamDecoderSeekStatus)
+		FLAC__STREAM_ENCODER_SEEK_STATUS_OK;
 }
 
 FLAC__StreamDecoderTellStatus
@@ -2154,7 +2159,7 @@ flac_depress_tell_callback(const FLAC__StreamDecoder *decoder,
 	struct flac_data_const_u8 *in;
 	struct flac_depress_data *depress_data;
 
-	depress_data = client_data;
+	depress_data = (struct flac_depress_data *) client_data;
 	in = &(depress_data->in);
 
 	*absolute_byte_offset = in->offset;
@@ -2170,7 +2175,7 @@ flac_depress_length_callback(const FLAC__StreamDecoder *decoder,
 	struct flac_data_const_u8 *in;
 	struct flac_depress_data *depress_data;
 
-	depress_data = client_data;
+	depress_data = (struct flac_depress_data *) client_data;
 	in = &(depress_data->in);
 
 	*stream_length = in->n;
@@ -2184,7 +2189,7 @@ FLAC__bool flac_depress_eof_callback(const FLAC__StreamDecoder *decoder,
 	struct flac_data_const_u8 *in;
 	struct flac_depress_data *depress_data;
 
-	depress_data = client_data;
+	depress_data = (struct flac_depress_data *) client_data;
 	in = &(depress_data->in);
 
 	return in->offset == in->n;
@@ -2199,7 +2204,7 @@ flac_depress_write_callback(const FLAC__StreamDecoder *decoder,
 	struct flac_data_32 *out;
 	struct flac_depress_data *depress_data;
 
-	depress_data = client_data;
+	depress_data = (struct flac_depress_data *) client_data;
 	out = &(depress_data->out);
 
 	(void) memcpy(out->data + out->offset, buffer[0],
@@ -2218,7 +2223,7 @@ void flac_depress_error_callback(const FLAC__StreamDecoder *decoder,
 {
 	struct flac_depress_data *depress_data;
 
-	depress_data = client_data;
+	depress_data = (struct flac_depress_data *) client_data;
 	depress_data->error = 1;
 }
 
@@ -2237,7 +2242,7 @@ int zstd_flac_press(const int32_t *in, uint64_t nin, uint8_t *out,
 	uint8_t *out_flac;
 
 	nout_flac = flac_bound(nin);
-	out_flac = malloc(nout_flac);
+	out_flac = (uint8_t *) malloc(nout_flac);
 
 	ret = flac_press(in, nin, out_flac, &nout_flac, bps, sample_rate);
 	if (ret == 0)
@@ -2255,7 +2260,7 @@ int zstd_flac_depress(const uint8_t *in, uint64_t nin, int32_t *out,
 	uint8_t *out_zstd;
 
 	nout_zstd = MAX(256, zstd_bound(*nout * sizeof *out));
-	out_zstd = malloc(nout_zstd);
+	out_zstd = (uint8_t *) malloc(nout_zstd);
 
 	ret = zstd_depress(in, nin, out_zstd, &nout_zstd);
 	if (ret == 0)
@@ -2303,4 +2308,91 @@ void turbopfor_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	(void) p4ndec128v16(in, nin, (uint16_t *) out);
 	unzigdelta_inplace_16(out, nout);
 	*/
+}
+
+/* fastpfor */
+
+uint64_t fastpfor_bound_16(uint64_t nin)
+{
+	return nin + 1024;
+}
+
+void fastpfor_press_16(const int16_t *in, uint64_t nin, uint32_t *out,
+		       uint64_t *nout)
+{
+	uint32_t *in_zd;
+	size_t nout_tmp;
+
+  	using namespace FastPForLib;
+	IntegerCODEC &codec = *CODECFactory::getFromName("simdfastpfor256");
+
+	in_zd = zigdelta_16_u32(in, nin);
+
+	nout_tmp = *nout;
+	codec.encodeArray(in_zd, nin, out, nout_tmp);
+
+	free(in_zd);
+	*nout = nout_tmp;
+}
+
+void fastpfor_depress_16(uint32_t *in, uint64_t nin, int16_t *out,
+			 uint64_t *nout)
+{
+	uint32_t *out_zd;
+	size_t nout_tmp;
+
+  	using namespace FastPForLib;
+	IntegerCODEC &codec = *CODECFactory::getFromName("simdfastpfor256");
+
+	out_zd = (uint32_t *) malloc(*nout * sizeof *out_zd);
+
+	nout_tmp = *nout;
+	codec.decodeArray(in, nin, out_zd, nout_tmp);
+	*nout = nout_tmp;
+
+	unzigdelta_u32_16(out_zd, *nout, out);
+	free(out_zd);
+}
+
+/* fastpfor | zstd */
+
+uint64_t zstd_fastpfor_bound_16(uint64_t nin)
+{
+	return fastpfor_bound_16(nin) * sizeof (uint32_t);
+}
+
+int zstd_fastpfor_press_16(const int16_t *in, uint64_t nin, uint8_t *out,
+			   uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_fpf;
+	uint32_t *out_fpf;
+
+	nout_fpf = fastpfor_bound_16(nin);
+	out_fpf = (uint32_t *) malloc(nout_fpf * sizeof *out_fpf);
+
+	fastpfor_press_16(in, nin, out_fpf, &nout_fpf);
+	ret = zstd_press((uint8_t *) out_fpf, nout_fpf * sizeof *out_fpf, out, nout);
+
+	free(out_fpf);
+	return ret;
+}
+
+int zstd_fastpfor_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			     uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_zstd;
+	uint32_t *out_zstd;
+
+	nout_zstd = MAX(256, zstd_bound(*nout * sizeof *out));
+	out_zstd = (uint32_t *) malloc(nout_zstd);
+
+	ret = zstd_depress(in, nin, (uint8_t *) out_zstd, &nout_zstd);
+	nout_zstd /= sizeof *out_zstd;
+	if (ret == 0)
+		fastpfor_depress_16(out_zstd, nout_zstd, out, nout);
+
+	free(out_zstd);
+	return ret;
 }

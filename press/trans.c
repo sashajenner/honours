@@ -7,7 +7,7 @@ uint16_t *shift_x_u16(int16_t x, const uint16_t *in, uint64_t nin)
 	uint16_t *out;
 	uint64_t i;
 
-	out = malloc(nin * sizeof *out);
+	out = (uint16_t *) malloc(nin * sizeof *out);
 
 	for (i = 0; i < nin; i++) {
 		out[i] = in[i] + x;
@@ -21,7 +21,7 @@ int16_t *shift_x_16(int16_t x, const int16_t *in, uint64_t nin)
 	int16_t *out;
 	uint64_t i;
 
-	out = malloc(nin * sizeof *out);
+	out = (int16_t *) malloc(nin * sizeof *out);
 
 	for (i = 0; i < nin; i++) {
 		out[i] = in[i] + x;
@@ -83,7 +83,7 @@ int16_t *delta_16(const int16_t *in, uint64_t nin)
 	uint64_t i;
 
 	prev = 0;
-	out = malloc(nin * sizeof *out);
+	out = (int16_t *) malloc(nin * sizeof *out);
 
 	for (i = 0; i < nin; i++) {
 		out[i] = in[i] - prev;
@@ -112,7 +112,7 @@ uint16_t *zigdelta_16(const int16_t *in, uint64_t nin)
 	uint16_t *out;
 	uint64_t i;
 
-	out = malloc(nin * sizeof *out);
+	out = (uint16_t *) malloc(nin * sizeof *out);
 
 	for (i = 0; i < nin - 1; i++) {
 		out[i] = zigzag_one_16(in[i + 1] - in[i]);
@@ -128,7 +128,7 @@ uint16_t *zigdelta_16_u16(const int16_t *in, uint64_t nin)
 	uint16_t *out;
 	uint64_t i;
 
-	out = malloc(nin * sizeof *out);
+	out = (uint16_t *) malloc(nin * sizeof *out);
 	prev = 0;
 
 	for (i = 0; i < nin; i++) {
@@ -146,7 +146,7 @@ uint32_t *zigdelta_16_u32(const int16_t *in, uint64_t nin)
 	uint32_t *out;
 	uint64_t i;
 
-	out = malloc(nin * sizeof *out);
+	out = (uint32_t *) malloc(nin * sizeof *out);
 	prev = 0;
 
 	for (i = 0; i < nin; i++) {

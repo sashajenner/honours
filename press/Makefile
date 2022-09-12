@@ -1,4 +1,4 @@
-CC = cc
+CC = c++
 CFLAGS = -g -Wall -Werror
 LDFLAGS = -lm -lz -lzstd -lpthread
 OBJ = test.o press.o trans.o flat.o bitmap.o stats.o util.o
@@ -12,7 +12,9 @@ FLAC = flac-1.3.4
 FLACLIB = $(FLAC)/src/libFLAC/.libs/libFLAC.so
 TURBOPFOR = TurboPFor-Integer-Compression
 TURBOPFORLIB = $(TURBOPFOR)/libic.a
-LIB = $(SVBLIB) $(BZIP2LIB) $(FLZMA2LIB) $(FLACLIB) $(TURBOPFORLIB)
+FASTPFOR = FastPFor
+FASTPFORLIB = $(FASTPFOR)/build/libFastPFOR.a
+LIB = $(SVBLIB) $(BZIP2LIB) $(FLZMA2LIB) $(FLACLIB) $(TURBOPFORLIB) $(FASTPFORLIB)
 
 .PHONY = clean $(LIB)
 
@@ -30,6 +32,14 @@ $(FLZMA2LIB):
 
 $(FLACLIB):
 	make -C $(FLAC)
+
+$(TURBOPFORLIB):
+	make -C $(TURBOPFOR)
+
+$(FASTPFORLIB):
+	mkdir -p $(FASTPFOR)/build
+	cmake $(FASTPFOR)
+	cmake --build $(FASTPFOR)/build
 
 test.o: test.c test.h press.h bitmap.h
 	$(CC) $< $(CFLAGS) -c -o $@

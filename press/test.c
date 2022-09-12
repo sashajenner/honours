@@ -66,7 +66,7 @@ int test_none(const int16_t *sigs, const uint32_t nr_sigs, struct result *res)
 	ASSERT(pressbound == nr_sigs_bytes);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -81,7 +81,7 @@ int test_none(const int16_t *sigs, const uint32_t nr_sigs, struct result *res)
 	ASSERT(press_len == pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -136,7 +136,7 @@ int test_uintx_16(uint8_t bits_out, const int16_t *sigs,
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -151,7 +151,7 @@ int test_uintx_16(uint8_t bits_out, const int16_t *sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -216,7 +216,7 @@ int test_uint_16(const int16_t *sigs, const uint32_t nr_sigs,
 	/*printf("min bits out:\t%" PRIu8 "\n", minbits);*/
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -231,7 +231,7 @@ int test_uint_16(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -291,7 +291,7 @@ int test_uint_submin_16(const int16_t *sigs, const uint32_t nr_sigs,
 	/*printf("min bits out:\t%" PRIu8 "\n", minbits);*/
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -306,7 +306,7 @@ int test_uint_submin_16(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -365,7 +365,7 @@ int test_uint_zd_16(const int16_t *sigs, const uint32_t nr_sigs,
 	/*printf("min bits out:\t%" PRIu8 "\n", minbits);*/
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -381,7 +381,7 @@ int test_uint_zd_16(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -441,7 +441,7 @@ int test_uint_zsm_16(const int16_t *sigs, const uint32_t nr_sigs,
 	/*printf("min bits out:\t%" PRIu8 "\n", minbits);*/
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -458,7 +458,7 @@ int test_uint_zsm_16(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -518,7 +518,7 @@ int test_zlib_uint_submin_16(const int16_t *sigs, const uint32_t nr_sigs,
 	/*printf("min bits out:\t%" PRIu8 "\n", minbits);*/
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -533,7 +533,7 @@ int test_zlib_uint_submin_16(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -593,7 +593,7 @@ int test_zlib_uint_zd_16(const int16_t *sigs, const uint32_t nr_sigs,
 	/*printf("min bits out:\t%" PRIu8 "\n", minbits);*/
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -610,7 +610,7 @@ int test_zlib_uint_zd_16(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -670,7 +670,7 @@ int test_zstd_uint_submin_16(const int16_t *sigs, const uint32_t nr_sigs,
 	/*printf("min bits out:\t%" PRIu8 "\n", minbits);*/
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -685,7 +685,7 @@ int test_zstd_uint_submin_16(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -745,7 +745,7 @@ int test_zstd_uint_zd_16(const int16_t *sigs, const uint32_t nr_sigs,
 	/*printf("min bits out:\t%" PRIu8 "\n", minbits);*/
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -762,7 +762,7 @@ int test_zstd_uint_zd_16(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -821,7 +821,7 @@ int test_bzip2_uint_zd_16(const int16_t *sigs, const uint32_t nr_sigs,
 	/*printf("min bits out:\t%" PRIu8 "\n", minbits);*/
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -838,7 +838,7 @@ int test_bzip2_uint_zd_16(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -897,7 +897,7 @@ int test_fast_lzma2_uint_zd_16(const int16_t *sigs, const uint32_t nr_sigs,
 	/*printf("min bits out:\t%" PRIu8 "\n", minbits);*/
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -914,7 +914,7 @@ int test_fast_lzma2_uint_zd_16(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -969,7 +969,7 @@ int test_flat_uint_submin_16(uint32_t step, const int16_t *sigs,
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -984,7 +984,7 @@ int test_flat_uint_submin_16(uint32_t step, const int16_t *sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -1063,7 +1063,7 @@ int test_zlib(const int16_t *sigs, const uint32_t nr_sigs, struct result *res)
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -1078,7 +1078,7 @@ int test_zlib(const int16_t *sigs, const uint32_t nr_sigs, struct result *res)
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -1130,7 +1130,7 @@ int test_zstd(const int16_t *sigs, const uint32_t nr_sigs, struct result *res)
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -1145,7 +1145,7 @@ int test_zstd(const int16_t *sigs, const uint32_t nr_sigs, struct result *res)
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -1197,7 +1197,7 @@ int test_bzip2(const int16_t *sigs, const uint32_t nr_sigs, struct result *res)
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -1212,7 +1212,7 @@ int test_bzip2(const int16_t *sigs, const uint32_t nr_sigs, struct result *res)
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -1264,7 +1264,7 @@ int test_fast_lzma2(const int16_t *sigs, const uint32_t nr_sigs, struct result *
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -1279,7 +1279,7 @@ int test_fast_lzma2(const int16_t *sigs, const uint32_t nr_sigs, struct result *
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -1323,7 +1323,7 @@ int test_svb(const int16_t *sigs, const uint32_t nr_sigs, struct result *res)
 
 	nr_sigs_bytes = sizeof *sigs * nr_sigs;
 
-	sigs_u32 = malloc(nr_sigs * sizeof *sigs_u32);
+	sigs_u32 = (uint32_t *) malloc(nr_sigs * sizeof *sigs_u32);
 	ASSERT(sigs_u32);
 	for (i = 0; i < nr_sigs; i++) {
 		sigs_u32[i] = sigs[i];
@@ -1336,7 +1336,7 @@ int test_svb(const int16_t *sigs, const uint32_t nr_sigs, struct result *res)
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -1349,7 +1349,7 @@ int test_svb(const int16_t *sigs, const uint32_t nr_sigs, struct result *res)
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress_u32 = malloc(nr_sigs * sizeof *sigs_depress_u32);
+	sigs_depress_u32 = (uint32_t *) malloc(nr_sigs * sizeof *sigs_depress_u32);
 	ASSERT(sigs_depress_u32);
 
 	/* decompress sigs_press */
@@ -1360,7 +1360,7 @@ int test_svb(const int16_t *sigs, const uint32_t nr_sigs, struct result *res)
 
 	/* ensure decompressed == original */
 	for (i = 0; i < nr_sigs; i++) {
-		ASSERT(sigs_depress_u32[i] == sigs[i]);
+		ASSERT(sigs_depress_u32[i] == (uint32_t) sigs[i]);
 	}
 
 	/* let it go */
@@ -1390,7 +1390,7 @@ int test_svb0124(const int16_t *sigs, const uint32_t nr_sigs,
 
 	nr_sigs_bytes = sizeof *sigs * nr_sigs;
 
-	sigs_u32 = malloc(nr_sigs * sizeof *sigs_u32);
+	sigs_u32 = (uint32_t *) malloc(nr_sigs * sizeof *sigs_u32);
 	ASSERT(sigs_u32);
 	for (i = 0; i < nr_sigs; i++) {
 		sigs_u32[i] = sigs[i];
@@ -1403,7 +1403,7 @@ int test_svb0124(const int16_t *sigs, const uint32_t nr_sigs,
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -1416,7 +1416,7 @@ int test_svb0124(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress_u32 = malloc(nr_sigs * sizeof *sigs_depress_u32);
+	sigs_depress_u32 = (uint32_t *) malloc(nr_sigs * sizeof *sigs_depress_u32);
 	ASSERT(sigs_depress_u32);
 
 	/* decompress sigs_press */
@@ -1427,7 +1427,7 @@ int test_svb0124(const int16_t *sigs, const uint32_t nr_sigs,
 
 	/* ensure decompressed == original */
 	for (i = 0; i < nr_sigs; i++) {
-		ASSERT(sigs_depress_u32[i] == sigs[i]);
+		ASSERT(sigs_depress_u32[i] == (uint32_t) sigs[i]);
 	}
 
 	/* let it go */
@@ -1462,7 +1462,7 @@ int test_svb12(const int16_t *sigs, const uint32_t nr_sigs, struct result *res)
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -1475,7 +1475,7 @@ int test_svb12(const int16_t *sigs, const uint32_t nr_sigs, struct result *res)
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs * sizeof *sigs_depress);
+	sigs_depress = (uint16_t *) malloc(nr_sigs * sizeof *sigs_depress);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -1522,7 +1522,7 @@ int test_svb_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -1536,7 +1536,7 @@ int test_svb_zd(const int16_t *sigs, const uint32_t nr_sigs,
 
 	/* init sigs_depress */
 	depress_len = nr_sigs;
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -1585,7 +1585,7 @@ int test_svb0124_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -1599,7 +1599,7 @@ int test_svb0124_zd(const int16_t *sigs, const uint32_t nr_sigs,
 
 	/* init sigs_depress */
 	depress_len = nr_sigs;
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -1647,7 +1647,7 @@ int test_svb12_zd(const int16_t *sigs, const uint32_t nr_sigs, struct result *re
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -1661,7 +1661,7 @@ int test_svb12_zd(const int16_t *sigs, const uint32_t nr_sigs, struct result *re
 
 	/* init sigs_depress */
 	depress_len = nr_sigs;
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -1711,7 +1711,7 @@ int test_zlib_svb_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -1725,7 +1725,7 @@ int test_zlib_svb_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -1778,7 +1778,7 @@ int test_zlib_svb0124_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -1792,7 +1792,7 @@ int test_zlib_svb0124_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -1845,7 +1845,7 @@ int test_zlib_svb12_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -1859,7 +1859,7 @@ int test_zlib_svb12_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -1912,7 +1912,7 @@ int test_zstd_svb_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -1926,7 +1926,7 @@ int test_zstd_svb_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -1979,7 +1979,7 @@ int test_zstd_svb0124_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -1993,7 +1993,7 @@ int test_zstd_svb0124_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -2046,7 +2046,7 @@ int test_zstd_svb12_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -2060,7 +2060,7 @@ int test_zstd_svb12_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -2107,7 +2107,7 @@ int test_flac(const int16_t *sigs, const uint32_t nr_sigs, uint32_t bps,
 
 	nr_sigs_bytes = sizeof *sigs * nr_sigs;
 
-	sigs_32 = malloc(nr_sigs * sizeof *sigs_32);
+	sigs_32 = (int32_t *) malloc(nr_sigs * sizeof *sigs_32);
 	ASSERT(sigs_32);
 	for (i = 0; i < nr_sigs; i++) {
 		sigs_32[i] = sigs[i];
@@ -2120,7 +2120,7 @@ int test_flac(const int16_t *sigs, const uint32_t nr_sigs, uint32_t bps,
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -2136,7 +2136,7 @@ int test_flac(const int16_t *sigs, const uint32_t nr_sigs, uint32_t bps,
 
 	/* init sigs_depress */
 	depress_len = nr_sigs;
-	sigs_depress_32 = malloc(depress_len * sizeof *sigs_depress_32);
+	sigs_depress_32 = (int32_t *) malloc(depress_len * sizeof *sigs_depress_32);
 	ASSERT(sigs_depress_32);
 
 	/* decompress sigs_press */
@@ -2189,7 +2189,7 @@ int test_zstd_flac(const int16_t *sigs, const uint32_t nr_sigs, uint32_t bps,
 
 	nr_sigs_bytes = sizeof *sigs * nr_sigs;
 
-	sigs_32 = malloc(nr_sigs * sizeof *sigs_32);
+	sigs_32 = (int32_t *) malloc(nr_sigs * sizeof *sigs_32);
 	ASSERT(sigs_32);
 	for (i = 0; i < nr_sigs; i++) {
 		sigs_32[i] = sigs[i];
@@ -2202,7 +2202,7 @@ int test_zstd_flac(const int16_t *sigs, const uint32_t nr_sigs, uint32_t bps,
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -2218,7 +2218,7 @@ int test_zstd_flac(const int16_t *sigs, const uint32_t nr_sigs, uint32_t bps,
 
 	/* init sigs_depress */
 	depress_len = nr_sigs;
-	sigs_depress_32 = malloc(depress_len * sizeof *sigs_depress_32);
+	sigs_depress_32 = (int32_t *) malloc(depress_len * sizeof *sigs_depress_32);
 	ASSERT(sigs_depress_32);
 
 	/* decompress sigs_press */
@@ -2277,7 +2277,7 @@ int test_turbopfor(const int16_t *sigs, const uint32_t nr_sigs,
 	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = (uint8_t *) malloc(pressbound);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -2290,7 +2290,7 @@ int test_turbopfor(const int16_t *sigs, const uint32_t nr_sigs,
 	ASSERT(press_len <= pressbound);
 
 	/* init sigs_depress */
-	sigs_depress = malloc(nr_sigs_bytes);
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
 	ASSERT(sigs_depress);
 
 	/* decompress sigs_press */
@@ -2313,6 +2313,134 @@ int test_turbopfor(const int16_t *sigs, const uint32_t nr_sigs,
 	res->depress_bytes = nr_sigs_bytes;
 	res->pressbound_bytes = pressbound;
 	res->press_bytes = press_len;
+
+	return EXIT_SUCCESS;
+}
+
+int test_fastpfor(const int16_t *sigs, const uint32_t nr_sigs,
+		  struct result * res)
+{
+	clock_t after;
+	clock_t before;
+	int16_t *sigs_depress;
+	uint32_t i;
+	uint64_t depress_len;
+	uint64_t nr_sigs_bytes;
+	uint64_t press_len;
+	uint64_t pressbound;
+	uint32_t *sigs_press;
+
+	nr_sigs_bytes = sizeof *sigs * nr_sigs;
+
+	/* bound sigs_press */
+	before = clock();
+	pressbound = fastpfor_bound_16(nr_sigs);
+	after = clock();
+	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
+
+	/* init sigs_press */
+	sigs_press = (uint32_t *) malloc(pressbound * sizeof *sigs_press);
+	ASSERT(sigs_press);
+
+	/* compress sigs */
+	press_len = pressbound;
+	before = clock();
+	fastpfor_press_16(sigs, nr_sigs, sigs_press, &press_len);
+	after = clock();
+	res->press_clocktime = GET_CLOCK_SECS(before, after);
+
+	ASSERT(press_len <= pressbound);
+
+	/* init sigs_depress */
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
+	ASSERT(sigs_depress);
+
+	/* decompress sigs_press */
+	depress_len = nr_sigs;
+	before = clock();
+	fastpfor_depress_16(sigs_press, press_len, sigs_depress, &depress_len);
+	after = clock();
+	res->depress_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(depress_len == nr_sigs);
+
+	/* ensure decompressed == original */
+	for (i = 0; i < depress_len / sizeof *sigs; i++) {
+		ASSERT(sigs_depress[i] == sigs[i]);
+	}
+
+	/* let it go */
+	free(sigs_press);
+	free(sigs_depress);
+
+	res->depress_bytes = nr_sigs_bytes;
+	res->pressbound_bytes = pressbound * sizeof *sigs_press;
+	res->press_bytes = press_len * sizeof *sigs_press;
+
+	return EXIT_SUCCESS;
+}
+
+int test_zstd_fastpfor(const int16_t *sigs, const uint32_t nr_sigs,
+		       struct result * res)
+{
+	clock_t after;
+	clock_t before;
+	int ret;
+	int16_t *sigs_depress;
+	uint32_t i;
+	uint64_t depress_len;
+	uint64_t nr_sigs_bytes;
+	uint64_t press_len;
+	uint64_t pressbound;
+	uint8_t *sigs_press;
+
+	nr_sigs_bytes = sizeof *sigs * nr_sigs;
+
+	/* bound sigs_press */
+	before = clock();
+	pressbound = zstd_fastpfor_bound_16(nr_sigs);
+	after = clock();
+	res->pressbound_clocktime = GET_CLOCK_SECS(before, after);
+
+	/* init sigs_press */
+	sigs_press = (uint8_t *) malloc(pressbound);
+	ASSERT(sigs_press);
+
+	/* compress sigs */
+	press_len = pressbound;
+	before = clock();
+	ret = zstd_fastpfor_press_16(sigs, nr_sigs, sigs_press, &press_len);
+	after = clock();
+	res->press_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(ret == 0);
+
+	ASSERT(press_len <= pressbound);
+
+	/* init sigs_depress */
+	sigs_depress = (int16_t *) malloc(nr_sigs_bytes);
+	ASSERT(sigs_depress);
+
+	/* decompress sigs_press */
+	depress_len = nr_sigs;
+	before = clock();
+	ret = zstd_fastpfor_depress_16(sigs_press, press_len, sigs_depress,
+				       &depress_len);
+	after = clock();
+	res->depress_clocktime = GET_CLOCK_SECS(before, after);
+	ASSERT(depress_len == nr_sigs);
+	ASSERT(ret == 0);
+
+	/* ensure decompressed == original */
+	for (i = 0; i < depress_len / sizeof *sigs; i++) {
+		ASSERT(sigs_depress[i] == sigs[i]);
+	}
+
+	/* let it go */
+	free(sigs_press);
+	free(sigs_depress);
+
+	res->depress_bytes = nr_sigs_bytes;
+	res->pressbound_bytes = pressbound * sizeof *sigs_press;
+	res->press_bytes = press_len * sizeof *sigs_press;
 
 	return EXIT_SUCCESS;
 }
@@ -2343,7 +2471,7 @@ int main(void)
 	TEST(zstd, P11, &res, fp);
 	TEST(bzip2, P11, &res, fp);
 	TEST(fast_lzma2, P11, &res, fp);
-	TEST(svb, P11, &res, fp);
+	/*TEST(svb, P11, &res, fp);*/
 	TEST(svb0124, P11, &res, fp);
 	TEST(svb12, P11, &res, fp);
 	TEST(svb_zd, P11, &res, fp);
@@ -2358,6 +2486,8 @@ int main(void)
 	TEST(flac_P11, P11, &res, fp);
 	TEST(zstd_flac_P11, P11, &res, fp);
 	TEST(turbopfor, P11, &res, fp);
+	TEST(fastpfor, P11, &res, fp);
+	TEST(zstd_fastpfor, P11, &res, fp);
 
 	TEST(none, P11_0_66999, &res, fp);
 	TEST(uint11_16, P11_0_66999, &res, fp);
@@ -2377,7 +2507,7 @@ int main(void)
 	TEST(zstd, P11_0_66999, &res, fp);
 	TEST(bzip2, P11_0_66999, &res, fp);
 	TEST(fast_lzma2, P11_0_66999, &res, fp);
-	TEST(svb, P11_0_66999, &res, fp);
+	/*TEST(svb, P11_0_66999, &res, fp);*/
 	TEST(svb0124, P11_0_66999, &res, fp);
 	TEST(svb12, P11_0_66999, &res, fp);
 	TEST(svb_zd, P11_0_66999, &res, fp);
@@ -2410,7 +2540,7 @@ int main(void)
 	TEST(zstd, P11_0_28997, &res, fp);
 	TEST(bzip2, P11_0_28997, &res, fp);
 	TEST(fast_lzma2, P11_0_28997, &res, fp);
-	TEST(svb, P11_0_28997, &res, fp);
+	/*TEST(svb, P11_0_28997, &res, fp);*/
 	TEST(svb0124, P11_0_28997, &res, fp);
 	TEST(svb12, P11_0_28997, &res, fp);
 	TEST(svb_zd, P11_0_28997, &res, fp);
@@ -2442,7 +2572,7 @@ int main(void)
 	TEST(zstd, P11_0_1995, &res, fp);
 	TEST(bzip2, P11_0_1995, &res, fp);
 	TEST(fast_lzma2, P11_0_1995, &res, fp);
-	TEST(svb, P11_0_1995, &res, fp);
+	/*TEST(svb, P11_0_1995, &res, fp);*/
 	TEST(svb0124, P11_0_1995, &res, fp);
 	TEST(svb12, P11_0_1995, &res, fp);
 	TEST(svb_zd, P11_0_1995, &res, fp);
@@ -2474,7 +2604,7 @@ int main(void)
 	TEST(zstd, P11_0_285, &res, fp);
 	TEST(bzip2, P11_0_285, &res, fp);
 	TEST(fast_lzma2, P11_0_285, &res, fp);
-	TEST(svb, P11_0_285, &res, fp);
+	/*TEST(svb, P11_0_285, &res, fp);*/
 	TEST(svb0124, P11_0_285, &res, fp);
 	TEST(svb12, P11_0_285, &res, fp);
 	TEST(svb_zd, P11_0_285, &res, fp);
@@ -2509,7 +2639,7 @@ int main(void)
 	TEST(zstd, P11_999_1999, &res, fp);
 	TEST(bzip2, P11_999_1999, &res, fp);
 	TEST(fast_lzma2, P11_999_1999, &res, fp);
-	TEST(svb, P11_999_1999, &res, fp);
+	/*TEST(svb, P11_999_1999, &res, fp);*/
 	TEST(svb0124, P11_999_1999, &res, fp);
 	TEST(svb12, P11_999_1999, &res, fp);
 	TEST(svb_zd, P11_999_1999, &res, fp);
@@ -2541,7 +2671,7 @@ int main(void)
 	TEST(zstd, ONE, &res, fp);
 	TEST(bzip2, ONE, &res, fp);
 	TEST(fast_lzma2, ONE, &res, fp);
-	TEST(svb, ONE, &res, fp);
+	/*TEST(svb, ONE, &res, fp);*/
 	TEST(svb0124, ONE, &res, fp);
 	TEST(svb12, ONE, &res, fp);
 	TEST(svb_zd, ONE, &res, fp);
@@ -2573,16 +2703,16 @@ int main(void)
 	TEST(zstd, SAME, &res, fp);
 	TEST(bzip2, SAME, &res, fp);
 	TEST(fast_lzma2, SAME, &res, fp);
-	TEST(svb, SAME, &res, fp);
+	/*TEST(svb, SAME, &res, fp);*/
 	TEST(svb0124, SAME, &res, fp);
 	TEST(svb12, SAME, &res, fp);
-	TEST(svb_zd, SAME, &res, fp);
+	/*TEST(svb_zd, SAME, &res, fp);*/
 	TEST(svb0124_zd, SAME, &res, fp);
 	TEST(svb12_zd, SAME, &res, fp);
-	TEST(zlib_svb_zd, SAME, &res, fp);
+	/*TEST(zlib_svb_zd, SAME, &res, fp);*/
 	TEST(zlib_svb0124_zd, SAME, &res, fp);
 	TEST(zlib_svb12_zd, SAME, &res, fp);
-	TEST(zstd_svb_zd, SAME, &res, fp);
+	/*TEST(zstd_svb_zd, SAME, &res, fp);*/
 	TEST(zstd_svb0124_zd, SAME, &res, fp);
 	TEST(zstd_svb12_zd, SAME, &res, fp);
 	TEST(flac_P11, SAME, &res, fp);
@@ -2605,7 +2735,7 @@ int main(void)
 	TEST(zstd, ZERO, &res, fp);
 	TEST(bzip2, ZERO, &res, fp);
 	TEST(fast_lzma2, ZERO, &res, fp);
-	TEST(svb, ZERO, &res, fp);
+	/*TEST(svb, ZERO, &res, fp);*/
 	TEST(svb0124, ZERO, &res, fp);
 	TEST(svb12, ZERO, &res, fp);
 	TEST(svb_zd, ZERO, &res, fp);
