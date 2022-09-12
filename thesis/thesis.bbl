@@ -1,4 +1,4 @@
-\begin{thebibliography}{27}
+\begin{thebibliography}{28}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \providecommand{\urlprefix}{URL }
@@ -69,6 +69,12 @@ Scott Gigante. 2017.
   A tool for reducing the storage size of oxford nanopore technologies datasets
   without loss of functionality}.
 \newblock \emph{F1000Research}, 6.
+
+\bibitem[{Google(2022)}]{google-zigzag}
+Google. 2022.
+\newblock Protocol buffers: Encoding: Signed integers.
+\newblock
+  \url{https://developers.google.com/protocol-buffers/docs/encoding#types}.
 
 \bibitem[{Hernaez et~al.(2019)Hernaez, Pavlichin, Weissman, and
   Ochoa}]{genomic-comp}

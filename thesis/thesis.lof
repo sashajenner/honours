@@ -3,10 +3,12 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces An example of $1024,12,10,\num {1048576}, 0,1,2,1024$ compressed with classical and 0-based Stream VByte.}}{7}{figure.caption.8}%
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Compressed classical Stream VByte bytes}}}{7}{subfigure.1.1}%
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Compressed 0-based Stream VByte bytes}}}{7}{subfigure.1.2}%
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Compressed 16-bit Stream VByte bytes for $1024,12,10,4096, 0,1,2,1024$.}}{8}{figure.caption.9}%
+\contentsline {figure}{\numberline {2.1}{\ignorespaces The sequence of numbers $1024,12,10,\num {524288}$ in the bit packed format. The data is read from left to right, top to bottom with the most significant bits first.}}{7}{figure.caption.7}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces An example of $1024,12,10,\num {1048576}, 0,1,2,1024$ compressed with classical and 0-based Stream VByte.}}{8}{figure.caption.9}%
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Compressed classical Stream VByte bytes}}}{8}{subfigure.2.1}%
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Compressed 0-based Stream VByte bytes}}}{8}{subfigure.2.2}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Compressed 16-bit Stream VByte bytes for $1024,12,10,4096, 0,1,2,1024$.}}{9}{figure.caption.10}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces The zig-zag encoding applied to integers -15 to 15. As we can see, it is similar to the absolute value function but is doubled and shifted on the negative $x$-axis to ensure injectivity.\relax }}{11}{figure.caption.11}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
