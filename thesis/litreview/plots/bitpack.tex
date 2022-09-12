@@ -1,0 +1,108 @@
+\begin{figure}
+\centering
+\begin{tikzpicture}[node distance=0cm,
+	start chain=1 going right,
+	start chain=2 going right,
+	start chain=3 going right,
+	start chain=4 going right,
+	start chain=5 going right,
+	start chain=6 going right,
+	start chain=7 going right,
+	start chain=8 going right,
+	start chain=9 going right,
+	start chain=10 going right]
+  \tikzstyle{mytape}=[draw]
+	\node(a1) [on chain=1,mytape,fill=blue!20] {$0$};
+	\node [on chain=1,mytape,fill=blue!20] {$0$};
+	\node [on chain=1,mytape,fill=blue!20] {$0$};
+	\node [on chain=1,mytape,fill=blue!20] {$0$};
+	\node(a2) [on chain=1,mytape,fill=blue!20] {$0$};
+	\node [on chain=1,mytape,fill=blue!20] {$0$};
+	\node [on chain=1,mytape,fill=blue!20] {$0$};
+	\node [on chain=1,mytape,fill=blue!20] {$0$};
+
+	\node [above of=a2,left=-1.65cm,node distance=0.5cm] {$4 \times 20$ bits or $10$ bytes};
+
+	\node(b1) [on chain=2,mytape,fill=blue!20,below of=a1,node distance=0.51cm] {$0$};
+	\node [on chain=2,mytape,fill=blue!20] {$0$};
+	\node [on chain=2,mytape,fill=blue!20] {$0$};
+	\node [on chain=2,mytape,fill=blue!20] {$0$};
+	\node [on chain=2,mytape,fill=blue!20] {$0$};
+	\node [on chain=2,mytape,fill=blue!20] {$1$};
+	\node [on chain=2,mytape,fill=blue!20] {$0$};
+	\node [on chain=2,mytape,fill=blue!20] {$0$};
+
+	\node(c1) [on chain=3,mytape,fill=yellow!20,below of=b1,node distance=0.51cm] {$1$};
+	\node [on chain=3,mytape,fill=yellow!20] {$1$};
+	\node [on chain=3,mytape,fill=yellow!20] {$0$};
+	\node [on chain=3,mytape,fill=yellow!20] {$0$};
+	\node [on chain=3,mytape,fill=blue!20] {$0$};
+	\node [on chain=3,mytape,fill=blue!20] {$0$};
+	\node [on chain=3,mytape,fill=blue!20] {$0$};
+	\node [on chain=3,mytape,fill=blue!20] {$0$};
+
+	\node(d1) [on chain=4,mytape,fill=yellow!20,below of=c1,node distance=0.51cm] {$0$};
+	\node [on chain=4,mytape,fill=yellow!20] {$0$};
+	\node [on chain=4,mytape,fill=yellow!20] {$0$};
+	\node [on chain=4,mytape,fill=yellow!20] {$0$};
+	\node [on chain=4,mytape,fill=yellow!20] {$0$};
+	\node [on chain=4,mytape,fill=yellow!20] {$0$};
+	\node [on chain=4,mytape,fill=yellow!20] {$0$};
+	\node [on chain=4,mytape,fill=yellow!20] {$0$};
+
+	\node(e1) [on chain=5,mytape,fill=yellow!20,below of=d1,node distance=0.51cm] {$0$};
+	\node [on chain=5,mytape,fill=yellow!20] {$0$};
+	\node [on chain=5,mytape,fill=yellow!20] {$0$};
+	\node [on chain=5,mytape,fill=yellow!20] {$0$};
+	\node [on chain=5,mytape,fill=yellow!20] {$0$};
+	\node [on chain=5,mytape,fill=yellow!20] {$0$};
+	\node [on chain=5,mytape,fill=yellow!20] {$0$};
+	\node [on chain=5,mytape,fill=yellow!20] {$0$};
+
+	\node(f1) [on chain=6,mytape,fill=green!20,below of=e1,node distance=0.51cm] {$0$};
+	\node [on chain=6,mytape,fill=green!20] {$0$};
+	\node [on chain=6,mytape,fill=green!20] {$0$};
+	\node [on chain=6,mytape,fill=green!20] {$0$};
+	\node [on chain=6,mytape,fill=green!20] {$1$};
+	\node [on chain=6,mytape,fill=green!20] {$0$};
+	\node [on chain=6,mytape,fill=green!20] {$1$};
+	\node [on chain=6,mytape,fill=green!20] {$0$};
+
+	\node(g1) [on chain=7,mytape,fill=green!20,below of=f1,node distance=0.51cm] {$0$};
+	\node [on chain=7,mytape,fill=green!20] {$0$};
+	\node [on chain=7,mytape,fill=green!20] {$0$};
+	\node [on chain=7,mytape,fill=green!20] {$0$};
+	\node [on chain=7,mytape,fill=green!20] {$0$};
+	\node [on chain=7,mytape,fill=green!20] {$0$};
+	\node [on chain=7,mytape,fill=green!20] {$0$};
+	\node [on chain=7,mytape,fill=green!20] {$0$};
+
+	\node(h1) [on chain=8,mytape,fill=brown!20,below of=g1,node distance=0.51cm] {$0$};
+	\node [on chain=8,mytape,fill=brown!20] {$0$};
+	\node [on chain=8,mytape,fill=brown!20] {$0$};
+	\node [on chain=8,mytape,fill=brown!20] {$0$};
+	\node [on chain=8,mytape,fill=green!20] {$0$};
+	\node [on chain=8,mytape,fill=green!20] {$0$};
+	\node [on chain=8,mytape,fill=green!20] {$0$};
+	\node [on chain=8,mytape,fill=green!20] {$0$};
+
+	\node(i1) [on chain=9,mytape,fill=brown!20,below of=h1,node distance=0.51cm] {$0$};
+	\node [on chain=9,mytape,fill=brown!20] {$0$};
+	\node [on chain=9,mytape,fill=brown!20] {$0$};
+	\node [on chain=9,mytape,fill=brown!20] {$0$};
+	\node [on chain=9,mytape,fill=brown!20] {$0$};
+	\node [on chain=9,mytape,fill=brown!20] {$0$};
+	\node [on chain=9,mytape,fill=brown!20] {$0$};
+	\node [on chain=9,mytape,fill=brown!20] {$0$};
+
+	\node(j1) [on chain=10,mytape,fill=brown!20,below of=i1,node distance=0.51cm] {$1$};
+	\node [on chain=10,mytape,fill=brown!20] {$0$};
+	\node [on chain=10,mytape,fill=brown!20] {$0$};
+	\node [on chain=10,mytape,fill=brown!20] {$0$};
+	\node [on chain=10,mytape,fill=brown!20] {$0$};
+	\node [on chain=10,mytape,fill=brown!20] {$0$};
+	\node [on chain=10,mytape,fill=brown!20] {$0$};
+	\node [on chain=10,mytape,fill=brown!20] {$0$};
+\end{tikzpicture}
+	\caption[\label{fig:bitpack}The sequence of numbers $1024,12,10,\num{524288}$ in the bit packed format. The data is read from left to right, top to bottom with the most significant bits first.]{\label{fig:bitpack}The sequence of numbers $1024,12,10,\num{524288}$ in the bit packed format. The data is read from left to right, top to bottom with the most significant bits first\protect\footnotemark[1].}
+\end{figure}
