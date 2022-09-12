@@ -28,5 +28,14 @@ since $\log$ is an increasing function.
 Another transformation takes the differences between successive signals and is defined by
 \[ \delta(x):=(x_{i+1}-x_i\mid 0\le i\le n-2).\]
 % TODO analyse delta
+
+\subsection{Subsequence Searching}
+Some of the previously discussed compression methods, such as bit packing and FOR, depend on global statistics of the data such as the minimum and maximum.
+For nanopore signal data, these statistics are easily dominated by outliers in the data.
+One naive solution is to separately compress adjacent subsequences of equal length.
+This approach has previously been successful in the literature with methods such as SIMD-BP128 and fast patched frame-of-reference (FastPFOR) performing compression in blocks of 128 integers \cite{lemire-simd}.
+However, we can exploit the characteristics of nanopore signal data to find better subsequences.
+For example, each read typically consists of an adapter stall which is long and has a small range.
+
 The next idea is to divide $x$ into subsequences with small range and compress each subsequence separately. Let $OPT(i, j)$ be the minimum number of bytes after compressing $(x_i,\dots, x_j)$. Then,
 \[ OPT(i, j) = \min(bytes(i, j),\min_{i\le k<j}(OPT(i, k) + OPT(k+1, j))) \]

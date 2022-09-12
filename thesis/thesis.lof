@@ -9,6 +9,7 @@
 \contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Compressed 0-based Stream VByte bytes}}}{8}{subfigure.2.2}%
 \contentsline {figure}{\numberline {2.3}{\ignorespaces Compressed 16-bit Stream VByte bytes for $1024,12,10,4096, 0,1,2,1024$.}}{9}{figure.caption.10}%
 \contentsline {figure}{\numberline {2.4}{\ignorespaces The zig-zag encoding applied to integers -15 to 15. As we can see, it is similar to the absolute value function but is doubled and shifted on the negative $x$-axis to ensure injectivity.\relax }}{11}{figure.caption.11}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces The MinION, the first commercially-available nanopore sequencing device, recording nanopore signal data as a double-stranded DNA (dsDNA) molecule is unwound and ratcheted through the nanopore.}}{12}{figure.caption.12}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
