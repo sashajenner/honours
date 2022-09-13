@@ -6,7 +6,19 @@ The data consists of many sequences of unsigned integers known as \textit{reads}
 
 Let each read be represented by
 \[ x := (x_i\mid x_i \in \mathbb{Z} \cap [0, 2^{16})) \]
-where $i\in \mathbb{Z}\cap [0, n)$. Computationally, $x$ is an unsigned 16-bit integer array with $n$ elements. However, in practice the full range of $2^{16}$ integers is never met. Instead, each integer can be represented more space-efficiently by using $b<16$ bits where \[b(x)=\lceil\log_2(\max(x))\rceil.\] In this case, the compression ratio would be approximately $16/b$:
+where $i\in \mathbb{Z}\cap [0, n)$. Computationally, $x$ is an unsigned 16-bit integer array with $n$ elements. However, in practice the full range of $2^{16}$ integers is never met.
+
+\subsection{Characteristics}
+
+%TODO discuss statistics of nanopore data
+%plot some nanopore signals
+%talk about stall, homopolymer, regular dna sections
+
+\subsection{Methods}
+
+% Explore integer methods without generic
+
+Instead, each integer can be represented more space-efficiently by using $b<16$ bits where \[b(x)=\lceil\log_2(\max(x))\rceil.\] In this case, the compression ratio would be approximately $16/b$:
 \begin{align*}
 	\text{Compression Ratio} &= \frac{\text{Uncompressed Bytes}}{\text{Compressed Bytes}}\\
 	&=\frac{\frac{16}{8}n}{\lceil\frac{b}{8}n\rceil}\\
@@ -34,8 +46,37 @@ Some of the previously discussed compression methods, such as bit packing and FO
 For nanopore signal data, these statistics are easily dominated by outliers in the data.
 One naive solution is to separately compress adjacent subsequences of equal length.
 This approach has previously been successful in the literature with methods such as SIMD-BP128 and fast patched frame-of-reference (FastPFOR) performing compression in blocks of 128 integers \cite{lemire-simd}.
-However, we can exploit the characteristics of nanopore signal data to find better subsequences.
-For example, each read typically consists of an adapter stall which is long and has a small range.
 
-The next idea is to divide $x$ into subsequences with small range and compress each subsequence separately. Let $OPT(i, j)$ be the minimum number of bytes after compressing $(x_i,\dots, x_j)$. Then,
-\[ OPT(i, j) = \min(bytes(i, j),\min_{i\le k<j}(OPT(i, k) + OPT(k+1, j))) \]
+% Explore blocks of different sizes
+% Explore blocks of different equal splits
+
+Consider partitioning the nanopore signal into adjacent variable length blocks.
+Let $P(x,s)$ be the partitioning of signal $x$ into $|s|=m\ge 1$ partitions according to partitioner $s$ where
+\[ s := (s_j \in \mathbb{Z}\cap [0, n) \mid s_0 = 0)\]
+and $s_j$ is the starting index of the $j$-th partition such that
+\[ P(x,s) = (p_j) := ((x_{s_j},x_{s_j+1},\dots,x_{s_{j+1}-1}))_{j\in\mathbb{Z}\cap[0,m)}.\]
+%((x_{s_0},x_{s_0+1},\dots,x_{s_1-1}),(x_{s_1},\dots,x_{s_2-1}),\dots,(x_{s_{m-1}},\dots,x_n)) .\]
+For example, if $x=(656,527,515,527,526)$ and $s = (0,3,4)$ then $m=3$ and
+\[P(x,s)=((656,527,515),(527),(526)).\]
+
+Given the partitioning $P$ we would like to compress each partition $p_j$ separately and concatenate the results.
+Let $M(p)$ be the compressed bytes of partition $p$ after applying compression method $M$.
+Then, the compressed bytes of signal $x$ under partitioner $s$ is the concatenation of the compressed bytes of each partition $M(p_j)$ given by
+\[ C(x,s,M) := (M(p_j)\mid p_j=P(x,s)_j). \]
+Let $\hat s$ be the partitioner of $x$ which minimises the number of compressed bytes
+\[ |C(x,\hat s,M)| = \min_s |C(x,s,M)| = \min_s \sum_j|M(p_j)|. \]
+The minimum number of compressed bytes can be found using the following recursive relationship
+\[ |C(x,\hat s,M)| = \min\{M(x),\min_{0\le k\le n-2}\{|C(x_L,\hat s_{x_L},M)| + |C(x_R,\hat s_{x_R},M)|\}\} \]
+where $x_L=(x_0,x_1,\dots,x_k)$ and $x_R=(x_{k+1},\dots,x_{n-1})$.
+That is, the compressed bytes with minimum length are found by either compressing the whole signal as usual or by dividing the signal into two partitions and concatenating each partition's minimum length compressed bytes.
+
+For an input signal of size $n$, the number of comparisons is given by the recurrence relation
+\[ c_n = c_{M,n} + 1 + \sum_{0\le k\le n-2}(c_{k+1}+c_{n-k-1} + 1) \]
+where $c_{M,n}$ is the number of comparisons for the compression method $M$ on input size $n$.
+
+However, we can exploit the characteristics of nanopore signal data to find better subsequences.
+For example, each read typically consists of a stall.
+
+%The next idea is to divide $x$ into subsequences with small range and compress each subsequence separately.
+%Let $OPT(i, j)$ be the minimum number of bytes after compressing $(x_i,\dots, x_j)$. Then,
+%\[ OPT(i, j) = \min(bytes(i, j),\min_{i\le k<j}(OPT(i, k) + OPT(k+1, j))) \]
