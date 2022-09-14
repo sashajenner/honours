@@ -1,8 +1,8 @@
 \contentsline {chapter}{\tocchapter {Chapter}{}{Student Plagiarism: Compliance Statement}}{ii}{chapter*.2}%
 \contentsline {chapter}{\tocchapter {Chapter}{}{Abstract}}{iii}{chapter*.4}%
 \contentsline {chapter}{\tocchapter {Chapter}{}{Acknowledgements}}{iv}{chapter*.6}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{List of Figures}}{vi}{chapter*.6}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{List of Tables}}{vii}{chapter*.6}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{List of Figures}}{vii}{chapter*.6}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{List of Tables}}{viii}{chapter*.6}%
 \contentsline {chapter}{\tocchapter {Chapter}{1}{Introduction}}{1}{chapter.1}%
 \contentsline {chapter}{\tocchapter {Chapter}{2}{Literature Review}}{2}{chapter.2}%
 \contentsline {section}{\tocsection {}{2.1}{Data Compression}}{2}{section.2.1}%
@@ -18,7 +18,9 @@
 \contentsline {subsection}{\tocsubsection {}{3.1.1}{Characteristics}}{14}{subsection.3.1.1}%
 \contentsline {subsection}{\tocsubsection {}{3.1.2}{Methods}}{14}{subsection.3.1.2}%
 \contentsline {subsection}{\tocsubsection {}{3.1.3}{Subsequence Searching}}{15}{subsection.3.1.3}%
-\contentsline {chapter}{\tocchapter {Chapter}{4}{Experiments}}{17}{chapter.4}%
-\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{18}{chapter.5}%
-\contentsline {chapter}{\tocchapter {Chapter}{6}{Conclusion}}{19}{chapter.6}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{20}{chapter*.15}%
+\contentsline {chapter}{\tocchapter {Chapter}{4}{Experiments}}{19}{chapter.4}%
+\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{20}{chapter.5}%
+\contentsline {chapter}{\tocchapter {Chapter}{6}{Conclusion}}{21}{chapter.6}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{22}{chapter*.14}%
+\contentsline {section}{\tocsection {}{6.1}{Subsequence Searching}}{22}{section.6.1}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{23}{chapter*.16}%
