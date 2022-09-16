@@ -8,6 +8,11 @@ Let each read be represented by
 \[ x := (x_i\mid x_i \in \mathbb{Z} \cap [0, 2^{16})) \]
 where $i\in \mathbb{Z}\cap [0, n)$. Computationally, $x$ is an unsigned 16-bit integer array with $n$ elements. However, in practice the full range of $2^{16}$ integers is never met.
 
+For the remainder of the thesis, the data which we will use for analysing the characteristics of nanopore signal data and for comparing compression methods is the NA12878 data set. The data set has been well studied and is used prolifically for benchmarking genomics tools. The data set originates from a Utah woman. Her DNA sample was artificially recreated and sequenced using an ONT PromethION 48. This device produces the most data out of all nanopore sequencing devices so is most appropriate for data compression.
+%TODO actually 48?
+
+The data set consists of \num{500000} reads and \num{56735699469} signal points. Altogether the data set is \num{40825496253} bytes or $\sim$39 GiB when stored in the BLOW5 file format (v0.2.0) using svb-zd (differential followed by zig-zag encoding and Stream VByte) signal compression and zlib record compression.
+
 \subsection{Characteristics}
 
 %TODO discuss statistics of nanopore data
@@ -67,53 +72,78 @@ Then, the compressed bytes of signal $x$ under partitioner $s$ is the concatenat
 Let $\hat s$ be the partitioner of $x$ which minimises the number of compressed bytes
 \[ |C(x,\hat s,M)| = \min_s |C(x,s,M)| = \min_s \sum_j|M(p_j)|. \]
 The minimum number of compressed bytes can be found using the following recursive relationship
-\[ |C(x,\hat s,M)| = \min\{M(x),\min_{0\le k\le n-2}\{|C(x_L,\hat s_{x_L},M)| + |C(x_R,\hat s_{x_R},M)|\}\} \]
+\begin{align*}
+	|C(x,\hat s,M)| &= M(x) & n = 1\\
+	|C(x,\hat s,M)| &= \min\{M(x),\min_{0\le k\le n-2}\{|C(x_L,\hat s_{x_L},M)| + |C(x_R,\hat s_{x_R},M)|\}\} & n\ge 2
+\end{align*}
 where $x_L=(x_0,x_1,\dots,x_k)$ and $x_R=(x_{k+1},\dots,x_{n-1})$.
 That is, the compressed bytes with minimum length are found by either compressing the whole signal as usual or by dividing the signal into two partitions and concatenating each partition's minimum length compressed bytes.
 
 For a signal of size $n$, the number of comparisons is given by the recurrence relation
 \begin{align*}
 	c_1 &= c_{M,1}\\
-	c_n &= c_{M,n} + 1 + \sum_{0\le k\le n-2}(c_{k+1}+c_{n-k-1} + 1) &n\ge 2
+	c_n &= c_{M,n} + \sum_{k=0}^{n-2}(c_{k+1}+c_{n-k-1} + 1) &n\ge 2
+	%TODO +1 for adding?
 \end{align*}
 where $c_{M,n}$ is the number of comparisons for the compression method $M$ on input size $n$.
 This can be simplified as follows
 \begin{align*}
-	c_n &= c_{M,n} + 1 + \sum_{1\le k\le n-1}(2c_k + 1)\\
-	&= c_{M,n} + 1 + \frac{n(n-1)}{2} + 2\sum_{1\le k\le n-1}c_k &n\ge 2
+	c_n &= c_{M,n} + \sum_{k=1}^{n-1}(2c_k + 1)\\
+	&= c_{M,n} + n-1 + 2\sum_{k=1}^{n-1}c_k &n\ge 2
 \end{align*}
 Let's write $c_n$ in terms of $c_{n-1}$ in order to solve the recurrence more easily.
 \begin{align*}
-	c_{n-1} &= c_{M,n-1} + 1 + \frac{(n-1)(n-2)}{2} + 2\sum_{1\le k\le n-2}c_k & n\ge 3\\
-	c_{n} - c_{n-1} &= c_{M,n} - c_{M,n-1} + \frac{n(n-1)}{2} - \frac{(n-1)(n-2)}{2} + 2c_{n-1}\\
-	c_{n} &= c_{M,n} - c_{M,n-1} + n-1 + 3c_{n-1} & n\ge 3\\
-	c_2 &= c_{M,2}+2c_{M,1}+2\\
-	c_1 &= c_{M,1}
+	c_{n-1} &= c_{M,n-1} + n - 2 + 2\sum_{k=1}^{n-2}c_k & n\ge 3\\
+	c_{n} - c_{n-1} &= c_{M,n} - c_{M,n-1} + 1 + 2c_{n-1} \\
+	c_{n} &= c_{M,n} - c_{M,n-1} + 1 + 3c_{n-1} & n\ge 2
 \end{align*}
+%TODO cite formula here?
 Unrolling this we find that
-\[ c_n = c_{M,n} + 2\sum_{1\le k\le n-1}3^{k-1}c_{M,n-k}+2\times 3^{n-2}+\sum_{1\le k\le n-2}3^{k-1}(n-k). \]
-The can be separated into two parts, the compression computations
-\[ \phi_n = c_{M,n} + 2\sum_{1\le k\le n-1}3^{k-1}c_{M,n-k}\]
-and the number of comparisons
-\[ \xi_n = 2\times 3^{n-2}+\sum_{1\le k\le n-2}3^{k-1}(n-k). \]
+\begin{align*}
+	c_n &= c_{M,n} + \sum_{k=1}^{n-1}3^{k-1}(2c_{M,n-k} + 1) & n\ge 2.
+\end{align*}
 If the compression method has linear time complexity (i.e. $c_{M,n} = O(n)$) then
 \begin{align*}
-	\phi_n &= O(n) + 2\sum_{1\le k\le n-1}3^{k-1}O(n-k)\\
-	%TODO don't know if this is correct or not
-	&= O(n) - O(n-1) + \frac{3^{n}}{2} - \frac{3}{2} & \text{See Appendix \ref{app:phi}}\\
-	&= O(3^n).
+	c_n &= O(n) + \sum_{k=1}^{n-1}3^{k-1}(2O(n-k) + 1)\\
+	&= O(n) + \sum_{k=1}^{n-1}3^{k-1}O(n-k)\\
+	&= O(3^n) & \text{See Appendix \ref{app:cn}}
 \end{align*}
-That is, the compression computations take exponential time. For the number of comparisons
-\begin{align*}
-	\xi_n &= 2\times 3^{n-2}+\frac{5}{4}\times 3^{n-2}-\frac{2n+1}{4}\\
-	&= \frac{13\times 3^{n-2}-2n-1}{4} &\text{See Appendix \ref{app:xi}}\\
-	&=O(3^n).
-\end{align*}
-It also takes exponential time for the number of comparisons, hence $c_n=O(3^n)$.
+That is, it takes exponential time to find the minimum compressed size using the naive recursive algorithm.
+%TODO why different to subsequence sum
 
 However, this algorithm re-computes the compressed bytes of subsequences many times rather than calculating it once and caching the data.
-A better approach is to use a bottom-up dynamic programming which avoids recursion and hence stack overflows.
-The approach would first compute all $|C(y,\hat s,M)|$ where $y$ has length 1, storing the result in a triangular matrix $D\in \mathbb{Z}$
+A better approach is to use bottom-up dynamic programming which avoids recursion and hence stack overflows.
+The approach would compute the minimum number of compressed bytes for all subsequences of length $1$ then $2$, $3$ and so forth up to $n$. The results are stored in a triangular matrix $OPT\in \mathbb{N}\times\mathbb{N}$ where $OPT_{i,j}$ is the minimum number of compressed bytes of the subsequence starting at index $i$ and ending at index $j$.
+It is triangular since we are not interested in subsequences which end before they begin. That is, we require that $i\le j$.
+
+%TODO put algorithm here
+
+For a signal of size $n$, the algorithm has the following number of comparisons
+\[ \tilde c_n = \sum_{k=1}^n(n-k+1)(c_{M,k}+k-1) \]
+since there are $n-k+1$ subsequences of size $k$ and each must compare compressing itself to concatenating $k-1$ pairs of compressed subdivisions.
+Suppose as before that the compression method takes linear time. Then $\tilde c_n$ simplifies to
+\begin{align*}
+	\tilde c_n &= \sum_{k=1}^n(n-k+1)(O(k)+k-1)\\
+	&= \sum_{k=1}^n(n-k+1)O(k)\\
+	&= O(n^3) &\text{See Appendix \ref{app:cn-dyn}}
+\end{align*}
+Interestingly, $c_n$ and $\tilde c_n$ are asymptotically related by having opposite base and power terms; 3 and $n$.
+
+%What is the length of these subsequences?
+
+We can speed up the algorithm without a significant loss in compression by ignoring subsequences smaller than $l$ and moving between subsequence lengths at a step of $\delta_1$ and subsequences of the same length at a step of $\delta_2$.
+The idea is that for compression method $M$, there exists some $l$ such that the minimum number of compressed bytes of subsequence $y$ with size $|y|<l$ equals the number of regular compressed bytes of $y$ with high probability.
+In mathematical notation $\exists l\in\mathbb{N}^+$ such that $\forall x,\;|x|<l$
+\[ P(C(x,\hat s,M)=M(x))> 1-\epsilon\]
+for small $\epsilon \le 0.05$.
+Furthermore, it is not necessary to calculate subsequences of all lengths or all subsequences of the same length since subsequences which differ by a couple signals should not provide a significantly better partition. This is because the deltas between successive signal values are small.
+Rather, we want to calculate the minimum number of compressed bytes for subsequences of length $l,l+\delta_1,l+2\delta_1,\dots,l + \lfloor\frac{n-l}{\delta_1}\rfloor\delta_1, n$.
+Then for subsequences of a particular length $p$ we calculate the minimum number of compressed bytes for subsequences $\delta_2$ apart, of the form $(x_{i\delta_2},x_{1+i\delta_2},\dots,x_{p-1+ i\delta_2})$ where $0\le i\le \lfloor \frac{n-p}{\delta_2} \rfloor$.
+
+%TODO put algorithm here
+
+For a signal of size $n$, the algorithm now has the following number of comparisons
+%\[ \tilde c_n = \sum_{k=l}^n(n-k+1)(c_{M,k}+k-1) \]
 
 However, we can exploit the characteristics of nanopore signal data to find better subsequences.
 For example, each read typically consists of a stall.
