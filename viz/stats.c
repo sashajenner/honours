@@ -10,6 +10,7 @@
 
 void init_stats(struct stats *st)
 {
+	st->id = NULL;
 	st->n = 0;
 	st->min = INT16_MAX;
 	st->max = INT16_MIN;
@@ -72,6 +73,16 @@ static inline void update_stats_pa(const struct slow5_rec *rec, struct stats *st
 	st->var_pa = VAR_TO_PICOAMPS(st->var, rec->range, rec->digitisation);
 }
 
+static inline void update_stats_id(const struct slow5_rec *rec, struct stats *st)
+{
+	st->id = rec->read_id;
+}
+
+void update_stats_start(const struct slow5_rec *rec, struct stats *st)
+{
+	update_stats_id(rec, st);
+}
+
 void update_stats(int16_t x, struct stats *st)
 {
 	update_stats_n(st);
@@ -90,7 +101,8 @@ void update_stats_end(const struct slow5_rec *rec, struct stats *st)
 
 void print_hdr_stats(void)
 {
-	puts("n\t"
+	puts("id\t"
+		"n\t"
 		"min\t"
 		"max\t"
 		"mean\t"
@@ -105,7 +117,8 @@ void print_hdr_stats(void)
 
 void print_stats(const struct stats *st)
 {
-	printf("%zu\t" /* n */
+	printf("%s\t" /* id */
+		"%zu\t" /* n */
 		"%d\t" /* min */
 		"%d\t" /* max */
 		"%f\t" /* mean */
@@ -116,6 +129,7 @@ void print_stats(const struct stats *st)
 		"%f\t" /* mean_pa */
 		"%f\t" /* var_pa */
 		"%f\n", /* sd_pa */
+		st->id,
 		st->n,
 		st->min,
 		st->max,
