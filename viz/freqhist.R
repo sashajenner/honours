@@ -5,6 +5,7 @@ USAGE = 'usage: ./freqhist.R DATA_FILE'
 library(ggplot2)
 library(plotly)
 library(htmlwidgets)
+library(tikzDevice)
 
 args = commandArgs(TRUE)
 
@@ -18,6 +19,29 @@ name = basename(path)
 colname = names(df)[1]
 title = paste(name, 'Histogram')
 xtitle = colname
+ytitle = names(df)[2]
+
+min0 = 175
+min100 = 178
+minmil = min(df[df$freq > 10^6,1])
+max0 = 1048
+max100 = 932
+maxmil = max(df[df$freq > 10^6,1])
+mean = 475.224468
+
+tikz(file = paste0(path, '.hist.tex'), width = 5, height = 5)
+ggplot(df, aes(x=df[,1], y=df[,2] / 10^6)) +
+	geom_histogram(stat="identity") +
+	xlab('Raw Signal') +
+	ylab('Frequency ($\\times 10^6$)') +
+	xlim(c(minmil, maxmil))
+dev.off()
+
+ggplot(df, aes(x=df[,1], y=df[,2])) +
+	geom_histogram(stat="identity") +
+	xlab('Raw Signal') +
+	ylab('Frequency ($\\times 10^6$)') +
+	ylim(c(0, 10^3))
 
 plot = ggplot(df, aes(x=df[,1], y=df[,2])) +
 	geom_histogram(stat="identity") +

@@ -11,6 +11,8 @@
 \contentsline {figure}{\numberline {2.4}{\ignorespaces The zig-zag encoding applied to integers -15 to 15. As we can see, it is similar to the absolute value function but is doubled and shifted on the negative $x$-axis to ensure injectivity.\relax }}{11}{figure.caption.11}%
 \contentsline {figure}{\numberline {2.5}{\ignorespaces The MinION, the first commercially-available nanopore sequencing device, recording nanopore signal data as a double-stranded DNA (dsDNA) molecule is unwound and ratcheted through the nanopore.}}{12}{figure.caption.12}%
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces The frequency of raw signal values 295 to 687 in millions for the NA12878 data set. The raw signal values outside this range occurred less than 1 million times.\relax }}{16}{figure.caption.16}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces The first 1500 data points of a randomly chosen read split into four sections: surge (before the red line), stall (between red and orange), pre-adapter surge (between orange and blue) and adapter sequence (after blue). In order from left to right the vertical lines are red, orange and blue.\relax }}{17}{figure.caption.17}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
