@@ -5,6 +5,16 @@ struct stats {
 	char *id;
 	size_t n;
 
+	double dig;
+	double offset;
+	double range;
+	double rate;
+	char *channel_num;
+	double median_before;
+	int32_t read_num;
+	uint8_t start_mux;
+	uint64_t start_time;
+
 	int16_t min;
 	int16_t max;
 	int16_t median;
