@@ -24,9 +24,16 @@ This is most likely due to the nature of the analogue-to-digital converter (ADC)
 \input{evaluation/plots/rawsig-tab}
 \input{evaluation/plots/freq}
 
+The read lengths range from 2024 to \num{5724000} with a median of 80304.5. See Table \ref{tab:n} for an overview and Figure \ref{fig:n-hist} for the histogram with bin width one.
+
+\input{evaluation/plots/n-tab}
+\input{evaluation/plots/nhist}
+
+\input{evaluation/plots/diff-tab}
+
 \subsection{Characteristics}
 
-Each read consists of several sections with recognisable characteristics; the surge, stall, pre-adapter surge, adapter, DNA, homopolymer and stuck sections. Figure \ref{fig:start-sections} shows the beginning of a typical read with the surge, stall, pre-adapter surge and adapter sections delimited.
+Each read consists of several sections with recognisable characteristics; the surge, stall, pre-adapter surge, adapter, DNA, homopolymer and slow sections. Figure \ref{fig:start-sections} shows the beginning of a typical read with the surge, stall, pre-adapter surge and adapter sections delimited.
 
 The surge typically consists of one signal at the beginning of the read which is significally above the mean. The pore is most likely in its open state (no molecules within it) at the time of recording and MinKNOW, the recording software, has failed to completely trim the pre-data section. This results in a large current surge since there are no molecules being kinetically propelled by the electric field.
 % TODO analyse surge section
@@ -38,11 +45,24 @@ The adapter sequence is the first DNA sequence recorded in the signal data. The 
 
 \input{evaluation/plots/start-sections}
 
-The DNA sections are the sections of the signal data which store information necessary for determining the original DNA sequence. Characteristically, these oscillate in smaller low-variance sections of 10-100 signals with steep transitions between them. The adapter sequence is quite similar in behaviour since it also represents molecular information.
+The DNA sections are the sections of the signal data which store information necessary for determining the original DNA sequence. Characteristically, these oscillate in smaller low-variance sections of 10-100 signals with steep transitions between them. The adapter sequence is quite similar in behaviour since it also represents molecular information. See Figure \ref{fig:dna-section} for an example.
 
-The homopolymer and stuck sections are similar in behaviour. They typically occur at random positions in the read and consist of hundreds to thousands of signal points which oscillate with small variation around some value. This is quite similar to the stall section except that the stall oscillates near the median value of the read, whilst the homopolyer and stuck sections can occur at any feasible value. The difference between the homopolymer and stuck sections is that the homopolymer section represents the repetition of one DNA base whilst the stuck section represents several DNA bases which have for one reason or another gotten stuck in the nanopore.
+\input{evaluation/plots/dna-section}
+
+The homopolymer and slow sections are similar in behaviour. They typically occur at random positions in the read and consist of hundreds to thousands of signal points which oscillate with small variation around some value. This is quite similar to the stall section except that the stall oscillates near the median value of the read, whilst the homopolyer and slow sections can occur at any feasible value. The difference between the homopolymer and slow sections is that the homopolymer section represents the repetition of one or more DNA bases, whilst the slow section represents several DNA bases which are moving through the nanopore relatively slowly, or have gotten temporarily stuck, and so are recorded over many more signal points than usual.
+
+\input{evaluation/plots/homo-section}
+\input{evaluation/plots/slow-section}
+
+%TODO show homopolymer and slow sections
 
 There is sometimes a stall-like section which terminates the read as well.
+
+\input{evaluation/plots/mess-section}
+
+%TODO show terminating stall
+
+However predictable some of these sections are, each read can have strange unpredictable behaviour.
 
 %TODO discuss statistics of nanopore data
 %plot some nanopore signals
@@ -51,6 +71,11 @@ There is sometimes a stall-like section which terminates the read as well.
 
 %TODO why lossless important
 %TODO why not lossy
+%TODO why per read
+
+It is important for fast parallel querying that the reads are compressed separately. That's not to say that each read is independent. Reads originating from the same channel and well/pore will have been recorded by the same sensor and so will likely have similar properties. This is especially true for reads recorded at a similar timestamp as each channel deteriorates over the course of a sequencing run. A compression method may take advantage of these available patterns but it is important for querying that each read can be decompressed independently. Perhaps there exists a multi-read compression strategy which is great for space reduction and hence archival purposes. However, such a strategy is not obvious and the primary desire of bioinformaticians is a better compression algorithm that does not sacrifice parallel querying. Hence, multi-read compression is outside the scope of this thesis.
+
+Lossy compression, although an interesting avenue, is not desirable for most research applications where accuracy is more valued than storage space. For example, long-term archival of scholarly research data must be lossless to allow for public replication of any results. For this reason, lossless compression is the focus of this thesis.
 
 % Explore integer methods without generic
 
