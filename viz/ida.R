@@ -4,6 +4,7 @@
 USAGE = 'usage: ./ida.R STATS_TSV'
 
 library(ggplot2)
+library(tikzDevice)
 
 # check args
 args = commandArgs(TRUE)
@@ -31,12 +32,32 @@ cat('read length max: ', max(df$n), '\n', sep='')
 # average read length?
 cat('read length mean: ', mean(df$n), '\n', sep='')
 
+# quartiles?
+q = quantile(df$n)
+cat('read length quartiles: ', q[2], q[3], q[4], '\n', sep=' ')
+
+# sd?
+cat('read length sample sd: ', sd(df$n), '\n', sep='')
+
+getmode <- function(v) {
+	uniqv <- unique(v)
+	uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+# mode?
+cat('read length mode: ', getmode(df$n), '\n', sep='')
+
 # distribution of read lengths?
-ggplot(df, aes(x=n)) +
-	geom_boxplot() +
-	theme(axis.text.y=element_blank(),
-	      axis.ticks.y=element_blank()) +
-	labs(title='boxplot of read lengths')
+#tikz(file = paste0(path, '.nhist.tex'), width = 5, height = 5)
+#ggplot(df, aes(x=n/10^3)) +
+#	geom_histogram(binwidth=1) +
+#	xlim(0,1000) +
+#	xlab('Read Length ($\\times 10^3$)') +
+#	ylab('Count')
+#	#theme(axis.text.y=element_blank(),
+#	#      axis.ticks.y=element_blank()) +
+#	#labs(title='boxplot of read lengths')
+#dev.off()
 
 # smallest signal value?
 cat('raw signal min: ', min(df$min), '\n', sep='')

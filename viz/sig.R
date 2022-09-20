@@ -22,17 +22,23 @@ xtitle = 'Data Point'
 ytitle = colname
 
 #x=1:nrow(df)
-x=29000:(29000+200)
-tikz(file = paste0(path, '.dna.tex'), width = 5, height = 5)
+x=(65600):(66080)
+tikz(file = paste0(path, '.homo.tex'), width = 5, height = 5)
 ggplot(data.frame(df[x,]), aes(x, df[x,1])) + #color=cut(x, c(1,14,789,831,3000)))) +
 	geom_line() +
 	xlab('Position in Read') +
-	ylab('Raw Signal')
+	ylab('Raw Signal') +
 	#xlim(0,1500) +
 	#geom_rect(aes(xmin=1, xmax=14, ymin=-Inf,ymax=Inf),fill='red',alpha=0.002) +
-	#geom_vline(xintercept=14,colour='red',alpha=0.9) +
-	#geom_vline(xintercept=789,colour='dark orange',alpha=0.9) +
-	#geom_vline(xintercept=831,colour='blue',alpha=0.9)
+	geom_vline(xintercept=65719,colour='red',alpha=0.9) +
+	geom_vline(xintercept=65949,colour='red',alpha=0.9)
+	#geom_vline(xintercept=22741,colour='dark orange',alpha=0.9) +
+	#geom_vline(xintercept=24384,colour='blue',alpha=0.9) +
+	#geom_vline(xintercept=25329,colour='purple',alpha=0.9) +
+	#geom_text(label='',colour='red',x=,y=,alpha=0.9)
+	#geom_text(label='TCCCAA',colour='dark orange',x=22741+215,y=475-10,alpha=0.9) +
+	#geom_text(label='CCCAAG',colour='dark orange',x=22741+215,y=475-20,alpha=0.9) +
+	#geom_text(label='CCAAGT',colour='blue',x=24384+215,y=420,alpha=0.9)
 	#scale_color_manual(values=c("[1,14]"="red",
 	#			    "(14,789]"="green",
 	#			    "(789,831]"="blue",
