@@ -5,18 +5,18 @@
 #include "getsig.h"
 
 #define TALLY_SZ (65536) /* 2^16 */
-#define TALLY_SZ_EXP (2048) /* 2^11 */
+#define TALLY_SZ_EXP (4096) /* 2^12 */
 
-uint64_t *gettally(FILE *fp, uint16_t *min, uint16_t *max)
+uint64_t *gettally(FILE *fp, int16_t *min, int16_t *max)
 {
 	uint64_t *tally;
-	uint16_t x;
+	int16_t x;
 	int ret;
 	size_t n;
 	char *line;
 
-	*min = UINT16_MAX;
-	*max = 0;
+	*min = INT16_MAX;
+	*max = INT16_MIN;
 
 	tally = calloc(TALLY_SZ_EXP, sizeof (*tally));
 	if (!tally)
@@ -30,7 +30,7 @@ uint64_t *gettally(FILE *fp, uint16_t *min, uint16_t *max)
 	}
 
 	while ((ret = getnextsig(fp, line, n, &x)) == 0) {
-		tally[x] ++;
+		tally[(x << 1) ^ (x >> 15)] ++;
 		if (x < *min)
 			*min = x;
 		if (x > *max)
@@ -90,14 +90,14 @@ uint64_t *gettrally(FILE *fp, uint16_t *min, uint16_t *max)
 	return trally;
 }
 
-void printtally(const uint64_t *tally, uint16_t min, uint16_t max)
+void printtally(const uint64_t *tally, int16_t min, int16_t max)
 {
 	PRINTSTDHDR("freq");
 
 	int i;
 
 	for (i = min; i <= max; ++i) {
-		printf("%d" SEP "%zu\n", i, tally[i]);
+		printf("%d" SEP "%zu\n", i, tally[(i << 1) ^ (i >> 15)]);
 	}
 }
 

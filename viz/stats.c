@@ -179,6 +179,7 @@ void print_hdr_stats(void)
 		"sd_pa\t"
 		"dig\t"
 		"offset\t"
+		"range\t"
 		"rate\t"
 		"channel_num\t"
 		"median_before\t"

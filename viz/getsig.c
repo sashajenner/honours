@@ -17,7 +17,7 @@ int getsig(char *line, int16_t *sig)
 	return 0;
 }
 
-int getnextsig(FILE *fp, char *line, size_t n, uint16_t *x)
+int getnextsig(FILE *fp, char *line, size_t n, int16_t *x)
 {
 	if (getline(&line, &n, fp) == -1)
 		return 1;
