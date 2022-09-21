@@ -12,7 +12,10 @@ FLAC = flac-1.3.4
 FLACLIB = $(FLAC)/src/libFLAC/.libs/libFLAC.so
 TURBOPFOR = TurboPFor-Integer-Compression
 TURBOPFORLIB = $(TURBOPFOR)/libic.a
-LIB = $(SVBLIB) $(BZIP2LIB) $(FLZMA2LIB) $(FLACLIB) $(TURBOPFORLIB)
+SLOW5 = ~/work/garvan/slow5/slow5tools/slow5lib
+SLOW5INCLUDE = $(SLOW5)/include
+SLOW5LIB = $(SLOW5)/lib/libslow5.a
+LIB = $(SVBLIB) $(BZIP2LIB) $(FLZMA2LIB) $(FLACLIB) $(TURBOPFORLIB) $(SLOW5LIB)
 
 .PHONY = clean $(LIB)
 
@@ -32,7 +35,7 @@ $(FLACLIB):
 	make -C $(FLAC)
 
 test.o: test.c test.h press.h bitmap.h
-	$(CC) $< $(CFLAGS) -c -o $@
+	$(CC) $< $(CFLAGS) -I $(SLOW5INCLUDE) -c -o $@
 
 press.o: press.c press.h bitmap.h stats.h trans.h util.h flat.h
 	$(CC) $< $(CFLAGS) -c -o $@
