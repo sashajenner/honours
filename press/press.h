@@ -396,6 +396,30 @@ void turbopfor_press_16(const int16_t *in, uint64_t nin, uint8_t *out,
 void turbopfor_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			  uint64_t nout);
 
+/* variable byte 1 except 2 */
+
+#define VB1E2_MAX_EXCEPTIONS (256)
+uint64_t vb1e2_bound(uint32_t nin);
+void vb1e2_press(const uint16_t *in, uint32_t nin, uint8_t *out,
+		 uint64_t *nout);
+void vb1e2_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout);
+
+/* zigzag delta vb1e2 */
+
+uint64_t vb1e2_zd_bound_16(uint32_t nin);
+void vb1e2_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+		       uint64_t *nout);
+void vb1e2_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			 uint32_t *nout);
+
+/* zigzag delta vb1e2 zstd */
+
+uint64_t zstd_vb1e2_zd_bound_16(uint32_t nin);
+int zstd_vb1e2_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			   uint64_t *nout);
+int zstd_vb1e2_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			     uint32_t *nout);
+
 /* TODO
  * determine flats more coarsely
  * flat using other methods
@@ -403,6 +427,7 @@ void turbopfor_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
  * variable bit
  * bzip/lzma uint_submin?
  * other variable byte
+ * 	assume 1 but store 2 bytes exceptions with indices in meta
  * huffman
  * peak-picking flat approximation
  * hasindu basecalled data method (k-mer pore model)

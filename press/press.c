@@ -78,6 +78,17 @@ int press_uint_submin_16(const int16_t *in, uint32_t nin, uint8_t *out,
 int depress_uint_submin_16(const uint8_t *in, uint32_t nin, int16_t *out,
 			   uint32_t *nout);
 
+#define DEFINE_FLAT_METHOD_UINT_SUBMIN_16(name) \
+struct flat_method name = { \
+	bound_uint_submin_16, \
+	init_meta_uint_submin_16, \
+	free_meta_uint_submin_16, \
+	fill_meta_uint_submin_16, \
+	press_uint_submin_16, \
+	depress_uint_submin_16, \
+	ntobytes_uint_submin_16, \
+}
+
 struct flac_data_u8 {
 	uint8_t *data;
 	uint64_t cap;
@@ -1272,16 +1283,7 @@ uint32_t ntobytes_uint_submin_16(const uint8_t *in, uint32_t n)
 
 uint64_t flat_uint_submin_bound_16(uint32_t nin)
 {
-	struct flat_method method = {
-		bound_uint_submin_16,
-		init_meta_uint_submin_16,
-		free_meta_uint_submin_16,
-		fill_meta_uint_submin_16,
-		press_uint_submin_16,
-		depress_uint_submin_16,
-		ntobytes_uint_submin_16,
-	};
-
+	DEFINE_FLAT_METHOD_UINT_SUBMIN_16(method);
 	return flat_bound_16(nin, &method);
 }
 
@@ -1289,32 +1291,14 @@ int flat_uint_submin_press_16(const int16_t *in, uint32_t nin, uint32_t step,
 			      uint8_t *out, uint32_t *nout, uint32_t **flats,
 			      uint32_t *nflats)
 {
-	struct flat_method method = {
-		bound_uint_submin_16,
-		init_meta_uint_submin_16,
-		free_meta_uint_submin_16,
-		fill_meta_uint_submin_16,
-		press_uint_submin_16,
-		depress_uint_submin_16,
-		ntobytes_uint_submin_16,
-	};
-
+	DEFINE_FLAT_METHOD_UINT_SUBMIN_16(method);
 	return flat_press_16(in, nin, step, out, nout, &method, flats, nflats);
 }
 
 int flat_uint_submin_depress_16(const uint8_t *in, uint32_t nin, int16_t *out,
 				uint32_t *nout)
 {
-	struct flat_method method = {
-		bound_uint_submin_16,
-		init_meta_uint_submin_16,
-		free_meta_uint_submin_16,
-		fill_meta_uint_submin_16,
-		press_uint_submin_16,
-		depress_uint_submin_16,
-		ntobytes_uint_submin_16,
-	};
-
+	DEFINE_FLAT_METHOD_UINT_SUBMIN_16(method);
 	return flat_depress_16(in, nin, out, nout, &method);
 }
 
@@ -2303,4 +2287,171 @@ void turbopfor_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	(void) p4ndec128v16(in, nin, (uint16_t *) out);
 	unzigdelta_inplace_16(out, nout);
 	*/
+}
+
+/*
+ * variable byte 1 except 2
+ * [num exceptions][exception indices]data
+ * maximum 256 exceptions
+ */
+
+uint64_t vb1e2_bound(uint32_t nin)
+{
+	return sizeof (uint8_t) + VB1E2_MAX_EXCEPTIONS * (sizeof (uint32_t) + 2) + nin - VB1E2_MAX_EXCEPTIONS;
+}
+
+void vb1e2_press(const uint16_t *in, uint32_t nin, uint8_t *out,
+		 uint64_t *nout)
+{
+	uint8_t nex;
+	uint32_t *ex_pos;
+	uint32_t i;
+	uint32_t j;
+	uint64_t offset;
+	uint8_t nbytes;
+
+	nex = 0;
+	ex_pos = malloc(VB1E2_MAX_EXCEPTIONS * sizeof *ex_pos);
+
+	for (i = 0; i < nin; i++) {
+		if (in[i] > UINT8_MAX) {
+			ex_pos[nex] = i;
+			nex ++;
+		}
+	}
+
+	(void) memcpy(out, &nex, sizeof nex);
+	offset = sizeof nex;
+	(void) memcpy(out + offset, ex_pos, nex * sizeof *ex_pos);
+	offset += nex * sizeof *ex_pos;
+
+	j = 0;
+	for (i = 0; i < nin; i++) {
+		if (j < nex && i == ex_pos[j]) {
+			nbytes = 2;
+			j++;
+		} else {
+			nbytes = 1;
+		}
+
+		(void) memcpy(out + offset, in + i, nbytes);
+		offset += nbytes;
+	}
+
+	*nout = offset;
+}
+
+void vb1e2_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout)
+{
+	uint8_t nex;
+	uint32_t *ex_pos;
+	uint32_t i;
+	uint32_t j;
+	uint64_t offset;
+
+	(void) memcpy(&nex, in, sizeof nex);
+	offset = sizeof nex;
+	ex_pos = malloc(nex * sizeof *ex_pos);
+	(void) memcpy(ex_pos, in + offset, nex * sizeof *ex_pos);
+	offset += nex * sizeof *ex_pos;
+
+	i = 0;
+	j = 0;
+	while (offset < nin) {
+		if (j < nex && i == ex_pos[j]) {
+			memcpy(out + i, in + offset, 2);
+			j++;
+			offset += 2;
+		} else {
+			out[i] = in[offset];
+			offset++;
+		}
+
+		i++;
+	}
+
+	*nout = i;
+}
+
+/* delta | zigzag | vb1e2 */
+
+uint64_t vb1e2_zd_bound_16(uint32_t nin)
+{
+	return sizeof (uint16_t) + vb1e2_bound(nin - 1);
+}
+
+void vb1e2_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+		       uint64_t *nout)
+{
+	uint16_t *in_zd;
+	uint64_t nout_tmp;
+
+	in_zd = zigdelta_16_u16(in, nin);
+
+	(void) memcpy(out, in_zd, sizeof *in_zd);
+	nout_tmp = *nout - sizeof *in_zd;
+	vb1e2_press(in_zd + 1, nin - 1, out + sizeof *in_zd, &nout_tmp);
+
+	*nout = nout_tmp + sizeof *in_zd;
+	free(in_zd);
+}
+
+void vb1e2_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			 uint32_t *nout)
+{
+	uint16_t *out_zd;
+	uint32_t nout_tmp;
+
+	out_zd = malloc(nin * sizeof *out_zd);
+	(void) memcpy(out_zd, in, sizeof *out_zd);
+
+	nout_tmp = nin - 1;
+	vb1e2_depress(in + sizeof *out_zd, nin - sizeof *out_zd, out_zd + 1,
+		      &nout_tmp);
+	*nout = nout_tmp + 1;
+
+	unzigdelta_u16_16(out_zd, *nout, out);
+	free(out_zd);
+}
+
+/* delta | zigzag | vb1e2 | zstd */
+
+uint64_t zstd_vb1e2_zd_bound_16(uint32_t nin)
+{
+	return zstd_bound(vb1e2_zd_bound_16(nin));
+}
+
+int zstd_vb1e2_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			   uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_vb;
+	uint8_t *out_vb;
+
+	nout_vb = vb1e2_zd_bound_16(nin);
+	out_vb = malloc(nout_vb);
+
+	vb1e2_zd_press_16(in, nin, out_vb, &nout_vb);
+	ret = zstd_press(out_vb, nout_vb, out, nout);
+
+	free(out_vb);
+	return ret;
+}
+
+int zstd_vb1e2_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			     uint32_t *nout)
+{
+	int ret;
+	uint64_t nout_zstd;
+	uint8_t *out_zstd;
+
+	nout_zstd = zstd_bound(*nout * sizeof *out);
+	out_zstd = malloc(nout_zstd);
+
+	ret = zstd_depress(in, nin, out_zstd, &nout_zstd);
+	if (ret == 0)
+		vb1e2_zd_depress_16(out_zstd, nout_zstd, out, nout);
+
+	free(out_zstd);
+	return ret;
 }
