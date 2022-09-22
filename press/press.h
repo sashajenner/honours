@@ -404,6 +404,13 @@ void vb1e2_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		 uint64_t *nout);
 void vb1e2_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout);
 
+/* variable byte 1 except 2 before */
+
+uint64_t vbe21_bound(uint32_t nin);
+void vbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
+		 uint64_t *nout);
+void vbe21_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout);
+
 /* zigzag delta vb1e2 */
 
 uint64_t vb1e2_zd_bound_16(uint32_t nin);
@@ -419,6 +426,14 @@ int zstd_vb1e2_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 			   uint64_t *nout);
 int zstd_vb1e2_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			     uint32_t *nout);
+
+/* zigzag delta vbe21 huffman */
+
+uint64_t huffman_vbe21_zd_bound_16(uint32_t nin);
+int huffman_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			      uint64_t *nout);
+int huffman_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+				uint32_t *nout);
 
 /* TODO
  * determine flats more coarsely

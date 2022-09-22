@@ -15,7 +15,9 @@ TURBOPFORLIB = $(TURBOPFOR)/libic.a
 SLOW5 = ~/work/garvan/slow5/slow5tools/slow5lib
 SLOW5INCLUDE = $(SLOW5)/include
 SLOW5LIB = $(SLOW5)/lib/libslow5.a
-LIB = $(SVBLIB) $(BZIP2LIB) $(FLZMA2LIB) $(FLACLIB) $(TURBOPFORLIB) $(SLOW5LIB)
+HUFFMAN = huffman
+HUFFMANLIB = $(HUFFMAN)/huffman.c
+LIB = $(SVBLIB) $(BZIP2LIB) $(FLZMA2LIB) $(FLACLIB) $(TURBOPFORLIB) $(SLOW5LIB) $(HUFFMANLIB)
 
 .PHONY = clean $(LIB)
 
