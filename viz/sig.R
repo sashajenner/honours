@@ -21,9 +21,9 @@ title = paste(name, colname)
 xtitle = 'Data Point'
 ytitle = colname
 
-#x=1:nrow(df)
+x=1:nrow(df)
 x=(65600):(66080)
-tikz(file = paste0(path, '.homo.tex'), width = 5, height = 5)
+#tikz(file = paste0(path, '.homo.tex'), width = 5, height = 5)
 ggplot(data.frame(df[x,]), aes(x, df[x,1])) + #color=cut(x, c(1,14,789,831,3000)))) +
 	geom_line() +
 	xlab('Position in Read') +
@@ -44,19 +44,19 @@ ggplot(data.frame(df[x,]), aes(x, df[x,1])) + #color=cut(x, c(1,14,789,831,3000)
 	#			    "(789,831]"="blue",
 	#			    "(831,3000]"="black"))
 #ggsave(paste0(path, '.section.pdf'), plot)
-dev.off()
+#dev.off()
 
-#plot = ggplot(df, aes(1:nrow(df), df[,1])) +
-#	geom_line() +
-#	xlab(xtitle) +
-#	ylab(ytitle) +
-#	labs(title = title)
-#ggsave(paste0(path, '.pdf'), plot, width=40)
-#
-#plotly = plot_ly(x = 1:nrow(df), y = df[,1],
-#		 type = 'scatter',
-#		 mode = 'lines',
-#		 name = title) %>%
-#	layout(xaxis = list(title = xtitle),
-#	       yaxis = list(title = ytitle))
-#saveWidget(plotly, paste0(path, '.html'))
+plot = ggplot(df, aes(1:nrow(df), df[,1])) +
+	geom_line() +
+	xlab(xtitle) +
+	ylab(ytitle) +
+	labs(title = title)
+ggsave(paste0(path, '.pdf'), plot, width=40)
+
+plotly = plot_ly(x = 1:nrow(df), y = df[,1],
+		 type = 'scatter',
+		 mode = 'lines',
+		 name = title) %>%
+	layout(xaxis = list(title = xtitle),
+	       yaxis = list(title = ytitle))
+saveWidget(plotly, paste0(path, '.html'))

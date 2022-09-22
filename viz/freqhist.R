@@ -29,13 +29,13 @@ max100 = 932
 maxmil = max(df[df$freq > 10^6,1])
 mean = 475.224468
 
-tikz(file = paste0(path, '.hist.tex'), width = 5, height = 5)
+#tikz(file = paste0(path, '.hist.tex'), width = 5, height = 5)
 ggplot(df, aes(x=df[,1], y=df[,2] / 10^6)) +
 	geom_histogram(stat="identity") +
 	xlab('Raw Signal') +
 	ylab('Frequency ($\\times 10^6$)') +
 	xlim(c(minmil, maxmil))
-dev.off()
+#dev.off()
 
 ggplot(df, aes(x=df[,1], y=df[,2])) +
 	geom_histogram(stat="identity") +
@@ -54,3 +54,12 @@ plotly = plot_ly(x = df[,1], y=df[,2],
 		 name = title) %>%
 	layout(xaxis = list(title = xtitle))
 saveWidget(plotly, paste0(path, '.hist.html'))
+
+huf_bits = 0
+for (i in 1:nrow(df)) {
+	zig = 2 * abs(df$signal[i])
+	if (zig < 0)
+		zig = zig - 1
+	huf_bits = huf_bits + df$freq[i] * (zig + 1)
+}
+print(huf_bits / 8)
