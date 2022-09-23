@@ -14,9 +14,9 @@ if (length(args) != 1) {
 path = args[1]
 df = read.delim(path)
 
-df_P11 = df[df$data == 'P11',]
-df_P11$method = reorder(df_P11$method, df_P11$press_ratio)
+#df_P11 = df[df$data == 'P11',]
+df$method = reorder(df$method, df$press_ratio)
 
-ggplot(df_P11, aes(x=method, y=press_ratio)) +
+ggplot(df, aes(x=method, y=press_ratio)) +
        geom_bar(stat='identity') +
        theme(axis.text.x=element_text(angle=90,hjust=1))
