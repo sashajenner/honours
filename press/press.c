@@ -2316,8 +2316,9 @@ void vb1e2_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 
 	for (i = 0; i < nin; i++) {
 		if (in[i] > UINT8_MAX) {
-			ex_pos[nex] = i;
-			nex ++;
+			ex_pos[nex++] = i;
+			if (nex == 0)
+				fprintf(stderr, "error: vb1e2 too many exceptions\n");
 		}
 	}
 
@@ -2339,6 +2340,7 @@ void vb1e2_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		offset += nbytes;
 	}
 
+	free(ex_pos);
 	*nout = offset;
 }
 
@@ -2371,6 +2373,7 @@ void vb1e2_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout)
 		i++;
 	}
 
+	free(ex_pos);
 	*nout = i;
 }
 
@@ -2424,6 +2427,7 @@ void vbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		}
 	}
 
+	free(ex_pos);
 	*nout = offset;
 }
 
@@ -2459,6 +2463,7 @@ void vbe21_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout)
 		i++;
 	}
 
+	free(ex_pos);
 	*nout = i;
 }
 
@@ -2624,6 +2629,103 @@ int huffman_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	out_huffman = NULL;
 	ret = huffman_decode_memory(in + offset, nin - offset, &out_huffman,
 				    &nout_tmp_vb);
+	memcpy(out_vb + exlen, out_huffman, nout_tmp_vb);
+	free(out_huffman);
+	nout_tmp_vb += exlen;
+
+	if (ret == 0) {
+		nout_tmp = *nout - 1;
+		out_zd = malloc(*nout * sizeof *out_zd);
+		vbe21_depress(out_vb, nout_tmp_vb, out_zd + 1, &nout_tmp);
+		free(out_vb);
+
+		(void) memcpy(out_zd, in, sizeof *out_zd);
+
+		unzigdelta_u16_16(out_zd, nout_tmp + 1, out);
+		free(out_zd);
+		*nout = nout_tmp + 1;
+	}
+
+	return ret;
+}
+
+/*
+ * delta | zigzag | vbe21 | static huffman
+ * static huffman on the 1 byte data
+ */
+
+uint64_t shuffman_vbe21_zd_bound_16(uint32_t nin)
+{
+	return huffman_vbe21_zd_bound_16(nin);
+}
+
+int shuffman_vbe21_zd_press_16(SymbolEncoder *se, const int16_t *in,
+			       uint32_t nin, uint8_t *out, uint64_t *nout)
+{
+	uint16_t *in_zd;
+	uint8_t *out_vb;
+	uint8_t *out_huffman;
+	uint32_t nout_tmp;
+	uint64_t nout_tmp_vb;
+	uint32_t exlen;
+	uint8_t nex;
+	uint64_t offset;
+	int ret;
+
+	in_zd = zigdelta_16_u16(in, nin);
+
+	(void) memcpy(out, in_zd, sizeof *in_zd);
+
+	nout_tmp_vb = *nout - sizeof *in_zd;
+	out_vb = malloc(nout_tmp_vb);
+	vbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
+	free(in_zd);
+
+	nex = out_vb[0];
+	offset = sizeof *in_zd;
+	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
+	(void) memcpy(out + offset, out_vb, exlen);
+	offset += exlen;
+
+	nout_tmp = 0;
+	out_huffman = NULL;
+	ret = shuffman_encode_memory(se, out_vb + exlen, nout_tmp_vb - exlen,
+				     &out_huffman, &nout_tmp);
+	(void) memcpy(out + offset, out_huffman, nout_tmp);
+	free(out_huffman);
+
+	*nout = nout_tmp + offset;
+	free(out_vb);
+
+	return ret;
+}
+
+int shuffman_vbe21_zd_depress_16(huffman_node *root, unsigned int dataBytesOut,
+				 uint8_t *in, uint64_t nin, int16_t *out,
+				 uint32_t *nout)
+{
+	uint32_t exlen;
+	uint8_t nex;
+	uint64_t offset;
+	uint8_t *out_vb;
+	uint8_t *out_huffman;
+	uint16_t *out_zd;
+	uint32_t nout_tmp;
+	uint32_t nout_tmp_vb;
+	int ret;
+
+	nex = in[sizeof *out];
+	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
+	offset = sizeof *out;
+
+	out_vb = malloc(*nout * sizeof *out);
+	(void) memcpy(out_vb, in + offset, exlen);
+	offset += exlen;
+
+	nout_tmp_vb = *nout;
+	out_huffman = NULL;
+	ret = shuffman_decode_memory(root, in + offset, nin - offset,
+				     &out_huffman, &nout_tmp_vb);
 	memcpy(out_vb + exlen, out_huffman, nout_tmp_vb);
 	free(out_huffman);
 	nout_tmp_vb += exlen;
