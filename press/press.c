@@ -2823,6 +2823,7 @@ void rice_press(const uint8_t *in, uint64_t nin, uint8_t *out, uint64_t *nout)
 	*nout = BITS_TO_BYTES(n);
 }
 
+/* nin is the number of elements not bytes */
 void rice_depress(const uint8_t *in, uint64_t nin, uint8_t *out,
 		  uint64_t *nout)
 {
@@ -2836,30 +2837,39 @@ void rice_depress(const uint8_t *in, uint64_t nin, uint8_t *out,
 	uint8_t k;
 
 	j = 0;
-	k = (get_bit(0, in) << 2) |
-	    (get_bit(1, in) << 1) |
-	    get_bit(2, in);
+
+	bit = get_bit(0, in);
+	if (bit)
+		bit = 1;
+	k = bit << 2;
+
+	bit = get_bit(1, in);
+	if (bit)
+		bit = 1;
+	k = k | bit << 1;
+
+	bit = get_bit(2, in);
+	if (bit)
+		bit = 1;
+	k = k | bit;
+
 	n = 3;
 	m = 1 << k;
 
-	while (n / BITS_PER_BYTE < nin) {
+	while (j < nin) {
 		q = 0;
-		while (n / BITS_PER_BYTE < nin && get_bit(n++, in)) {
+		while (get_bit(n++, in)) {
 			q++;
 		}
-		if (n / BITS_PER_BYTE >= nin)
-			break;
 
 		x = m * q;
 
-		for (i = k - 1; i >= 0 && n <= nin * BITS_PER_BYTE; i--) {
+		for (i = k - 1; i >= 0; i--) {
 			bit = get_bit(n++, in);
 			if (bit)
 				bit = 1;
 			x = x | (bit << i);
 		}
-		if (n / BITS_PER_BYTE > nin)
-			break;
 
 		out[j++] = x;
 	}
@@ -2914,6 +2924,7 @@ void rice_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	free(out_vb);
 }
 
+/* nin is the number of elements not bytes */
 void rice_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			      uint32_t *nout)
 {
@@ -2936,7 +2947,7 @@ void rice_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 
 	nout_tmp_vb = *nout;
 	out_rice = malloc(nout_tmp_vb);
-	rice_depress(in + offset, nin - offset, out_rice, &nout_tmp_vb);
+	rice_depress(in + offset, nin - nex - 1, out_rice, &nout_tmp_vb);
 	memcpy(out_vb + exlen, out_rice, nout_tmp_vb);
 	free(out_rice);
 	nout_tmp_vb += exlen;

@@ -2648,7 +2648,7 @@ int test_rice_vbe21_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	/* decompress sigs_press */
 	depress_len = nr_sigs;
 	before = clock();
-	rice_vbe21_zd_depress_16(sigs_press, press_len, sigs_depress,
+	rice_vbe21_zd_depress_16(sigs_press, nr_sigs, sigs_depress,
 				 &depress_len);
 	after = clock();
 	UPDATE_RES(res, depress_clocktime, GET_CLOCK_SECS(before, after));
