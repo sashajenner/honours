@@ -441,9 +441,25 @@ int huffman_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 uint64_t shuffman_vbe21_zd_bound_16(uint32_t nin);
 int shuffman_vbe21_zd_press_16(SymbolEncoder *se, const int16_t *in,
 			       uint32_t nin, uint8_t *out, uint64_t *nout);
-int shuffman_vbe21_zd_depress_16(huffman_node *root, unsigned int dataBytesOut,
-				 uint8_t *in, uint64_t nin, int16_t *out,
-				 uint32_t *nout);
+int shuffman_vbe21_zd_depress_16(huffman_node *root, uint8_t *in, uint64_t nin,
+				 int16_t *out, uint32_t *nout);
+
+/* rice coding */
+
+uint64_t rice_bound(uint64_t nin);
+void rice_press(const uint8_t *in, uint64_t nin, uint8_t *out, uint64_t *nout);
+void rice_depress(const uint8_t *in, uint64_t nin, uint8_t *out,
+		  uint64_t *nout);
+
+/* zigzag delta vbe21 rice coding */
+
+uint64_t rice_vbe21_zd_bound_16(uint32_t nin);
+void rice_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			    uint64_t *nout);
+void rice_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			      uint32_t *nout);
+
+/* arithmetic coding */
 
 /* TODO
  * determine flats more coarsely
@@ -453,10 +469,10 @@ int shuffman_vbe21_zd_depress_16(huffman_node *root, unsigned int dataBytesOut,
  * bzip/lzma uint_submin?
  * other variable byte
  * 	assume 1 but store 2 bytes exceptions with indices in meta
- * huffman
  * peak-picking flat approximation
  * hasindu basecalled data method (k-mer pore model)
- * huffman/golomb-rice/arithmetic/elias-gamma on zigzag delta
+ * golomb/arithmetic/elias-gamma on zigzag delta
+ * don't need zigzag if using huffman
  * http://neurocline.github.io/dev/2015/09/17/zig-zag-encoding.html: Note that it would be possible to store negative numbers with a smaller number of bytes with a little more sophistication, and not require zigzag encoding: you store the number of bytes required by the absolute magnitude of the number, and on reading, you pick up the MSB of the sequence of stored bytes and recreate the number. I suspect that zig-zag encoding is used because the amount of code for encoding and decoding is actually less when expressed in a high-level language, and perhaps faster even in assembly.
  */
 

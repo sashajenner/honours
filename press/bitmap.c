@@ -36,5 +36,13 @@ uint8_t get_bit(uint64_t bit, const uint8_t *addr)
 	return onoff;
 }
 
+void place_bit(uint8_t x, uint64_t bit, uint8_t *addr)
+{
+	if (x)
+		set_bit(bit, addr);
+	else
+		clear_bit(bit, addr);
+}
+
 DEFINE_TYPE_TO_BIN(int16_t);
 DEFINE_TYPE_TO_BIN(uint8_t);

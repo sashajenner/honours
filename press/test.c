@@ -2580,9 +2580,8 @@ int test_shuffman_vb1e2_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	/* decompress sigs_press */
 	depress_len = nr_sigs;
 	before = clock();
-	ret = shuffman_vbe21_zd_depress_16(root, dataBytesOut, sigs_press,
-					   press_len, sigs_depress,
-					   &depress_len);
+	ret = shuffman_vbe21_zd_depress_16(root, sigs_press, press_len,
+					   sigs_depress, &depress_len);
 	after = clock();
 	UPDATE_RES(res, depress_clocktime, GET_CLOCK_SECS(before, after));
 	ASSERT(ret == 0);
@@ -2600,6 +2599,70 @@ int test_shuffman_vb1e2_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	free(sigs_press);
 	free(sigs_depress);
 	fclose(fp);
+
+	UPDATE_RES(res, depress_bytes, nr_sigs_bytes);
+	UPDATE_RES(res, pressbound_bytes, pressbound);
+	UPDATE_RES(res, press_bytes, press_len);
+
+	return EXIT_SUCCESS;
+}
+
+int test_rice_vbe21_zd(const int16_t *sigs, const uint32_t nr_sigs,
+		       struct result *res)
+{
+	clock_t after;
+	clock_t before;
+	int16_t *sigs_depress;
+	uint32_t depress_len;
+	uint32_t i;
+	uint64_t nr_sigs_bytes;
+	uint64_t press_len;
+	uint64_t pressbound;
+	uint8_t *sigs_press;
+
+	nr_sigs_bytes = sizeof *sigs * nr_sigs;
+
+	/* bound sigs_press */
+	before = clock();
+	pressbound = rice_vbe21_zd_bound_16(nr_sigs);
+	after = clock();
+	UPDATE_RES(res, pressbound_clocktime, GET_CLOCK_SECS(before, after));
+
+	/* init sigs_press */
+	sigs_press = malloc(pressbound);
+	ASSERT(sigs_press);
+
+	/* compress sigs */
+	press_len = pressbound;
+	before = clock();
+	rice_vbe21_zd_press_16(sigs, nr_sigs, sigs_press, &press_len);
+	after = clock();
+	UPDATE_RES(res, press_clocktime, GET_CLOCK_SECS(before, after));
+
+	/*ASSERT(press_len <= pressbound);*/
+
+	/* init sigs_depress */
+	sigs_depress = malloc(nr_sigs_bytes);
+	ASSERT(sigs_depress);
+
+	/* decompress sigs_press */
+	depress_len = nr_sigs;
+	before = clock();
+	rice_vbe21_zd_depress_16(sigs_press, press_len, sigs_depress,
+				 &depress_len);
+	after = clock();
+	UPDATE_RES(res, depress_clocktime, GET_CLOCK_SECS(before, after));
+
+	ASSERT(depress_len == nr_sigs);
+
+	/* ensure decompressed == original */
+	for (i = 0; i < depress_len / sizeof *sigs; i++) {
+		ASSERT(sigs_depress[i] == sigs[i]);
+	}
+
+	/* let it go */
+	free(sigs_press);
+	free(sigs_depress);
 
 	UPDATE_RES(res, depress_bytes, nr_sigs_bytes);
 	UPDATE_RES(res, pressbound_bytes, pressbound);
@@ -2660,6 +2723,7 @@ int main(int argc, char **argv)
 	TEST(zstd_vb1e2_zd, &res, fp);
 	TEST(huffman_vb1e2_zd, &res, fp);
 	TEST(shuffman_vb1e2_zd, &res, fp);
+	TEST(rice_vbe21_zd, &res, fp);
 
 	(void) fclose(fp);
 

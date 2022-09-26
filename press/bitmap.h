@@ -62,5 +62,6 @@ void set_bit(uint64_t bit, uint8_t *addr);
 void clear_bit(uint64_t bit, uint8_t *addr);
 
 uint8_t get_bit(uint64_t bit, const uint8_t *addr);
+void place_bit(uint8_t x, uint64_t bit, uint8_t *addr);
 
 #endif /* bitmap.h */

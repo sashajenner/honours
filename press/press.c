@@ -2700,9 +2700,8 @@ int shuffman_vbe21_zd_press_16(SymbolEncoder *se, const int16_t *in,
 	return ret;
 }
 
-int shuffman_vbe21_zd_depress_16(huffman_node *root, unsigned int dataBytesOut,
-				 uint8_t *in, uint64_t nin, int16_t *out,
-				 uint32_t *nout)
+int shuffman_vbe21_zd_depress_16(huffman_node *root, uint8_t *in, uint64_t nin,
+				 int16_t *out, uint32_t *nout)
 {
 	uint32_t exlen;
 	uint8_t nex;
@@ -2744,4 +2743,212 @@ int shuffman_vbe21_zd_depress_16(huffman_node *root, unsigned int dataBytesOut,
 	}
 
 	return ret;
+}
+
+/*
+ * rice coding
+ * modified from Emil Mikulic 2002
+ * https://unix4lyfe.org/rice-coding/
+ */
+
+uint64_t rice_bound(uint64_t nin)
+{
+	/* this is a guess worst case */
+	return nin * 1.5;
+}
+
+static int rice_len(uint8_t x, uint8_t k)
+{
+	int m = 1 << k;
+	int q = x / m;
+	return q + 1 + k;
+}
+
+static uint8_t rice_find_k(const uint8_t *in, uint64_t nin)
+{
+	uint8_t k;
+	uint64_t outsize;
+	uint64_t best_size;
+	uint8_t best_k;
+	uint64_t i;
+
+	best_k = 0;
+	best_size = UINT64_MAX;
+
+	/* find length */
+	for (k = 0; k < 8; k++) {
+		outsize = 0;
+		for (i = 0; i < nin; i++)
+			outsize += rice_len(in[i], k);
+
+		if (outsize < best_size) {
+			best_size = outsize;
+			best_k = k;
+		}
+	}
+
+	return best_k;
+}
+
+void rice_press(const uint8_t *in, uint64_t nin, uint8_t *out, uint64_t *nout)
+{
+	uint64_t i;
+	int16_t j;
+	uint64_t n;
+	uint8_t m;
+	uint8_t q;
+	uint8_t k;
+
+	k = rice_find_k(in, nin);
+	m = 1 << k;
+	n = 0;
+
+	place_bit((k >> 2) & 1, n++, out);
+	place_bit((k >> 1) & 1, n++, out);
+	place_bit(k & 1, n++, out);
+
+	for (i = 0; i < nin; i++) {
+		q = in[i] / m;
+
+		for (j = 0; j < q; j++) {
+			set_bit(n++, out);
+		}
+		clear_bit(n++, out);
+
+		for (j = k - 1; j >= 0; j--) {
+			place_bit((in[i] >> j) & 1, n++, out);
+		}
+	}
+
+	*nout = BITS_TO_BYTES(n);
+}
+
+void rice_depress(const uint8_t *in, uint64_t nin, uint8_t *out,
+		  uint64_t *nout)
+{
+	uint8_t m;
+	uint8_t q;
+	uint64_t n;
+	int x;
+	uint8_t bit;
+	int16_t i;
+	uint64_t j;
+	uint8_t k;
+
+	j = 0;
+	k = (get_bit(0, in) << 2) |
+	    (get_bit(1, in) << 1) |
+	    get_bit(2, in);
+	n = 3;
+	m = 1 << k;
+
+	while (n / BITS_PER_BYTE < nin) {
+		q = 0;
+		while (n / BITS_PER_BYTE < nin && get_bit(n++, in)) {
+			q++;
+		}
+		if (n / BITS_PER_BYTE >= nin)
+			break;
+
+		x = m * q;
+
+		for (i = k - 1; i >= 0 && n <= nin * BITS_PER_BYTE; i--) {
+			bit = get_bit(n++, in);
+			if (bit)
+				bit = 1;
+			x = x | (bit << i);
+		}
+		if (n / BITS_PER_BYTE > nin)
+			break;
+
+		out[j++] = x;
+	}
+
+	*nout = j;
+}
+
+/*
+ * delta | zigzag | vbe21 | rice
+ * rice on the 1 byte data
+ */
+
+uint64_t rice_vbe21_zd_bound_16(uint32_t nin)
+{
+	return vb1e2_zd_bound_16(nin);
+}
+
+void rice_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			    uint64_t *nout)
+{
+	uint16_t *in_zd;
+	uint8_t *out_vb;
+	uint8_t *out_rice;
+	uint64_t nout_tmp;
+	uint64_t nout_tmp_vb;
+	uint32_t exlen;
+	uint8_t nex;
+	uint64_t offset;
+
+	in_zd = zigdelta_16_u16(in, nin);
+
+	(void) memcpy(out, in_zd, sizeof *in_zd);
+
+	nout_tmp_vb = *nout - sizeof *in_zd;
+	out_vb = malloc(nout_tmp_vb);
+	vbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
+	free(in_zd);
+
+	nex = out_vb[0];
+	offset = sizeof *in_zd;
+	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
+	(void) memcpy(out + offset, out_vb, exlen);
+	offset += exlen;
+
+	nout_tmp = rice_bound(nout_tmp_vb - exlen);
+	out_rice = malloc(nout_tmp);
+	rice_press(out_vb + exlen, nout_tmp_vb - exlen, out_rice, &nout_tmp);
+	(void) memcpy(out + offset, out_rice, nout_tmp);
+	free(out_rice);
+
+	*nout = nout_tmp + offset;
+	free(out_vb);
+}
+
+void rice_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			      uint32_t *nout)
+{
+	uint32_t exlen;
+	uint8_t nex;
+	uint64_t offset;
+	uint8_t *out_vb;
+	uint8_t *out_rice;
+	uint16_t *out_zd;
+	uint32_t nout_tmp;
+	uint64_t nout_tmp_vb;
+
+	nex = in[sizeof *out];
+	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
+	offset = sizeof *out;
+
+	out_vb = malloc(*nout * sizeof *out);
+	(void) memcpy(out_vb, in + offset, exlen);
+	offset += exlen;
+
+	nout_tmp_vb = *nout;
+	out_rice = malloc(nout_tmp_vb);
+	rice_depress(in + offset, nin - offset, out_rice, &nout_tmp_vb);
+	memcpy(out_vb + exlen, out_rice, nout_tmp_vb);
+	free(out_rice);
+	nout_tmp_vb += exlen;
+
+	nout_tmp = *nout - 1;
+	out_zd = malloc(*nout * sizeof *out_zd);
+	vbe21_depress(out_vb, nout_tmp_vb, out_zd + 1, &nout_tmp);
+	free(out_vb);
+
+	(void) memcpy(out_zd, in, sizeof *out_zd);
+
+	unzigdelta_u16_16(out_zd, nout_tmp + 1, out);
+	free(out_zd);
+	*nout = nout_tmp + 1;
 }
