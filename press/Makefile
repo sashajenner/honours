@@ -17,9 +17,9 @@ SLOW5INCLUDE = $(SLOW5)/include
 SLOW5LIB = $(SLOW5)/lib/libslow5.a
 HUFFMAN = huffman
 HUFFMANLIB = $(HUFFMAN)/huffman.c
-#RICE = rice
-#RICELIB = $(RICE)/librice.a
-LIB = $(SVBLIB) $(BZIP2LIB) $(FLZMA2LIB) $(FLACLIB) $(TURBOPFORLIB) $(SLOW5LIB) $(HUFFMANLIB)
+TURBORC = Turbo-Range-Coder
+TURBORCLIB = $(TURBORC)/librc.a
+LIB = $(SVBLIB) $(BZIP2LIB) $(FLZMA2LIB) $(FLACLIB) $(TURBOPFORLIB) $(SLOW5LIB) $(HUFFMANLIB) $(TURBORCLIB)
 
 .PHONY = clean $(LIB)
 
@@ -38,11 +38,11 @@ $(FLZMA2LIB):
 $(FLACLIB):
 	make -C $(FLAC)
 
-$(TURBOPFOR):
+$(TURBOPFORLIB):
 	make -c $(TURBOPFOR)
 
-$(RICELIB):
-	make -c $(RICE)
+$(TURBORCLIB):
+	make -c $(TURBORC)
 
 test.o: test.c test.h press.h bitmap.h
 	$(CC) $< $(CFLAGS) -I $(SLOW5INCLUDE) -c -o $@
