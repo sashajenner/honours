@@ -2,6 +2,8 @@
 # delta to zigzag delta
 USAGE = 'usage: ./diff_to_zd.R DELTA_DATA_FILE'
 
+library(ggplot2)
+
 args = commandArgs(TRUE)
 
 if (length(args) != 1) {
@@ -27,6 +29,16 @@ for (i in 1:nrow(df)) {
 
 df_zigzag_1byte = df_zigzag[1:256]
 
-for (i in 1:length(df_zigzag_1byte)) {
-	cat(i - 1, ': ', df_zigzag_1byte[i], '\n')
-}
+#for (i in 1:length(df_zigzag_1byte)) {
+#	cat(i - 1, ': ', df_zigzag_1byte[i], '\n')
+#}
+
+df_zigzag_actual = data.frame(signal = 1:length(df_zigzag),
+				freq = df_zigzag)
+ggplot(df_zigzag_actual, aes(x=signal, y=freq)) +
+	geom_col()
+
+df_zigzag_1byte_actual = data.frame(signal = 1:length(df_zigzag_1byte),
+				freq = df_zigzag_1byte)
+ggplot(df_zigzag_1byte_actual, aes(x=signal, y=freq)) +
+	geom_col()
