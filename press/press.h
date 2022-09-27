@@ -484,7 +484,8 @@ void rccdf_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
  * peak-picking flat approximation
  * hasindu basecalled data method (k-mer pore model)
  * golomb/elias-gamma on zigzag delta
- * don't need zigzag if using huffman
+ * don't need zigzag if using huffman (actually might need it for vbe21)
+ * wavelet compression http://bearcave.com/misl/misl_tech/wavelets/compression/index.html
  * http://neurocline.github.io/dev/2015/09/17/zig-zag-encoding.html: Note that it would be possible to store negative numbers with a smaller number of bytes with a little more sophistication, and not require zigzag encoding: you store the number of bytes required by the absolute magnitude of the number, and on reading, you pick up the MSB of the sequence of stored bytes and recreate the number. I suspect that zig-zag encoding is used because the amount of code for encoding and decoding is actually less when expressed in a high-level language, and perhaps faster even in assembly.
  */
 
