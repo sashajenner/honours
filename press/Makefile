@@ -39,10 +39,10 @@ $(FLACLIB):
 	make -C $(FLAC)
 
 $(TURBOPFORLIB):
-	make -c $(TURBOPFOR)
+	make -C $(TURBOPFOR)
 
 $(TURBORCLIB):
-	make -c $(TURBORC)
+	make -C $(TURBORC) librc.a
 
 test.o: test.c test.h press.h bitmap.h
 	$(CC) $< $(CFLAGS) -I $(SLOW5INCLUDE) -c -o $@

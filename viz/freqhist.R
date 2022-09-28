@@ -37,23 +37,23 @@ mean = 475.224468
 #	xlim(c(minmil, maxmil))
 ##dev.off()
 #
-#ggplot(df, aes(x=df[,1], y=df[,2])) +
-#	geom_histogram(stat="identity") +
-#	xlab('Raw Signal') +
-#	ylab('Frequency ($\\times 10^6$)') +
-#	ylim(c(0, 10^3))
-#
-#plot = ggplot(df, aes(x=df[,1], y=df[,2])) +
-#	geom_histogram(stat="identity") +
-#	xlab(xtitle) +
-#	labs(title = title)
-#ggsave(paste0(path, '.hist.pdf'), plot)
-#
-#plotly = plot_ly(x = df[,1], y=df[,2],
-#		 type = 'bar',
-#		 name = title) %>%
-#	layout(xaxis = list(title = xtitle))
-#saveWidget(plotly, paste0(path, '.hist.html'))
+ggplot(df, aes(x=df[,1], y=df[,2])) +
+	geom_histogram(stat="identity") +
+	xlab('Raw Signal') +
+	ylab('Frequency ($\\times 10^6$)') +
+	ylim(c(0, 10^3))
+
+plot = ggplot(df, aes(x=df[,1], y=df[,2])) +
+	geom_histogram(stat="identity") +
+	xlab(xtitle) +
+	labs(title = title)
+ggsave(paste0(path, '.hist.pdf'), plot)
+
+plotly = plot_ly(x = df[,1], y=df[,2],
+		 type = 'bar',
+		 name = title) %>%
+	layout(xaxis = list(title = xtitle))
+saveWidget(plotly, paste0(path, '.hist.html'))
 
 #huf_bits = 0
 #for (i in 1:nrow(df)) {
@@ -64,7 +64,7 @@ mean = 475.224468
 #}
 #print(huf_bits / 8)
 
-n = sum(df$freq)
-for (i in c(2^1,2^2,2^3,2^4,2^5,2^6,2^7,2^8)) {
-	cat(log2(i), sum(df$freq[1:i]) / n, '\n')
-}
+#n = sum(df$freq)
+#for (i in c(2^1,2^2,2^3,2^4,2^5,2^6,2^7,2^8)) {
+#	cat(log2(i), sum(df$freq[1:i]) / n, '\n')
+#}

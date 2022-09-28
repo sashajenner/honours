@@ -46,6 +46,14 @@ ggplot(data.frame(df[x,]), aes(x, df[x,1])) + #color=cut(x, c(1,14,789,831,3000)
 #ggsave(paste0(path, '.section.pdf'), plot)
 #dev.off()
 
+#print(df)
+#for (i in 1:nrow(df)) {
+#	cat(i, ',', df[i,1], '\n', sep='')
+#}
+#df_new = df - min(df)
+#print(df_new)
+#max(df_new)
+
 plot = ggplot(df, aes(1:nrow(df), df[,1])) +
 	geom_line() +
 	xlab(xtitle) +

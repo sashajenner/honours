@@ -160,6 +160,12 @@ void flac_depress_error_callback(const FLAC__StreamDecoder *decoder,
 				 FLAC__StreamDecoderErrorStatus status,
 				 void *client_data);
 
+/*
+#define SIZEOF_WAVE_OBJ
+#define SIZEOF_CONV_OBJ
+#define SIZEOF_WT_SET(nin) (SIZEOF_WAVE_OBJ + SIZEOF_CONV_OBJ + 112 * sizeof(int)
+*/
+
 /* none */
 
 int none_press(const uint8_t *in, uint64_t nin, uint8_t *out, uint64_t *nout)
@@ -3140,3 +3146,21 @@ void rccdf_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	free(out_zd);
 	*nout = nout_tmp + 1;
 }
+
+/* discrete wavelet transform */
+
+/*
+uint64_t dwt_bound_16(uint32_t nin)
+{
+	return SIZEOF_DWT(nin) + nin;
+}
+
+void dwt_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+		  uint64_t *nout)
+{
+}
+
+void dwt_depress_16(uint8_t *in, uint64_t nin, int16_t *out, uint32_t *nout)
+{
+}
+*/
