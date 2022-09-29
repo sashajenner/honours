@@ -424,6 +424,13 @@ void vbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		 uint64_t *nout);
 void vbe21_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout);
 
+/* variable byte 1 except 2 before bitpack */
+
+uint64_t vbbe21_bound(uint32_t nin);
+void vbbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
+		  uint64_t *nout);
+void vbbe21_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout);
+
 /* zigzag delta vb1e2 */
 
 uint64_t vb1e2_zd_bound_16(uint32_t nin);
@@ -448,6 +455,14 @@ int huffman_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 int huffman_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 				uint32_t *nout);
 
+/* zigzag delta vbbe21 huffman */
+
+uint64_t huffman_vbbe21_zd_bound_16(uint32_t nin);
+int huffman_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			       uint64_t *nout);
+int huffman_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+				 uint32_t *nout);
+
 /* zigzag delta vbe21 static huffman */
 
 uint64_t shuffman_vbe21_zd_bound_16(uint32_t nin);
@@ -455,6 +470,14 @@ int shuffman_vbe21_zd_press_16(SymbolEncoder *se, const int16_t *in,
 			       uint32_t nin, uint8_t *out, uint64_t *nout);
 int shuffman_vbe21_zd_depress_16(huffman_node *root, uint8_t *in, uint64_t nin,
 				 int16_t *out, uint32_t *nout);
+
+/* zigzag delta vbbe21 static huffman */
+
+uint64_t shuffman_vbbe21_zd_bound_16(uint32_t nin);
+int shuffman_vbbe21_zd_press_16(SymbolEncoder *se, const int16_t *in,
+				uint32_t nin, uint8_t *out, uint64_t *nout);
+int shuffman_vbbe21_zd_depress_16(huffman_node *root, uint8_t *in,
+				  uint64_t nin, int16_t *out, uint32_t *nout);
 
 /* rice coding */
 
@@ -471,6 +494,14 @@ void rice_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 void rice_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			      uint32_t *nout);
 
+/* zigzag delta vbbe21 rice coding */
+
+uint64_t rice_vbbe21_zd_bound_16(uint32_t nin);
+void rice_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			     uint64_t *nout);
+void rice_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			       uint32_t *nout);
+
 /* zigzag delta vbe21 range coding */
 
 uint64_t rc_vbe21_zd_bound_16(uint32_t nin);
@@ -479,6 +510,14 @@ void rc_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 void rc_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			    uint32_t *nout);
 
+/* zigzag delta vbbe21 range coding */
+
+uint64_t rc_vbbe21_zd_bound_16(uint32_t nin);
+void rc_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			   uint64_t *nout);
+void rc_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			     uint32_t *nout);
+
 /* zigzag delta vbe21 range coding cdf */
 
 uint64_t rccdf_vbe21_zd_bound_16(uint32_t nin);
@@ -486,6 +525,14 @@ void rccdf_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 			     uint64_t *nout);
 void rccdf_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			       uint32_t *nout);
+
+/* zigzag delta vbbe21 range coding cdf */
+
+uint64_t rccdf_vbbe21_zd_bound_16(uint32_t nin);
+void rccdf_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			      uint64_t *nout);
+void rccdf_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+				uint32_t *nout);
 
 /* discrete wavelet transform */
 
