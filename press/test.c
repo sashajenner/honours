@@ -2693,7 +2693,7 @@ int test_rc_vbe21_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	UPDATE_RES(res, pressbound_clocktime, GET_CLOCK_SECS(before, after));
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = calloc(pressbound, 1);
 	ASSERT(sigs_press);
 
 	/* compress sigs */
@@ -2757,7 +2757,7 @@ int test_rccdf_vbe21_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	UPDATE_RES(res, pressbound_clocktime, GET_CLOCK_SECS(before, after));
 
 	/* init sigs_press */
-	sigs_press = malloc(pressbound);
+	sigs_press = calloc(pressbound, 1);
 	ASSERT(sigs_press);
 
 	/* compress sigs */

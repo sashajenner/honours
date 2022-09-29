@@ -57,6 +57,18 @@ int uint_depress_16(const uint8_t *in, uint64_t nin, uint16_t *out,
 		    uint64_t *nout);
 
 /*
+ * store each uint32_t as uintx_t where x is decided after one pass
+ * compressed: [x, sigs as uintx_t]
+ */
+
+uint8_t uint_get_minbits_32(const uint32_t *in, uint64_t nin);
+uint64_t uint_bound_32(uint8_t out_bits, uint64_t nin);
+int uint_press_32(uint8_t out_bits, const uint32_t *in, uint64_t nin,
+		  uint8_t *out, uint64_t *nout);
+int uint_depress_32(const uint8_t *in, uint64_t nin, uint32_t *out,
+		    uint64_t *nout);
+
+/*
  * TODO store outliers separately
  * where to store?
  * - at the beginning: store indices of outliers before data
@@ -496,8 +508,9 @@ void dwt_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
  * golomb/elias-gamma on zigzag delta
  * don't need zigzag if using huffman (actually might need it for vbe21)
  * wavelet compression http://bearcave.com/misl/misl_tech/wavelets/compression/index.html
- * http://neurocline.github.io/dev/2015/09/17/zig-zag-encoding.html: Note that it would be possible to store negative numbers with a smaller number of bytes with a little more sophistication, and not require zigzag encoding: you store the number of bytes required by the absolute magnitude of the number, and on reading, you pick up the MSB of the sequence of stored bytes and recreate the number. I suspect that zig-zag encoding is used because the amount of code for encoding and decoding is actually less when expressed in a high-level language, and perhaps faster even in assembly.
+ * http://neurocline.github.io/dev/2015/09/17/zig-zag-encoding.html
  * linear predictive coding (LPC), waveform coding, subband coding
+ * turbo gorilla
  */
 
 #endif /* press.h */

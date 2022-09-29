@@ -21,6 +21,21 @@ uint16_t get_max_u16(const uint16_t *in, uint64_t nin)
 	return max;
 }
 
+uint32_t get_max_u32(const uint32_t *in, uint64_t nin)
+{
+	uint32_t max;
+	uint64_t i;
+
+	max = 0;
+
+	for (i = 0; i < nin; i++) {
+		if (in[i] > max)
+			max = in[i];
+	}
+
+	return max;
+}
+
 void get_minmax_u16(const uint16_t *in, uint64_t nin, uint16_t *min,
 		    uint16_t *max)
 {

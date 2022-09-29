@@ -93,6 +93,25 @@ int16_t *delta_16(const int16_t *in, uint64_t nin)
 	return out;
 }
 
+uint32_t *delta_increasing_u32(const uint32_t *in, uint64_t nin)
+{
+	uint32_t prev;
+	uint32_t *out;
+	uint64_t i;
+
+	out = malloc(nin * sizeof *out);
+
+	out[0] = in[0];
+	prev = in[0];
+
+	for (i = 1; i < nin; i++) {
+		out[i] = in[i] - prev - 1;
+		prev = in[i];
+	}
+
+	return out;
+}
+
 void undelta_inplace_16(int16_t *in, uint64_t nin)
 {
 	int16_t prev;
@@ -102,6 +121,19 @@ void undelta_inplace_16(int16_t *in, uint64_t nin)
 
 	for (i = 0; i < nin; i++) {
 		in[i] += prev;
+		prev = in[i];
+	}
+}
+
+void undelta_inplace_increasing_u32(uint32_t *in, uint64_t nin)
+{
+	uint32_t prev;
+	uint64_t i;
+
+	prev = in[0];
+
+	for (i = 1; i < nin; i++) {
+		in[i] += prev + 1;
 		prev = in[i];
 	}
 }
