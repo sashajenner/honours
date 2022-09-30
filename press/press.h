@@ -554,7 +554,7 @@ void dwt_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 
 /* jumps */
 
-uint64_t jump_bound_16(uint32_t nin);
+uint64_t jumps_bound_16(uint32_t nin);
 void jumps_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 		    uint64_t *nout);
 void jumps_depress_16(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout);

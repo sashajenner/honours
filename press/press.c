@@ -4073,6 +4073,7 @@ void rccdf_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
  * - strictly (in|de)creasing
  * - have at least one diff x_{i+1} - x_i > 25
  * [num jumps][num falls]
+ * TODO vbbe21 is not the right fit? too many exceptions
  * [[jump start indices][fall start indices] | diff - 1 | rc_vbbe21]
  * [[jump lengths      ][fall lengths      ] - 1 | rc]
  * [first sig]
@@ -4149,11 +4150,12 @@ void jumps_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 {
 	int16_t *in_d;
 	int8_t *flat_d;
-	int8_t *flat_d_press;
+	uint8_t *flat_d_press;
 	uint32_t nflat_d_press;
 	uint32_t nflat_d;
 	uint32_t iflat_d;
-	uint16_t *jf_d;
+	int16_t *jf_d;
+	uint8_t *jf_d_press;
 	uint32_t njf_d;
 	uint32_t njf_d_press;
 	uint32_t nj_d;
@@ -4166,14 +4168,12 @@ void jumps_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint16_t njf_len_press;
 	uint16_t nj;
 	uint16_t nf;
-	uint32_t *j_start_diff;
-	uint32_t *f_start_diff;
+	uint16_t *j_start_diff;
+	uint16_t *f_start_diff;
 	uint16_t *jf_start_diff;
 	uint8_t *jf_start_diff_press;
 	uint32_t njf_start_diff_press;
 	uint64_t press_len_tmp;
-	uint16_t first_j_start;
-	uint16_t first_f_start;
 	int16_t njf;
 	uint64_t offset;
 	uint64_t offset_tmp;
@@ -4296,12 +4296,13 @@ void jumps_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 			offset_tmp += to_copy;
 		}
 
-		times_x_inplace_16(-1, jf_d + nj_d, njf_d - nj_d);
-		shift_x_inplace_u16(-1, jf_d, njf_d);
+		times_x_inplace_16(-1, (int16_t *) jf_d + nj_d, njf_d - nj_d);
+		shift_x_inplace_16(-1, jf_d, njf_d);
 
 		press_len_tmp = rc_vbbe21_bound_16(njf_d);
 		jf_d_press = malloc(press_len_tmp);
-		rc_vbbe21_press_16(jf_d, njf_d, jf_d_press, &press_len_tmp);
+		rc_vbbe21_press_16((uint16_t *) jf_d, njf_d, jf_d_press,
+				   &press_len_tmp);
 		free(jf_d);
 
 		njf_d_press = press_len_tmp;
@@ -4337,7 +4338,7 @@ void jumps_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	/* I know...this is just a safe upper bound */
 	press_len_tmp = rice_bound(nflat_d);
 	flat_d_press = malloc(nflat_d);
-	press_len_tmp = rcmsenc(flat_d, nflat_d, flat_d_press);
+	press_len_tmp = rcmsenc((uint8_t *) flat_d, nflat_d, flat_d_press);
 	free(flat_d);
 
 	nflat_d_press = press_len_tmp;

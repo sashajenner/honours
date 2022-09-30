@@ -13,6 +13,7 @@ void zigzag_inplace_16(int16_t *in, uint64_t nin);
 void unzigzag_inplace_16(uint16_t *in, uint64_t nin);
 int16_t *delta_16(const int16_t *in, uint64_t nin);
 uint32_t *delta_increasing_u32(const uint32_t *in, uint64_t nin);
+uint16_t *delta_increasing_u32_u16(const uint32_t *in, uint64_t nin);
 void undelta_inplace_16(int16_t *in, uint64_t nin);
 void undelta_inplace_increasing_u32(uint32_t *in, uint64_t nin);
 uint16_t *zigdelta_16(const int16_t *in, uint64_t nin);
