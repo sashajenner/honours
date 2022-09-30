@@ -510,6 +510,14 @@ void rc_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 void rc_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			    uint32_t *nout);
 
+/* vbbe21 range coding */
+
+uint64_t rc_vbbe21_bound_16(uint32_t nin);
+void rc_vbbe21_press_16(const uint16_t *in, uint32_t nin, uint8_t *out,
+			uint64_t *nout);
+void rc_vbbe21_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
+			  uint32_t *nout);
+
 /* zigzag delta vbbe21 range coding */
 
 uint64_t rc_vbbe21_zd_bound_16(uint32_t nin);
@@ -544,6 +552,13 @@ void dwt_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			uint32_t *nout);
 			*/
 
+/* jumps */
+
+uint64_t jump_bound_16(uint32_t nin);
+void jumps_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+		    uint64_t *nout);
+void jumps_depress_16(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout);
+
 /* TODO
  * determine flats more coarsely
  * flat using other methods
@@ -558,6 +573,7 @@ void dwt_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
  * http://neurocline.github.io/dev/2015/09/17/zig-zag-encoding.html
  * linear predictive coding (LPC), waveform coding, subband coding
  * turbo gorilla
+ * encode the stall using submin | bitpack (pfor?), submean/submedian | zigzag
  */
 
 #endif /* press.h */

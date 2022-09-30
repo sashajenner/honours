@@ -168,6 +168,15 @@ void flac_depress_error_callback(const FLAC__StreamDecoder *decoder,
 #define SIZEOF_WT_SET(nin) (SIZEOF_WAVE_OBJ + SIZEOF_CONV_OBJ + 112 * sizeof(int)
 */
 
+#define MAX_JUMP_LEN (16)
+
+enum JUMP_TREND { NO_JUMP, JUMP_UP, JUMP_DOWN };
+
+static void find_jumps_16(const int16_t *in_d, uint32_t nin,
+			  uint32_t *jumps_start, uint32_t *falls_start,
+			  uint8_t *jumps_len, uint8_t *falls_len,
+			  uint16_t *njumps, uint16_t *nfalls);
+
 /* none */
 
 int none_press(const uint8_t *in, uint64_t nin, uint8_t *out, uint64_t *nout)
@@ -2470,6 +2479,8 @@ void vbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		if (in[i] > UINT8_MAX) {
 			ex_pos[nex] = i;
 			nex++;
+			if (nex == 0)
+				fprintf(stderr, "error: vb1e2 too many exceptions\n");
 		}
 	}
 
@@ -2573,6 +2584,8 @@ void vbbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 			ex_pos[nex] = i;
 			ex[nex] = in[i] - UINT8_MAX - 1;
 			nex++;
+			if (nex == 0)
+				fprintf(stderr, "error: vb1e2 too many exceptions\n");
 		}
 	}
 
@@ -3654,6 +3667,101 @@ void rc_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 }
 
 /*
+ * vbbe21 | range
+ * range on the 1 byte data
+ */
+
+uint64_t rc_vbbe21_bound_16(uint32_t nin)
+{
+	return vbe21_bound(nin);
+}
+
+void rc_vbbe21_press_16(const uint16_t *in, uint32_t nin, uint8_t *out,
+			uint64_t *nout)
+{
+	uint8_t *out_vb;
+	uint8_t *out_rc;
+	uint64_t nout_tmp;
+	uint64_t nout_tmp_vb;
+	uint16_t nex_pos_press;
+	uint16_t nex_press;
+	uint16_t exlen;
+	uint8_t nex;
+	uint64_t offset;
+
+	nout_tmp_vb = *nout;
+	out_vb = malloc(nout_tmp_vb);
+	vbbe21_press(in, nin, out_vb, &nout_tmp_vb);
+
+	nex = out_vb[0];
+	exlen = sizeof nex;
+	if (nex > 1) {
+		(void) memcpy(&nex_pos_press, out_vb + exlen, sizeof nex_pos_press);
+		exlen += sizeof nex_pos_press + nex_pos_press;
+		(void) memcpy(&nex_press, out_vb + exlen, sizeof nex_press);
+		exlen += sizeof nex_press + nex_press;
+	} else if (nex == 1) {
+		exlen += nex * (sizeof (uint32_t) + sizeof (uint16_t));
+	}
+	(void) memcpy(out, out_vb, exlen);
+	offset = exlen;
+
+	/* I know...this is just a safe upper bound */
+	nout_tmp = rice_bound(nout_tmp_vb - exlen);
+	out_rc = malloc(nout_tmp);
+	nout_tmp = rcmsenc(out_vb + exlen, nout_tmp_vb - exlen, out_rc);
+	(void) memcpy(out + offset, out_rc, nout_tmp);
+	free(out_rc);
+
+	*nout = nout_tmp + offset;
+	free(out_vb);
+}
+
+/* *nout must be the exact number of original elements */
+void rc_vbbe21_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
+			  uint32_t *nout)
+{
+	uint16_t nex_pos_press;
+	uint16_t nex_press;
+	uint16_t exlen;
+	uint8_t nex;
+	uint64_t offset;
+	uint8_t *out_vb;
+	uint8_t *out_rc;
+	uint32_t nout_tmp;
+	uint64_t nout_tmp_vb;
+
+	nex = in[sizeof *out];
+	exlen = sizeof nex;
+	if (nex > 1) {
+		(void) memcpy(&nex_pos_press, in + sizeof *out + exlen, sizeof nex_pos_press);
+		exlen += sizeof nex_pos_press + nex_pos_press;
+		(void) memcpy(&nex_press, in + sizeof *out + exlen, sizeof nex_press);
+		exlen += sizeof nex_press + nex_press;
+	} else if (nex == 1) {
+		exlen += nex * (sizeof (uint32_t) + sizeof (uint16_t));
+	}
+	offset = sizeof *out;
+
+	out_vb = malloc(*nout * sizeof *out);
+	(void) memcpy(out_vb, in + offset, exlen);
+	offset += exlen;
+
+	nout_tmp_vb = *nout - nex;
+	out_rc = malloc(nout_tmp_vb);
+	(void) rcmsdec(in + offset, *nout - nex, out_rc);
+	(void) memcpy(out_vb + exlen, out_rc, nout_tmp_vb);
+	free(out_rc);
+	nout_tmp_vb += exlen;
+
+	nout_tmp = *nout;
+	vbbe21_depress(out_vb, nout_tmp_vb, out, &nout_tmp);
+	free(out_vb);
+
+	*nout = nout_tmp;
+}
+
+/*
  * delta | zigzag | vbbe21 | range
  * range on the 1 byte data
  */
@@ -3957,20 +4065,299 @@ void rccdf_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	*nout = nout_tmp + 1;
 }
 
-/* discrete wavelet transform */
-
 /*
-uint64_t dwt_bound_16(uint32_t nin)
+ * jumps
+ * find jumps and falls in the signal
+ * defined by sequences length n which are
+ * - non-empty n >= 1
+ * - strictly (in|de)creasing
+ * - have at least one diff x_{i+1} - x_i > 25
+ * [num jumps][num falls]
+ * [[jump start indices][fall start indices] | diff - 1 | rc_vbbe21]
+ * [[jump lengths      ][fall lengths      ] - 1 | rc]
+ * [first sig]
+ * [[jump sigs         ][- fall sigs       ] | diff - 1 | rc_vbbe21]
+ * [flat sigs | diff | zigzag | rc]
+ */
+
+/* TODO do tighter upper bound */
+uint64_t jumps_bound_16(uint32_t nin)
 {
-	return SIZEOF_DWT(nin) + nin;
+	return sizeof (uint32_t) + sizeof (uint32_t) +
+		nin * sizeof (uint8_t) +
+		nin * sizeof (uint8_t) +
+		nin * sizeof (uint8_t);
 }
 
-void dwt_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
-		  uint64_t *nout)
+static void find_jumps_16(const int16_t *in_d, uint32_t nin,
+			  uint32_t *jumps_start, uint32_t *falls_start,
+			  uint8_t *jumps_len, uint8_t *falls_len,
+			  uint16_t *njumps, uint16_t *nfalls)
 {
+	uint32_t i;
+	uint32_t start;
+	int in_jump;
+	enum JUMP_TREND trend;
+	uint16_t njumps_tmp;
+	uint16_t nfalls_tmp;
+
+	start = 0;
+	in_jump = 0;
+	trend = NO_JUMP;
+	njumps_tmp = 0;
+	nfalls_tmp = 0;
+	for (i = 0; i < nin; i++) {
+		if (in_jump) {
+			if (in_d[i] <= 0 && trend == JUMP_UP) {
+				jumps_start[njumps_tmp] = start;
+				jumps_len[njumps_tmp] = i - start;
+				njumps_tmp++;
+
+				in_jump = 0;
+				trend = NO_JUMP;
+			} else if (in_d[i] >= 0 && trend == JUMP_DOWN) {
+				falls_start[nfalls_tmp] = start;
+				falls_len[nfalls_tmp] = i - start;
+				nfalls_tmp++;
+
+				in_jump = 0;
+				trend = NO_JUMP;
+			}
+		}
+
+		if (!in_d[i]) {
+			trend = NO_JUMP;
+			in_jump = 0;
+		} else if (in_d[i] > 0 && trend != JUMP_UP) {
+			trend = JUMP_UP;
+			start = i;
+		} else if (in_d[i] < 0 && trend != JUMP_DOWN) {
+			trend = JUMP_DOWN;
+			start = i;
+		}
+
+		if (abs(in_d[i]) > 25)
+			in_jump = 1;
+	}
+
+	*njumps = njumps_tmp;
+	*nfalls = nfalls_tmp;
 }
 
-void dwt_depress_16(uint8_t *in, uint64_t nin, int16_t *out, uint32_t *nout)
+void jumps_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+		    uint64_t *nout)
+{
+	int16_t *in_d;
+	int8_t *flat_d;
+	int8_t *flat_d_press;
+	uint32_t nflat_d_press;
+	uint32_t nflat_d;
+	uint32_t iflat_d;
+	uint16_t *jf_d;
+	uint32_t njf_d;
+	uint32_t njf_d_press;
+	uint32_t nj_d;
+	uint32_t *j_start;
+	uint32_t *f_start;
+	uint8_t *j_len;
+	uint8_t *f_len;
+	uint8_t *jf_len;
+	uint8_t *jf_len_press;
+	uint16_t njf_len_press;
+	uint16_t nj;
+	uint16_t nf;
+	uint32_t *j_start_diff;
+	uint32_t *f_start_diff;
+	uint16_t *jf_start_diff;
+	uint8_t *jf_start_diff_press;
+	uint32_t njf_start_diff_press;
+	uint64_t press_len_tmp;
+	uint16_t first_j_start;
+	uint16_t first_f_start;
+	int16_t njf;
+	uint64_t offset;
+	uint64_t offset_tmp;
+	uint64_t to_copy;
+	uint32_t i;
+	uint32_t j;
+	uint32_t f;
+
+	in_d = delta_16(in, nin);
+
+	j_start = malloc((nin - 1) * sizeof *j_start);
+	f_start = malloc((nin - 1) * sizeof *f_start);
+	j_len = malloc((nin - 1) * sizeof *j_len);
+	f_len = malloc((nin - 1) * sizeof *f_len);
+	find_jumps_16(in_d + 1, nin - 1, j_start, f_start, j_len, f_len, &nj, &nf);
+
+	(void) memcpy(out, &nj, sizeof nj);
+	offset = sizeof nj;
+	(void) memcpy(out + offset, &nf, sizeof nf);
+	offset += sizeof nf;
+
+	/* start indices */
+
+	j_start_diff = delta_increasing_u32_u16(j_start, nj);
+	f_start_diff = delta_increasing_u32_u16(f_start, nf);
+	if (nj > 0) {
+		(void) memcpy(out + offset, j_start_diff, sizeof *j_start_diff);
+		offset += sizeof *j_start_diff;
+	}
+	if (nf > 0) {
+		(void) memcpy(out + offset, f_start_diff, sizeof *f_start_diff);
+		offset += sizeof *f_start_diff;
+	}
+	njf = nj + nf - 2;
+	if (njf > 0) {
+		jf_start_diff = malloc(njf * sizeof *jf_start_diff);
+
+		to_copy = (nj - 1) * sizeof *j_start_diff;
+		(void) memcpy(jf_start_diff, j_start_diff + 1, to_copy);
+		free(j_start_diff);
+		offset_tmp = to_copy;
+
+		to_copy = (nf - 1) * sizeof *f_start_diff;
+		(void) memcpy(jf_start_diff + offset_tmp, f_start_diff + 1,
+			      to_copy);
+		free(f_start_diff);
+
+		press_len_tmp = rc_vbbe21_bound_16(njf);
+		jf_start_diff_press = malloc(press_len_tmp);
+		rc_vbbe21_press_16(jf_start_diff, njf, jf_start_diff_press,
+				   &press_len_tmp);
+		free(jf_start_diff);
+
+		njf_start_diff_press = press_len_tmp;
+		(void) memcpy(out + offset, &njf_start_diff_press,
+			      sizeof njf_start_diff_press);
+		offset += sizeof njf_start_diff_press;
+
+		(void) memcpy(out + offset, jf_start_diff_press,
+			      njf_start_diff_press);
+		offset += njf_start_diff_press;
+		free(jf_start_diff_press);
+	}
+
+	/* lengths */
+
+	njf = nj + nf;
+	if (njf > 0) {
+		jf_len = malloc(njf * sizeof *jf_len);
+
+		to_copy = nj * sizeof *j_len;
+		(void) memcpy(jf_len, j_len, to_copy);
+		offset_tmp = to_copy;
+
+		to_copy = nf * sizeof *f_len;
+		(void) memcpy(jf_len + offset_tmp, f_len, to_copy);
+
+		shift_x_inplace_u8(-1, jf_len, njf);
+
+		/* I know...this is just a safe upper bound */
+		press_len_tmp = rice_bound(njf);
+		jf_len_press = malloc(press_len_tmp);
+		press_len_tmp = rcmsenc(jf_len, njf, jf_len_press);
+		free(jf_len);
+
+		njf_len_press = press_len_tmp;
+		(void) memcpy(out + offset, &njf_len_press,
+			      sizeof njf_len_press);
+		offset += sizeof njf_len_press;
+
+		(void) memcpy(out + offset, jf_len_press, njf_len_press);
+		offset += njf_len_press;
+		free(jf_len_press);
+	}
+
+	/* first sig */
+
+	(void) memcpy(out + offset, in_d, sizeof *in_d);
+	offset += sizeof *in_d;
+
+	/* jump sigs */
+
+	if (njf > 0) {
+		jf_d = malloc(MAX(nin - 1, njf * MAX_JUMP_LEN));
+
+		offset_tmp = 0;
+		for (i = 0; i < nj; i++) {
+			to_copy = j_len[i] * sizeof in_d;
+			njf_d += j_len[i];
+			(void) memcpy(jf_d + offset_tmp, in_d + j_start[i],
+				      to_copy);
+			offset_tmp += to_copy;
+		}
+		nj_d = njf_d;
+		for (i = 0; i < nf; i++) {
+			to_copy = f_len[i] * sizeof in_d;
+			njf_d += f_len[i];
+			(void) memcpy(jf_d + offset_tmp, in_d + f_start[i],
+				      to_copy);
+			offset_tmp += to_copy;
+		}
+
+		times_x_inplace_16(-1, jf_d + nj_d, njf_d - nj_d);
+		shift_x_inplace_u16(-1, jf_d, njf_d);
+
+		press_len_tmp = rc_vbbe21_bound_16(njf_d);
+		jf_d_press = malloc(press_len_tmp);
+		rc_vbbe21_press_16(jf_d, njf_d, jf_d_press, &press_len_tmp);
+		free(jf_d);
+
+		njf_d_press = press_len_tmp;
+		(void) memcpy(out + offset, &njf_d_press, sizeof njf_d_press);
+		offset += sizeof njf_d_press;
+
+		(void) memcpy(out + offset, jf_d_press, njf_d_press);
+		offset += njf_d_press;
+		free(jf_d_press);
+	}
+
+	/* flat sigs */
+
+	nflat_d = nin - 1 - njf_d;
+	flat_d = malloc(nflat_d * sizeof *flat_d);
+	iflat_d = 0;
+	j = 0;
+	f = 0;
+	for (i = 0; i < nin; i++) {
+		if (j < nj && i == j_start[j]) {
+			i += j_len[j] - 1;
+			j++;
+		} else if (f < nf && i == f_start[f]) {
+			i += f_len[f] - 1;
+			f++;
+		} else {
+			flat_d[iflat_d++] = in_d[i];
+		}
+	}
+
+	zigzag_inplace_8(flat_d, nflat_d);
+
+	/* I know...this is just a safe upper bound */
+	press_len_tmp = rice_bound(nflat_d);
+	flat_d_press = malloc(nflat_d);
+	press_len_tmp = rcmsenc(flat_d, nflat_d, flat_d_press);
+	free(flat_d);
+
+	nflat_d_press = press_len_tmp;
+	(void) memcpy(out + offset, &nflat_d_press,
+		      sizeof nflat_d_press);
+	offset += sizeof nflat_d_press;
+
+	(void) memcpy(out + offset, flat_d_press, nflat_d_press);
+	offset += nflat_d_press;
+	free(flat_d_press);
+
+	free(in_d);
+	free(j_start);
+	free(f_start);
+	free(j_len);
+	free(f_len);
+
+	*nout = offset;
+}
+
+void jumps_depress_16(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout)
 {
 }
-*/
