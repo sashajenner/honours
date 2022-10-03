@@ -5,6 +5,8 @@
 
 uint16_t *shift_x_u16(int16_t x, const uint16_t *in, uint64_t nin);
 int16_t *shift_x_16(int16_t x, const int16_t *in, uint64_t nin);
+void shift_x_u16_u16(int16_t x, const uint16_t *in, uint64_t nin,
+		     uint16_t *out);
 void shift_x_inplace_u16(int16_t x, uint16_t *in, uint64_t nin);
 void shift_x_inplace_16(int16_t x, int16_t *in, uint64_t nin);
 void shift_x_inplace_u8(int8_t x, uint8_t *in, uint64_t nin);

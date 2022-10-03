@@ -550,6 +550,25 @@ void rccdf_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 void rccdf_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 				uint32_t *nout);
 
+/* stall zigzag delta vbbe21 range coding */
+
+uint64_t rc_svbbe21_zd_bound_16(uint32_t nin);
+void rc_svbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			    uint64_t *nout);
+void rc_svbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			      uint32_t *nout);
+
+/*
+ * subtract min from all sigs
+ * apply vbbe21 range coding
+ * compressed: [min, sigs - min as vbbe21_rc]
+ */
+uint64_t rc_vbbe21_submin_bound_16(uint64_t nin);
+void rc_vbbe21_submin_press_16(const uint16_t *in, uint64_t nin, uint8_t *out,
+			       uint64_t *nout);
+void rc_vbbe21_submin_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
+				 uint64_t *nout);
+
 /* discrete wavelet transform */
 
 /*

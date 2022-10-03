@@ -39,6 +39,16 @@ void shift_x_inplace_u16(int16_t x, uint16_t *in, uint64_t nin)
 	}
 }
 
+void shift_x_u16_u16(int16_t x, const uint16_t *in, uint64_t nin,
+		     uint16_t *out)
+{
+	uint64_t i;
+
+	for (i = 0; i < nin; i++) {
+		out[i] = in[i] + x;
+	}
+}
+
 void shift_x_inplace_16(int16_t x, int16_t *in, uint64_t nin)
 {
 	uint64_t i;

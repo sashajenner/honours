@@ -6,6 +6,21 @@
 
 #define UINT32_MAX_LENGTH (10)
 
+uint16_t get_min_u16(const uint16_t *in, uint64_t nin)
+{
+	uint16_t min;
+	uint64_t i;
+
+	min = UINT16_MAX;
+
+	for (i = 0; i < nin; i++) {
+		if (in[i] < min)
+			min = in[i];
+	}
+
+	return min;
+}
+
 uint16_t get_max_u16(const uint16_t *in, uint64_t nin)
 {
 	uint16_t max;

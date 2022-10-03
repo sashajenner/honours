@@ -2,6 +2,7 @@ CC = cc
 CFLAGS = -g -Wall -Werror
 LDFLAGS = -lm -lz -lzstd -lpthread
 OBJ = test.o press.o trans.o flat.o bitmap.o stats.o util.o
+JNNLIB = $(JNN)/jnn.o
 SVB = streamvbyte
 SVBLIB = $(SVB)/libstreamvbyte.so.0.0.1
 BZIP2 = bzip2
@@ -19,7 +20,9 @@ HUFFMAN = huffman
 HUFFMANLIB = $(HUFFMAN)/huffman.c
 TURBORC = Turbo-Range-Coder
 TURBORCLIB = $(TURBORC)/librc.a
-LIB = $(SVBLIB) $(BZIP2LIB) $(FLZMA2LIB) $(FLACLIB) $(TURBOPFORLIB) $(SLOW5LIB) $(HUFFMANLIB) $(TURBORCLIB)
+SIGTK = sigtk
+SIGTKLIB = $(SIGTK)/build/jnn.o $(SIGTK)/build/sigtk.o
+LIB = $(SVBLIB) $(BZIP2LIB) $(FLZMA2LIB) $(FLACLIB) $(TURBOPFORLIB) $(SLOW5LIB) $(HUFFMANLIB) $(TURBORCLIB) $(SIGTKLIB)
 
 .PHONY = clean $(LIB)
 
@@ -44,11 +47,14 @@ $(TURBOPFORLIB):
 $(TURBORCLIB):
 	make -C $(TURBORC) librc.a
 
+$(SIGTKLIB):
+	make -C $(SIGTK)
+
 test.o: test.c test.h press.h bitmap.h
 	$(CC) $< $(CFLAGS) -I $(SLOW5INCLUDE) -c -o $@
 
 press.o: press.c press.h bitmap.h stats.h trans.h util.h flat.h
-	$(CC) $< $(CFLAGS) -c -o $@
+	$(CC) $< $(CFLAGS) -I $(SLOW5INCLUDE) -c -o $@
 
 trans.o: trans.c trans.h
 	$(CC) $< $(CFLAGS) -c -o $@

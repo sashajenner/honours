@@ -22,6 +22,7 @@
 #include "TurboPFor-Integer-Compression/bitpack.h"
 #include "huffman/huffman.h"
 #include "Turbo-Range-Coder/turborc.h"
+#include "sigtk/src/jnn.h"
 
 uint64_t uintx_bound(uint8_t in_bits, uint8_t out_bits, uint64_t nin);
 void uintx_htobe(uint8_t in_bits, const uint8_t *h, uint8_t *be, uint64_t n);
@@ -4115,6 +4116,281 @@ void rccdf_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	unzigdelta_u16_16(out_zd, nout_tmp + 1, out);
 	free(out_zd);
 	*nout = nout_tmp + 1;
+}
+
+/*
+ * stall zigzag delta vbbe21 range coding
+ * TODO can do len_stall - 1 and bitpack
+ * [start_stall][len_stall][stall | submin | vbbe21 | rc]
+ * [non-stall | delta | zigzag | vbbe21 | rc]
+ */
+
+uint64_t rc_svbbe21_zd_bound_16(uint32_t nin)
+{
+	return rc_vbbe21_zd_bound_16(nin);
+}
+
+int find_stall(const int16_t *in, uint32_t nin, uint16_t *stall_start,
+	       uint16_t *stall_len)
+{
+	int nsegs;
+	jnn_pair_t *segs;
+
+	jnn_param_t param = JNNV1_CDNA_PARAM;
+	segs = jnn_raw(in, nin, param, &nsegs);
+
+	if (!nsegs)
+		return 0;
+
+	*stall_start = segs[0].x;
+	*stall_len = segs[0].y - segs[0].x + 1;
+
+	free(segs);
+
+	return 1;
+}
+
+void rc_svbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			    uint64_t *nout)
+{
+	uint16_t stall_start;
+	uint16_t stall_len;
+	uint8_t exists_stall;
+	uint64_t offset;
+	uint16_t *in_stall;
+	int16_t *in_nonstall;
+	uint16_t nin_stall_press;
+	uint64_t nin_stall_press_tmp;
+	uint32_t nin_nonstall_press;
+	uint64_t nin_nonstall_press_tmp;
+
+	exists_stall = find_stall(in, nin, &stall_start, &stall_len);
+	if (stall_len < 1000) {
+		exists_stall = 0;
+		stall_len = 0;
+		stall_start = 0;
+	}
+
+	(void) memcpy(out, &exists_stall, sizeof exists_stall);
+	offset = sizeof exists_stall;
+	if (exists_stall) {
+		stall_start += 20;
+		stall_len -= 40;
+
+		(void) memcpy(out + offset, &stall_start, sizeof stall_start);
+		offset += sizeof stall_start;
+		(void) memcpy(out + offset, &stall_len, sizeof stall_len);
+		offset += sizeof stall_len;
+
+		in_stall = malloc(stall_len * sizeof *in_stall);
+		(void) memcpy(in_stall, in + stall_start,
+			      stall_len * sizeof *in_stall);
+
+		offset += sizeof nin_stall_press;
+		nin_stall_press_tmp = *nout - offset;
+		rc_vbbe21_submin_press_16(in_stall, stall_len, out + offset,
+					  &nin_stall_press_tmp);
+		free(in_stall);
+		nin_stall_press = nin_stall_press_tmp;
+
+		offset -= sizeof nin_stall_press;
+		(void) memcpy(out + offset, &nin_stall_press,
+			      sizeof nin_stall_press);
+		offset += sizeof nin_stall_press + nin_stall_press;
+	}
+
+	in_nonstall = malloc((nin - stall_len) * sizeof *in_nonstall);
+	(void) memcpy(in_nonstall, in, stall_start * sizeof *in);
+	(void) memcpy(in_nonstall + stall_start, in + stall_start + stall_len,
+		      (nin - stall_len - stall_start) * sizeof *in);
+
+	offset += sizeof nin_nonstall_press;
+	nin_nonstall_press_tmp = *nout - offset;
+	rc_vbbe21_zd_press_16(in_nonstall, nin - stall_len, out + offset,
+			      &nin_nonstall_press_tmp);
+	free(in_nonstall);
+	nin_nonstall_press = nin_nonstall_press_tmp;
+
+	offset -= sizeof nin_nonstall_press;
+	(void) memcpy(out + offset, &nin_nonstall_press,
+		      sizeof nin_nonstall_press);
+	offset += sizeof nin_nonstall_press + nin_nonstall_press;
+
+	*nout = offset;
+}
+
+void rc_svbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			      uint32_t *nout)
+{
+	uint8_t exists_stall;
+	uint64_t offset;
+	uint16_t stall_start;
+	uint16_t stall_len;
+	uint8_t *stall_press;
+	uint8_t *nonstall_press;
+	uint16_t nin_stall_press;
+	uint32_t nin_nonstall_press;
+	uint16_t *stall;
+	int16_t *nonstall;
+	uint64_t nstall;
+	uint32_t nnonstall;
+
+	(void) memcpy(&exists_stall, in, sizeof exists_stall);
+	offset = sizeof exists_stall;
+
+	stall_start = 0;
+	stall_len = 0;
+	if (exists_stall) {
+		(void) memcpy(&stall_start, in + offset, sizeof stall_start);
+		offset += sizeof stall_start;
+		(void) memcpy(&stall_len, in + offset, sizeof stall_len);
+		offset += sizeof stall_len;
+
+		(void) memcpy(&nin_stall_press, in + offset,
+			      sizeof nin_stall_press);
+		offset += sizeof nin_stall_press;
+
+		stall_press = malloc(nin_stall_press);
+		(void) memcpy(stall_press, in + offset, nin_stall_press);
+		offset += nin_stall_press;
+
+		nstall = stall_len;
+		stall = malloc(nstall * sizeof *stall);
+		rc_vbbe21_submin_depress_16(stall_press, nin_stall_press,
+					    stall, &nstall);
+		free(stall_press);
+
+		(void) memcpy(out + stall_start, stall,
+			      stall_len * sizeof *stall);
+		free(stall);
+	}
+
+	(void) memcpy(&nin_nonstall_press, in + offset,
+		      sizeof nin_nonstall_press);
+	offset += sizeof nin_nonstall_press;
+
+	nonstall_press = calloc(nin_nonstall_press + 4, 1);
+	(void) memcpy(nonstall_press, in + offset, nin_nonstall_press);
+	offset += nin_nonstall_press;
+
+	nnonstall = nin - stall_len;
+	nonstall = calloc(nnonstall, sizeof nonstall);
+	rc_vbbe21_zd_depress_16(nonstall_press, nin_nonstall_press, nonstall,
+				&nnonstall);
+	free(nonstall_press);
+
+	(void) memcpy(out, nonstall, stall_start * sizeof *nonstall);
+	(void) memcpy(out + stall_start + stall_len, nonstall + stall_len,
+		      (nin - stall_len) * sizeof *nonstall);
+	free(nonstall);
+	*nout = nin;
+}
+
+/*
+ * subtract min from all sigs
+ * apply range coding
+ * compressed: [min, sigs - min as rc]
+ */
+uint64_t rc_vbbe21_submin_bound_16(uint64_t nin)
+{
+	return sizeof (uint16_t) + rc_vbbe21_bound_16(nin);
+}
+
+void rc_vbbe21_submin_press_16(const uint16_t *in, uint64_t nin, uint8_t *out,
+			       uint64_t *nout)
+{
+	uint16_t min;
+	uint16_t *in_submin;
+	uint8_t *in_vb;
+	uint64_t nout_tmp;
+	uint8_t nex;
+	uint64_t offset;
+	uint32_t exlen;
+	uint16_t nex_pos_press;
+	uint16_t nex_press;
+
+	min = get_min_u16(in, nin);
+	in_submin = shift_x_u16(-1 * min, in, nin);
+
+	(void) memcpy(out, &min, sizeof min);
+
+	nout_tmp = *nout - sizeof min;
+	nout_tmp = vbbe21_bound(nout_tmp);
+	in_vb = malloc(nout_tmp);
+	vbbe21_press(in_submin, nin, in_vb, &nout_tmp);
+	free(in_submin);
+
+	nex = in_vb[0];
+	offset = sizeof min;
+	exlen = sizeof nex;
+	if (nex > 1) {
+		(void) memcpy(&nex_pos_press, in_vb + exlen, sizeof nex_pos_press);
+		exlen += sizeof nex_pos_press + nex_pos_press;
+		(void) memcpy(&nex_press, in_vb + exlen, sizeof nex_press);
+		exlen += sizeof nex_press + nex_press;
+	} else if (nex == 1) {
+		exlen += nex * (sizeof (uint32_t) + sizeof (uint16_t));
+	}
+	(void) memcpy(out + offset, in_vb, exlen);
+	offset += exlen;
+
+	nout_tmp -= exlen;
+	nout_tmp = rcmsenc(in_vb, nout_tmp, out + offset);
+
+	free(in_vb);
+	*nout = nout_tmp + offset;
+}
+
+void rc_vbbe21_submin_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
+				 uint64_t *nout)
+{
+	uint16_t nex_pos_press;
+	uint16_t nex_press;
+	uint16_t exlen;
+	uint8_t nex;
+	uint64_t offset;
+	uint8_t *out_vb;
+	uint8_t *out_rc;
+	uint16_t *out_sm;
+	uint32_t nout_tmp;
+	uint64_t nout_tmp_vb;
+	uint16_t min;
+
+	nex = in[sizeof min];
+	exlen = sizeof nex;
+	if (nex > 1) {
+		(void) memcpy(&nex_pos_press, in + sizeof min + exlen, sizeof nex_pos_press);
+		exlen += sizeof nex_pos_press + nex_pos_press;
+		(void) memcpy(&nex_press, in + sizeof min + exlen, sizeof nex_press);
+		exlen += sizeof nex_press + nex_press;
+	} else if (nex == 1) {
+		exlen += nex * (sizeof (uint32_t) + sizeof (uint16_t));
+	}
+	offset = sizeof min;
+
+	out_vb = malloc(*nout * sizeof *out);
+	(void) memcpy(out_vb, in + offset, exlen);
+	offset += exlen;
+
+	nout_tmp_vb = *nout - nex;
+	out_rc = malloc(nout_tmp_vb);
+	(void) rcmsdec(in + offset, *nout - nex, out_rc);
+	(void) memcpy(out_vb + exlen, out_rc, nout_tmp_vb);
+	free(out_rc);
+	nout_tmp_vb += exlen;
+
+	nout_tmp = *nout;
+	out_sm = malloc(*nout * sizeof *out_sm);
+	vbbe21_depress(out_vb, nout_tmp_vb, out_sm, &nout_tmp);
+
+	free(out_vb);
+
+	(void) memcpy(&min, in, sizeof min);
+
+	shift_x_u16_u16(min, out_sm, nin, out);
+	free(out_sm);
+
+	*nout = nout_tmp;
 }
 
 /*
