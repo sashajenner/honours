@@ -375,6 +375,14 @@ int zstd_svb0124_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 int zstd_svb0124_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
 			       uint32_t *nout);
 
+/* svb(16) 1,2 bytes zstd */
+
+uint64_t zstd_svb12_bound(uint32_t nin);
+int zstd_svb12_press(const uint16_t *in, uint32_t nin, uint8_t *out,
+		     uint64_t *nout);
+int zstd_svb12_depress(const uint8_t *in, uint64_t nin, uint16_t *out,
+		       uint32_t *nout);
+
 /* zigzag delta svb(16) 1,2 bytes zstd */
 
 uint64_t zstd_svb12_zd_bound(uint32_t nin);

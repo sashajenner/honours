@@ -1921,6 +1921,58 @@ int zstd_svb0124_zd_depress_16(const uint8_t *in, uint64_t nin, int16_t *out,
 	return ret;
 }
 
+/* svb(16) 1,2 bytes zstd */
+
+uint64_t zstd_svb12_bound(uint32_t nin)
+{
+	return zstd_bound(sizeof nin + svb12_zd_bound(nin));
+}
+
+int zstd_svb12_press(const uint16_t *in, uint32_t nin, uint8_t *out,
+		     uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_svb;
+	uint8_t *out_svb;
+
+	nout_svb = sizeof nin + svb12_zd_bound(nin);
+	out_svb = malloc(nout_svb);
+
+	/* encode nin before svb data */
+	(void) memcpy(out_svb, &nin, sizeof nin);
+	nout_svb -= sizeof nin;
+	svb12_press(in, nin, out_svb + sizeof nin, &nout_svb);
+	nout_svb += sizeof nin;
+
+	ret = zstd_press(out_svb, nout_svb, out, nout);
+
+	free(out_svb);
+	return ret;
+}
+
+int zstd_svb12_depress(const uint8_t *in, uint64_t nin, uint16_t *out,
+		       uint32_t *nout)
+{
+	int ret;
+	uint32_t nout_signals;
+	uint64_t nout_zstd;
+	uint8_t *out_zstd;
+
+	nout_zstd = zstd_bound(*nout * sizeof *out);
+	out_zstd = malloc(nout_zstd);
+
+	ret = zstd_depress(in, nin, out_zstd, &nout_zstd);
+	if (ret == 0) {
+		(void) memcpy(&nout_signals, out_zstd, sizeof nout_signals);
+		svb12_depress(out_zstd + sizeof nout_signals, nout_signals,
+			      out);
+		*nout = nout_signals;
+	}
+
+	free(out_zstd);
+	return ret;
+}
+
 /* delta | zigzag | svb12 | zstd */
 
 uint64_t zstd_svb12_zd_bound(uint32_t nin)
@@ -2480,7 +2532,7 @@ void vbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 			ex_pos[nex] = i;
 			nex++;
 			if (nex == 0)
-				fprintf(stderr, "error: vb1e2 too many exceptions\n");
+				fprintf(stderr, "error: vbe21 too many exceptions\n");
 		}
 	}
 
@@ -2585,7 +2637,7 @@ void vbbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 			ex[nex] = in[i] - UINT8_MAX - 1;
 			nex++;
 			if (nex == 0)
-				fprintf(stderr, "error: vb1e2 too many exceptions\n");
+				fprintf(stderr, "error: vbbe21 too many exceptions\n");
 		}
 	}
 
@@ -4073,8 +4125,7 @@ void rccdf_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
  * - strictly (in|de)creasing
  * - have at least one diff x_{i+1} - x_i > 25
  * [num jumps][num falls]
- * TODO vbbe21 is not the right fit? too many exceptions
- * [[jump start indices][fall start indices] | diff - 1 | rc_vbbe21]
+ * [[jump start indices][fall start indices] | diff - 1 | zstd_svb12]
  * [[jump lengths      ][fall lengths      ] - 1 | rc]
  * [first sig]
  * [[jump sigs         ][- fall sigs       ] | diff - 1 | rc_vbbe21]
@@ -4217,14 +4268,15 @@ void jumps_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 		offset_tmp = to_copy;
 
 		to_copy = (nf - 1) * sizeof *f_start_diff;
-		(void) memcpy(jf_start_diff + offset_tmp, f_start_diff + 1,
-			      to_copy);
+		(void) memcpy(jf_start_diff + offset_tmp / sizeof *jf_start_diff,
+			      f_start_diff + 1, to_copy);
 		free(f_start_diff);
 
-		press_len_tmp = rc_vbbe21_bound_16(njf);
+		press_len_tmp = zstd_svb12_bound(njf);
 		jf_start_diff_press = malloc(press_len_tmp);
-		rc_vbbe21_press_16(jf_start_diff, njf, jf_start_diff_press,
-				   &press_len_tmp);
+		/* TODO don't encode njf before svb data */
+		(void) zstd_svb12_press(jf_start_diff, njf,
+					jf_start_diff_press, &press_len_tmp);
 		free(jf_start_diff);
 
 		njf_start_diff_press = press_len_tmp;
@@ -4249,7 +4301,8 @@ void jumps_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 		offset_tmp = to_copy;
 
 		to_copy = nf * sizeof *f_len;
-		(void) memcpy(jf_len + offset_tmp, f_len, to_copy);
+		(void) memcpy(jf_len + offset_tmp / sizeof *jf_len, f_len,
+			      to_copy);
 
 		shift_x_inplace_u8(-1, jf_len, njf);
 
@@ -4276,23 +4329,24 @@ void jumps_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 
 	/* jump sigs */
 
+	njf_d = 0;
 	if (njf > 0) {
 		jf_d = malloc(MAX(nin - 1, njf * MAX_JUMP_LEN));
 
 		offset_tmp = 0;
 		for (i = 0; i < nj; i++) {
-			to_copy = j_len[i] * sizeof in_d;
+			to_copy = j_len[i] * sizeof *in_d;
 			njf_d += j_len[i];
-			(void) memcpy(jf_d + offset_tmp, in_d + j_start[i],
-				      to_copy);
+			(void) memcpy(jf_d + offset_tmp / sizeof *jf_d,
+				      in_d + 1 + j_start[i], to_copy);
 			offset_tmp += to_copy;
 		}
 		nj_d = njf_d;
 		for (i = 0; i < nf; i++) {
-			to_copy = f_len[i] * sizeof in_d;
+			to_copy = f_len[i] * sizeof *in_d;
 			njf_d += f_len[i];
-			(void) memcpy(jf_d + offset_tmp, in_d + f_start[i],
-				      to_copy);
+			(void) memcpy(jf_d + offset_tmp / sizeof *jf_d,
+				      in_d + 1 + f_start[i], to_copy);
 			offset_tmp += to_copy;
 		}
 
@@ -4321,15 +4375,16 @@ void jumps_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	iflat_d = 0;
 	j = 0;
 	f = 0;
-	for (i = 0; i < nin; i++) {
-		if (j < nj && i == j_start[j]) {
-			i += j_len[j] - 1;
+	i = 1;
+	while (i < nin) {
+		if (j < nj && i == j_start[j] + 1) {
+			i += j_len[j];
 			j++;
-		} else if (f < nf && i == f_start[f]) {
-			i += f_len[f] - 1;
+		} else if (f < nf && i == f_start[f] + 1) {
+			i += f_len[f];
 			f++;
 		} else {
-			flat_d[iflat_d++] = in_d[i];
+			flat_d[iflat_d++] = in_d[i++];
 		}
 	}
 
