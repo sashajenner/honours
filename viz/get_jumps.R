@@ -27,75 +27,118 @@ jump_diffs = vector(mode='list', length=nrow(df))
 jump_is_up = vector(length=nrow(df))
 
 in_jump = 0
-is_up = 0
+#is_up = 0
 start = 1
-is_zero = 0
+#is_zero = 0
+#for (i in 1:nrow(df)) {
+#	diff = df[i,1]
+#	if (!in_jump) {
+#		if (is_zero)
+#			start = i
+#
+#		if (diff > 0) {
+#			if (!is_up) {
+#				start = i
+#				is_up = 1
+#			}
+#			is_zero = 0
+#		} else if (diff < 0) {
+#			if (is_up) {
+#				start = i
+#				is_up = 0
+#			}
+#			is_zero = 0
+#		} else {
+#			is_zero = 1
+#		}
+#	} else {
+#		if (diff > 0) {
+#			if (!is_up) {
+#				nr_jumps = nr_jumps + 1
+#				jump_starts[nr_jumps] = start
+#				jump_sizes[nr_jumps] = i - start
+#				jump_diffs[[nr_jumps]] = df[start:(i-1),1]
+#				jump_is_up[nr_jumps] = is_up
+#
+#				start = i
+#				in_jump = 0
+#			}
+#			is_up = 1
+#		} else if (diff < 0) {
+#			if (is_up) {
+#				nr_jumps = nr_jumps + 1
+#				jump_starts[nr_jumps] = start
+#				jump_sizes[nr_jumps] = i - start
+#				jump_diffs[[nr_jumps]] = df[start:(i-1),1]
+#				jump_is_up[nr_jumps] = is_up
+#
+#				start = i
+#				in_jump = 0
+#			}
+#			is_up = 0
+#		} else {
+#			nr_jumps = nr_jumps + 1
+#			jump_starts[nr_jumps] = start
+#			jump_sizes[nr_jumps] = i - start
+#			jump_diffs[[nr_jumps]] = df[start:(i-1),1]
+#			jump_is_up[nr_jumps] = is_up
+#
+#			is_zero = 1
+#			in_jump = 0
+#		}
+#
+#	}
+#
+#	if (abs(diff) > 25)
+#		in_jump = 1
+#}
+
+trend = 0
 for (i in 1:nrow(df)) {
 	diff = df[i,1]
-	if (!in_jump) {
-		if (is_zero)
-			start = i
-
-		if (diff > 0) {
-			if (!is_up) {
-				start = i
-				is_up = 1
-			}
-			is_zero = 0
-		} else if (diff < 0) {
-			if (is_up) {
-				start = i
-				is_up = 0
-			}
-			is_zero = 0
-		} else {
-			is_zero = 1
-		}
-	} else {
-		if (diff > 0) {
-			if (!is_up) {
-				nr_jumps = nr_jumps + 1
-				jump_starts[nr_jumps] = start
-				jump_sizes[nr_jumps] = i - start
-				jump_diffs[[nr_jumps]] = df[start:(i-1),1]
-				jump_is_up[nr_jumps] = is_up
-
-				start = i
-				in_jump = 0
-			}
-			is_up = 1
-		} else if (diff < 0) {
-			if (is_up) {
-				nr_jumps = nr_jumps + 1
-				jump_starts[nr_jumps] = start
-				jump_sizes[nr_jumps] = i - start
-				jump_diffs[[nr_jumps]] = df[start:(i-1),1]
-				jump_is_up[nr_jumps] = is_up
-
-				start = i
-				in_jump = 0
-			}
-			is_up = 0
-		} else {
+	if (in_jump) {
+		if (diff <= 0 && trend == 1) {
 			nr_jumps = nr_jumps + 1
 			jump_starts[nr_jumps] = start
 			jump_sizes[nr_jumps] = i - start
 			jump_diffs[[nr_jumps]] = df[start:(i-1),1]
-			jump_is_up[nr_jumps] = is_up
+			jump_is_up[nr_jumps] = 1
 
-			is_zero = 1
-			in_jump = 0
+			in_jump = 0;
+			trend = 0;
+		} else if (diff >= 0 && trend == -1) {
+			nr_jumps = nr_jumps + 1
+			jump_starts[nr_jumps] = start
+			jump_sizes[nr_jumps] = i - start
+			jump_diffs[[nr_jumps]] = df[start:(i-1),1]
+			jump_is_up[nr_jumps] = 0
+
+			in_jump = 0;
+			trend = 0;
 		}
-
 	}
 
-	if (abs(diff) > 25)
+	if (diff == 0) {
+		trend = 0
+		in_jump = 0
+	} else if (diff > 0 && trend != 1) {
+		trend = 1
+		start = i
+	} else if (diff < 0 && trend != -1) {
+		trend = -1
+		start = i
+	}
+
+	if (abs(diff) > 25) {
 		in_jump = 1
+	}
 }
 
 hist(diff(jump_starts[1:nr_jumps]))
+print(sum(diff(jump_starts[1:nr_jumps]) > 255))
 hist(jump_sizes[1:nr_jumps])
-print(jump_is_up[1:nr_jumps])
+print(max(jump_sizes[1:nr_jumps]))
+#print(jump_is_up[1:nr_jumps])
 print(sum(jump_is_up[1:nr_jumps] == 1))
 print(sum(jump_is_up[1:nr_jumps] == 0))
 
