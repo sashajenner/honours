@@ -3,9 +3,19 @@
 % Explain what I am doing and why to my Mum...
 % Outline of Chapters
 
-The introduction goes in here. \newcite{clark-curran:07} did something inline. And here they did something not inline \cite{clark-curran:07}.
-
 % Contributions to research?
 % 	Evaluate current state of the art
 % 	Testing environment setup (eg github)
 % 	Design and implement superior algo
+
+Nanopore sequencing is used to determine the nucleotide sequence (A, C, T or U, and G) of a DNA or RNA molecule.
+It typically produces around 1 TiB of data for a human DNA sequencing run.
+% How many runs by some well known institute or project to put into perspective?
+The Genomic Technologies Group at the Garvan Institute of Medical Research regularly perform 5-10 clinical human DNA sequencing runs a week which need to be archived for up to 10 years. This amounts to between 260 and 520 TiB a year.
+% How much data produced in certain years, for different projects, etc. ?
+
+Around 3 billion bases in the human genome.
+Each base is recorded by roughly 10 signal points (=30 billion points).
+2 bytes per integer (=60 GiB)
+To increase sequencing accuracy each base is recorded many times over. For 20 x coverage (=1 TiB)
+Many labs doing human DNA sequencing at a large rate.

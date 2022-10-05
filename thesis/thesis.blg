@@ -3,49 +3,48 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: thesis.aux
 The style file: style/mybibstyle.bst
 Database file #1: references.bib
-Warning--I didn't find a database entry for "clark-curran:07"
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 Warning--empty booktitle in bwt
 Warning--empty journal in huffman-time
-You've used 28 entries,
+You've used 30 entries,
             3070 wiz_defined-function locations,
-            842 strings with 9893 characters,
-and the built_in function-call counts, 14871 in all, are:
-= -- 1178
-> -- 548
-< -- 22
-+ -- 216
-- -- 174
-* -- 1074
-:= -- 2381
-add.period$ -- 113
-call.type$ -- 28
-change.case$ -- 201
-chr.to.int$ -- 26
-cite$ -- 30
-duplicate$ -- 1083
-empty$ -- 1201
-format.name$ -- 242
-if$ -- 2937
+            851 strings with 10134 characters,
+and the built_in function-call counts, 15744 in all, are:
+= -- 1248
+> -- 586
+< -- 23
++ -- 230
+- -- 186
+* -- 1132
+:= -- 2536
+add.period$ -- 121
+call.type$ -- 30
+change.case$ -- 215
+chr.to.int$ -- 28
+cite$ -- 32
+duplicate$ -- 1144
+empty$ -- 1265
+format.name$ -- 258
+if$ -- 3104
 int.to.chr$ -- 3
 int.to.str$ -- 1
-missing$ -- 226
-newline$ -- 146
-num.names$ -- 112
-pop$ -- 406
+missing$ -- 238
+newline$ -- 156
+num.names$ -- 120
+pop$ -- 432
 preamble$ -- 1
-purify$ -- 170
+purify$ -- 182
 quote$ -- 0
-skip$ -- 431
+skip$ -- 458
 stack$ -- 0
-substring$ -- 671
-swap$ -- 534
+substring$ -- 693
+swap$ -- 558
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 249
+type$ -- 267
 warning$ -- 2
-while$ -- 102
+while$ -- 108
 width$ -- 0
-write$ -- 361
-(There were 3 warnings)
+write$ -- 385
+(There were 2 warnings)

@@ -1,4 +1,4 @@
-\begin{thebibliography}{28}
+\begin{thebibliography}{30}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \providecommand{\urlprefix}{URL }
@@ -54,6 +54,12 @@ A.~J. Cox, M.~J. Bauer, T.~Jakobi, and G.~Rosone. 2012.
   compression of genomic sequence databases with the burrows-wheeler
   transform}.
 \newblock \emph{Bioinformatics}, 28(11):1415--1419.
+
+\bibitem[{Deamer et~al.(2016)Deamer, Akeson, and Branton}]{three-decades-nano}
+David Deamer, Mark Akeson, and Daniel Branton. 2016.
+\newblock \href{https://doi.org/10.1038/nbt.3423}{Three decades of nanopore
+  sequencing}.
+\newblock \emph{Nature Biotechnology}.
 
 \bibitem[{Gage(1994)}]{byte-pair}
 Phillip Gage. 1994.
@@ -134,6 +140,11 @@ nanoporetech. 2022{\natexlab{a}}.
 nanoporetech. 2022{\natexlab{b}}.
 \newblock vbz\_compression.
 \newblock \url{https://github.com/nanoporetech/vbz_compression}.
+
+\bibitem[{ONT(2022)}]{nano-web}
+ONT. 2022.
+\newblock Flow cells and nanopores.
+\newblock \url{https://nanoporetech.com/how-it-works/flow-cells-and-nanopores}.
 
 \bibitem[{Rissanen(1976)}]{arithmetic-coding}
 J.~J. Rissanen. 1976.

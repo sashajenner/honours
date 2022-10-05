@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.3.3)  5 OCT 2022 12:07
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.3.3)  5 OCT 2022 17:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1275,14 +1275,6 @@ List of Tables
 
 ] (./introduction/introduction.tex
 Chapter 1
-
-Package natbib Warning: Citation `clark-curran:07' on page 1 undefined on input
- line 6.
-
-
-Package natbib Warning: Citation `clark-curran:07' on page 1 undefined on input
- line 6.
-
 ) (./litreview/litreview.tex [1
 
 
@@ -1291,7 +1283,7 @@ Package natbib Warning: Citation `clark-curran:07' on page 1 undefined on input
 ]
 Chapter 2
 (./litreview/nano.tex (./litreview/plots/nano.tex
-<litreview/plots/nano.png, id=253, 1953.2975pt x 1237.62375pt>
+<litreview/plots/nano.png, id=259, 1953.2975pt x 1237.62375pt>
 File: litreview/plots/nano.png Graphic file (type png)
 <use litreview/plots/nano.png>
 Package pdftex.def Info: litreview/plots/nano.png  used on input line 3.
@@ -1304,7 +1296,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 ]
 (./litreview/plots/shannon-comm.tex
-<litreview/plots/shannon-comm-system.png, id=265, 1372.12625pt x 598.235pt>
+<litreview/plots/shannon-comm-system.png, id=273, 1372.12625pt x 598.235pt>
 File: litreview/plots/shannon-comm-system.png Graphic file (type png)
 <use litreview/plots/shannon-comm-system.png>
 Package pdftex.def Info: litreview/plots/shannon-comm-system.png  used on input
@@ -1381,17 +1373,13 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 (./evaluation/plots/PAF25452_pass_bfdfd1d8.raw.freq.hist.tex))
 (./evaluation/plots/n-tab.tex) (./evaluation/plots/nhist.tex
 (./evaluation/plots/reads.blow5.withpa.tsv.nhist.tex))
-(./evaluation/plots/diff-tab.tex)
-Underfull \vbox (badness 5970) has occurred while \output is active []
+(./evaluation/plots/diff-tab.tex) [16]
+Underfull \vbox (badness 1303) has occurred while \output is active []
 
- [16]
-[17] (./evaluation/plots/start-sections.tex
+ [17]
+(./evaluation/plots/start-sections.tex
 (./evaluation/plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.section.tex)
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [18])
-(./evaluation/plots/dna-section.tex
+[18]) (./evaluation/plots/dna-section.tex
 (./evaluation/plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.dna.tex))
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -1461,22 +1449,18 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 129--132
+Underfull \hbox (badness 10000) in paragraph at lines 135--138
 []\T1/ptm/m/n/10.95 nanoporetech. 2022a.  pod5-file-format.  []$\T1/pcr/m/n/10.
 95 https : / / github . com / nanoporetech /
  []
 
 
-Underfull \hbox (badness 2302) in paragraph at lines 134--137
+Underfull \hbox (badness 2302) in paragraph at lines 140--143
 []\T1/ptm/m/n/10.95 nanoporetech. 2022b.  vbz_compression.  []$\T1/pcr/m/n/10.9
 5 https : / / github . com / nanoporetech / vbz _
  []
 
-)
-
-Package natbib Warning: There were undefined citations.
-
-[34]
+) [34]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 156.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 156.
  (./thesis.aux)
@@ -1491,10 +1475,10 @@ LaTeX Warning: There were multiply-defined labels.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 156.
  ) 
 Here is how much of TeX's memory you used:
- 29415 strings out of 483107
- 545274 string characters out of 5964631
- 1667116 words of memory out of 5000000
- 43388 multiletter control sequences out of 15000+600000
+ 29423 strings out of 483107
+ 545436 string characters out of 5964631
+ 1667156 words of memory out of 5000000
+ 43394 multiletter control sequences out of 15000+600000
  609909 words of font info for 112 fonts, out of 8000000 for 9000
  220 hyphenation exceptions out of 8191
  52i,24n,62p,1246b,994s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1516,10 +1500,10 @@ xmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/font
 s/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/tim
 es/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
 
-Output written on thesis.pdf (43 pages, 3306772 bytes).
+Output written on thesis.pdf (43 pages, 3308530 bytes).
 PDF statistics:
- 727 PDF objects out of 1000 (max. 8388607)
- 634 compressed objects within 7 object streams
- 128 named destinations out of 1000 (max. 500000)
+ 738 PDF objects out of 1000 (max. 8388607)
+ 645 compressed objects within 7 object streams
+ 130 named destinations out of 1000 (max. 500000)
  220 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -29,11 +29,12 @@
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{List of Figures}}{vii}{chapter*.6}\protected@file@percent }
 \@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{List of Tables}}{ix}{chapter*.6}\protected@file@percent }
-\citation{clark-curran:07}
-\citation{clark-curran:07}
 \@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{1}{Introduction}}{1}{chapter.1}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
+\citation{three-decades-nano}
+\citation{Wang2021}
+\citation{nano-web}
 \citation{Wang2021}
 \@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{2}{Literature Review}}{2}{chapter.2}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
@@ -130,15 +131,15 @@
 \newlabel{tab:data}{{3.1}{16}{The NA12878 data set.\relax }{table.caption.15}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces  Summary statistics of the data's raw signal values.\relax }}{16}{table.caption.16}\protected@file@percent }
 \newlabel{tab:rawsig}{{3.2}{16}{Summary statistics of the data's raw signal values.\relax }{table.caption.16}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces  Summary statistics of the data's read lengths.\relax }}{16}{table.caption.18}\protected@file@percent }
-\newlabel{tab:n}{{3.3}{16}{Summary statistics of the data's read lengths.\relax }{table.caption.18}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{3.1}{Characteristics}}{16}{section.3.1}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces The frequency of raw signal values 295 to 687 in millions for the NA12878 data set. The raw signal values outside this range occurred less than 1 million times.\relax }}{17}{figure.caption.17}\protected@file@percent }
 \newlabel{fig:data-hist}{{3.1}{17}{The frequency of raw signal values 295 to 687 in millions for the NA12878 data set. The raw signal values outside this range occurred less than 1 million times.\relax }{figure.caption.17}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces  Summary statistics of the differential encoding of the data.\relax }}{17}{table.caption.20}\protected@file@percent }
-\newlabel{tab:diff}{{3.4}{17}{Summary statistics of the differential encoding of the data.\relax }{table.caption.20}{}}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{3.1}{Characteristics}}{17}{section.3.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces  Summary statistics of the data's read lengths.\relax }}{17}{table.caption.18}\protected@file@percent }
+\newlabel{tab:n}{{3.3}{17}{Summary statistics of the data's read lengths.\relax }{table.caption.18}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Histogram of the number of data points in (length of) each read for the NA12878 data set. The distribution appears to modelled by an exponential or Gamma.\relax }}{18}{figure.caption.19}\protected@file@percent }
 \newlabel{fig:n-hist}{{3.2}{18}{Histogram of the number of data points in (length of) each read for the NA12878 data set. The distribution appears to modelled by an exponential or Gamma.\relax }{figure.caption.19}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces  Summary statistics of the differential encoding of the data.\relax }}{18}{table.caption.20}\protected@file@percent }
+\newlabel{tab:diff}{{3.4}{18}{Summary statistics of the differential encoding of the data.\relax }{table.caption.20}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces The first 1500 data points of a randomly chosen read split into four sections: surge (before the red line), stall (between red and orange), pre-adapter surge (between orange and blue) and adapter sequence (after blue). In order from left to right the vertical lines are coloured red, orange and blue.\relax }}{19}{figure.caption.21}\protected@file@percent }
 \newlabel{fig:start-sections}{{3.3}{19}{The first 1500 data points of a randomly chosen read split into four sections: surge (before the red line), stall (between red and orange), pre-adapter surge (between orange and blue) and adapter sequence (after blue). In order from left to right the vertical lines are coloured red, orange and blue.\relax }{figure.caption.21}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces An example of 200 data points from a DNA section in the same randomly chosen read as in Figure \ref  {fig:start-sections}. It is characterised by smaller low-variance sections with steep transitions between them.\relax }}{20}{figure.caption.22}\protected@file@percent }
@@ -183,30 +184,32 @@
 \bibcite{zstd}{{5}{2018}{{Collet and Kucherawy}}{{}}}
 \bibcite{info-book}{{6}{1991}{{Cover and Thomas}}{{}}}
 \bibcite{bwt-genomic}{{7}{2012}{{Cox et~al.}}{{Cox, Bauer, Jakobi, and Rosone}}}
-\bibcite{byte-pair}{{8}{1994}{{Gage}}{{}}}
-\bibcite{picopore}{{9}{2017}{{Gigante}}{{}}}
-\bibcite{google-zigzag}{{10}{2022}{{Google}}{{}}}
-\bibcite{genomic-comp}{{11}{2019}{{Hernaez et~al.}}{{Hernaez, Pavlichin, Weissman, and Ochoa}}}
-\bibcite{huffman}{{12}{1952}{{Huffman}}{{}}}
-\bibcite{fgk}{{13}{1985}{{Knuth}}{{}}}
-\bibcite{huffman-time}{{14}{1976}{{Leeuwen}}{{}}}
-\bibcite{lemire-simd}{{15}{2014}{{Lemire et~al.}}{{Lemire, Boytsov, and Kurz}}}
-\bibcite{svb}{{16}{2018}{{Lemire et~al.}}{{Lemire, Kurz, and Rupp}}}
-\bibcite{range-coding}{{17}{1979}{{Martin}}{{}}}
+\bibcite{three-decades-nano}{{8}{2016}{{Deamer et~al.}}{{Deamer, Akeson, and Branton}}}
+\bibcite{byte-pair}{{9}{1994}{{Gage}}{{}}}
+\bibcite{picopore}{{10}{2017}{{Gigante}}{{}}}
+\bibcite{google-zigzag}{{11}{2022}{{Google}}{{}}}
+\bibcite{genomic-comp}{{12}{2019}{{Hernaez et~al.}}{{Hernaez, Pavlichin, Weissman, and Ochoa}}}
+\bibcite{huffman}{{13}{1952}{{Huffman}}{{}}}
+\bibcite{fgk}{{14}{1985}{{Knuth}}{{}}}
+\bibcite{huffman-time}{{15}{1976}{{Leeuwen}}{{}}}
+\bibcite{lemire-simd}{{16}{2014}{{Lemire et~al.}}{{Lemire, Boytsov, and Kurz}}}
+\bibcite{svb}{{17}{2018}{{Lemire et~al.}}{{Lemire, Kurz, and Rupp}}}
 \@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{33}{chapter*.28}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\bibcite{mcmillan}{{18}{1956}{{McMillan}}{{}}}
-\bibcite{pod5}{{19}{2022{a}}{{nanoporetech}}{{}}}
-\bibcite{vbz}{{20}{2022{b}}{{nanoporetech}}{{}}}
-\bibcite{arithmetic-coding}{{21}{1976}{{Rissanen}}{{}}}
-\bibcite{rle}{{22}{1967}{{Robinson and Cherry}}{{}}}
-\bibcite{shannon}{{23}{1948}{{Shannon}}{{}}}
-\bibcite{vitter}{{24}{1987}{{Vitter}}{{}}}
-\bibcite{Wang2021}{{25}{2021}{{Wang et~al.}}{{Wang, Zhao, Bollas, Wang, and Au}}}
-\bibcite{lzw}{{26}{1984}{{Welch}}{{}}}
-\bibcite{lz77}{{27}{1977}{{Ziv and Lempel}}{{}}}
-\bibcite{lz78}{{28}{1978}{{Ziv and Lempel}}{{}}}
+\bibcite{range-coding}{{18}{1979}{{Martin}}{{}}}
+\bibcite{mcmillan}{{19}{1956}{{McMillan}}{{}}}
+\bibcite{pod5}{{20}{2022{a}}{{nanoporetech}}{{}}}
+\bibcite{vbz}{{21}{2022{b}}{{nanoporetech}}{{}}}
+\bibcite{nano-web}{{22}{2022}{{ONT}}{{}}}
+\bibcite{arithmetic-coding}{{23}{1976}{{Rissanen}}{{}}}
+\bibcite{rle}{{24}{1967}{{Robinson and Cherry}}{{}}}
+\bibcite{shannon}{{25}{1948}{{Shannon}}{{}}}
+\bibcite{vitter}{{26}{1987}{{Vitter}}{{}}}
+\bibcite{Wang2021}{{27}{2021}{{Wang et~al.}}{{Wang, Zhao, Bollas, Wang, and Au}}}
+\bibcite{lzw}{{28}{1984}{{Welch}}{{}}}
+\bibcite{lz77}{{29}{1977}{{Ziv and Lempel}}{{}}}
+\bibcite{lz78}{{30}{1978}{{Ziv and Lempel}}{{}}}
 \newlabel{tocindent-1}{0pt}
 \newlabel{tocindent0}{58.08931pt}
 \newlabel{tocindent1}{24.63747pt}
