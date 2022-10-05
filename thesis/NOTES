@@ -1,0 +1,29 @@
+- nano
+	- constant voltage applied to produce an ionic current
+	- negatively charged single-stranded DNA or RNA molecules are pulled through the nanopore from the negatively charged 'cis' side to the positively charged 'trans' side
+	- translocation speed controlled by a motor protein
+	- changes in the ionic current correspond to the nucleotide sequence passing through the sensing region
+	- the ionic current is decoded using computational algorithms to determine the nucleotide sequence of the biopolymer
+	- the motor protein is a helicase (enzyme) which unwounds the double-stranded DNA or RNA-DNA duplex into single-stranded molecules which pass through the nanopore
+	- emerged in the 1980s
+	- \alpha-hemolysin the first nanopore
+	- slow DNA translocation through incorporating processive enzyme / motor protein
+	- Feb 2012 two groups showed that the ionic current could be resolved into signals from individual nucleotides by combining phi29 DNA polymerase and a nanopore (\alpha-hemolysin and MspA)
+	- first nanopore sequencing device MinION announced in Feb 2012 as well
+	- early released in 2014 and commercialised in 2015
+	- ONT has continually refined the nanopore and motor protein but have not disclosed the nanopore proteins used in most releases
+	- ONT is used in most peer-reviewed studies of nanopore sequencing technology
+	- lower accuracy but very large reads
+	- promethion in 2018
+	- RNA ONT sequencing has less accuracy
+	- PromethION ~430 bases / s
+	- PromethION
+		- 24 or 48 parallel flow cells
+		- 3000 channels per flow cell
+		- theoretically max output 14TB when running for 72 hours at 420 bases / second
+	- thousands of current measurements (4000) per second
+	- processive translocation of the molecule leads to a characteristic current shift determined by multiple consecutive nucleotides (k-mer) defined by the length of the sensing region
+	- rev D ASIC chip
+	- ASIC chip: application specific integrated circuit chip
+	- each nanopore connects to its own electrode and channel in the sensor array chip
+	- each channel has multiple nanopores and is associated with its own separate electrode in the sensor chip

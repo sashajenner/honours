@@ -1,0 +1,64 @@
+- title page associate supervisors clean up
+- spell check all
+- common methods
+	- zstd
+	- zlib
+		- deflate
+	- ...
+- frame of reference
+- genomics data compression literature review
+- scientific signal compression literature view
+- sections
+	- splitting data
+	- function approximations
+	- boostrap basecalled data
+
+structure
+- abstract
+- acknowledgements
+- introduction
+- literature review
+	- nanopore sequencing
+	- data compression
+		- information theory
+		- entropy
+			- huffman
+			- arithmetic/range
+			- golomb/rice
+			- universal
+				- elias delta
+		- dictionary
+			- lempel-ziv
+		- other
+			- run length
+			- bwt
+		- integer compression
+			- bit packing
+			- frame of reference, pfor
+			- traditional variable byte
+			- differential/delta coding
+			- stream vbyte
+				- classical
+				- 0-based
+				- 16-bit
+		- signal
+			- wavelets
+		- software
+			- gzip (zlib)
+			- zstd
+			- flac
+		- nanopore data compression
+			- previous attempts
+			- vbz16
+- data analysis
+	- why not RNA - small
+		- different characteristics polyA tail
+	- why promethion - large
+- methods / problem space
+	- focus
+	- delta | zigzag | vbbe21 | rc
+		- vbbe21 instead of svb
+		- static huffman
+		- range coding
+	- encoding the stall
+	- subsequence searching

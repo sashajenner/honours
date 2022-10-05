@@ -34,69 +34,73 @@
 \@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{1}{Introduction}}{1}{chapter.1}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\citation{shannon}
+\citation{Wang2021}
 \@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{2}{Literature Review}}{2}{chapter.2}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{chap:litreview}{{2}{2}{Literature Review}{chapter.2}{}}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{2.1}{Data Compression}}{2}{section.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{2.1.1}{Introduction}}{2}{subsection.2.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\tocsection {}{2.1}{Nanopore Sequencing}}{2}{section.2.1}\protected@file@percent }
 \citation{shannon}
+\citation{shannon}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces The MinION, the first commercially-available nanopore sequencing device, recording nanopore signal data as a double-stranded DNA (dsDNA) molecule is unwound and ratcheted through the nanopore.}}{3}{figure.caption.7}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:nano}{{2.1}{3}{The MinION, the first commercially-available nanopore sequencing device, recording nanopore signal data as a double-stranded DNA (dsDNA) molecule is unwound and ratcheted through the nanopore}{figure.caption.7}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{2.2}{Data Compression}}{3}{section.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{2.2.1}{Introduction}}{3}{subsection.2.2.1}\protected@file@percent }
+\citation{shannon}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Shannon's general communication system consists of an \textit  {information source} which produces a message, a \textit  {transmitter} which manipulates the message to produce a signal suitable for transmission over the channel, a \textit  {channel} which serves as the medium for signal transmission from the transmitter to the receiver, a \textit  {receiver} which reconstructs the message from the signal and a \textit  {destination} which is the message's intended point of delivery.}}{4}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:shannon-comm-system}{{2.2}{4}{Shannon's general communication system consists of an \textit {information source} which produces a message, a \textit {transmitter} which manipulates the message to produce a signal suitable for transmission over the channel, a \textit {channel} which serves as the medium for signal transmission from the transmitter to the receiver, a \textit {receiver} which reconstructs the message from the signal and a \textit {destination} which is the message's intended point of delivery}{figure.caption.8}{}}
 \citation{info-book}
+\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{2.2.2}{Entropy coding}}{5}{subsection.2.2.2}\protected@file@percent }
 \citation{huffman}
 \citation{mcmillan}
 \citation{huffman-time}
 \citation{fgk,vitter}
 \citation{arithmetic-coding}
-\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{2.1.2}{Entropy coding}}{4}{subsection.2.1.2}\protected@file@percent }
 \citation{arithmetic-coding}
 \citation{range-coding}
 \citation{byte-pair}
 \citation{lzw}
 \citation{lz77}
 \citation{lz78}
-\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{2.1.3}{Dictionary coding}}{5}{subsection.2.1.3}\protected@file@percent }
 \citation{rle}
+\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{2.2.3}{Dictionary coding}}{7}{subsection.2.2.3}\protected@file@percent }
 \citation{bwt}
 \citation{bwt-genomic}
-\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{2.1.4}{Other encodings}}{6}{subsection.2.1.4}\protected@file@percent }
-\newlabel{sec:data-other}{{2.1.4}{6}{Other encodings}{subsection.2.1.4}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\tocsubsubsection {}{2.1.4.1}{Integer compression schemes}}{6}{subsubsection.2.1.4.1}\protected@file@percent }
-\newlabel{sec:integer-comp}{{2.1.4.1}{6}{Integer compression schemes}{subsubsection.2.1.4.1}{}}
 \citation{lemire-simd}
+\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{2.2.4}{Other encodings}}{8}{subsection.2.2.4}\protected@file@percent }
+\newlabel{sec:data-other}{{2.2.4}{8}{Other encodings}{subsection.2.2.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\tocsubsubsection {}{2.2.4.1}{Integer compression schemes}}{8}{subsubsection.2.2.4.1}\protected@file@percent }
+\newlabel{sec:integer-comp}{{2.2.4.1}{8}{Integer compression schemes}{subsubsection.2.2.4.1}{}}
 \citation{lemire-simd}
 \citation{svb}
 \citation{svb}
 \citation{pod5}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces The sequence of numbers $1024,12,10,\num {524288}$ in the bit packed format. The data is read from left to right, top to bottom with the most significant bits first.}}{7}{figure.caption.7}\protected@file@percent }
-\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:bitpack}{{2.1}{7}{The sequence of numbers $1024,12,10,\num {524288}$ in the bit packed format. The data is read from left to right, top to bottom with the most significant bits first}{figure.caption.7}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces The number of bytes used and their control codeword for different supported integer ranges in classical 32-bit, 0-based and 16-bit Stream VByte.\relax }}{8}{table.caption.8}\protected@file@percent }
-\newlabel{tab:groupsvb}{{2.1}{8}{The number of bytes used and their control codeword for different supported integer ranges in classical 32-bit, 0-based and 16-bit Stream VByte.\relax }{table.caption.8}{}}
-\newlabel{fig:svb}{{2.2a}{8}{Subfigure 2 2.2a}{subfigure.2.2.1}{}}
-\newlabel{sub@fig:svb}{{(a)}{a}{Subfigure 2 2.2a\relax }{subfigure.2.2.1}{}}
-\newlabel{fig:svb-0based}{{2.2b}{8}{Subfigure 2 2.2b}{subfigure.2.2.2}{}}
-\newlabel{sub@fig:svb-0based}{{(b)}{b}{Subfigure 2 2.2b\relax }{subfigure.2.2.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces  An example of $1024,12,10,\num {1048576}, 0,1,2,1024$ compressed with classical and 0-based Stream VByte.}}{8}{figure.caption.9}\protected@file@percent }
-\newlabel{fig:groupsvb}{{2.2}{8}{An example of $1024,12,10,\num {1048576}, 0,1,2,1024$ compressed with classical and 0-based Stream VByte}{figure.caption.9}{}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {Compressed classical Stream VByte bytes}}}{8}{subfigure.2.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Compressed 0-based Stream VByte bytes}}}{8}{subfigure.2.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces The sequence of numbers $1024,12,10,\num {524288}$ in the bit packed format. The data is read from left to right, top to bottom with the most significant bits first.}}{9}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:bitpack}{{2.3}{9}{The sequence of numbers $1024,12,10,\num {524288}$ in the bit packed format. The data is read from left to right, top to bottom with the most significant bits first}{figure.caption.9}{}}
 \citation{vbz}
+\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces The number of bytes used and their control codeword for different supported integer ranges in classical 32-bit, 0-based and 16-bit Stream VByte.\relax }}{10}{table.caption.10}\protected@file@percent }
+\newlabel{tab:groupsvb}{{2.1}{10}{The number of bytes used and their control codeword for different supported integer ranges in classical 32-bit, 0-based and 16-bit Stream VByte.\relax }{table.caption.10}{}}
+\newlabel{fig:svb}{{2.4a}{10}{Subfigure 2 2.4a}{subfigure.2.4.1}{}}
+\newlabel{sub@fig:svb}{{(a)}{a}{Subfigure 2 2.4a\relax }{subfigure.2.4.1}{}}
+\newlabel{fig:svb-0based}{{2.4b}{10}{Subfigure 2 2.4b}{subfigure.2.4.2}{}}
+\newlabel{sub@fig:svb-0based}{{(b)}{b}{Subfigure 2 2.4b\relax }{subfigure.2.4.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces  An example of $1024,12,10,\num {1048576}, 0,1,2,1024$ compressed with classical and 0-based Stream VByte.}}{10}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:groupsvb}{{2.4}{10}{An example of $1024,12,10,\num {1048576}, 0,1,2,1024$ compressed with classical and 0-based Stream VByte}{figure.caption.11}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {Compressed classical Stream VByte bytes}}}{10}{subfigure.4.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Compressed 0-based Stream VByte bytes}}}{10}{subfigure.4.2}\protected@file@percent }
 \citation{zstd}
 \citation{lemire-simd}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Compressed 16-bit Stream VByte bytes for $1024,12,10,4096, 0,1,2,1024$.}}{9}{figure.caption.10}\protected@file@percent }
-\newlabel{fig:svb-16}{{2.3}{9}{Compressed 16-bit Stream VByte bytes for $1024,12,10,4096, 0,1,2,1024$}{figure.caption.10}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\tocsubsubsection {}{2.1.4.2}{State-of-the-Art}}{9}{subsubsection.2.1.4.2}\protected@file@percent }
-\newlabel{sec:state-of-the-art}{{2.1.4.2}{9}{State-of-the-Art}{subsubsection.2.1.4.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces Compressed 16-bit Stream VByte bytes for $1024,12,10,4096, 0,1,2,1024$.}}{11}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:svb-16}{{2.5}{11}{Compressed 16-bit Stream VByte bytes for $1024,12,10,4096, 0,1,2,1024$}{figure.caption.12}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\tocsubsubsection {}{2.2.4.2}{State-of-the-Art}}{11}{subsubsection.2.2.4.2}\protected@file@percent }
+\newlabel{sec:state-of-the-art}{{2.2.4.2}{11}{State-of-the-Art}{subsubsection.2.2.4.2}{}}
 \citation{google-zigzag}
-\citation{Wang2021}
 \citation{genomic-comp}
 \citation{picopore}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{2.2}{Nanopore Signal Data}}{10}{section.2.2}\protected@file@percent }
 \citation{lossy-nano,lfzip}
 \citation{lossy-nano}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces The zig-zag encoding applied to integers -15 to 15. As we can see, it is similar to the absolute value function but is doubled and shifted on the negative $x$-axis to ensure injectivity.\relax }}{11}{figure.caption.11}\protected@file@percent }
-\newlabel{fig:zigzag}{{2.4}{11}{The zig-zag encoding applied to integers -15 to 15. As we can see, it is similar to the absolute value function but is doubled and shifted on the negative $x$-axis to ensure injectivity.\relax }{figure.caption.11}{}}
+\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{2.2.5}{Nanopore compression}}{12}{subsection.2.2.5}\protected@file@percent }
 \citation{mcdrc}
 \citation{shannon}
 \citation{huffman}
@@ -113,63 +117,64 @@
 \citation{svb}
 \citation{lossy-nano}
 \citation{mcdrc}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces The MinION, the first commercially-available nanopore sequencing device, recording nanopore signal data as a double-stranded DNA (dsDNA) molecule is unwound and ratcheted through the nanopore.}}{12}{figure.caption.12}\protected@file@percent }
-\newlabel{fig:nano}{{2.5}{12}{The MinION, the first commercially-available nanopore sequencing device, recording nanopore signal data as a double-stranded DNA (dsDNA) molecule is unwound and ratcheted through the nanopore}{figure.caption.12}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces A timeline of the major events in the literature.\relax }}{13}{table.caption.13}\protected@file@percent }
-\newlabel{tab:lit}{{2.2}{13}{A timeline of the major events in the literature.\relax }{table.caption.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces The zig-zag encoding applied to integers -15 to 15. As we can see, it is similar to the absolute value function but is doubled and shifted on the negative $x$-axis to ensure injectivity.\relax }}{13}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:zigzag}{{2.6}{13}{The zig-zag encoding applied to integers -15 to 15. As we can see, it is similar to the absolute value function but is doubled and shifted on the negative $x$-axis to ensure injectivity.\relax }{figure.caption.13}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces A timeline of the major events in the literature.\relax }}{14}{table.caption.14}\protected@file@percent }
+\newlabel{tab:lit}{{2.2}{14}{A timeline of the major events in the literature.\relax }{table.caption.14}{}}
 \citation{Wang2021}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{3}{Evaluation}}{14}{chapter.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{3}{Data}}{15}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:evaluation}{{3}{14}{Evaluation}{chapter.3}{}}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{3.1}{Data}}{14}{section.3.1}\protected@file@percent }
-\newlabel{sec:data}{{3.1}{14}{Data}{section.3.1}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces The NA12878 data set.\relax }}{15}{table.caption.14}\protected@file@percent }
-\newlabel{tab:data}{{3.1}{15}{The NA12878 data set.\relax }{table.caption.14}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces  Summary statistics of the data's raw signal values.\relax }}{15}{table.caption.15}\protected@file@percent }
-\newlabel{tab:rawsig}{{3.2}{15}{Summary statistics of the data's raw signal values.\relax }{table.caption.15}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces  Summary statistics of the data's read lengths.\relax }}{15}{table.caption.17}\protected@file@percent }
-\newlabel{tab:n}{{3.3}{15}{Summary statistics of the data's read lengths.\relax }{table.caption.17}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces The frequency of raw signal values 295 to 687 in millions for the NA12878 data set. The raw signal values outside this range occurred less than 1 million times.\relax }}{16}{figure.caption.16}\protected@file@percent }
-\newlabel{fig:data-hist}{{3.1}{16}{The frequency of raw signal values 295 to 687 in millions for the NA12878 data set. The raw signal values outside this range occurred less than 1 million times.\relax }{figure.caption.16}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces  Summary statistics of the differential encoding of the data.\relax }}{16}{table.caption.19}\protected@file@percent }
-\newlabel{tab:diff}{{3.4}{16}{Summary statistics of the differential encoding of the data.\relax }{table.caption.19}{}}
-\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{3.1.1}{Characteristics}}{16}{subsection.3.1.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Histogram of the number of data points in (length of) each read for the NA12878 data set. The distribution appears to modelled by an exponential or Gamma.\relax }}{17}{figure.caption.18}\protected@file@percent }
-\newlabel{fig:n-hist}{{3.2}{17}{Histogram of the number of data points in (length of) each read for the NA12878 data set. The distribution appears to modelled by an exponential or Gamma.\relax }{figure.caption.18}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces The first 1500 data points of a randomly chosen read split into four sections: surge (before the red line), stall (between red and orange), pre-adapter surge (between orange and blue) and adapter sequence (after blue). In order from left to right the vertical lines are coloured red, orange and blue.\relax }}{18}{figure.caption.20}\protected@file@percent }
-\newlabel{fig:start-sections}{{3.3}{18}{The first 1500 data points of a randomly chosen read split into four sections: surge (before the red line), stall (between red and orange), pre-adapter surge (between orange and blue) and adapter sequence (after blue). In order from left to right the vertical lines are coloured red, orange and blue.\relax }{figure.caption.20}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces An example of 200 data points from a DNA section in the same randomly chosen read as in Figure \ref  {fig:start-sections}. It is characterised by smaller low-variance sections with steep transitions between them.\relax }}{19}{figure.caption.21}\protected@file@percent }
-\newlabel{fig:dna-section}{{3.4}{19}{An example of 200 data points from a DNA section in the same randomly chosen read as in Figure \ref {fig:start-sections}. It is characterised by smaller low-variance sections with steep transitions between them.\relax }{figure.caption.21}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces An example of a homopolymer section (repetition of `T') from the same read used in Figures \ref  {fig:start-sections} and \ref  {fig:dna-section}. The thymine DNA base is repeated 33 times in the homopolymer.\relax }}{20}{figure.caption.22}\protected@file@percent }
-\newlabel{fig:homo-section}{{3.5}{20}{An example of a homopolymer section (repetition of `T') from the same read used in Figures \ref {fig:start-sections} and \ref {fig:dna-section}. The thymine DNA base is repeated 33 times in the homopolymer.\relax }{figure.caption.22}{}}
-\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{3.1.2}{Methods}}{20}{subsection.3.1.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces An example of 3800 data points from a slow section in another randomly chosen read. It is characterised by extended low-variance sections between regular DNA sections. The 6-mers GTCCCA, TCCCAA and CCAAGT are mapped to the regions between the red and orange, orange and blue, and blue and purple vertical lines respectively. CCCAAG is also mapped to the orange-blue region but not as cleanly. In order from left to right the vertical lines are coloured red, orange, blue and purple.\relax }}{21}{figure.caption.23}\protected@file@percent }
-\newlabel{fig:dna-section}{{3.6}{21}{An example of 3800 data points from a slow section in another randomly chosen read. It is characterised by extended low-variance sections between regular DNA sections. The 6-mers GTCCCA, TCCCAA and CCAAGT are mapped to the regions between the red and orange, orange and blue, and blue and purple vertical lines respectively. CCCAAG is also mapped to the orange-blue region but not as cleanly. In order from left to right the vertical lines are coloured red, orange, blue and purple.\relax }{figure.caption.23}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces An example of an incongruent section from the same read used in Figures \ref  {fig:start-sections}, \ref  {fig:dna-section} and \ref  {fig:homo-section}. The incongruent section's mean signal level is $\sim $ 620 compared to the whole's read's mean which is $\sim $ 550.\relax }}{22}{figure.caption.24}\protected@file@percent }
-\newlabel{fig:mess-section}{{3.7}{22}{An example of an incongruent section from the same read used in Figures \ref {fig:start-sections}, \ref {fig:dna-section} and \ref {fig:homo-section}. The incongruent section's mean signal level is $\sim $ 620 compared to the whole's read's mean which is $\sim $ 550.\relax }{figure.caption.24}{}}
+\newlabel{chap:data}{{3}{15}{Data}{chapter.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces The NA12878 data set.\relax }}{16}{table.caption.15}\protected@file@percent }
+\newlabel{tab:data}{{3.1}{16}{The NA12878 data set.\relax }{table.caption.15}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces  Summary statistics of the data's raw signal values.\relax }}{16}{table.caption.16}\protected@file@percent }
+\newlabel{tab:rawsig}{{3.2}{16}{Summary statistics of the data's raw signal values.\relax }{table.caption.16}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces  Summary statistics of the data's read lengths.\relax }}{16}{table.caption.18}\protected@file@percent }
+\newlabel{tab:n}{{3.3}{16}{Summary statistics of the data's read lengths.\relax }{table.caption.18}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces The frequency of raw signal values 295 to 687 in millions for the NA12878 data set. The raw signal values outside this range occurred less than 1 million times.\relax }}{17}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:data-hist}{{3.1}{17}{The frequency of raw signal values 295 to 687 in millions for the NA12878 data set. The raw signal values outside this range occurred less than 1 million times.\relax }{figure.caption.17}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces  Summary statistics of the differential encoding of the data.\relax }}{17}{table.caption.20}\protected@file@percent }
+\newlabel{tab:diff}{{3.4}{17}{Summary statistics of the differential encoding of the data.\relax }{table.caption.20}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{3.1}{Characteristics}}{17}{section.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Histogram of the number of data points in (length of) each read for the NA12878 data set. The distribution appears to modelled by an exponential or Gamma.\relax }}{18}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:n-hist}{{3.2}{18}{Histogram of the number of data points in (length of) each read for the NA12878 data set. The distribution appears to modelled by an exponential or Gamma.\relax }{figure.caption.19}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces The first 1500 data points of a randomly chosen read split into four sections: surge (before the red line), stall (between red and orange), pre-adapter surge (between orange and blue) and adapter sequence (after blue). In order from left to right the vertical lines are coloured red, orange and blue.\relax }}{19}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:start-sections}{{3.3}{19}{The first 1500 data points of a randomly chosen read split into four sections: surge (before the red line), stall (between red and orange), pre-adapter surge (between orange and blue) and adapter sequence (after blue). In order from left to right the vertical lines are coloured red, orange and blue.\relax }{figure.caption.21}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces An example of 200 data points from a DNA section in the same randomly chosen read as in Figure \ref  {fig:start-sections}. It is characterised by smaller low-variance sections with steep transitions between them.\relax }}{20}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:dna-section}{{3.4}{20}{An example of 200 data points from a DNA section in the same randomly chosen read as in Figure \ref {fig:start-sections}. It is characterised by smaller low-variance sections with steep transitions between them.\relax }{figure.caption.22}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces An example of a homopolymer section (repetition of `T') from the same read used in Figures \ref  {fig:start-sections} and \ref  {fig:dna-section}. The thymine DNA base is repeated 33 times in the homopolymer.\relax }}{21}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:homo-section}{{3.5}{21}{An example of a homopolymer section (repetition of `T') from the same read used in Figures \ref {fig:start-sections} and \ref {fig:dna-section}. The thymine DNA base is repeated 33 times in the homopolymer.\relax }{figure.caption.23}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces An example of 3800 data points from a slow section in another randomly chosen read. It is characterised by extended low-variance sections between regular DNA sections. The 6-mers GTCCCA, TCCCAA and CCAAGT are mapped to the regions between the red and orange, orange and blue, and blue and purple vertical lines respectively. CCCAAG is also mapped to the orange-blue region but not as cleanly. In order from left to right the vertical lines are coloured red, orange, blue and purple.\relax }}{22}{figure.caption.24}\protected@file@percent }
+\newlabel{fig:dna-section}{{3.6}{22}{An example of 3800 data points from a slow section in another randomly chosen read. It is characterised by extended low-variance sections between regular DNA sections. The 6-mers GTCCCA, TCCCAA and CCAAGT are mapped to the regions between the red and orange, orange and blue, and blue and purple vertical lines respectively. CCCAAG is also mapped to the orange-blue region but not as cleanly. In order from left to right the vertical lines are coloured red, orange, blue and purple.\relax }{figure.caption.24}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces An example of an incongruent section from the same read used in Figures \ref  {fig:start-sections}, \ref  {fig:dna-section} and \ref  {fig:homo-section}. The incongruent section's mean signal level is $\sim $ 620 compared to the whole's read's mean which is $\sim $ 550.\relax }}{23}{figure.caption.25}\protected@file@percent }
+\newlabel{fig:mess-section}{{3.7}{23}{An example of an incongruent section from the same read used in Figures \ref {fig:start-sections}, \ref {fig:dna-section} and \ref {fig:homo-section}. The incongruent section's mean signal level is $\sim $ 620 compared to the whole's read's mean which is $\sim $ 550.\relax }{figure.caption.25}{}}
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{4}{Problem Space}}{24}{chapter.4}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{chap:probspace}{{4}{24}{Problem Space}{chapter.4}{}}
 \citation{lemire-simd}
-\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{3.1.3}{Subsequence Searching}}{23}{subsection.3.1.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{4}{Experiments}}{27}{chapter.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\tocsection {}{4.1}{Subsequence Searching}}{25}{section.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{29}{chapter.5}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:experiments}{{4}{27}{Experiments}{chapter.4}{}}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{28}{chapter.5}\protected@file@percent }
+\newlabel{chap:results}{{5}{29}{Results}{chapter.5}{}}
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{6}{Discussion}}{30}{chapter.6}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:results}{{5}{28}{Results}{chapter.5}{}}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{6}{Conclusion}}{29}{chapter.6}\protected@file@percent }
+\newlabel{chap:disc}{{6}{30}{Discussion}{chapter.6}{}}
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{7}{Conclusion}}{31}{chapter.7}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:conclusion}{{6}{29}{Conclusion}{chapter.6}{}}
+\newlabel{chap:conclusion}{{7}{31}{Conclusion}{chapter.7}{}}
 \bibstyle{style/mybibstyle}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{30}{chapter*.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{32}{chapter*.26}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:appendix}{{6}{30}{Appendix}{chapter*.25}{}}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{6.1}{Subsequence Searching}}{30}{section.6.1}\protected@file@percent }
-\newlabel{app:cn}{{6.1}{30}{Subsequence Searching}{section.6.1}{}}
-\newlabel{app:cn-dyn}{{6.1}{30}{Subsequence Searching}{section.6.1}{}}
+\newlabel{chap:appendix}{{7}{32}{Appendix}{chapter*.26}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{7.1}{Subsequence Searching}}{32}{section.7.1}\protected@file@percent }
+\newlabel{app:cn}{{7.1}{32}{Subsequence Searching}{section.7.1}{}}
+\newlabel{app:cn-dyn}{{7.1}{32}{Subsequence Searching}{section.7.1}{}}
 \bibdata{references}
 \bibcite{bwt}{{1}{1994}{{Burrows and Wheeler}}{{}}}
 \bibcite{lossy-nano}{{2}{2020{a}}{{Chandak et~al.}}{{Chandak, Tatwawadi, Sridhar, and Weissman}}}
@@ -188,7 +193,7 @@
 \bibcite{lemire-simd}{{15}{2014}{{Lemire et~al.}}{{Lemire, Boytsov, and Kurz}}}
 \bibcite{svb}{{16}{2018}{{Lemire et~al.}}{{Lemire, Kurz, and Rupp}}}
 \bibcite{range-coding}{{17}{1979}{{Martin}}{{}}}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{31}{chapter*.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{33}{chapter*.28}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \bibcite{mcmillan}{{18}{1956}{{McMillan}}{{}}}

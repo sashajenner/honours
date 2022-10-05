@@ -1,0 +1,67 @@
+\chapter{Data} \label{chap:data}
+
+The data consists of many sequences of unsigned integers known as \textit{reads}. Each integer represents the quantised ionic current recorded at a certain time step as a single-stranded DNA or RNA molecule is driven through a nanoscale protein pore (or \textit{nanopore}) \cite{Wang2021}. Disturbances in the ionic current caused by the molecule's biological structure can be used to determine its nucleic acid sequence.
+
+Let each read be represented by
+\[ x := (x_i\mid x_i \in \mathbb{Z} \cap [0, 2^{16})) \]
+where $i\in \mathbb{Z}\cap [0, n)$. Computationally, $x$ is an unsigned 16-bit integer array with $n$ elements. However, in practice the full range of $2^{16}$ integers is never met.
+
+For the remainder of the thesis, the data which we will use for analysing the characteristics of nanopore signal data and for comparing compression methods is the NA12878 data set. The data set has been well studied and is used prolifically for benchmarking genomics tools. The data set originates from a Utah woman. Her DNA sample was artificially recreated, treated using a short read eliminator kit and sequenced on an ONT PromethION 48. This device produces the most data out of all nanopore sequencing devices so is most appropriate for data compression.
+%TODO actually 48?
+
+The data set consists of \num{500000} reads and $\sim$ 57 billion signal points. Altogether the data set is $\sim$39 GiB when stored in the BLOW5 file format (v0.2.0) using svb-zd (differential followed by zig-zag encoding and Stream VByte) signal compression and zlib record compression. See Table \ref{tab:data} for an overview of the data set.
+
+\input{evaluation/plots/data-tab}
+
+The raw signal values in the data set range from 158 to 1748 with a median of 474 and standard deviation of $\sim$ 35. The maximum is 1748 but the middle 99\% of the data ranges from 350 to 622. Figure \ref{fig:data-hist} shows the singular-width bin histogram of the raw signal values between 295 and 687.
+As one can observe, the distribution is fairly symmetric around the centre with the median and mean very close to one another. However, it is slightly right-skewed with its right tail extending much further than its left. This is most evident by observing that the maximum is more than four times further from the median than the minimum.
+Most interestingly, there is clearly a cyclical pattern in the relative frequency of adjacent signal points which repeats every 16 values.
+%TODO put closeup figure showing pattern
+This is most likely due to the nature of the analogue-to-digital converter (ADC) which digitises the analogue ionic current signal during sequencing.
+
+\input{evaluation/plots/rawsig-tab}
+\input{evaluation/plots/freq}
+
+The read lengths range from 2024 to \num{5724000} with a median of 80304.5. See Table \ref{tab:n} for an overview and Figure \ref{fig:n-hist} for the histogram with bin width one.
+
+\input{evaluation/plots/n-tab}
+\input{evaluation/plots/nhist}
+
+\input{evaluation/plots/diff-tab}
+
+\section{Characteristics}
+
+Each read consists of several sections with recognisable characteristics; the surge, stall, pre-adapter surge, adapter, DNA, homopolymer and slow sections. Figure \ref{fig:start-sections} shows the beginning of a typical read with the surge, stall, pre-adapter surge and adapter sections delimited.
+
+The surge typically consists of one signal at the beginning of the read which is significally above the mean. The pore is most likely in its open state (no molecules within it) at the time of recording and MinKNOW, the recording software, has failed to completely trim the pre-data section. This results in a large current surge since there are no molecules being kinetically propelled by the electric field.
+% TODO analyse surge section
+
+The stall also occurs at the beginning of the read and after the surge if it exists. It consists of hundreds to thousands of signal points which oscillate with small variation around the median of the read. This section is rarely missing from the read and possibly occurs due to the motor protein stalling before beginning to unwind the DNA molecule.
+% TODO analyse stall lengths
+
+The adapter sequence is the first DNA sequence recorded in the signal data. The adapter connects the motor protein to the DNA strand and has a predictable molecular sequence which differs from sequencing kit to kit. There is typically a surge between the stall and the adapter section consisting of several signal values which we will name the \textit{pre-adapter surge}.
+
+\input{evaluation/plots/start-sections}
+
+The DNA sections are the sections of the signal data which store information necessary for determining the original DNA sequence. Characteristically, these oscillate in smaller low-variance sections of 10-100 signals with steep transitions between them. The adapter sequence is quite similar in behaviour since it also represents molecular information. See Figure \ref{fig:dna-section} for an example.
+
+\input{evaluation/plots/dna-section}
+
+The homopolymer and slow sections are similar in behaviour. They typically occur at random positions in the read and consist of hundreds to thousands of signal points which oscillate with small variation around some value. This is quite similar to the stall section except that the stall oscillates near the median value of the read, whilst the homopolyer and slow sections can occur at any feasible value. The difference between the homopolymer and slow sections is that the homopolymer section represents the repetition of one or more DNA bases, whilst the slow section represents several DNA bases which are moving through the nanopore relatively slowly, or have gotten temporarily stuck, and so are recorded over many more signal points than usual.
+
+\input{evaluation/plots/homo-section}
+\input{evaluation/plots/slow-section}
+
+%TODO show homopolymer and slow sections
+
+There is sometimes a stall-like section which terminates the read as well.
+
+\input{evaluation/plots/mess-section}
+
+%TODO show terminating stall
+
+However predictable some of these sections are, each read can have strange unpredictable behaviour.
+
+%TODO discuss statistics of nanopore data
+%plot some nanopore signals
+

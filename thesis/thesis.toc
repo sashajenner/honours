@@ -5,22 +5,22 @@
 \contentsline {chapter}{\tocchapter {Chapter}{}{List of Tables}}{ix}{chapter*.6}%
 \contentsline {chapter}{\tocchapter {Chapter}{1}{Introduction}}{1}{chapter.1}%
 \contentsline {chapter}{\tocchapter {Chapter}{2}{Literature Review}}{2}{chapter.2}%
-\contentsline {section}{\tocsection {}{2.1}{Data Compression}}{2}{section.2.1}%
-\contentsline {subsection}{\tocsubsection {}{2.1.1}{Introduction}}{2}{subsection.2.1.1}%
-\contentsline {subsection}{\tocsubsection {}{2.1.2}{Entropy coding}}{4}{subsection.2.1.2}%
-\contentsline {subsection}{\tocsubsection {}{2.1.3}{Dictionary coding}}{5}{subsection.2.1.3}%
-\contentsline {subsection}{\tocsubsection {}{2.1.4}{Other encodings}}{6}{subsection.2.1.4}%
-\contentsline {subsubsection}{\tocsubsubsection {}{2.1.4.1}{Integer compression schemes}}{6}{subsubsection.2.1.4.1}%
-\contentsline {subsubsection}{\tocsubsubsection {}{2.1.4.2}{State-of-the-Art}}{9}{subsubsection.2.1.4.2}%
-\contentsline {section}{\tocsection {}{2.2}{Nanopore Signal Data}}{10}{section.2.2}%
-\contentsline {chapter}{\tocchapter {Chapter}{3}{Evaluation}}{14}{chapter.3}%
-\contentsline {section}{\tocsection {}{3.1}{Data}}{14}{section.3.1}%
-\contentsline {subsection}{\tocsubsection {}{3.1.1}{Characteristics}}{16}{subsection.3.1.1}%
-\contentsline {subsection}{\tocsubsection {}{3.1.2}{Methods}}{20}{subsection.3.1.2}%
-\contentsline {subsection}{\tocsubsection {}{3.1.3}{Subsequence Searching}}{23}{subsection.3.1.3}%
-\contentsline {chapter}{\tocchapter {Chapter}{4}{Experiments}}{27}{chapter.4}%
-\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{28}{chapter.5}%
-\contentsline {chapter}{\tocchapter {Chapter}{6}{Conclusion}}{29}{chapter.6}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{30}{chapter*.25}%
-\contentsline {section}{\tocsection {}{6.1}{Subsequence Searching}}{30}{section.6.1}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{31}{chapter*.27}%
+\contentsline {section}{\tocsection {}{2.1}{Nanopore Sequencing}}{2}{section.2.1}%
+\contentsline {section}{\tocsection {}{2.2}{Data Compression}}{3}{section.2.2}%
+\contentsline {subsection}{\tocsubsection {}{2.2.1}{Introduction}}{3}{subsection.2.2.1}%
+\contentsline {subsection}{\tocsubsection {}{2.2.2}{Entropy coding}}{5}{subsection.2.2.2}%
+\contentsline {subsection}{\tocsubsection {}{2.2.3}{Dictionary coding}}{7}{subsection.2.2.3}%
+\contentsline {subsection}{\tocsubsection {}{2.2.4}{Other encodings}}{8}{subsection.2.2.4}%
+\contentsline {subsubsection}{\tocsubsubsection {}{2.2.4.1}{Integer compression schemes}}{8}{subsubsection.2.2.4.1}%
+\contentsline {subsubsection}{\tocsubsubsection {}{2.2.4.2}{State-of-the-Art}}{11}{subsubsection.2.2.4.2}%
+\contentsline {subsection}{\tocsubsection {}{2.2.5}{Nanopore compression}}{12}{subsection.2.2.5}%
+\contentsline {chapter}{\tocchapter {Chapter}{3}{Data}}{15}{chapter.3}%
+\contentsline {section}{\tocsection {}{3.1}{Characteristics}}{17}{section.3.1}%
+\contentsline {chapter}{\tocchapter {Chapter}{4}{Problem Space}}{24}{chapter.4}%
+\contentsline {section}{\tocsection {}{4.1}{Subsequence Searching}}{25}{section.4.1}%
+\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{29}{chapter.5}%
+\contentsline {chapter}{\tocchapter {Chapter}{6}{Discussion}}{30}{chapter.6}%
+\contentsline {chapter}{\tocchapter {Chapter}{7}{Conclusion}}{31}{chapter.7}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{32}{chapter*.26}%
+\contentsline {section}{\tocsection {}{7.1}{Subsequence Searching}}{32}{section.7.1}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{33}{chapter*.28}%

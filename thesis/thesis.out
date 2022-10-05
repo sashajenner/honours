@@ -5,20 +5,20 @@
 \BOOKMARK [0][-]{chapter*.6}{List of Tables}{}% 5
 \BOOKMARK [0][-]{chapter.1}{Chapter 1. Introduction}{}% 6
 \BOOKMARK [0][-]{chapter.2}{Chapter 2. Literature Review}{}% 7
-\BOOKMARK [1][-]{section.2.1}{2.1. Data Compression}{chapter.2}% 8
-\BOOKMARK [2][-]{subsection.2.1.1}{2.1.1. Introduction}{section.2.1}% 9
-\BOOKMARK [2][-]{subsection.2.1.2}{2.1.2. Entropy coding}{section.2.1}% 10
-\BOOKMARK [2][-]{subsection.2.1.3}{2.1.3. Dictionary coding}{section.2.1}% 11
-\BOOKMARK [2][-]{subsection.2.1.4}{2.1.4. Other encodings}{section.2.1}% 12
-\BOOKMARK [1][-]{section.2.2}{2.2. Nanopore Signal Data}{chapter.2}% 13
-\BOOKMARK [0][-]{chapter.3}{Chapter 3. Evaluation}{}% 14
-\BOOKMARK [1][-]{section.3.1}{3.1. Data}{chapter.3}% 15
-\BOOKMARK [2][-]{subsection.3.1.1}{3.1.1. Characteristics}{section.3.1}% 16
-\BOOKMARK [2][-]{subsection.3.1.2}{3.1.2. Methods}{section.3.1}% 17
-\BOOKMARK [2][-]{subsection.3.1.3}{3.1.3. Subsequence Searching}{section.3.1}% 18
-\BOOKMARK [0][-]{chapter.4}{Chapter 4. Experiments}{}% 19
-\BOOKMARK [0][-]{chapter.5}{Chapter 5. Results}{}% 20
-\BOOKMARK [0][-]{chapter.6}{Chapter 6. Conclusion}{}% 21
-\BOOKMARK [0][-]{chapter*.25}{Appendix}{}% 22
-\BOOKMARK [1][-]{section.6.1}{6.1. Subsequence Searching}{chapter*.25}% 23
-\BOOKMARK [0][-]{chapter*.27}{Bibliography}{}% 24
+\BOOKMARK [1][-]{section.2.1}{2.1. Nanopore Sequencing}{chapter.2}% 8
+\BOOKMARK [1][-]{section.2.2}{2.2. Data Compression}{chapter.2}% 9
+\BOOKMARK [2][-]{subsection.2.2.1}{2.2.1. Introduction}{section.2.2}% 10
+\BOOKMARK [2][-]{subsection.2.2.2}{2.2.2. Entropy coding}{section.2.2}% 11
+\BOOKMARK [2][-]{subsection.2.2.3}{2.2.3. Dictionary coding}{section.2.2}% 12
+\BOOKMARK [2][-]{subsection.2.2.4}{2.2.4. Other encodings}{section.2.2}% 13
+\BOOKMARK [2][-]{subsection.2.2.5}{2.2.5. Nanopore compression}{section.2.2}% 14
+\BOOKMARK [0][-]{chapter.3}{Chapter 3. Data}{}% 15
+\BOOKMARK [1][-]{section.3.1}{3.1. Characteristics}{chapter.3}% 16
+\BOOKMARK [0][-]{chapter.4}{Chapter 4. Problem Space}{}% 17
+\BOOKMARK [1][-]{section.4.1}{4.1. Subsequence Searching}{chapter.4}% 18
+\BOOKMARK [0][-]{chapter.5}{Chapter 5. Results}{}% 19
+\BOOKMARK [0][-]{chapter.6}{Chapter 6. Discussion}{}% 20
+\BOOKMARK [0][-]{chapter.7}{Chapter 7. Conclusion}{}% 21
+\BOOKMARK [0][-]{chapter*.26}{Appendix}{}% 22
+\BOOKMARK [1][-]{section.7.1}{7.1. Subsequence Searching}{chapter*.26}% 23
+\BOOKMARK [0][-]{chapter*.28}{Bibliography}{}% 24
