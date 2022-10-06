@@ -49,6 +49,7 @@ structure
 			- flac
 		- nanopore data compression
 			- previous attempts
+			- slow5 record and signal
 			- vbz16
 - data analysis
 	- why not RNA - small
@@ -60,5 +61,7 @@ structure
 		- vbbe21 instead of svb
 		- static huffman
 		- range coding
-	- encoding the stall
+	- exploiting the signal
+		- encoding the stall
+		- separating jumps and flats
 	- subsequence searching

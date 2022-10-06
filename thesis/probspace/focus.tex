@@ -1,0 +1,9 @@
+\section{The Focus}
+
+%TODO why lossless important
+%TODO why not lossy
+%TODO why per read
+
+It is important for fast parallel querying that the reads are compressed separately. That's not to say that each read is independent. Reads originating from the same channel and well/pore will have been recorded by the same sensor and so will likely have similar properties. This is especially true for reads recorded at a similar timestamp as each channel deteriorates over the course of a sequencing run. A compression method may take advantage of these available patterns but it is important for querying that each read can be decompressed independently. Perhaps there exists a multi-read compression strategy which is great for space reduction and hence archival purposes. However, such a strategy is not obvious and the primary desire of bioinformaticians is a better compression algorithm that does not sacrifice parallel querying. Hence, multi-read compression is outside the scope of this thesis.
+
+Lossy compression, although an interesting avenue, is not desirable for most research applications where accuracy is more valued than storage space. For example, long-term archival of scholarly research data must be lossless to allow for public replication of any results. For this reason, lossless compression is the focus of this thesis.

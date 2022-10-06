@@ -20,7 +20,7 @@ Data compression or source coding is the process of encoding information using f
 
 Data compression relies on the framework of information theory established fundamentally by Claude E. Shannon in ``A Mathematical Theory of Communication'' \cite{shannon}. Information theory studies the transmission of digital information through communication systems. The communication system Shannon theorises is composed of five parts: the information source, transmitter, channel, receiver and destination. See Figure \ref{fig:shannon-comm-system}. Depending on the information transmitted through the system, it is classified into three main categories; discrete, continuous and mixed.
 
-\input{litreview/plots/shannon-comm}
+\input{plots/shannon-comm}
 \footnotetext[1]{Figure \ref{fig:shannon-comm-system} was taken from Fig. 1 in \cite{shannon}.}
 
 In the discrete case, the information source can be represented by a stochastic process \[\{X_t: t\in\mathbb{N}^+\}\] with a discrete state space $S$. Governed by this mathematical model, the information source produces a sequence of symbols from its alphabet which is received by the transmitter. If the probability of the transmitter observing the next symbol depends only on the current symbol and is conditionally independent of previous symbols, the process satisfies the Markov property. In this case, the information source can be represented by a Markov chain with a finite state space $S_1,S_2,\dots,S_n$ and a set of transition probabilities $p_i(j)$ defined as the probability that the system will transition from state $S_i$ to $S_j$.

@@ -1,4 +1,4 @@
-\begin{thebibliography}{30}
+\begin{thebibliography}{32}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \providecommand{\urlprefix}{URL }
@@ -67,6 +67,25 @@ Phillip Gage. 1994.
   \href{http://www.pennelynn.com/Documents/CUJ/HTML/94HTML/19940045.HTM}{A new
   algorithm for data compression}.
 \newblock \emph{The C User Journal}.
+
+\bibitem[{Gamaarachchi et~al.(2022{\natexlab{a}})Gamaarachchi, Samarakoon,
+  Jenner, Ferguson, Amos, Hammond, Saadat, Smith, Parameswaran, and
+  Deveson}]{slow5}
+Hasindu Gamaarachchi, Hiruna Samarakoon, Sasha~P. Jenner, James~M. Ferguson,
+  Timothy~G. Amos, Jillian~M. Hammond, Hassaan Saadat, Martin~A. Smith, Sri
+  Parameswaran, and Ira~W. Deveson. 2022{\natexlab{a}}.
+\newblock \href{https://doi.org/10.1038/s41587-021-01147-4}{Fast nanopore
+  sequencing data analysis with slow5}.
+\newblock \emph{Nature Biotechnology}.
+
+\bibitem[{Gamaarachchi et~al.(2022{\natexlab{b}})Gamaarachchi, Samarakoon,
+  Jenner, Ferguson, Amos, Hammond, Saadat, Smith, Parameswaran, and
+  Deveson}]{slow5-spec}
+Hasindu Gamaarachchi, Hiruna Samarakoon, Sasha~P. Jenner, James~M. Ferguson,
+  Timothy~G. Amos, Jillian~M. Hammond, Hassaan Saadat, Martin~A. Smith, Sri
+  Parameswaran, and Ira~W. Deveson. 2022{\natexlab{b}}.
+\newblock \emph{SLOW5 Specification (version 0.2.0)}.
+\newblock \url{https://hasindu2008.github.io/slow5specs/slow5-v0.2.0.pdf}.
 
 \bibitem[{Gigante(2017)}]{picopore}
 Scott Gigante. 2017.

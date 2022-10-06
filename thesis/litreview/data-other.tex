@@ -1,4 +1,4 @@
-\subsection{Other encodings}
+\subsection{Other Encodings}
 \label{sec:data-other}
 
 There are many other lossless data compression schemes described in the literature. Run-length encoding is one such method which encodes substrings consisting of repeated consecutive symbols, known as \textit{runs}, with their repeated symbol and length. First employed in 1967 for transmission of analogue television signals, run-length encoding proves beneficial when there are many runs, especially of long length \cite{rle}. Unfortunately, nanopore signal data does not contain many such runs and would likely encode poorly under this method.
@@ -26,20 +26,20 @@ Hence, on this example the compression ratio would be
 Compression and decompression using this method can be efficiently computed using scalar processing.
 It can be computed even faster by using an alternative bit packing layout and exploiting single-instruction-multiple-data (SIMD) processing  \cite{lemire-simd}.
 
-\input{litreview/plots/bitpack}
+\input{plots/bitpack}
 % TODO move footnotes to the right spot
 \footnotetext[1]{Figure \ref{fig:bitpack} is heavily inspired by Figure 1 from \cite{lemire-simd}.}
 
 Stream VByte is a specialised codec for compressing 32-bit unsigned integers \cite{svb}. It stores each integer using a variable number of bytes (1 to 4) depending on its size. Integers in the range $[2^{8(n-1)},2^{8n}-1]$ are represented using $n>0$ bytes. For example, integers in the range $[1,255]$ are losslessly represented using 1 byte. The integer 0 is a special case missing from the above formula which is classically represented using 1 byte. There is however a variation which instead encodes 0 using 0 bytes and integers in the 3 byte range $[2^{16},2^{24}-1]$ with 4 bytes rather than 3. This is advantageous if 0 occurs more often than integers in the 3 byte range. See Table \ref{tab:groupsvb} for a comparison of the classical and 0-based encoding. The number of bytes used for each integer is stored in an array of control bytes which prefaces the actual data. 2-bit words are used to store the number of bytes used for each integer with 00, 01, 10 and 11 corresponding to 1, 2, 3 and 4 bytes respectively (or 0, 1, 2 and 4 bytes in the 0-based variation). See Figures \ref{fig:groupsvb} for an example of how the encodings are structured.
 
-%\input{litreview/plots/svb-byte}
-\input{litreview/plots/svb-table-comb}
-\input{litreview/plots/svb}
+%\input{plots/svb-byte}
+\input{plots/svb-table-comb}
+\input{plots/svb}
 \footnotetext[2]{Figures \ref{fig:groupsvb} and \ref{fig:svb-16} are modified versions of Figures 1--3 from \cite{svb}.}
 
 Another variation to this encoding for 16-bit unsigned integers, known as Stream VByte 16, was developed by Oxford Nanopore Technologies in 2022 for compressing nanopore signal data in the POD5 file format \cite{pod5}. It is the same as the classical Stream VByte encoding described above except that each integer is stored using 1 or 2 bytes rather than 1 to 4 bytes. Since there are two different byte lengths, each of the byte lengths is stored using 1 bit; byte lengths 1 and 2 correspond to bit values 0 and 1 respectively. See Table \ref{tab:groupsvb} and Figure \ref{fig:svb-16}. If each integer lies in the range $[0, 2^{16})$ this method saves one bit per integer on average versus classical 32-bit Stream VByte. Due to their similarities, I hypothesise that the compression and decompression speed of Stream VByte 16 is similar if not better than classical Stream VByte. But there is no existing benchmark in the literature which compares both algorithms.
 
-\input{litreview/plots/svb-16}
+\input{plots/svb-16}
 
 \subsubsection{State-of-the-Art}
 \label{sec:state-of-the-art}
@@ -80,6 +80,6 @@ x = (z >>> 1) ^ -(z & 1)
 \end{lstlisting}
 This technique is used for signed integers in Google Protocol Buffers and is briefly described in their Developer Guide \cite{google-zigzag}.
 
-\input{litreview/plots/zigzag-fig}
+\input{plots/zigzag-fig}
 
 This requires at least four passes over the input data depending on how many passes Zstandard performs.

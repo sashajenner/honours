@@ -19,7 +19,7 @@
 	- PromethION ~430 bases / s
 	- PromethION
 		- 24 or 48 parallel flow cells
-		- 3000 channels per flow cell
+		- 2675 channels per flow cell
 		- theoretically max output 14TB when running for 72 hours at 420 bases / second
 	- thousands of current measurements (4000) per second
 	- processive translocation of the molecule leads to a characteristic current shift determined by multiple consecutive nucleotides (k-mer) defined by the length of the sensing region
