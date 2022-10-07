@@ -1,31 +1,36 @@
 \chapter{Data} \label{chap:data}
 
-\input{plots/data-meta}
+%TODO discuss SLOW5 format and how using v0.2.0
 
-\input{plots/data-read-meta}
+\input{plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.small}
 
 The data consists of many sequences of unsigned integers known as \textit{reads} and their associated metadata. Each read represents the quantised ionic current measured across a nanopore as a single-stranded DNA or RNA molecule is driven through it. The current is typically recorded 4000 times a second by the analogue-to-digital converter (ADC). This frequency is known as the \textit{sampling rate} and is stored as metadata for each read. Disturbances in the ionic current caused by the molecule's biological structure can be used to determine its nucleic acid sequence.
 
 Let each read be represented by
 \[ x := (x_i\mid x_i \in \mathbb{Z} \cap [0, 2^{16})) \]
-where $i\in \mathbb{Z}\cap [0, n)$. Computationally, $x$ is an unsigned 16-bit integer array with $n$ elements. However, in practice the full range of $2^{16}$ integers is never met. A property which will be further explored and heavily exploited.
+where $i\in \mathbb{Z}\cap [0, n)$. Computationally, $x$ is an unsigned 16-bit integer array with $n$ elements. However, in practice the full range of $2^{16}$ integers is never met. A property which will be further explored and heavily exploited. See Figure \ref{fig:read-e9f} for an example.
 
-There are many metadata fields which are constant for all reads of the same sequencing run. This includes the sampling rate and every header attribute. Common header attributes include metadata relating to the ASIC chip such as its temperature at the start of the run, the ONT device being used, the start time of the run, its duration in minutes and whether DNA or RNA is being used \cite{slow5-spec}.
+There are many metadata fields which are constant for all reads of the same sequencing run. This includes the sampling rate and every header attribute. Common header attributes include metadata relating to the ASIC chip such as its temperature at the start of the run, the ONT device being used, the start time of the run, its duration in minutes and whether DNA or RNA is being used \cite{slow5-spec}. See Table \ref{tab:data-meta}.
 
-The main read-variable metadata is the length $n$ and the information necessary for converting the read from quantised raw signal values into picoamperes (pA). This information is comprised of three fields: the digitisation, offset and range. The digitisation is the number of quantisation levels in the ADC which is typically 2048 ($2^{11}$) or 4096 ($2^{12}$). I believe this is why each data point in a read is recorded using 16 bits; it is the closest multiple of a byte after 11 and 12 bits. The next field is the offset which is the ADC's offset error whilst the range is the sensor chips full measurement range in picoamperes. To convert a raw signal value into picoamperes one does the following computation
-\[ (raw + offset) \times \frac{range}{digitisation}. \] The digitisation and range fields are actually constant between reads since they are hardware-defined properties; it is the offset which varies among reads.
+\input{plots/data-meta}
+\input{plots/data-read-meta}
 
-There are other read-variable metadata fields which are optionally included in the data when using the SLOW5 file format, which is the data format of interest for this thesis \cite{slow5}. Nonetheless these may prove useful for a compression algorithm and include the reason the read ended, flow cell location data comprised of the channel and pore number, the estimated median current level before the start of the read, and a count of the number of reads and data points previously recorded by the channel.
+The main read-variable metadata is the length $n$ and the information necessary for converting the read from quantised raw signal values into picoamperes (pA). This information is comprised of three fields: the digitisation, offset and range. The digitisation is the number of quantisation levels in the ADC which is typically 2048 ($2^{11}$) or 4096 ($2^{12}$). I believe this is why each data point in a read is recorded using 16 bits; it is the closest multiple of a byte after 11 and 12 bits. The next field is the offset which is the ADC's offset error whilst the range is the sensor chip's full measurement range in picoamperes. To convert a raw signal value into picoamperes one does the following computation
+\[ (raw + offset) \times \frac{range}{digitisation}. \] The digitisation and range fields are actually constant between reads since they are hardware-defined properties; it is the offset which varies among reads. See Table \ref{tab:data-read-meta}.
 
-For the remainder of the thesis, the data which we will use for analysing the characteristics of nanopore signal data and for comparing compression methods is a downsampling of a $\sim$30$\times$ NA12878 data set. The NA12878 data set has been well studied and is used prolifically for benchmarking genomics tools. It originates from a Utah woman whose DNA sample was artificially recreated, treated using a short read eliminator kit and sequenced on an ONT PromethION 48 using two version R9.4.1 flow cells to obtain $\sim$30$\times$ coverage of her genome. The data set was then downsampled a factor of $\sim$18 by obtaining the sequence of reads requested by a typical analysis application.
+There are other read-variable metadata fields which are optionally included in the data but nonetheless may prove useful for a compression algorithm. These include the reason the read ended, flow cell location data comprised of the channel and pore number, the estimated median current level before the start of the read, and a count of the number of reads and data points previously recorded by the channel.
+
+For the remainder of the thesis, the data which we will use for analysing the characteristics of nanopore signal data and for comparing compression methods is a downsampling of a $\sim$30$\times$ NA12878 data set. The NA12878 data set has been well studied and is used prolifically for benchmarking genomics tools. It originates from a Utah woman whose DNA sample was artificially recreated, treated using a short read eliminator kit and sequenced on an ONT PromethION 48 using two version R9.4.1 flow cells to obtain $\sim$30$\times$ coverage of her genome.
+The data set was then downsampled a factor of $\sim$18 by obtaining the first \num{500000} reads.
+%The data set was then downsampled a factor of $\sim$18 by obtaining the sequence of reads requested by a typical analysis application.
 %More specifically, it was generated by sorting the reads by chromosome number and then base location to obtain a sorted order of reads by genomic coordinates.
 Downsampling produces a smaller representative data set which speeds up testing, and the results found should scale up to the whole data set.
 Also, the PromethION flow cell produces the most yield out of all ONT flow cells so it makes sense to consider such a data set in a study of data compression.
 
-The original data set contains \num{9083052} reads and consumes $\sim$2 TiB in raw binary or $\sim$707 GiB using VBZ \cite{slow5}. The downsampled data set consists of \num{500000} reads and $\sim$ 57 billion signal points. Altogether it consumes $\sim$39 GiB when stored in the BLOW5 file format (v0.2.0) using svb-zd (or VBZ) signal compression and zlib record compression \cite{slow5}. See Table \ref{tab:data} for an overview of the data set.
-%and Figure \ref{fig:data-hdr}.TODO include slow5 header of data
+The original data set contains \num{9083052} reads and consumes $\sim$2 TiB in raw binary or $\sim$707 GiB using svb-zd signal compression and zlib record compression (hereafter svb-zd \& zlib)\cite{slow5}. After downsampling, the data set contains \num{500000} reads and $\sim$ 57 billion signal points, consuming $\sim$106 GiB in raw binary or $\sim$39 GiB when stored using svb-zd \& zlib. See Tables \ref{tab:data-orig} and \ref{tab:data} for an overview of the data set.
 
-\input{evaluation/plots/data-tab}
+\input{plots/data-orig-tab}
+\input{plots/data-tab}
 
 The raw signal values in the data set range from 158 to 1748 with a median of 474 and standard deviation of $\sim$ 35. The maximum is 1748 but the middle 99\% of the data ranges from 350 to 622. Figure \ref{fig:data-hist} shows the singular-width bin histogram of the raw signal values between 295 and 687.
 As one can observe, the distribution is fairly symmetric around the centre with the median and mean very close to one another. However, it is slightly right-skewed with its right tail extending much further than its left. This is most evident by observing that the maximum is more than four times further from the median than the minimum.
@@ -33,15 +38,15 @@ Most interestingly, there is clearly a cyclical pattern in the relative frequenc
 %TODO put closeup figure showing pattern
 This is most likely due to the nature of the analogue-to-digital converter (ADC) which digitises the analogue ionic current signal during sequencing.
 
-\input{evaluation/plots/rawsig-tab}
-\input{evaluation/plots/freq}
+\input{plots/rawsig-tab}
+\input{plots/freq}
 
 The read lengths range from 2024 to \num{5724000} with a median of 80304.5. See Table \ref{tab:n} for an overview and Figure \ref{fig:n-hist} for the histogram with bin width one.
 
-\input{evaluation/plots/n-tab}
-\input{evaluation/plots/nhist}
+\input{plots/n-tab}
+\input{plots/nhist}
 
-\input{evaluation/plots/diff-tab}
+\input{plots/diff-tab}
 
 \section{Characteristics}
 
@@ -55,22 +60,22 @@ The stall also occurs at the beginning of the read and after the surge if it exi
 
 The adapter sequence is the first DNA sequence recorded in the signal data. The adapter connects the motor protein to the DNA strand and has a predictable molecular sequence which differs from sequencing kit to kit. There is typically a surge between the stall and the adapter section consisting of several signal values which we will name the \textit{pre-adapter surge}.
 
-\input{evaluation/plots/start-sections}
+\input{plots/start-sections}
 
 The DNA sections are the sections of the signal data which store information necessary for determining the original DNA sequence. Characteristically, these oscillate in smaller low-variance sections of 10-100 signals with steep transitions between them. The adapter sequence is quite similar in behaviour since it also represents molecular information. See Figure \ref{fig:dna-section} for an example.
 
-\input{evaluation/plots/dna-section}
+\input{plots/dna-section}
 
 The homopolymer and slow sections are similar in behaviour. They typically occur at random positions in the read and consist of hundreds to thousands of signal points which oscillate with small variation around some value. This is quite similar to the stall section except that the stall oscillates near the median value of the read, whilst the homopolyer and slow sections can occur at any feasible value. The difference between the homopolymer and slow sections is that the homopolymer section represents the repetition of one or more DNA bases, whilst the slow section represents several DNA bases which are moving through the nanopore relatively slowly, or have gotten temporarily stuck, and so are recorded over many more signal points than usual.
 
-\input{evaluation/plots/homo-section}
-\input{evaluation/plots/slow-section}
+\input{plots/homo-section}
+\input{plots/slow-section}
 
 %TODO show homopolymer and slow sections
 
 There is sometimes a stall-like section which terminates the read as well.
 
-\input{evaluation/plots/mess-section}
+\input{plots/mess-section}
 
 %TODO show terminating stall
 

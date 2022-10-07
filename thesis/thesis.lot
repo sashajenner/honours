@@ -6,12 +6,13 @@
 \contentsline {table}{\numberline {2.1}{\ignorespaces The number of bytes used and their control codeword for different supported integer ranges in classical 32-bit, 0-based and 16-bit Stream VByte.\relax }}{10}{table.caption.10}%
 \contentsline {table}{\numberline {2.2}{\ignorespaces A timeline of the major events in the literature.\relax }}{15}{table.caption.14}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {3.1}{\ignorespaces The constant metadata of the NA12878 data set.\relax }}{16}{table.caption.15}%
-\contentsline {table}{\numberline {3.2}{\ignorespaces The variable metadata of the read with ID e9f08690-171f-476f-9119-5330d0290126 from the NA12878 data set.\relax }}{16}{table.caption.16}%
-\contentsline {table}{\numberline {3.3}{\ignorespaces The NA12878 data set.\relax }}{18}{table.caption.17}%
-\contentsline {table}{\numberline {3.4}{\ignorespaces Summary statistics of the data's raw signal values.\relax }}{19}{table.caption.18}%
-\contentsline {table}{\numberline {3.5}{\ignorespaces Summary statistics of the data's read lengths.\relax }}{20}{table.caption.20}%
-\contentsline {table}{\numberline {3.6}{\ignorespaces Summary statistics of the differential encoding of the data.\relax }}{20}{table.caption.22}%
+\contentsline {table}{\numberline {3.1}{\ignorespaces Some constant metadata of the NA12878 data set.\relax }}{17}{table.caption.16}%
+\contentsline {table}{\numberline {3.2}{\ignorespaces The variable metadata of the read with ID e9f08690-171f-476f-9119-5330d0290126 from the NA12878 data set.\relax }}{17}{table.caption.17}%
+\contentsline {table}{\numberline {3.3}{\ignorespaces The original NA12878 data set.\relax }}{18}{table.caption.18}%
+\contentsline {table}{\numberline {3.4}{\ignorespaces The downsampled NA12878 data set.\relax }}{18}{table.caption.19}%
+\contentsline {table}{\numberline {3.5}{\ignorespaces Summary statistics of the data's raw signal values.\relax }}{19}{table.caption.20}%
+\contentsline {table}{\numberline {3.6}{\ignorespaces Summary statistics of the data's read lengths.\relax }}{19}{table.caption.22}%
+\contentsline {table}{\numberline {3.7}{\ignorespaces Summary statistics of the differential encoding of the data.\relax }}{19}{table.caption.24}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
