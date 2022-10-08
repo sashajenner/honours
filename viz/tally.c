@@ -5,7 +5,7 @@
 #include "getsig.h"
 
 #define TALLY_SZ (65536) /* 2^16 */
-#define TALLY_SZ_EXP (4096) /* 2^12 */
+#define TALLY_SZ_EXP (8192) /* 2^13 */
 
 uint64_t *gettally(FILE *fp, int16_t *min, int16_t *max)
 {

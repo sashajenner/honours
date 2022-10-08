@@ -58,7 +58,7 @@ ggplot(data.frame(df[x,]), aes(x, df[x,1])) + #color=cut(x, c(1,14,789,831,3000)
 plot = ggplot(df, aes(1:nrow(df), df[,1])) +
 	geom_line() +
 	xlab('Position in Read') +
-	ylab('Raw Signal Delta') +
+	ylab('Raw Signal Zig-Zag Delta') +
 	theme(text = element_text(size = 40,
 				  family = 'serif'),
 		plot.margin = unit(c(0,2,0,0), "cm"))
