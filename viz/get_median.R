@@ -74,6 +74,9 @@ q0975 = get_quantile(df, 0.975)
 q0005 = get_quantile(df, 0.005)
 q0995 = get_quantile(df, 0.995)
 
+prob_lesser_neg128 = sum((df[df$signal <= -128,])$freq) / sum(df$freq)
+prob_greater_127 = sum((df[df$signal >= 127,])$freq) / sum(df$freq)
+
 print(q0005)
 print(q0025)
 print(q1)
@@ -81,3 +84,7 @@ print(median)
 print(q3)
 print(q0975)
 print(q0995)
+
+print(prob_lesser_neg128)
+print(prob_greater_127)
+print(prob_lesser_neg128 + prob_greater_127)

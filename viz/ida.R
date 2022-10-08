@@ -4,6 +4,7 @@
 USAGE = 'usage: ./ida.R STATS_TSV'
 
 library(ggplot2)
+library(tidyverse)
 library(tikzDevice)
 
 # check args
@@ -96,7 +97,13 @@ df = read.delim(path)
 # distribution of signal values in pa? TODO
 
 # start_time vs mean
-hist(df$channel_num)
-df_cn1 = df[df$channel_num == 2642,]
-ggplot(df_cn1, aes(start_time, mean)) +
+#hist(df$channel_num)
+#df_cn1 = df[df$channel_num == 2642,]
+#ggplot(df_cn1, aes(start_time, mean)) +
+#	geom_point()
+
+df_avg = df %>% group_by(start_time) %>%
+	summarise(mean_n = mean(n))
+
+ggplot(df_avg, aes(start_time, mean_n)) +
 	geom_point()
