@@ -9,10 +9,11 @@
 \contentsline {table}{\numberline {3.1}{\ignorespaces Some constant metadata of the NA12878 data set.\relax }}{17}{table.caption.16}%
 \contentsline {table}{\numberline {3.2}{\ignorespaces The variable metadata of the read with ID e9f08690-171f-476f-9119-5330d0290126 from the NA12878 data set.\relax }}{17}{table.caption.17}%
 \contentsline {table}{\numberline {3.3}{\ignorespaces The original NA12878 data set.\relax }}{18}{table.caption.18}%
-\contentsline {table}{\numberline {3.4}{\ignorespaces The downsampled NA12878 data set.\relax }}{18}{table.caption.19}%
+\contentsline {table}{\numberline {3.4}{\ignorespaces The downsampled NA12878 data set.\relax }}{19}{table.caption.19}%
 \contentsline {table}{\numberline {3.5}{\ignorespaces Summary statistics of the data's raw signal values.\relax }}{19}{table.caption.20}%
-\contentsline {table}{\numberline {3.6}{\ignorespaces Summary statistics of the data's read lengths.\relax }}{19}{table.caption.22}%
-\contentsline {table}{\numberline {3.7}{\ignorespaces Summary statistics of the differential encoding of the data.\relax }}{19}{table.caption.24}%
+\contentsline {table}{\numberline {3.6}{\ignorespaces Summary statistics of the data's read lengths.\relax }}{20}{table.caption.22}%
+\contentsline {table}{\numberline {3.7}{\ignorespaces Summary statistics of the differential encoding of the data.\relax }}{27}{table.caption.30}%
+\contentsline {table}{\numberline {3.8}{\ignorespaces Summary statistics of the zig-zag differential encoding of the data.\relax }}{28}{table.caption.33}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

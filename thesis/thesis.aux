@@ -127,13 +127,14 @@
 \citation{mcdrc}
 \@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces A timeline of the major events in the literature.\relax }}{15}{table.caption.14}\protected@file@percent }
 \newlabel{tab:lit}{{2.2}{15}{A timeline of the major events in the literature.\relax }{table.caption.14}{}}
-\citation{slow5-spec}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{3}{Data}}{16}{chapter.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{3}{The Data}}{16}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:data}{{3}{16}{Data}{chapter.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces The read with ID e9f08690-171f-476f-9119-5330d0290126 from the NA12878 data set. $535, 531, 529, 519, 535,\dots  $ is the sequence starting from position 25000.\relax }}{16}{figure.caption.15}\protected@file@percent }
-\newlabel{fig:read-e9f}{{3.1}{16}{The read with ID e9f08690-171f-476f-9119-5330d0290126 from the NA12878 data set. $535, 531, 529, 519, 535,\dots $ is the sequence starting from position 25000.\relax }{figure.caption.15}{}}
+\newlabel{chap:data}{{3}{16}{The Data}{chapter.3}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{3.1}{Introduction}}{16}{section.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces The read with ID e9f08690-171f-476f-9119-5330d0290126 from the NA12878 data set plotted against two axes. The primary $y$-axis (left) is the raw signal values and the secondary $y$-axis (right) is the ionic current found using equation \ref  {eq:pa}. $535, 531, 529, 519, 535,\dots  $ is the sequence starting from position 25000 and $106.73, 105.27, 104.54, 100.88, 106.73,\dots  $ is the same sequence after converting to picoamperes (rounded to 2 decimal places).\relax }}{16}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:read-e9f-pa}{{3.1}{16}{The read with ID e9f08690-171f-476f-9119-5330d0290126 from the NA12878 data set plotted against two axes. The primary $y$-axis (left) is the raw signal values and the secondary $y$-axis (right) is the ionic current found using equation \ref {eq:pa}. $535, 531, 529, 519, 535,\dots $ is the sequence starting from position 25000 and $106.73, 105.27, 104.54, 100.88, 106.73,\dots $ is the same sequence after converting to picoamperes (rounded to 2 decimal places).\relax }{figure.caption.15}{}}
+\citation{slow5-spec}
 \@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Some constant metadata of the NA12878 data set.\relax }}{17}{table.caption.16}\protected@file@percent }
 \newlabel{tab:data-meta}{{3.1}{17}{Some constant metadata of the NA12878 data set.\relax }{table.caption.16}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces The variable metadata of the read with ID e9f08690-171f-476f-9119-5330d0290126 from the NA12878 data set.\relax }}{17}{table.caption.17}\protected@file@percent }
@@ -141,62 +142,74 @@
 \citation{slow5}
 \@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces The original NA12878 data set.\relax }}{18}{table.caption.18}\protected@file@percent }
 \newlabel{tab:data-orig}{{3.3}{18}{The original NA12878 data set.\relax }{table.caption.18}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces The downsampled NA12878 data set.\relax }}{18}{table.caption.19}\protected@file@percent }
-\newlabel{tab:data}{{3.4}{18}{The downsampled NA12878 data set.\relax }{table.caption.19}{}}
+\newlabel{eq:pa}{{3.1}{18}{Introduction}{equation.3.1.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces The downsampled NA12878 data set.\relax }}{19}{table.caption.19}\protected@file@percent }
+\newlabel{tab:data}{{3.4}{19}{The downsampled NA12878 data set.\relax }{table.caption.19}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {3.5}{\ignorespaces  Summary statistics of the data's raw signal values.\relax }}{19}{table.caption.20}\protected@file@percent }
 \newlabel{tab:rawsig}{{3.5}{19}{Summary statistics of the data's raw signal values.\relax }{table.caption.20}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.6}{\ignorespaces  Summary statistics of the data's read lengths.\relax }}{19}{table.caption.22}\protected@file@percent }
-\newlabel{tab:n}{{3.6}{19}{Summary statistics of the data's read lengths.\relax }{table.caption.22}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.7}{\ignorespaces  Summary statistics of the differential encoding of the data.\relax }}{19}{table.caption.24}\protected@file@percent }
-\newlabel{tab:diff}{{3.7}{19}{Summary statistics of the differential encoding of the data.\relax }{table.caption.24}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces The frequency of raw signal values 295 to 687 in millions for the NA12878 data set. The raw signal values outside this range occurred less than 1 million times.\relax }}{20}{figure.caption.21}\protected@file@percent }
-\newlabel{fig:data-hist}{{3.2}{20}{The frequency of raw signal values 295 to 687 in millions for the NA12878 data set. The raw signal values outside this range occurred less than 1 million times.\relax }{figure.caption.21}{}}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{3.1}{Characteristics}}{20}{section.3.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Histogram of the number of data points in (length of) each read for the NA12878 data set. The distribution appears to modelled by an exponential or Gamma.\relax }}{21}{figure.caption.23}\protected@file@percent }
-\newlabel{fig:n-hist}{{3.3}{21}{Histogram of the number of data points in (length of) each read for the NA12878 data set. The distribution appears to modelled by an exponential or Gamma.\relax }{figure.caption.23}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces The first 1500 data points of a randomly chosen read split into four sections: surge (before the red line), stall (between red and orange), pre-adapter surge (between orange and blue) and adapter sequence (after blue). In order from left to right the vertical lines are coloured red, orange and blue.\relax }}{22}{figure.caption.25}\protected@file@percent }
-\newlabel{fig:start-sections}{{3.4}{22}{The first 1500 data points of a randomly chosen read split into four sections: surge (before the red line), stall (between red and orange), pre-adapter surge (between orange and blue) and adapter sequence (after blue). In order from left to right the vertical lines are coloured red, orange and blue.\relax }{figure.caption.25}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces An example of 200 data points from a DNA section in the same randomly chosen read as in Figure \ref  {fig:start-sections}. It is characterised by smaller low-variance sections with steep transitions between them.\relax }}{23}{figure.caption.26}\protected@file@percent }
-\newlabel{fig:dna-section}{{3.5}{23}{An example of 200 data points from a DNA section in the same randomly chosen read as in Figure \ref {fig:start-sections}. It is characterised by smaller low-variance sections with steep transitions between them.\relax }{figure.caption.26}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces An example of a homopolymer section (repetition of `T') from the same read used in Figures \ref  {fig:start-sections} and \ref  {fig:dna-section}. The thymine DNA base is repeated 33 times in the homopolymer.\relax }}{24}{figure.caption.27}\protected@file@percent }
-\newlabel{fig:homo-section}{{3.6}{24}{An example of a homopolymer section (repetition of `T') from the same read used in Figures \ref {fig:start-sections} and \ref {fig:dna-section}. The thymine DNA base is repeated 33 times in the homopolymer.\relax }{figure.caption.27}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces An example of 3800 data points from a slow section in another randomly chosen read. It is characterised by extended low-variance sections between regular DNA sections. The 6-mers GTCCCA, TCCCAA and CCAAGT are mapped to the regions between the red and orange, orange and blue, and blue and purple vertical lines respectively. CCCAAG is also mapped to the orange-blue region but not as cleanly. In order from left to right the vertical lines are coloured red, orange, blue and purple.\relax }}{25}{figure.caption.28}\protected@file@percent }
-\newlabel{fig:dna-section}{{3.7}{25}{An example of 3800 data points from a slow section in another randomly chosen read. It is characterised by extended low-variance sections between regular DNA sections. The 6-mers GTCCCA, TCCCAA and CCAAGT are mapped to the regions between the red and orange, orange and blue, and blue and purple vertical lines respectively. CCCAAG is also mapped to the orange-blue region but not as cleanly. In order from left to right the vertical lines are coloured red, orange, blue and purple.\relax }{figure.caption.28}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces An example of an incongruent section from the same read used in Figures \ref  {fig:start-sections}, \ref  {fig:dna-section} and \ref  {fig:homo-section}. The incongruent section's mean signal level is $\sim $ 620 compared to the whole's read's mean which is $\sim $ 550.\relax }}{26}{figure.caption.29}\protected@file@percent }
-\newlabel{fig:mess-section}{{3.8}{26}{An example of an incongruent section from the same read used in Figures \ref {fig:start-sections}, \ref {fig:dna-section} and \ref {fig:homo-section}. The incongruent section's mean signal level is $\sim $ 620 compared to the whole's read's mean which is $\sim $ 550.\relax }{figure.caption.29}{}}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{4}{Problem Space}}{27}{chapter.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces The frequency of raw signal values 295 to 687 in millions for the NA12878 data set. The raw signal values outside this range occurred less than 1 million times (or with a probability lesser than 0.002\%).\relax }}{20}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:data-hist}{{3.2}{20}{The frequency of raw signal values 295 to 687 in millions for the NA12878 data set. The raw signal values outside this range occurred less than 1 million times (or with a probability lesser than 0.002\%).\relax }{figure.caption.21}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.6}{\ignorespaces  Summary statistics of the data's read lengths.\relax }}{20}{table.caption.22}\protected@file@percent }
+\newlabel{tab:n}{{3.6}{20}{Summary statistics of the data's read lengths.\relax }{table.caption.22}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Histogram of the number of data points in (length of) each read for the NA12878 data set. The distribution appears to modelled by an exponential or Gamma distribution.\relax }}{21}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:n-hist}{{3.3}{21}{Histogram of the number of data points in (length of) each read for the NA12878 data set. The distribution appears to modelled by an exponential or Gamma distribution.\relax }{figure.caption.23}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{3.2}{Characteristics}}{21}{section.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces The first 1500 data points of a randomly chosen read split into four sections: surge (before the red line), stall (between red and orange), pre-adapter surge (between orange and blue) and adapter sequence (after blue). In order from left to right the vertical lines are coloured red, orange and blue.\relax }}{22}{figure.caption.24}\protected@file@percent }
+\newlabel{fig:start-sections}{{3.4}{22}{The first 1500 data points of a randomly chosen read split into four sections: surge (before the red line), stall (between red and orange), pre-adapter surge (between orange and blue) and adapter sequence (after blue). In order from left to right the vertical lines are coloured red, orange and blue.\relax }{figure.caption.24}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces An example of 200 data points from a DNA section in the same randomly chosen read as in Figure \ref  {fig:start-sections}. It is characterised by smaller low-variance sections with steep transitions between them.\relax }}{23}{figure.caption.25}\protected@file@percent }
+\newlabel{fig:dna-section}{{3.5}{23}{An example of 200 data points from a DNA section in the same randomly chosen read as in Figure \ref {fig:start-sections}. It is characterised by smaller low-variance sections with steep transitions between them.\relax }{figure.caption.25}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces An example of a homopolymer section (repetition of `T') from the same read used in Figures \ref  {fig:start-sections} and \ref  {fig:dna-section}. The thymine DNA base is repeated 33 times in the homopolymer.\relax }}{24}{figure.caption.26}\protected@file@percent }
+\newlabel{fig:homo-section}{{3.6}{24}{An example of a homopolymer section (repetition of `T') from the same read used in Figures \ref {fig:start-sections} and \ref {fig:dna-section}. The thymine DNA base is repeated 33 times in the homopolymer.\relax }{figure.caption.26}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{3.3}{Transformations}}{24}{section.3.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces An example of 3800 data points from a slow section in another randomly chosen read. It is characterised by extended low-variance sections between regular DNA sections. The 6-mers GTCCCA, TCCCAA and CCAAGT are mapped to the regions between the red and orange, orange and blue, and blue and purple vertical lines respectively. CCCAAG is also mapped to the orange-blue region but not as cleanly. In order from left to right the vertical lines are coloured red, orange, blue and purple.\relax }}{25}{figure.caption.27}\protected@file@percent }
+\newlabel{fig:dna-section}{{3.7}{25}{An example of 3800 data points from a slow section in another randomly chosen read. It is characterised by extended low-variance sections between regular DNA sections. The 6-mers GTCCCA, TCCCAA and CCAAGT are mapped to the regions between the red and orange, orange and blue, and blue and purple vertical lines respectively. CCCAAG is also mapped to the orange-blue region but not as cleanly. In order from left to right the vertical lines are coloured red, orange, blue and purple.\relax }{figure.caption.27}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces An example of an incongruent section from the same read used in Figures \ref  {fig:start-sections}, \ref  {fig:dna-section} and \ref  {fig:homo-section}. The incongruent section's mean signal level is $\sim $ 620 compared to the whole's read's mean which is $\sim $ 550.\relax }}{26}{figure.caption.28}\protected@file@percent }
+\newlabel{fig:mess-section}{{3.8}{26}{An example of an incongruent section from the same read used in Figures \ref {fig:start-sections}, \ref {fig:dna-section} and \ref {fig:homo-section}. The incongruent section's mean signal level is $\sim $ 620 compared to the whole's read's mean which is $\sim $ 550.\relax }{figure.caption.28}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces The deltas of the read with ID e9f08690-171f-476f-9119-5330d0290126. $-4, -2, -10, 16,\dots  $ is the sequence starting from position 25000.\relax }}{26}{figure.caption.29}\protected@file@percent }
+\newlabel{fig:read-e9f-delta}{{3.9}{26}{The deltas of the read with ID e9f08690-171f-476f-9119-5330d0290126. $-4, -2, -10, 16,\dots $ is the sequence starting from position 25000.\relax }{figure.caption.29}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.7}{\ignorespaces  Summary statistics of the differential encoding of the data.\relax }}{27}{table.caption.30}\protected@file@percent }
+\newlabel{tab:diff}{{3.7}{27}{Summary statistics of the differential encoding of the data.\relax }{table.caption.30}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces The frequency of raw signal deltas -80 to 112 in millions for the NA12878 data set. The deltas outside this range occurred less than 1 million times.\relax }}{27}{figure.caption.31}\protected@file@percent }
+\newlabel{fig:delta-hist}{{3.10}{27}{The frequency of raw signal deltas -80 to 112 in millions for the NA12878 data set. The deltas outside this range occurred less than 1 million times.\relax }{figure.caption.31}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.11}{\ignorespaces The zig-zag deltas of the read with ID e9f08690-171f-476f-9119-5330d0290126. $7, 3, 19, 32,\dots  $ is the sequence starting from position 25000.\relax }}{28}{figure.caption.32}\protected@file@percent }
+\newlabel{fig:read-e9f-zd}{{3.11}{28}{The zig-zag deltas of the read with ID e9f08690-171f-476f-9119-5330d0290126. $7, 3, 19, 32,\dots $ is the sequence starting from position 25000.\relax }{figure.caption.32}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.8}{\ignorespaces  Summary statistics of the zig-zag differential encoding of the data.\relax }}{28}{table.caption.33}\protected@file@percent }
+\newlabel{tab:diff}{{3.8}{28}{Summary statistics of the zig-zag differential encoding of the data.\relax }{table.caption.33}{}}
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{4}{Problem Space}}{29}{chapter.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:probspace}{{4}{27}{Problem Space}{chapter.4}{}}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{4.1}{The Focus}}{27}{section.4.1}\protected@file@percent }
+\newlabel{chap:probspace}{{4}{29}{Problem Space}{chapter.4}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{4.1}{The Focus}}{29}{section.4.1}\protected@file@percent }
 \citation{lemire-simd}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{4.2}{One Byte, Two Byte Exceptions}}{29}{section.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.2.1}{Range Coding}}{29}{subsection.4.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.2.2}{Static Huffman}}{29}{subsection.4.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\tocsection {}{4.3}{Exploiting the Signal}}{29}{section.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.3.1}{The Stall}}{29}{subsection.4.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.3.2}{Separating the Jumps and Flats}}{29}{subsection.4.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\tocsection {}{4.4}{Subsequence Searching}}{29}{section.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{33}{chapter.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\tocsection {}{4.2}{One Byte, Two Byte Exceptions}}{31}{section.4.2}\protected@file@percent }
+\newlabel{sec:vbbe21}{{4.2}{31}{One Byte, Two Byte Exceptions}{section.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.2.1}{Range Coding}}{31}{subsection.4.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.2.2}{Static Huffman}}{31}{subsection.4.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\tocsection {}{4.3}{Exploiting the Signal}}{31}{section.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.3.1}{The Stall}}{31}{subsection.4.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.3.2}{Separating the Jumps and Flats}}{31}{subsection.4.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\tocsection {}{4.4}{Subsequence Searching}}{31}{section.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{35}{chapter.5}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:results}{{5}{33}{Results}{chapter.5}{}}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{6}{Discussion}}{34}{chapter.6}\protected@file@percent }
+\newlabel{chap:results}{{5}{35}{Results}{chapter.5}{}}
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{6}{Discussion}}{36}{chapter.6}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:disc}{{6}{34}{Discussion}{chapter.6}{}}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{7}{Conclusion}}{35}{chapter.7}\protected@file@percent }
+\newlabel{chap:disc}{{6}{36}{Discussion}{chapter.6}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{6.1}{Future Work}}{36}{section.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{7}{Conclusion}}{37}{chapter.7}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:conclusion}{{7}{35}{Conclusion}{chapter.7}{}}
+\newlabel{chap:conclusion}{{7}{37}{Conclusion}{chapter.7}{}}
 \bibstyle{style/mybibstyle}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{36}{chapter*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{38}{chapter*.34}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:appendix}{{7}{36}{Appendix}{chapter*.30}{}}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{7.1}{Subsequence Searching}}{36}{section.7.1}\protected@file@percent }
-\newlabel{app:cn}{{7.1}{36}{Subsequence Searching}{section.7.1}{}}
-\newlabel{app:cn-dyn}{{7.1}{36}{Subsequence Searching}{section.7.1}{}}
+\newlabel{chap:appendix}{{7}{38}{Appendix}{chapter*.34}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{7.1}{Subsequence Searching}}{38}{section.7.1}\protected@file@percent }
+\newlabel{app:cn}{{7.1}{38}{Subsequence Searching}{section.7.1}{}}
+\newlabel{app:cn-dyn}{{7.1}{38}{Subsequence Searching}{section.7.1}{}}
 \bibdata{references}
 \bibcite{bwt}{{1}{1994}{{Burrows and Wheeler}}{{}}}
 \bibcite{lossy-nano}{{2}{2020{a}}{{Chandak et~al.}}{{Chandak, Tatwawadi, Sridhar, and Weissman}}}
@@ -212,7 +225,7 @@
 \bibcite{picopore}{{12}{2017}{{Gigante}}{{}}}
 \bibcite{google-zigzag}{{13}{2022}{{Google}}{{}}}
 \bibcite{genomic-comp}{{14}{2019}{{Hernaez et~al.}}{{Hernaez, Pavlichin, Weissman, and Ochoa}}}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{37}{chapter*.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{39}{chapter*.36}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \bibcite{huffman}{{15}{1952}{{Huffman}}{{}}}
