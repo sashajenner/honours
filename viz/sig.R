@@ -54,19 +54,19 @@ ggplot(data.frame(df[x,]), aes(x, df[x,1])) + #color=cut(x, c(1,14,789,831,3000)
 #print(df_new)
 #max(df_new)
 
-#tikz(file = paste0(path, '.tex'), width = 20)
-plot = ggplot(df, aes(1:nrow(df), df[,1])) +
+tikz(file = paste0(path, '.tex'), width = 5, height = 5)
+ggplot(df, aes(1:nrow(df), df[,1])) +
 	geom_line() +
 	xlab('Position in Read') +
-	ylab('Raw Signal Zig-Zag Delta') +
-	theme(text = element_text(size = 40,
-				  family = 'serif'),
-		plot.margin = unit(c(0,2,0,0), "cm"))
+	ylab('Raw Signal')
+	#theme(text = element_text(size = 40,
+	#			  family = 'serif'),
+	#	plot.margin = unit(c(0,2,0,0), "cm"))
 	#scale_y_continuous(sec.axis=sec_axis(trans=~(.-243)*748.580139/2048,
 	#					name='Ionic Current (pA)'))
 	#labs(title = title)
-ggsave(paste0(path, '.pdf'), plot, width=20)
-#dev.off()
+#ggsave(paste0(path, '.pdf'), plot, width=20)
+dev.off()
 
 #plotly = plot_ly(x = 1:nrow(df), y = df[,1],
 #		 type = 'scatter',

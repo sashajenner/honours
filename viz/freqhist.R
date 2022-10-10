@@ -33,10 +33,11 @@ print(minmil)
 print(maxmil)
 
 tikz(file = paste0(path, '.hist.tex'), width = 5, height = 5)
-ggplot(df, aes(x=df[,1], y=df[,2])) +
+ggplot(df, aes(x=df[,1], y=df[,2] / 10^6)) +
 	geom_histogram(stat="identity") +
-	xlab('Exceptions') +
-	ylab('Frequency')
+	xlab('Raw Signal Zig-Zag Delta') +
+	ylab('Frequency ($\\times 10^6$)') +
+	xlim(c(0,maxmil))
 dev.off()
 #
 #plot = ggplot(df, aes(x=df[,1], y=df[,2])) +
