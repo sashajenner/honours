@@ -6,45 +6,45 @@ Database file #1: references.bib
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 Warning--empty booktitle in bwt
 Warning--empty journal in huffman-time
-You've used 32 entries,
+You've used 31 entries,
             3070 wiz_defined-function locations,
-            859 strings with 10570 characters,
-and the built_in function-call counts, 17527 in all, are:
-= -- 1355
-> -- 754
+            855 strings with 10448 characters,
+and the built_in function-call counts, 16630 in all, are:
+= -- 1302
+> -- 670
 < -- 23
-+ -- 293
-- -- 246
-* -- 1302
-:= -- 2835
-add.period$ -- 129
-call.type$ -- 32
-change.case$ -- 245
++ -- 261
+- -- 216
+* -- 1213
+:= -- 2684
+add.period$ -- 125
+call.type$ -- 31
+change.case$ -- 230
 chr.to.int$ -- 29
-cite$ -- 34
-duplicate$ -- 1246
-empty$ -- 1347
-format.name$ -- 324
-if$ -- 3425
-int.to.chr$ -- 4
+cite$ -- 33
+duplicate$ -- 1195
+empty$ -- 1304
+format.name$ -- 291
+if$ -- 3263
+int.to.chr$ -- 3
 int.to.str$ -- 1
-missing$ -- 268
-newline$ -- 166
-num.names$ -- 128
-pop$ -- 498
+missing$ -- 253
+newline$ -- 161
+num.names$ -- 124
+pop$ -- 465
 preamble$ -- 1
-purify$ -- 210
+purify$ -- 196
 quote$ -- 0
-skip$ -- 481
+skip$ -- 472
 stack$ -- 0
-substring$ -- 717
-swap$ -- 622
+substring$ -- 706
+swap$ -- 590
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 285
+type$ -- 276
 warning$ -- 2
-while$ -- 114
+while$ -- 111
 width$ -- 0
-write$ -- 409
+write$ -- 397
 (There were 2 warnings)

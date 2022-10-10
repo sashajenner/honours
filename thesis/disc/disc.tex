@@ -4,6 +4,14 @@
 
 Different length reads may have different characteristics which are exploitable for a compression algorithm.
 Reads from the same pore or channel may have similar characteristics as well.
+Different data sets:
+RNA exploration,
+different Nanopore devices.
+
+It is very likely that there exists a multi-read compression strategy which is great for space reduction and hence archival purposes.
+In fact, there are patterns between reads which could be exploited.
+For example, reads originating from the same channel and pore will have been recorded by the same electrode and so will likely have similar properties. This is especially true for reads recorded at a similar timestamp as each nanopore deteriorates over the course of a sequencing run.
+However, such a strategy is not obvious without further investigation.
 
 %Multi-read compression?
 %Lossy

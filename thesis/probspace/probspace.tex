@@ -2,6 +2,13 @@
 
 \input{probspace/focus}
 
+\input{probspace/vbbe21}
+
+\input{probspace/exploit-signal}
+
+\input{probspace/subseq}
+
+\section{Other}
 % Explore integer methods without generic
 
 Instead, each integer can be represented more space-efficiently by using $b<16$ bits where \[b(x)=\lceil\log_2(\max(x))\rceil.\] In this case, the compression ratio would be approximately $16/b$:
@@ -26,8 +33,3 @@ since $\log$ is an increasing function.
 Another transformation takes the differences between successive signals and is defined by
 \[ \delta(x):=(x_{i+1}-x_i\mid 0\le i\le n-2).\]
 
-\input{probspace/vbbe21}
-
-\input{probspace/exploit-signal}
-
-\input{probspace/subseq}

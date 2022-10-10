@@ -1,6 +1,38 @@
 \section{One Byte, Two Byte Exceptions}
 \label{sec:vbbe21}
 
+The one byte, two byte exceptions encoding, abbreviated to \textit{vb1e2}, encodes a list of integers using one byte for each integer except for integers which cannot fit into one byte, known as \textit{exceptions}, which are encoded using two bytes. Rather than using a control code to mark where normal data and exceptions occur as in the Stream VByte codec (Section \ref{subsubsec:svb}), the exceptions are encoded at the beginning since it is expected that exceptions will occur with small probability.
+
+The number of exceptions is written using 2 bytes, followed by the exceptions' positions in the list using 4 bytes each and the exceptions themselves using 2 bytes each.
+
+Now, consider applying the zig-zag delta encoding to a read of length $n$ and then compressing using encoding $A$. Let $C_A(n)$ be a random variable measuring the resulting compressed size in bytes. Then
+\begin{align*}
+	C_{vb1e2}(n) &= \lceil \frac{2 + 6X(n) + (n - X(n))}{8} \rceil\\
+	&= \lceil \frac{2 + 5X(n) + n}{8} \rceil
+\end{align*}
+where $X$ is a random variable counting the number of exceptions.
+Recall from Section \ref{subsec:prob} that the probability that a data point is greater than 255 and therefore outside the one byte range is $\sim 5\times 10^{-5}$. Thus, the expected number of exceptions is
+\[ E[X(n)] = 5n \times 10^{-5}. \]
+Then, the expected compressed size is given by
+\begin{align*}
+	E[C_{vb1e2}(n)] &= \lceil \frac{2 + 2.5n\times 10^{-4} + n}{8} \rceil\\
+	&= \lceil \frac{2 + 1.00025n}{8} \rceil.
+\end{align*}
+In comparison, using Stream VByte 16 (or \textit{svb16}) encoding, the compressed size is given by
+\begin{align*}
+	C_{svb16}(n) &= \lceil \frac{\lceil n/8 \rceil + 2X(n) + (n - X(n))}{8} \rceil\\
+	&= \lceil \frac{\lceil n/8 \rceil + X(n) + n}{8} \rceil.
+\end{align*}
+Then, the expected compressed size is
+\begin{align*}
+	E[C_{svb16}(n)] &= \lceil \frac{\lceil n/8 \rceil + 5n \times 10^{-5} + n}{8} \rceil\\
+	&= \lceil \frac{\lceil n/8 \rceil + 1.00005n}{8} \rceil\\
+	&\ge E[C_{vb1e2}(n)]
+\end{align*}
+for $n\ge 78$.
+
+\subsection{Exceptions Encoding}
+
 \subsection{Range Coding}
 
 \subsection{Static Huffman}

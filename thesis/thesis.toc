@@ -21,21 +21,23 @@
 \contentsline {subsection}{\tocsubsection {}{2.2.7}{Nanopore Compression}}{13}{subsection.2.2.7}%
 \contentsline {chapter}{\tocchapter {Chapter}{3}{The Data}}{16}{chapter.3}%
 \contentsline {section}{\tocsection {}{3.1}{Introduction}}{16}{section.3.1}%
-\contentsline {section}{\tocsection {}{3.2}{Characteristics}}{21}{section.3.2}%
-\contentsline {section}{\tocsection {}{3.3}{Transformations}}{24}{section.3.3}%
-\contentsline {chapter}{\tocchapter {Chapter}{4}{Problem Space}}{29}{chapter.4}%
-\contentsline {section}{\tocsection {}{4.1}{The Focus}}{29}{section.4.1}%
+\contentsline {section}{\tocsection {}{3.2}{Characteristics}}{22}{section.3.2}%
+\contentsline {section}{\tocsection {}{3.3}{Transformations}}{25}{section.3.3}%
+\contentsline {chapter}{\tocchapter {Chapter}{4}{Problem Space}}{31}{chapter.4}%
+\contentsline {section}{\tocsection {}{4.1}{The Focus}}{31}{section.4.1}%
 \contentsline {section}{\tocsection {}{4.2}{One Byte, Two Byte Exceptions}}{31}{section.4.2}%
-\contentsline {subsection}{\tocsubsection {}{4.2.1}{Range Coding}}{31}{subsection.4.2.1}%
-\contentsline {subsection}{\tocsubsection {}{4.2.2}{Static Huffman}}{31}{subsection.4.2.2}%
-\contentsline {section}{\tocsection {}{4.3}{Exploiting the Signal}}{31}{section.4.3}%
-\contentsline {subsection}{\tocsubsection {}{4.3.1}{The Stall}}{31}{subsection.4.3.1}%
-\contentsline {subsection}{\tocsubsection {}{4.3.2}{Separating the Jumps and Flats}}{31}{subsection.4.3.2}%
-\contentsline {section}{\tocsection {}{4.4}{Subsequence Searching}}{31}{section.4.4}%
-\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{35}{chapter.5}%
-\contentsline {chapter}{\tocchapter {Chapter}{6}{Discussion}}{36}{chapter.6}%
-\contentsline {section}{\tocsection {}{6.1}{Future Work}}{36}{section.6.1}%
-\contentsline {chapter}{\tocchapter {Chapter}{7}{Conclusion}}{37}{chapter.7}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{38}{chapter*.34}%
-\contentsline {section}{\tocsection {}{7.1}{Subsequence Searching}}{38}{section.7.1}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{39}{chapter*.36}%
+\contentsline {subsection}{\tocsubsection {}{4.2.1}{Exceptions Encoding}}{33}{subsection.4.2.1}%
+\contentsline {subsection}{\tocsubsection {}{4.2.2}{Range Coding}}{33}{subsection.4.2.2}%
+\contentsline {subsection}{\tocsubsection {}{4.2.3}{Static Huffman}}{33}{subsection.4.2.3}%
+\contentsline {section}{\tocsection {}{4.3}{Exploiting the Signal}}{33}{section.4.3}%
+\contentsline {subsection}{\tocsubsection {}{4.3.1}{The Stall}}{33}{subsection.4.3.1}%
+\contentsline {subsection}{\tocsubsection {}{4.3.2}{Separating the Jumps and Flats}}{33}{subsection.4.3.2}%
+\contentsline {section}{\tocsection {}{4.4}{Subsequence Searching}}{33}{section.4.4}%
+\contentsline {section}{\tocsection {}{4.5}{Other}}{36}{section.4.5}%
+\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{38}{chapter.5}%
+\contentsline {chapter}{\tocchapter {Chapter}{6}{Discussion}}{39}{chapter.6}%
+\contentsline {section}{\tocsection {}{6.1}{Future Work}}{39}{section.6.1}%
+\contentsline {chapter}{\tocchapter {Chapter}{7}{Conclusion}}{40}{chapter.7}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{41}{chapter*.35}%
+\contentsline {section}{\tocsection {}{7.1}{Subsequence Searching}}{41}{section.7.1}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{42}{chapter*.37}%
