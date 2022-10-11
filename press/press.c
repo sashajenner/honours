@@ -2028,6 +2028,114 @@ int zstd_svb12_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out,
 	return ret;
 }
 
+/* delta | zigzag | svb12 | bzip2 */
+
+uint64_t bzip2_svb12_zd_bound(uint32_t nin)
+{
+	return bzip2_bound(sizeof nin + svb12_zd_bound(nin));
+}
+
+int bzip2_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			 uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_svb;
+	uint8_t *out_svb;
+
+	nout_svb = sizeof nin + svb12_zd_bound(nin);
+	out_svb = malloc(nout_svb);
+
+	/* encode nin before svb_zd data */
+	(void) memcpy(out_svb, &nin, sizeof nin);
+	nout_svb -= sizeof nin;
+	svb12_zd_press(in, nin, out_svb + sizeof nin, &nout_svb);
+	nout_svb += sizeof nin;
+
+	ret = bzip2_press(out_svb, nout_svb, out, nout);
+
+	free(out_svb);
+	return ret;
+}
+
+int bzip2_svb12_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out,
+			   uint32_t *nout)
+{
+	int ret;
+	uint32_t nout_signals;
+	uint64_t nout_64;
+	uint64_t nout_bzip2;
+	uint8_t *out_bzip2;
+
+	nout_bzip2 = bzip2_bound(*nout * sizeof *out);
+	out_bzip2 = malloc(nout_bzip2);
+
+	ret = bzip2_depress(in, nin, out_bzip2, &nout_bzip2);
+	if (ret == 0) {
+		(void) memcpy(&nout_signals, out_bzip2, sizeof nout_signals);
+		nout_64 = *nout;
+		svb12_zd_depress(out_bzip2 + sizeof nout_signals, nout_signals,
+				 out, &nout_64);
+		*nout = nout_64;
+	}
+
+	free(out_bzip2);
+	return ret;
+}
+
+/* delta | zigzag | svb12 | fast_lzma2 */
+
+uint64_t fast_lzma2_svb12_zd_bound(uint32_t nin)
+{
+	return fast_lzma2_bound(sizeof nin + svb12_zd_bound(nin));
+}
+
+int fast_lzma2_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			      uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_svb;
+	uint8_t *out_svb;
+
+	nout_svb = sizeof nin + svb12_zd_bound(nin);
+	out_svb = malloc(nout_svb);
+
+	/* encode nin before svb_zd data */
+	(void) memcpy(out_svb, &nin, sizeof nin);
+	nout_svb -= sizeof nin;
+	svb12_zd_press(in, nin, out_svb + sizeof nin, &nout_svb);
+	nout_svb += sizeof nin;
+
+	ret = fast_lzma2_press(out_svb, nout_svb, out, nout);
+
+	free(out_svb);
+	return ret;
+}
+
+int fast_lzma2_svb12_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out,
+				uint32_t *nout)
+{
+	int ret;
+	uint32_t nout_signals;
+	uint64_t nout_64;
+	uint64_t nout_fast_lzma2;
+	uint8_t *out_fast_lzma2;
+
+	nout_fast_lzma2 = fast_lzma2_bound(*nout * sizeof *out);
+	out_fast_lzma2 = malloc(nout_fast_lzma2);
+
+	ret = fast_lzma2_depress(in, nin, out_fast_lzma2, &nout_fast_lzma2);
+	if (ret == 0) {
+		(void) memcpy(&nout_signals, out_fast_lzma2, sizeof nout_signals);
+		nout_64 = *nout;
+		svb12_zd_depress(out_fast_lzma2 + sizeof nout_signals, nout_signals,
+				 out, &nout_64);
+		*nout = nout_64;
+	}
+
+	free(out_fast_lzma2);
+	return ret;
+}
+
 /* flac */
 
 uint64_t flac_bound(uint64_t nin)
@@ -2925,7 +3033,7 @@ int zstd_vb1e2_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	return ret;
 }
 
-/* zigzag delta vbe21 zstd */
+/* delta | zigzag | vbe21 | zstd */
 
 uint64_t zstd_vbe21_zd_bound_16(uint32_t nin)
 {
@@ -2964,6 +3072,48 @@ int zstd_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 		vbe21_zd_depress_16(out_zstd, nout_zstd, out, nout);
 
 	free(out_zstd);
+	return ret;
+}
+
+/* delta | zigzag | vbe21 | zlib */
+
+uint64_t zlib_vbe21_zd_bound_16(uint32_t nin)
+{
+	return zlib_bound(vbe21_zd_bound_16(nin));
+}
+
+int zlib_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			   uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_vb;
+	uint8_t *out_vb;
+
+	nout_vb = vb1e2_zd_bound_16(nin);
+	out_vb = malloc(nout_vb);
+
+	vbe21_zd_press_16(in, nin, out_vb, &nout_vb);
+	ret = zlib_press(out_vb, nout_vb, out, nout);
+
+	free(out_vb);
+	return ret;
+}
+
+int zlib_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			     uint32_t *nout)
+{
+	int ret;
+	uint64_t nout_zlib;
+	uint8_t *out_zlib;
+
+	nout_zlib = zlib_bound(*nout * sizeof *out);
+	out_zlib = malloc(nout_zlib);
+
+	ret = zlib_depress(in, nin, out_zlib, &nout_zlib);
+	if (ret == 0)
+		vbe21_zd_depress_16(out_zlib, nout_zlib, out, nout);
+
+	free(out_zlib);
 	return ret;
 }
 

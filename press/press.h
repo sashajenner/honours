@@ -488,6 +488,14 @@ int zstd_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 int zstd_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			     uint32_t *nout);
 
+/* zigzag delta vbe21 zlib */
+
+uint64_t zlib_vbe21_zd_bound_16(uint32_t nin);
+int zlib_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			   uint64_t *nout);
+int zlib_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			     uint32_t *nout);
+
 /* zigzag delta vbe21 huffman */
 
 uint64_t huffman_vbe21_zd_bound_16(uint32_t nin);
@@ -634,6 +642,7 @@ void jumps_depress_16(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout);
  * linear predictive coding (LPC), waveform coding, subband coding
  * turbo gorilla
  * encode the stall using submin | bitpack (pfor?), submean/submedian | zigzag
+ * different compression levels
  */
 
 #endif /* press.h */
