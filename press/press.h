@@ -392,6 +392,22 @@ int zstd_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
 int zstd_svb12_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out,
 			  uint32_t *nout);
 
+/* zigzag delta svb(16) 1,2 bytes bzip2 */
+
+uint64_t bzip2_svb12_zd_bound(uint32_t nin);
+int bzip2_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			 uint64_t *nout);
+int bzip2_svb12_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out,
+			   uint32_t *nout);
+
+/* zigzag delta svb(16) 1,2 bytes fast_lzma2 */
+
+uint64_t fast_lzma2_svb12_zd_bound(uint32_t nin);
+int fast_lzma2_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			      uint64_t *nout);
+int fast_lzma2_svb12_zd_depress(const uint8_t *in, uint64_t nin, int16_t *out,
+				uint32_t *nout);
+
 /* flac */
 
 #define PRESS_LVL_FLAC (5)
@@ -462,6 +478,14 @@ uint64_t zstd_vb1e2_zd_bound_16(uint32_t nin);
 int zstd_vb1e2_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 			   uint64_t *nout);
 int zstd_vb1e2_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			     uint32_t *nout);
+
+/* zigzag delta vbe21 zstd */
+
+uint64_t zstd_vbe21_zd_bound_16(uint32_t nin);
+int zstd_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			   uint64_t *nout);
+int zstd_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			     uint32_t *nout);
 
 /* zigzag delta vbe21 huffman */
@@ -598,7 +622,7 @@ void jumps_depress_16(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout);
 /* TODO
  * determine flats more coarsely
  * flat using other methods
- * bzip/lzma svb_zd
+ * bzip/lzma svb_zd/vbe21
  * variable bit
  * bzip/lzma uint_submin?
  * peak-picking flat approximation

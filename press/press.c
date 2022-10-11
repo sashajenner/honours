@@ -2925,6 +2925,48 @@ int zstd_vb1e2_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	return ret;
 }
 
+/* zigzag delta vbe21 zstd */
+
+uint64_t zstd_vbe21_zd_bound_16(uint32_t nin)
+{
+	return zstd_bound(vbe21_zd_bound_16(nin));
+}
+
+int zstd_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			   uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_vb;
+	uint8_t *out_vb;
+
+	nout_vb = vb1e2_zd_bound_16(nin);
+	out_vb = malloc(nout_vb);
+
+	vbe21_zd_press_16(in, nin, out_vb, &nout_vb);
+	ret = zstd_press(out_vb, nout_vb, out, nout);
+
+	free(out_vb);
+	return ret;
+}
+
+int zstd_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			     uint32_t *nout)
+{
+	int ret;
+	uint64_t nout_zstd;
+	uint8_t *out_zstd;
+
+	nout_zstd = zstd_bound(*nout * sizeof *out);
+	out_zstd = malloc(nout_zstd);
+
+	ret = zstd_depress(in, nin, out_zstd, &nout_zstd);
+	if (ret == 0)
+		vbe21_zd_depress_16(out_zstd, nout_zstd, out, nout);
+
+	free(out_zstd);
+	return ret;
+}
+
 /*
  * delta | zigzag | vbe21 | huffman
  * huffman on the 1 byte data
