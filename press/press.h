@@ -2,6 +2,7 @@
 #define PRESS_H
 
 #include <stdint.h>
+#include <inttypes.h>
 #include <zlib.h>
 #include "flat.h"
 #include "huffman/huffman.h"
@@ -419,7 +420,7 @@ void turbopfor_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 
 /* variable byte 1 except 2 */
 
-#define VB1E2_MAX_EXCEPTIONS (256)
+#define VB1E2_MAX_EXCEPTIONS (UINT16_MAX)
 uint64_t vb1e2_bound(uint32_t nin);
 void vb1e2_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		 uint64_t *nout);
@@ -445,6 +446,14 @@ uint64_t vb1e2_zd_bound_16(uint32_t nin);
 void vb1e2_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 		       uint64_t *nout);
 void vb1e2_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			 uint32_t *nout);
+
+/* zigzag delta vbe21 */
+
+uint64_t vbe21_zd_bound_16(uint32_t nin);
+void vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+		       uint64_t *nout);
+void vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			 uint32_t *nout);
 
 /* zigzag delta vb1e2 zstd */

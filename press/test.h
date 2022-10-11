@@ -66,7 +66,9 @@ if (!(statement)) { \
 			"%s\n")*/
 
 /* running mean */
-#define UPDATE_RES(res, attr, update) (res->attr += ((update) - res->attr) / res->n)
+/*#define UPDATE_RES(res, attr, update) (res->attr += ((update) - res->attr) / res->n)*/
+/* total */
+#define UPDATE_RES(res, attr, update) (res->attr += update)
 
 struct result {
 	const char *method_name;

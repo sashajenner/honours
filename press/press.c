@@ -2432,7 +2432,7 @@ uint64_t vb1e2_bound(uint32_t nin)
 void vb1e2_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		 uint64_t *nout)
 {
-	uint8_t nex;
+	uint16_t nex;
 	uint32_t *ex_pos;
 	uint32_t i;
 	uint32_t j;
@@ -2474,7 +2474,7 @@ void vb1e2_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 
 void vb1e2_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout)
 {
-	uint8_t nex;
+	uint16_t nex;
 	uint32_t *ex_pos;
 	uint32_t i;
 	uint32_t j;
@@ -2519,7 +2519,7 @@ uint64_t vbe21_bound(uint32_t nin)
 void vbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		 uint64_t *nout)
 {
-	uint8_t nex;
+	uint16_t nex;
 	uint32_t *ex_pos;
 	uint32_t i;
 	uint32_t j;
@@ -2563,7 +2563,7 @@ void vbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 
 void vbe21_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout)
 {
-	uint8_t nex;
+	uint16_t nex;
 	uint32_t *ex_pos;
 	uint32_t i;
 	uint32_t j;
@@ -2614,7 +2614,7 @@ uint64_t vbbe21_bound(uint32_t nin)
 void vbbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		  uint64_t *nout)
 {
-	uint8_t nex;
+	uint16_t nex;
 	uint16_t *ex;
 	uint8_t *ex_press;
 	uint32_t *ex_pos;
@@ -2715,7 +2715,7 @@ void vbbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 
 void vbbe21_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout)
 {
-	uint8_t nex;
+	uint16_t nex;
 	uint16_t *ex;
 	uint32_t *ex_pos;
 	uint8_t *ex_pos_press;
@@ -2839,6 +2839,50 @@ void vb1e2_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	free(out_zd);
 }
 
+/*
+ * delta | zigzag | vbe21
+ * store first signal at start before vb
+ */
+
+uint64_t vbe21_zd_bound_16(uint32_t nin)
+{
+	return sizeof (uint16_t) + vb1e2_bound(nin - 1);
+}
+
+void vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+		       uint64_t *nout)
+{
+	uint16_t *in_zd;
+	uint64_t nout_tmp;
+
+	in_zd = zigdelta_16_u16(in, nin);
+
+	(void) memcpy(out, in_zd, sizeof *in_zd);
+	nout_tmp = *nout - sizeof *in_zd;
+	vbe21_press(in_zd + 1, nin - 1, out + sizeof *in_zd, &nout_tmp);
+
+	*nout = nout_tmp + sizeof *in_zd;
+	free(in_zd);
+}
+
+void vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			 uint32_t *nout)
+{
+	uint16_t *out_zd;
+	uint32_t nout_tmp;
+
+	out_zd = malloc(nin * sizeof *out_zd);
+	(void) memcpy(out_zd, in, sizeof *out_zd);
+
+	nout_tmp = nin - 1;
+	vbe21_depress(in + sizeof *out_zd, nin - sizeof *out_zd, out_zd + 1,
+		      &nout_tmp);
+	*nout = nout_tmp + 1;
+
+	unzigdelta_u16_16(out_zd, *nout, out);
+	free(out_zd);
+}
+
 /* delta | zigzag | vb1e2 | zstd */
 
 uint64_t zstd_vb1e2_zd_bound_16(uint32_t nin)
@@ -2900,7 +2944,7 @@ int huffman_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint32_t nout_tmp;
 	uint64_t nout_tmp_vb;
 	uint32_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	int ret;
 
@@ -2936,7 +2980,7 @@ int huffman_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 				uint32_t *nout)
 {
 	uint32_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	uint8_t *out_vb;
 	uint8_t *out_huffman;
@@ -2998,7 +3042,7 @@ int huffman_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
 	uint16_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	int ret;
 
@@ -3041,7 +3085,7 @@ int huffman_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 int huffman_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 				 uint32_t *nout)
 {
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
@@ -3112,7 +3156,7 @@ int shuffman_vbe21_zd_press_16(SymbolEncoder *se, const int16_t *in,
 	uint32_t nout_tmp;
 	uint64_t nout_tmp_vb;
 	uint32_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	int ret;
 
@@ -3148,7 +3192,7 @@ int shuffman_vbe21_zd_depress_16(huffman_node *root, uint8_t *in, uint64_t nin,
 				 int16_t *out, uint32_t *nout)
 {
 	uint32_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	uint8_t *out_vb;
 	uint8_t *out_huffman;
@@ -3210,7 +3254,7 @@ int shuffman_vbbe21_zd_press_16(SymbolEncoder *se, const int16_t *in,
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
 	uint16_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	int ret;
 
@@ -3256,7 +3300,7 @@ int shuffman_vbbe21_zd_depress_16(huffman_node *root, uint8_t *in,
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
 	uint16_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	uint8_t *out_vb;
 	uint8_t *out_huffman;
@@ -3456,7 +3500,7 @@ void rice_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint64_t nout_tmp;
 	uint64_t nout_tmp_vb;
 	uint32_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 
 	in_zd = zigdelta_16_u16(in, nin);
@@ -3489,7 +3533,7 @@ void rice_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			      uint32_t *nout)
 {
 	uint32_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	uint8_t *out_vb;
 	uint8_t *out_rice;
@@ -3545,7 +3589,7 @@ void rice_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
 	uint16_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 
 	in_zd = zigdelta_16_u16(in, nin);
@@ -3588,7 +3632,7 @@ void rice_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
 	uint16_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	uint8_t *out_vb;
 	uint8_t *out_rice;
@@ -3650,7 +3694,7 @@ void rc_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint64_t nout_tmp;
 	uint64_t nout_tmp_vb;
 	uint32_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 
 	in_zd = zigdelta_16_u16(in, nin);
@@ -3684,7 +3728,7 @@ void rc_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			    uint32_t *nout)
 {
 	uint32_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	uint8_t *out_vb;
 	uint8_t *out_rc;
@@ -3739,7 +3783,7 @@ void rc_vbbe21_press_16(const uint16_t *in, uint32_t nin, uint8_t *out,
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
 	uint16_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 
 	nout_tmp_vb = *nout;
@@ -3777,7 +3821,7 @@ void rc_vbbe21_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
 	uint16_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	uint8_t *out_vb;
 	uint8_t *out_rc;
@@ -3835,7 +3879,7 @@ void rc_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
 	uint16_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 
 	in_zd = zigdelta_16_u16(in, nin);
@@ -3879,7 +3923,7 @@ void rc_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
 	uint16_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	uint8_t *out_vb;
 	uint8_t *out_rc;
@@ -3941,7 +3985,7 @@ void rccdf_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint64_t nout_tmp;
 	uint64_t nout_tmp_vb;
 	uint32_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 
 	in_zd = zigdelta_16_u16(in, nin);
@@ -3975,7 +4019,7 @@ void rccdf_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			       uint32_t *nout)
 {
 	uint32_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	uint8_t *out_vb;
 	uint8_t *out_rc;
@@ -4031,7 +4075,7 @@ void rccdf_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
 	uint16_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 
 	in_zd = zigdelta_16_u16(in, nin);
@@ -4075,7 +4119,7 @@ void rccdf_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
 	uint16_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	uint8_t *out_vb;
 	uint8_t *out_rc;
@@ -4303,7 +4347,7 @@ void rc_vbbe21_submin_press_16(const uint16_t *in, uint64_t nin, uint8_t *out,
 	uint16_t *in_submin;
 	uint8_t *in_vb;
 	uint64_t nout_tmp;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	uint32_t exlen;
 	uint16_t nex_pos_press;
@@ -4347,7 +4391,7 @@ void rc_vbbe21_submin_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
 	uint16_t exlen;
-	uint8_t nex;
+	uint16_t nex;
 	uint64_t offset;
 	uint8_t *out_vb;
 	uint8_t *out_rc;

@@ -2391,6 +2391,68 @@ int test_vb1e2_zd(const int16_t *sigs, const uint32_t nr_sigs,
 	return EXIT_SUCCESS;
 }
 
+int test_vbe21_zd(const int16_t *sigs, const uint32_t nr_sigs,
+		  struct result * res)
+{
+	clock_t after;
+	clock_t before;
+	int16_t *sigs_depress;
+	uint32_t i;
+	uint32_t depress_len;
+	uint64_t nr_sigs_bytes;
+	uint64_t press_len;
+	uint64_t pressbound;
+	uint8_t *sigs_press;
+
+	nr_sigs_bytes = sizeof *sigs * nr_sigs;
+
+	/* bound sigs_press */
+	before = clock();
+	pressbound = vbe21_zd_bound_16(nr_sigs);
+	after = clock();
+	UPDATE_RES(res, pressbound_clocktime, GET_CLOCK_SECS(before, after));
+
+	/* init sigs_press */
+	sigs_press = malloc(pressbound);
+	ASSERT(sigs_press);
+
+	/* compress sigs */
+	press_len = pressbound;
+	before = clock();
+	vbe21_zd_press_16(sigs, nr_sigs, sigs_press, &press_len);
+	after = clock();
+	UPDATE_RES(res, press_clocktime, GET_CLOCK_SECS(before, after));
+
+	/*ASSERT(press_len <= pressbound);*/
+
+	/* init sigs_depress */
+	sigs_depress = malloc(nr_sigs_bytes);
+	ASSERT(sigs_depress);
+
+	/* decompress sigs_press */
+	depress_len = nr_sigs;
+	before = clock();
+	vbe21_zd_depress_16(sigs_press, press_len, sigs_depress, &depress_len);
+	after = clock();
+	UPDATE_RES(res, depress_clocktime, GET_CLOCK_SECS(before, after));
+	ASSERT(depress_len == nr_sigs);
+
+	/* ensure decompressed == original */
+	for (i = 0; i < depress_len / sizeof *sigs; i++) {
+		ASSERT(sigs_depress[i] == sigs[i]);
+	}
+
+	/* let it go */
+	free(sigs_press);
+	free(sigs_depress);
+
+	UPDATE_RES(res, depress_bytes, nr_sigs_bytes);
+	UPDATE_RES(res, pressbound_bytes, pressbound);
+	UPDATE_RES(res, press_bytes, press_len);
+
+	return EXIT_SUCCESS;
+}
+
 int test_zstd_vb1e2_zd(const int16_t *sigs, const uint32_t nr_sigs,
 		       struct result *res)
 {
@@ -3285,7 +3347,7 @@ int main(int argc, char **argv)
 	fwrite_res_hdr(fp);
 
 	/* TODO test array > 0 */
-	TEST(none, &res, fp);
+	/*TEST(none, &res, fp);
 	TEST(uint11_16, &res, fp);
 	TEST(uint_16, &res, fp);
 	TEST(uint_submin_16, &res, fp);
@@ -3296,9 +3358,9 @@ int main(int argc, char **argv)
 	TEST(zstd_uint_submin_16, &res, fp);
 	TEST(zstd_uint_zd_16, &res, fp);
 	TEST(bzip2_uint_zd_16, &res, fp);
-	TEST(fast_lzma2_uint_zd_16, &res, fp);
+	TEST(fast_lzma2_uint_zd_16, &res, fp);*/
 	/*TEST(flat_uint_submin_16_step1, &res, fp);*/
-	TEST(zlib, &res, fp);
+	/*TEST(zlib, &res, fp);
 	TEST(zstd, &res, fp);
 	TEST(bzip2, &res, fp);
 	TEST(fast_lzma2, &res, fp);
@@ -3306,9 +3368,9 @@ int main(int argc, char **argv)
 	TEST(svb0124, &res, fp);
 	TEST(svb12, &res, fp);
 	TEST(svb_zd, &res, fp);
-	TEST(svb0124_zd, &res, fp);
+	TEST(svb0124_zd, &res, fp);*/
 	TEST(svb12_zd, &res, fp);
-	TEST(zlib_svb_zd, &res, fp);
+	/*TEST(zlib_svb_zd, &res, fp);
 	TEST(zlib_svb0124_zd, &res, fp);
 	TEST(zlib_svb12_zd, &res, fp);
 	TEST(zstd_svb_zd, &res, fp);
@@ -3317,8 +3379,9 @@ int main(int argc, char **argv)
 	TEST(flac_P11, &res, fp);
 	TEST(zstd_flac_P11, &res, fp);
 	TEST(turbopfor, &res, fp);
-	TEST(vb1e2_zd, &res, fp);
-	TEST(zstd_vb1e2_zd, &res, fp);
+	TEST(vb1e2_zd, &res, fp);*/
+	TEST(vbe21_zd, &res, fp);
+	/*TEST(zstd_vb1e2_zd, &res, fp);
 	TEST(huffman_vbe21_zd, &res, fp);
 	TEST(shuffman_vbe21_zd, &res, fp);
 	TEST(rice_vbe21_zd, &res, fp);
@@ -3330,7 +3393,7 @@ int main(int argc, char **argv)
 	TEST(rc_vbbe21_zd, &res, fp);
 	TEST(rccdf_vbbe21_zd, &res, fp);
 	TEST(jumps, &res, fp);
-	TEST(rc_svbbe21_zd, &res, fp);
+	TEST(rc_svbbe21_zd, &res, fp);*/
 
 	(void) fclose(fp);
 
