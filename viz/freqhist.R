@@ -32,12 +32,14 @@ mean = 475.224468
 print(minmil)
 print(maxmil)
 
+print(sum(df[df$signal>100,2]))
+
 tikz(file = paste0(path, '.hist.tex'), width = 5, height = 5)
-ggplot(df, aes(x=df[,1], y=df[,2] / 10^6)) +
-	geom_histogram(stat="identity") +
-	xlab('Raw Signal Zig-Zag Delta') +
-	ylab('Frequency ($\\times 10^6$)') +
-	xlim(c(0,maxmil))
+ggplot(df, aes(x=df[,1], y=df[,2]/10^9)) +
+	geom_histogram(stat='identity') +
+	xlab('Raw Signal Delta') +
+	ylab('Frequency ($\\times 10^9$)') +
+	xlim(c(-1,maxmil))
 dev.off()
 #
 #plot = ggplot(df, aes(x=df[,1], y=df[,2])) +

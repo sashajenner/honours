@@ -49,15 +49,30 @@ df = read.delim(path)
 #cat('read length mode: ', getmode(df$n), '\n', sep='')
 
 # distribution of read lengths?
+
+den = density(df$n)
+dat = data.frame(x = den$x, y = den$y)
+
+library(MASS)
+fit.gamma <- fitdistr(as.numeric(df$n/10^3), "gamma", lower = c(0, 0))
+fit.exp <- fitdistr(as.numeric(df$n/10^3), "exponential", lower = c(0, 0))
+
+print(fit.gamma$estimate)
+
 #tikz(file = paste0(path, '.nhist.tex'), width = 5, height = 5)
-#ggplot(df, aes(x=n/10^3)) +
-#	geom_histogram(binwidth=1) +
-#	xlim(0,1000) +
-#	xlab('Read Length ($\\times 10^3$)') +
-#	ylab('Count')
-#	#theme(axis.text.y=element_blank(),
-#	#      axis.ticks.y=element_blank()) +
-#	#labs(title='boxplot of read lengths')
+ggplot(dat) +
+	geom_histogram(data = as.data.frame(df$n), aes(x=df$n/10^3, y=..density..), binwidth=1) +
+	geom_line(aes(x=dat$x/10^3, y=dgamma(dat$x/10^3,fit.gamma$estimate["shape"],
+				    fit.gamma$estimate["rate"])),
+		  color="red", size = 1) +
+	geom_line(aes(x=dat$x/10^3, y=dexp(dat$x/10^3, fit.exp$estimate["rate"])),
+		  color="blue", size = 1) +
+	xlim(0,1000)
+	#xlab('Read Length ($\\times 10^3$)') +
+	#ylab('Count')
+	#theme(axis.text.y=element_blank(),
+	#      axis.ticks.y=element_blank()) +
+	#labs(title='boxplot of read lengths')
 #dev.off()
 
 # smallest signal value?
@@ -102,8 +117,8 @@ df = read.delim(path)
 #ggplot(df_cn1, aes(start_time, mean)) +
 #	geom_point()
 
-df_avg = df %>% group_by(start_time) %>%
-	summarise(mean_n = mean(n))
-
-ggplot(df_avg, aes(start_time, mean_n)) +
-	geom_point()
+#df_avg = df %>% group_by(start_time) %>%
+#	summarise(mean_n = mean(n))
+#
+#ggplot(df_avg, aes(start_time, mean_n)) +
+#	geom_point()
