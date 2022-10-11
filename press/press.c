@@ -2582,7 +2582,7 @@ void vbe21_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout)
 
 	i = 0;
 	j = 0;
-	while (offset < nin) {
+	while (offset < nin || j < nex) {
 		if (j < nex && i == ex_pos[j]) {
 			j++;
 		} else {
