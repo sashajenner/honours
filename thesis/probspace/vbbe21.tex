@@ -1,37 +1,52 @@
 \section{One Byte, Two Byte Exceptions}
 \label{sec:vbbe21}
 
-The one byte, two byte exceptions encoding, abbreviated to \textit{vb1e2}, encodes a list of integers using one byte for each integer except for integers which cannot fit into one byte, known as \textit{exceptions}, which are encoded using two bytes. Rather than using a control code to mark where normal data and exceptions occur as in the Stream VByte codec (Section \ref{subsubsec:svb}), the exceptions are encoded at the beginning since it is expected that exceptions will occur with small probability.
+The one byte, two byte exceptions encoding, abbreviated to \textit{vbe21}, encodes a list of integers using one byte for each integer except for integers which cannot fit into one byte, known as \textit{exceptions}, which are encoded using two bytes. Rather than using a control code to mark where normal data and exceptions occur as in the Stream VByte codec (Section \ref{subsubsec:svb}), the exceptions are encoded at the beginning since it is expected that exceptions will occur with small probability.
 
 The number of exceptions is written using 2 bytes, followed by the exceptions' positions in the list using 4 bytes each and the exceptions themselves using 2 bytes each.
 
-Now, consider applying the zig-zag delta encoding to a read of length $n$ and then compressing using encoding $A$. Let $C_A(n)$ be a random variable measuring the resulting compressed size in bytes. Then
+Now, consider applying the zig-zag delta encoding to a read and then compressing using encoding $A$. Let $C_A:\Omega\to\mathbb{N}_0$ be a random variable measuring the resulting compressed size in bytes where $\Omega$ is the space of reads. Then
 \begin{align*}
-	C_{vb1e2}(n) &= \lceil \frac{2 + 6X(n) + (n - X(n))}{8} \rceil\\
-	&= \lceil \frac{2 + 5X(n) + n}{8} \rceil
+	C_{vbe21} &= 2 + 6X + (N - X)\\
+	&= 2 + 5X + N
 \end{align*}
-where $X$ is a random variable counting the number of exceptions.
+where $N$ and $X$ are random variables measuring the read length and number of exceptions respectively.
 Recall from Section \ref{subsec:prob} that the probability that a data point is greater than 255 and therefore outside the one byte range is $\sim 5\times 10^{-5}$. Thus, the expected number of exceptions is
-\[ E[X(n)] = 5n \times 10^{-5}. \]
+\[ E[X] = (5 \times 10^{-5})E[N] \]
+%Also, the read lengths can be modelled by the Gamma distribution $\Gamma(1.0885,0.0096)$.
+where the expected read length is
+\[ E[N] = 113471.4 \]
+from Table \ref{tab:n}.
 Then, the expected compressed size is given by
 \begin{align*}
-	E[C_{vb1e2}(n)] &= \lceil \frac{2 + 2.5n\times 10^{-4} + n}{8} \rceil\\
-	&= \lceil \frac{2 + 1.00025n}{8} \rceil.
+	E[C_{vbe21}] &= 2 + (2.5\times 10^{-4})E[N]+ E[N]\\
+	&= 2 + 1.00025E[N]\\
+	&\approx 113502.
 \end{align*}
-In comparison, using Stream VByte 16 (or \textit{svb16}) encoding, the compressed size is given by
+In comparison, using the Stream VByte 16 (or \textit{svb16}) encoding, the compressed size is given by
 \begin{align*}
-	C_{svb16}(n) &= \lceil \frac{\lceil n/8 \rceil + 2X(n) + (n - X(n))}{8} \rceil\\
-	&= \lceil \frac{\lceil n/8 \rceil + X(n) + n}{8} \rceil.
+	C_{svb16} &= \lceil N/8 \rceil + 2X + (N - X)\\
+	&= \lceil N/8 \rceil + X + N.
 \end{align*}
 Then, the expected compressed size is
 \begin{align*}
-	E[C_{svb16}(n)] &= \lceil \frac{\lceil n/8 \rceil + 5n \times 10^{-5} + n}{8} \rceil\\
-	&= \lceil \frac{\lceil n/8 \rceil + 1.00005n}{8} \rceil\\
-	&\ge E[C_{vb1e2}(n)]
+	E[C_{svb16}] &= \lceil E[N]/8 \rceil + (5 \times 10^{-5})E[N] + E[N]\\
+	&= \lceil E[N]/8 \rceil + 1.00005E[N]\\
+	&\approx 127661\\
+	&> E[C_{vbe21}].
 \end{align*}
-for $n\ge 78$.
+So it is clear that \textit{vbe21} saves more space than \textit{svb16}: roughly 14 KiB on average per read or an estimated 6.6 GiB for the whole data set. This is actually a very accurate estimation; see Figure \ref{fig:svb16-vbe21-zd}.
 
 \subsection{Exceptions Encoding}
+
+The number of exceptions per read ranges from 0 to 3616 but 99\% are between 0 and 42. The mean is $\sim$5 and the standard deviation is $\sim$18. See Table \ref{tab:ex}. Its distribution, shown in Figure \ref{fig:nex-hist}, could be nicely fitted by an exponential distribution. Notice that around 20\% of the reads have no exceptions such that their zig-zag deltas lie perfectly between 0 and 255.
+
+\input{plots/ex-tab}
+\input{plots/nex-hist}
+
+The exceptions range from 256 to 2317 as expected but 99\% of the exceptions do not go higher than 481. The mean and mode are $\sim$277 and 256 respectively. Refer to Table \ref{tab:ex}. The histogram of exceptions is shown in Figure \ref{fig:ex-hist}. Notably, the frequency of even-numbered exceptions is much greater than adjacent old-numbered exceptions from 256 up to $\sim$330. This is due to large positive deltas occuring more frequently than large negative deltas as previously discussed in Section \ref{subsec:stripe}.
+
+\input{plots/ex-hist}
 
 \subsection{Range Coding}
 

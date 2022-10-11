@@ -114,6 +114,7 @@ In fact, the probability that a delta is lesser than $-128$ and greater than 127
 \input{plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.zigzag.small}
 
 The zig-zag deltas (deltas then zig-zag encoding) range from 0 to 2317 with a median of 4, mean of $\sim15.5679$ and standard deviation of $\sim20.6060$. See Table \ref{tab:trans}. The zig-zag encoding interleaves the positive and negative deltas resulting in a geometric-like distribution which is not completely decreasing. See Figure \ref{fig:zd-hist}. Notice the `dotted' right tail; every box with an even offset from value 150 onwards is much larger than those with an odd offset. This is due to the higher frequency of large positive deltas in comparison to large negative deltas, as discussed above.
+\label{subsec:stripe}
 
 \input{plots/zd-hist}
 
