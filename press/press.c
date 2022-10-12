@@ -3907,7 +3907,7 @@ void rc_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	/* I know...this is just a safe upper bound */
 	nout_tmp = rice_bound(nout_tmp_vb - exlen);
 	out_rc = malloc(nout_tmp);
-	nout_tmp = rcmsenc(out_vb + exlen, nout_tmp_vb - exlen, out_rc);
+	nout_tmp = rcsenc(out_vb + exlen, nout_tmp_vb - exlen, out_rc);
 	(void) memcpy(out + offset, out_rc, nout_tmp);
 	free(out_rc);
 
@@ -3938,7 +3938,7 @@ void rc_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 
 	nout_tmp_vb = *nout - nex - 1;
 	out_rc = malloc(nout_tmp_vb);
-	(void) rcmsdec(in + offset, *nout - nex - 1, out_rc);
+	(void) rcsdec(in + offset, *nout - nex - 1, out_rc);
 	(void) memcpy(out_vb + exlen, out_rc, nout_tmp_vb);
 	free(out_rc);
 	nout_tmp_vb += exlen;
@@ -3998,7 +3998,7 @@ void rc_vbbe21_press_16(const uint16_t *in, uint32_t nin, uint8_t *out,
 	/* I know...this is just a safe upper bound */
 	nout_tmp = rice_bound(nout_tmp_vb - exlen);
 	out_rc = malloc(nout_tmp);
-	nout_tmp = rcmsenc(out_vb + exlen, nout_tmp_vb - exlen, out_rc);
+	nout_tmp = rcsenc(out_vb + exlen, nout_tmp_vb - exlen, out_rc);
 	(void) memcpy(out + offset, out_rc, nout_tmp);
 	free(out_rc);
 
@@ -4038,7 +4038,7 @@ void rc_vbbe21_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
 
 	nout_tmp_vb = *nout - nex;
 	out_rc = malloc(nout_tmp_vb);
-	(void) rcmsdec(in + offset, *nout - nex, out_rc);
+	(void) rcsdec(in + offset, *nout - nex, out_rc);
 	(void) memcpy(out_vb + exlen, out_rc, nout_tmp_vb);
 	free(out_rc);
 	nout_tmp_vb += exlen;
@@ -4100,7 +4100,7 @@ void rc_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	/* I know...this is just a safe upper bound */
 	nout_tmp = rice_bound(nout_tmp_vb - exlen);
 	out_rc = malloc(nout_tmp);
-	nout_tmp = rcmsenc(out_vb + exlen, nout_tmp_vb - exlen, out_rc);
+	nout_tmp = rcsenc(out_vb + exlen, nout_tmp_vb - exlen, out_rc);
 	(void) memcpy(out + offset, out_rc, nout_tmp);
 	free(out_rc);
 
@@ -4111,6 +4111,297 @@ void rc_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 /* *nout must be the exact number of original elements */
 void rc_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			     uint32_t *nout)
+{
+	uint16_t nex_pos_press;
+	uint16_t nex_press;
+	uint16_t exlen;
+	uint16_t nex;
+	uint64_t offset;
+	uint8_t *out_vb;
+	uint8_t *out_rc;
+	uint16_t *out_zd;
+	uint32_t nout_tmp;
+	uint64_t nout_tmp_vb;
+
+	nex = in[sizeof *out];
+	exlen = sizeof nex;
+	if (nex > 1) {
+		(void) memcpy(&nex_pos_press, in + sizeof *out + exlen, sizeof nex_pos_press);
+		exlen += sizeof nex_pos_press + nex_pos_press;
+		(void) memcpy(&nex_press, in + sizeof *out + exlen, sizeof nex_press);
+		exlen += sizeof nex_press + nex_press;
+	} else if (nex == 1) {
+		exlen += nex * (sizeof (uint32_t) + sizeof (uint16_t));
+	}
+	offset = sizeof *out;
+
+	out_vb = malloc(*nout * sizeof *out);
+	(void) memcpy(out_vb, in + offset, exlen);
+	offset += exlen;
+
+	nout_tmp_vb = *nout - nex - 1;
+	out_rc = malloc(nout_tmp_vb);
+	(void) rcsdec(in + offset, *nout - nex - 1, out_rc);
+	(void) memcpy(out_vb + exlen, out_rc, nout_tmp_vb);
+	free(out_rc);
+	nout_tmp_vb += exlen;
+
+	nout_tmp = *nout - 1;
+	out_zd = malloc(*nout * sizeof *out_zd);
+	vbbe21_depress(out_vb, nout_tmp_vb, out_zd + 1, &nout_tmp);
+	free(out_vb);
+
+	(void) memcpy(out_zd, in, sizeof *out_zd);
+
+	unzigdelta_u16_16(out_zd, nout_tmp + 1, out);
+	free(out_zd);
+	*nout = nout_tmp + 1;
+}
+
+/*
+ * delta | zigzag | vbe21 | range context mixing
+ * range context mixing on the 1 byte data
+ */
+
+uint64_t rccm_vbe21_zd_bound_16(uint32_t nin)
+{
+	return vb1e2_zd_bound_16(nin);
+}
+
+void rccm_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			    uint64_t *nout)
+{
+	uint16_t *in_zd;
+	uint8_t *out_vb;
+	uint8_t *out_rc;
+	uint64_t nout_tmp;
+	uint64_t nout_tmp_vb;
+	uint32_t exlen;
+	uint16_t nex;
+	uint64_t offset;
+
+	in_zd = zigdelta_16_u16(in, nin);
+
+	(void) memcpy(out, in_zd, sizeof *in_zd);
+
+	nout_tmp_vb = *nout - sizeof *in_zd;
+	out_vb = malloc(nout_tmp_vb);
+	vbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
+	free(in_zd);
+
+	nex = out_vb[0];
+	offset = sizeof *in_zd;
+	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
+	(void) memcpy(out + offset, out_vb, exlen);
+	offset += exlen;
+
+	/* I know...this is just a safe upper bound */
+	nout_tmp = rice_bound(nout_tmp_vb - exlen);
+	out_rc = malloc(nout_tmp);
+	nout_tmp = rcmsenc(out_vb + exlen, nout_tmp_vb - exlen, out_rc);
+	(void) memcpy(out + offset, out_rc, nout_tmp);
+	free(out_rc);
+
+	*nout = nout_tmp + offset;
+	free(out_vb);
+}
+
+/* *nout must be the exact number of original elements */
+void rccm_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			      uint32_t *nout)
+{
+	uint32_t exlen;
+	uint16_t nex;
+	uint64_t offset;
+	uint8_t *out_vb;
+	uint8_t *out_rc;
+	uint16_t *out_zd;
+	uint32_t nout_tmp;
+	uint64_t nout_tmp_vb;
+
+	nex = in[sizeof *out];
+	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
+	offset = sizeof *out;
+
+	out_vb = malloc(*nout * sizeof *out);
+	(void) memcpy(out_vb, in + offset, exlen);
+	offset += exlen;
+
+	nout_tmp_vb = *nout - nex - 1;
+	out_rc = malloc(nout_tmp_vb);
+	(void) rcmsdec(in + offset, *nout - nex - 1, out_rc);
+	(void) memcpy(out_vb + exlen, out_rc, nout_tmp_vb);
+	free(out_rc);
+	nout_tmp_vb += exlen;
+
+	nout_tmp = *nout - 1;
+	out_zd = malloc(*nout * sizeof *out_zd);
+	vbe21_depress(out_vb, nout_tmp_vb, out_zd + 1, &nout_tmp);
+	free(out_vb);
+
+	(void) memcpy(out_zd, in, sizeof *out_zd);
+
+	unzigdelta_u16_16(out_zd, nout_tmp + 1, out);
+	free(out_zd);
+	*nout = nout_tmp + 1;
+}
+
+/*
+ * vbbe21 | range context mixing
+ * range context mixing on the 1 byte data
+ */
+
+uint64_t rccm_vbbe21_bound_16(uint32_t nin)
+{
+	return vbe21_bound(nin);
+}
+
+void rccm_vbbe21_press_16(const uint16_t *in, uint32_t nin, uint8_t *out,
+			  uint64_t *nout)
+{
+	uint8_t *out_vb;
+	uint8_t *out_rc;
+	uint64_t nout_tmp;
+	uint64_t nout_tmp_vb;
+	uint16_t nex_pos_press;
+	uint16_t nex_press;
+	uint16_t exlen;
+	uint16_t nex;
+	uint64_t offset;
+
+	nout_tmp_vb = *nout;
+	out_vb = malloc(nout_tmp_vb);
+	vbbe21_press(in, nin, out_vb, &nout_tmp_vb);
+
+	nex = out_vb[0];
+	exlen = sizeof nex;
+	if (nex > 1) {
+		(void) memcpy(&nex_pos_press, out_vb + exlen, sizeof nex_pos_press);
+		exlen += sizeof nex_pos_press + nex_pos_press;
+		(void) memcpy(&nex_press, out_vb + exlen, sizeof nex_press);
+		exlen += sizeof nex_press + nex_press;
+	} else if (nex == 1) {
+		exlen += nex * (sizeof (uint32_t) + sizeof (uint16_t));
+	}
+	(void) memcpy(out, out_vb, exlen);
+	offset = exlen;
+
+	/* I know...this is just a safe upper bound */
+	nout_tmp = rice_bound(nout_tmp_vb - exlen);
+	out_rc = malloc(nout_tmp);
+	nout_tmp = rcmsenc(out_vb + exlen, nout_tmp_vb - exlen, out_rc);
+	(void) memcpy(out + offset, out_rc, nout_tmp);
+	free(out_rc);
+
+	*nout = nout_tmp + offset;
+	free(out_vb);
+}
+
+/* *nout must be the exact number of original elements */
+void rccm_vbbe21_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
+			    uint32_t *nout)
+{
+	uint16_t nex_pos_press;
+	uint16_t nex_press;
+	uint16_t exlen;
+	uint16_t nex;
+	uint64_t offset;
+	uint8_t *out_vb;
+	uint8_t *out_rc;
+	uint32_t nout_tmp;
+	uint64_t nout_tmp_vb;
+
+	nex = in[sizeof *out];
+	exlen = sizeof nex;
+	if (nex > 1) {
+		(void) memcpy(&nex_pos_press, in + sizeof *out + exlen, sizeof nex_pos_press);
+		exlen += sizeof nex_pos_press + nex_pos_press;
+		(void) memcpy(&nex_press, in + sizeof *out + exlen, sizeof nex_press);
+		exlen += sizeof nex_press + nex_press;
+	} else if (nex == 1) {
+		exlen += nex * (sizeof (uint32_t) + sizeof (uint16_t));
+	}
+	offset = sizeof *out;
+
+	out_vb = malloc(*nout * sizeof *out);
+	(void) memcpy(out_vb, in + offset, exlen);
+	offset += exlen;
+
+	nout_tmp_vb = *nout - nex;
+	out_rc = malloc(nout_tmp_vb);
+	(void) rcmsdec(in + offset, *nout - nex, out_rc);
+	(void) memcpy(out_vb + exlen, out_rc, nout_tmp_vb);
+	free(out_rc);
+	nout_tmp_vb += exlen;
+
+	nout_tmp = *nout;
+	vbbe21_depress(out_vb, nout_tmp_vb, out, &nout_tmp);
+	free(out_vb);
+
+	*nout = nout_tmp;
+}
+
+/*
+ * delta | zigzag | vbbe21 | range context mixing
+ * range context mixing on the 1 byte data
+ */
+
+uint64_t rccm_vbbe21_zd_bound_16(uint32_t nin)
+{
+	return vb1e2_zd_bound_16(nin);
+}
+
+void rccm_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			     uint64_t *nout)
+{
+	uint16_t *in_zd;
+	uint8_t *out_vb;
+	uint8_t *out_rc;
+	uint64_t nout_tmp;
+	uint64_t nout_tmp_vb;
+	uint16_t nex_pos_press;
+	uint16_t nex_press;
+	uint16_t exlen;
+	uint16_t nex;
+	uint64_t offset;
+
+	in_zd = zigdelta_16_u16(in, nin);
+
+	(void) memcpy(out, in_zd, sizeof *in_zd);
+
+	nout_tmp_vb = *nout - sizeof *in_zd;
+	out_vb = malloc(nout_tmp_vb);
+	vbbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
+	free(in_zd);
+
+	nex = out_vb[0];
+	offset = sizeof *in_zd;
+	exlen = sizeof nex;
+	if (nex > 1) {
+		(void) memcpy(&nex_pos_press, out_vb + exlen, sizeof nex_pos_press);
+		exlen += sizeof nex_pos_press + nex_pos_press;
+		(void) memcpy(&nex_press, out_vb + exlen, sizeof nex_press);
+		exlen += sizeof nex_press + nex_press;
+	} else if (nex == 1) {
+		exlen += nex * (sizeof (uint32_t) + sizeof (uint16_t));
+	}
+	(void) memcpy(out + offset, out_vb, exlen);
+	offset += exlen;
+
+	/* I know...this is just a safe upper bound */
+	nout_tmp = rice_bound(nout_tmp_vb - exlen);
+	out_rc = malloc(nout_tmp);
+	nout_tmp = rcmsenc(out_vb + exlen, nout_tmp_vb - exlen, out_rc);
+	(void) memcpy(out + offset, out_rc, nout_tmp);
+	free(out_rc);
+
+	*nout = nout_tmp + offset;
+	free(out_vb);
+}
+
+/* *nout must be the exact number of original elements */
+void rccm_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			       uint32_t *nout)
 {
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
@@ -4355,15 +4646,15 @@ void rccdf_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 }
 
 /*
- * stall zigzag delta vbbe21 range coding
+ * stall zigzag delta vbbe21 range coding context mixing
  * TODO can do len_stall - 1 and bitpack
- * [start_stall][len_stall][stall | submin | vbbe21 | rc]
- * [non-stall | delta | zigzag | vbbe21 | rc]
+ * [start_stall][len_stall][stall | submin | vbbe21 | rccm]
+ * [non-stall | delta | zigzag | vbbe21 | rccm]
  */
 
-uint64_t rc_svbbe21_zd_bound_16(uint32_t nin)
+uint64_t rccm_svbbe21_zd_bound_16(uint32_t nin)
 {
-	return rc_vbbe21_zd_bound_16(nin);
+	return rccm_vbbe21_zd_bound_16(nin);
 }
 
 int find_stall(const int16_t *in, uint32_t nin, uint16_t *stall_start,
@@ -4386,8 +4677,8 @@ int find_stall(const int16_t *in, uint32_t nin, uint16_t *stall_start,
 	return 1;
 }
 
-void rc_svbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
-			    uint64_t *nout)
+void rccm_svbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			      uint64_t *nout)
 {
 	uint16_t stall_start;
 	uint16_t stall_len;
@@ -4424,8 +4715,8 @@ void rc_svbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 
 		offset += sizeof nin_stall_press;
 		nin_stall_press_tmp = *nout - offset;
-		rc_vbbe21_submin_press_16(in_stall, stall_len, out + offset,
-					  &nin_stall_press_tmp);
+		rccm_vbbe21_submin_press_16(in_stall, stall_len, out + offset,
+					    &nin_stall_press_tmp);
 		free(in_stall);
 		nin_stall_press = nin_stall_press_tmp;
 
@@ -4442,8 +4733,8 @@ void rc_svbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 
 	offset += sizeof nin_nonstall_press;
 	nin_nonstall_press_tmp = *nout - offset;
-	rc_vbbe21_zd_press_16(in_nonstall, nin - stall_len, out + offset,
-			      &nin_nonstall_press_tmp);
+	rccm_vbbe21_zd_press_16(in_nonstall, nin - stall_len, out + offset,
+				&nin_nonstall_press_tmp);
 	free(in_nonstall);
 	nin_nonstall_press = nin_nonstall_press_tmp;
 
@@ -4455,8 +4746,8 @@ void rc_svbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	*nout = offset;
 }
 
-void rc_svbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
-			      uint32_t *nout)
+void rccm_svbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+				uint32_t *nout)
 {
 	uint8_t exists_stall;
 	uint64_t offset;
@@ -4492,8 +4783,8 @@ void rc_svbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 
 		nstall = stall_len;
 		stall = malloc(nstall * sizeof *stall);
-		rc_vbbe21_submin_depress_16(stall_press, nin_stall_press,
-					    stall, &nstall);
+		rccm_vbbe21_submin_depress_16(stall_press, nin_stall_press,
+					      stall, &nstall);
 		free(stall_press);
 
 		(void) memcpy(out + stall_start, stall,
@@ -4511,8 +4802,8 @@ void rc_svbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 
 	nnonstall = nin - stall_len;
 	nonstall = calloc(nnonstall, sizeof nonstall);
-	rc_vbbe21_zd_depress_16(nonstall_press, nin_nonstall_press, nonstall,
-				&nnonstall);
+	rccm_vbbe21_zd_depress_16(nonstall_press, nin_nonstall_press, nonstall,
+				  &nnonstall);
 	free(nonstall_press);
 
 	(void) memcpy(out, nonstall, stall_start * sizeof *nonstall);
@@ -4525,15 +4816,15 @@ void rc_svbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 /*
  * subtract min from all sigs
  * apply range coding
- * compressed: [min, sigs - min as rc]
+ * compressed: [min, sigs - min as rccm]
  */
-uint64_t rc_vbbe21_submin_bound_16(uint64_t nin)
+uint64_t rccm_vbbe21_submin_bound_16(uint64_t nin)
 {
-	return sizeof (uint16_t) + rc_vbbe21_bound_16(nin);
+	return sizeof (uint16_t) + rccm_vbbe21_bound_16(nin);
 }
 
-void rc_vbbe21_submin_press_16(const uint16_t *in, uint64_t nin, uint8_t *out,
-			       uint64_t *nout)
+void rccm_vbbe21_submin_press_16(const uint16_t *in, uint64_t nin,
+				 uint8_t *out, uint64_t *nout)
 {
 	uint16_t min;
 	uint16_t *in_submin;
@@ -4577,8 +4868,8 @@ void rc_vbbe21_submin_press_16(const uint16_t *in, uint64_t nin, uint8_t *out,
 	*nout = nout_tmp + offset;
 }
 
-void rc_vbbe21_submin_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
-				 uint64_t *nout)
+void rccm_vbbe21_submin_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
+				   uint64_t *nout)
 {
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
@@ -4638,10 +4929,10 @@ void rc_vbbe21_submin_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
  * - have at least one diff x_{i+1} - x_i > 25
  * [num jumps][num falls]
  * [[jump start indices][fall start indices] | diff - 1 | zstd_svb12]
- * [[jump lengths      ][fall lengths      ] - 1 | rc]
+ * [[jump lengths      ][fall lengths      ] - 1 | rccm]
  * [first sig]
- * [[jump sigs         ][- fall sigs       ] | diff - 1 | rc_vbbe21]
- * [flat sigs | diff | zigzag | rc]
+ * [[jump sigs         ][- fall sigs       ] | diff - 1 | rccm_vbbe21]
+ * [flat sigs | diff | zigzag | rccm]
  */
 
 /* TODO do tighter upper bound */
@@ -4865,9 +5156,9 @@ void jumps_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 		times_x_inplace_16(-1, (int16_t *) jf_d + nj_d, njf_d - nj_d);
 		shift_x_inplace_16(-1, jf_d, njf_d);
 
-		press_len_tmp = rc_vbbe21_bound_16(njf_d);
+		press_len_tmp = rccm_vbbe21_bound_16(njf_d);
 		jf_d_press = malloc(press_len_tmp);
-		rc_vbbe21_press_16((uint16_t *) jf_d, njf_d, jf_d_press,
+		rccm_vbbe21_press_16((uint16_t *) jf_d, njf_d, jf_d_press,
 				   &press_len_tmp);
 		free(jf_d);
 

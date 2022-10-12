@@ -487,6 +487,7 @@ static int write_code_table_to_memory(buf_cache* pc, SymbolEncoder* se, uint32_t
 {
 	uint32_t i;
 	uint8_t count = 0;
+	uint64_t bytes = 0;
 
 	/* Determine the number of entries in se. */
 	for (i = 0; i < MAX_SYMBOLS; ++i)
@@ -500,11 +501,13 @@ static int write_code_table_to_memory(buf_cache* pc, SymbolEncoder* se, uint32_t
 
 	if (write_cache(pc, &count, sizeof(count)))
 		return 1;
+	bytes += sizeof(count);
 
 	/* Write the number of bytes that will be encoded. */
 	symbol_count = htonl(symbol_count);
 	if (write_cache(pc, &symbol_count, sizeof(symbol_count)))
 		return 1;
+	bytes += sizeof(symbol_count);
 
 	/* Write the entries. */
 	for (i = 0; i < MAX_SYMBOLS; ++i)
@@ -519,16 +522,21 @@ static int write_code_table_to_memory(buf_cache* pc, SymbolEncoder* se, uint32_t
 			/* Write the 1 byte symbol. */
 			if (write_cache(pc, &uc, sizeof(uc)))
 				return 1;
+			bytes += sizeof(uc);
 			/* Write the 1 byte code bit length. */
 			uc = (unsigned char)p->numbits;
 			if (write_cache(pc, &uc, sizeof(uc)))
 				return 1;
+			bytes += sizeof(uc);
 			/* Write the code bytes. */
 			numbytes = numbytes_from_numbits(p->numbits);
 			if (write_cache(pc, p->bits, numbytes))
 				return 1;
+			bytes += numbytes;
 		}
 	}
+
+	fprintf(stderr, "table size: %ld\n", bytes);
 
 	return 0;
 }
