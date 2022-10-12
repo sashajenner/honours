@@ -35,19 +35,33 @@ Then, the expected compressed size is
 	&\approx 127661\\
 	&> E[C_{vbe21}].
 \end{align*}
-So it is clear that \textit{vbe21} saves more space than \textit{svb16}: roughly 14 KiB on average per read or an estimated 6.6 GiB for the whole data set. This is actually a very accurate estimation; see Figure \ref{fig:svb16-vbe21-zd}.
+So it is clear that \textit{vbe21} saves more space than \textit{svb16}: roughly 14 KiB on average per read or an estimated 6.6 GiB for the whole data set. This is actually a very accurate estimation; see Figure \ref{fig:svb-vbe21-zd-size}.
+
+\input{plots/svb-vbe21-zd-size}
 
 \subsection{Exceptions Encoding}
 
-The number of exceptions per read ranges from 0 to 3616 but 99\% are between 0 and 42. The mean is $\sim$5 and the standard deviation is $\sim$18. See Table \ref{tab:ex}. Its distribution, shown in Figure \ref{fig:nex-hist}, could be nicely fitted by an exponential distribution. Notice that around 20\% of the reads have no exceptions such that their zig-zag deltas lie perfectly between 0 and 255.
+The number of exceptions per read ranges from 0 to 3616 but 99\% of reads have between 0 and 42 exceptions. The mean is $\sim$5 and the standard deviation is $\sim$18. See Table \ref{tab:ex}. Its distribution, shown in Figure \ref{fig:nex-hist}, could be nicely fitted by an exponential distribution. Notice that around 20\% of the reads have no exceptions such that their zig-zag deltas lie perfectly between 0 and 255.
 
 \input{plots/ex-tab}
 \input{plots/nex-hist}
 
-The exceptions range from 256 to 2317 as expected but 99\% of the exceptions do not go higher than 481. The mean and mode are $\sim$277 and 256 respectively. Refer to Table \ref{tab:ex}. The histogram of exceptions is shown in Figure \ref{fig:ex-hist}. Notably, the frequency of even-numbered exceptions is much greater than adjacent old-numbered exceptions from 256 up to $\sim$330. This is due to large positive deltas occuring more frequently than large negative deltas as previously discussed in Section \ref{subsec:stripe}.
+The exceptions range from 256 to 2317 as expected but 99\% of the exceptions do not go higher than 481. The mean and mode are $\sim$277 and 256 respectively. Refer to Table \ref{tab:ex}. The histogram of exceptions is shown in Figure \ref{fig:ex-hist}. Notably, the frequency of even-numbered exceptions is much greater than adjacent odd-numbered exceptions from 256 up to $\sim$330. This is due to large positive deltas occuring more frequently than large negative deltas as previously discussed in Section \ref{subsec:stripe}.
 
 \input{plots/ex-hist}
 
-\subsection{Range Coding}
+Given this information, there are better ways of storing the exceptions than in a raw sequential format.
 
-\subsection{Static Huffman}
+% TODO show these ways
+% analyse how much better
+
+However, the exceptions section usually accounts for only 36 bytes of the read on average in the vbe21 format. Hence, focussing on compressing the one-byte data section has much more potential benefit.
+
+\subsection{Huffman}
+
+Consider compressing the one-byte data using the Huffman coding algorithm. This requires determining the read's zig-zag delta distribution on an initial pass. Then, the Huffman table is recorded and each byte is encoded with its Huffman code. The problem is that there is an overhead with storing the table.
+Naively, one can store the table by writing the number of entries in the table (1 byte), the table's size in bytes (4 bytes), then each entry's symbol (1 byte), code length (1 byte) and code (code length in bytes). The resulting table consumes
+\[ 5 + 2m + \sum_{i=1}^m\lceil b_i / 8 \rceil \]
+bytes where $m\in\mathbb{Z}\cap[0,255]$ is the number of entries in the table and $b_i$ is the length of the $i$-th entry's code in bits.
+
+\subsection{Range Coding}

@@ -22,8 +22,8 @@
 \BOOKMARK [1][-]{section.4.1}{4.1. The Focus}{chapter.4}% 22
 \BOOKMARK [1][-]{section.4.2}{4.2. One Byte, Two Byte Exceptions}{chapter.4}% 23
 \BOOKMARK [2][-]{subsection.4.2.1}{4.2.1. Exceptions Encoding}{section.4.2}% 24
-\BOOKMARK [2][-]{subsection.4.2.2}{4.2.2. Range Coding}{section.4.2}% 25
-\BOOKMARK [2][-]{subsection.4.2.3}{4.2.3. Static Huffman}{section.4.2}% 26
+\BOOKMARK [2][-]{subsection.4.2.2}{4.2.2. Huffman}{section.4.2}% 25
+\BOOKMARK [2][-]{subsection.4.2.3}{4.2.3. Range Coding}{section.4.2}% 26
 \BOOKMARK [1][-]{section.4.3}{4.3. Exploiting the Signal}{chapter.4}% 27
 \BOOKMARK [2][-]{subsection.4.3.1}{4.3.1. The Stall}{section.4.3}% 28
 \BOOKMARK [2][-]{subsection.4.3.2}{4.3.2. Separating the Jumps and Flats}{section.4.3}% 29
@@ -33,6 +33,6 @@
 \BOOKMARK [0][-]{chapter.6}{Chapter 6. Discussion}{}% 33
 \BOOKMARK [1][-]{section.6.1}{6.1. Future Work}{chapter.6}% 34
 \BOOKMARK [0][-]{chapter.7}{Chapter 7. Conclusion}{}% 35
-\BOOKMARK [0][-]{chapter*.38}{Appendix}{}% 36
-\BOOKMARK [1][-]{section.7.1}{7.1. Subsequence Searching}{chapter*.38}% 37
-\BOOKMARK [0][-]{chapter*.40}{Bibliography}{}% 38
+\BOOKMARK [0][-]{chapter*.39}{Appendix}{}% 36
+\BOOKMARK [1][-]{section.7.1}{7.1. Subsequence Searching}{chapter*.39}% 37
+\BOOKMARK [0][-]{chapter*.41}{Bibliography}{}% 38

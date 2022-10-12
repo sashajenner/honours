@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.3.3)  11 OCT 2022 18:32
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.3.3)  12 OCT 2022 12:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1288,7 +1288,7 @@ Chapter 1
 ]
 Chapter 2
 (./litreview/nano.tex (./plots/nano.tex
-<plots/nano.png, id=376, 1953.2975pt x 1237.62375pt>
+<plots/nano.png, id=380, 1953.2975pt x 1237.62375pt>
 File: plots/nano.png Graphic file (type png)
 <use plots/nano.png>
 Package pdftex.def Info: plots/nano.png  used on input line 3.
@@ -1301,7 +1301,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 ]
 (./plots/shannon-comm.tex
-<plots/shannon-comm-system.png, id=390, 1372.12625pt x 598.235pt>
+<plots/shannon-comm-system.png, id=394, 1372.12625pt x 598.235pt>
 File: plots/shannon-comm-system.png Graphic file (type png)
 <use plots/shannon-comm-system.png>
 Package pdftex.def Info: plots/shannon-comm-system.png  used on input line 3.
@@ -1365,7 +1365,7 @@ Overfull \hbox (16.8757pt too wide) in paragraph at lines 7--28
 )) (./data/data.tex [14] [15]
 Chapter 3
 (./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.pa.small.tex
-<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.pa.pdf, id=608, 1445.4pt 
+<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.pa.pdf, id=612, 1445.4pt 
 x 504.88625pt>
 File: plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.pa.pdf Graphic file 
 (type pdf)
@@ -1414,7 +1414,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 (./plots/reads.515e4fd0-8ab1-4845-8866-6772e779712b.raw.tex))
 (./plots/trans-tab.tex)
 (./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.small.tex
-<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.pdf, id=671, 1445.4
+<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.pdf, id=675, 1445.4
 pt x 504.88625pt>
 File: plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.pdf Graphic fi
 le (type pdf)
@@ -1434,7 +1434,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [23]
 [24] [25] (./plots/diff-hist.tex (./plots/reads.blow5.diff.freq.hist.tex))
 (./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.zigzag.small.tex
-<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.zigzag.pdf, id=691,
+<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.zigzag.pdf, id=695,
  1445.4pt x 504.88625pt>
 File: plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.zigzag.pdf Gra
 phic file (type pdf)
@@ -1458,11 +1458,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 ]
-
-LaTeX Warning: Reference `fig:svb16-vbe21-zd' on page 32 undefined on input lin
-e 38.
-
-
+(./plots/svb-vbe21-zd-size.tex (./plots/reads.blow5.test.vbe21.size.tex))
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [32]
@@ -1472,35 +1468,28 @@ Underfull \hbox (badness 10000) in paragraph at lines 5--5
  []
 
 ) (./plots/nex-hist.tex (./plots/reads.blow5.nex.freq.hist.tex))
-(./plots/ex-hist.tex (./plots/reads.blow5.ex.zigzag.freq.hist.tex)))
-(./probspace/exploit-signal.tex) (./probspace/subseq.tex
-Underfull \vbox (badness 10000) has occurred while \output is active []
+(./plots/ex-hist.tex (./plots/reads.blow5.ex.zigzag.freq.hist.tex)
+Underfull \vbox (badness 1406) has occurred while \output is active []
 
  [33]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [34]
-Overfull \vbox (40.42953pt too high) has occurred while \output is active []
-
-
-[35]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+[34]) [35]) (./probspace/exploit-signal.tex) (./probspace/subseq.tex
+Underfull \vbox (badness 4899) has occurred while \output is active []
 
  [36]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [37]
-
-LaTeX Warning: Command \; invalid in math mode on input line 88.
-
-
-LaTeX Warning: Command \; invalid in math mode on input line 88.
-
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [38])
-Underfull \vbox (badness 1675) has occurred while \output is active []
+ [38]
+
+LaTeX Warning: Command \; invalid in math mode on input line 88.
+
+
+LaTeX Warning: Command \; invalid in math mode on input line 88.
+
+)
+Underfull \vbox (badness 6792) has occurred while \output is active []
 
  [39])
 (./results/results.tex [40]
@@ -1552,18 +1541,14 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 156.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 156.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 156.
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: A09BC3532F172F64E4E00ECEB59C869C;2517.
-
-
-LaTeX Warning: There were undefined references.
-
+(rerunfilecheck)             Checksum: 472F5541413A48E303B756DFD8C8B90E;2510.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 156.
  ) 
 Here is how much of TeX's memory you used:
- 29644 strings out of 483107
- 550132 string characters out of 5964631
- 1883399 words of memory out of 5000000
- 43488 multiletter control sequences out of 15000+600000
+ 29663 strings out of 483107
+ 550603 string characters out of 5964631
+ 1883861 words of memory out of 5000000
+ 43498 multiletter control sequences out of 15000+600000
  610223 words of font info for 113 fonts, out of 8000000 for 9000
  220 hyphenation exceptions out of 8191
  52i,24n,62p,1246b,994s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1585,10 +1570,10 @@ xmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/font
 s/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/tim
 es/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
 
-Output written on thesis.pdf (56 pages, 4515399 bytes).
+Output written on thesis.pdf (56 pages, 4538522 bytes).
 PDF statistics:
- 965 PDF objects out of 1000 (max. 8388607)
- 851 compressed objects within 9 object streams
- 174 named destinations out of 1000 (max. 500000)
+ 971 PDF objects out of 1000 (max. 8388607)
+ 857 compressed objects within 9 object streams
+ 175 named destinations out of 1000 (max. 500000)
  347 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -26,8 +26,9 @@
 \contentsline {figure}{\numberline {3.12}{\ignorespaces The zig-zag deltas of the read with ID e9f08690-171f-476f-9119-5330d0290126. $7, 3, 19, 32,\dots $ is the sequence starting from position 25000.\relax }}{29}{figure.caption.33}%
 \contentsline {figure}{\numberline {3.13}{\ignorespaces The frequency of raw signal zig-zag deltas 0 to 224 in millions for the data set. The zig-zag deltas outside this range occurred less than 1 million times.\relax }}{30}{figure.caption.34}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Histogram of the number of exceptions per read up to 100 which appears to nicely follow an exponential distribution. Values after 100 occur highly infrequently -- there are only 546 out of \num {500000} reads with more than 100 exceptions.\relax }}{34}{figure.caption.36}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Histogram of the zig-zag delta exceptions up to 500. This figure is the tail of Figure \ref {fig:zd-hist}. The right and left tail of Figure \ref {fig:delta-hist} are `meshed' together during the zig-zag transformation causing the stripped pattern.\relax }}{35}{figure.caption.37}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Bar plot of the data's size in gibibytes after compressing the zig-zag deltas using two layers; (1) Stream VByte (svb), Stream VByte 16 (svb16) and vbe21; (2) no compression (none), zlib and zstd. The bars are sorted in decreasing order of the compression size.\relax }}{33}{figure.caption.35}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Histogram of the number of exceptions per read up to 100 which appears to nicely follow an exponential distribution. Values after 100 occur highly infrequently -- there are only 546 out of \num {500000} reads with more than 100 exceptions.\relax }}{34}{figure.caption.37}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Histogram of the zig-zag delta exceptions up to 500. This figure is the tail of Figure \ref {fig:zd-hist}. The right and left tail of Figure \ref {fig:delta-hist} are `meshed' together during the zig-zag transformation causing the stripped pattern.\relax }}{35}{figure.caption.38}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
