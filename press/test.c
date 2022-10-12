@@ -3637,28 +3637,27 @@ int main(int argc, char **argv)
 	TEST(svb12, &res, fp);
 	TEST(svb_zd, &res, fp);
 	TEST(svb0124_zd, &res, fp);*/
-	TEST(svb12_zd, &res, fp);
+	//TEST(svb12_zd, &res, fp);
 	/*TEST(zlib_svb_zd, &res, fp);
 	TEST(zlib_svb0124_zd, &res, fp);
 	TEST(zlib_svb12_zd, &res, fp);
-	*/
 	TEST(zstd_svb_zd, &res, fp);
 	TEST(zstd_svb0124_zd, &res, fp);
 	TEST(zstd_svb12_zd, &res, fp);
 	TEST(bzip2_svb12_zd, &res, fp);
 	TEST(fast_lzma2_svb12_zd, &res, fp);
-	/*
 	TEST(flac_P11, &res, fp);
 	TEST(zstd_flac_P11, &res, fp);
 	TEST(turbopfor, &res, fp);
-	TEST(vb1e2_zd, &res, fp);*/
+	TEST(vb1e2_zd, &res, fp);
 	TEST(vbe21_zd, &res, fp);
 	TEST(zstd_vb1e2_zd, &res, fp);
 	TEST(zstd_vbe21_zd, &res, fp);
 	TEST(zlib_vbe21_zd, &res, fp);
-	/*
+	*/
 	TEST(huffman_vbe21_zd, &res, fp);
 	TEST(shuffman_vbe21_zd, &res, fp);
+	/*
 	TEST(rice_vbe21_zd, &res, fp);
 	TEST(rc_vbe21_zd, &res, fp);
 	TEST(rccdf_vbe21_zd, &res, fp);

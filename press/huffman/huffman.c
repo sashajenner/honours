@@ -485,7 +485,8 @@ static int write_code_table(FILE* out, SymbolEncoder* se, uint32_t symbol_count)
  */
 static int write_code_table_to_memory(buf_cache* pc, SymbolEncoder* se, uint32_t symbol_count)
 {
-	uint32_t i, count = 0;
+	uint32_t i;
+	uint8_t count = 0;
 
 	/* Determine the number of entries in se. */
 	for (i = 0; i < MAX_SYMBOLS; ++i)
@@ -495,9 +496,9 @@ static int write_code_table_to_memory(buf_cache* pc, SymbolEncoder* se, uint32_t
 	}
 
 	/* Write the number of entries in network byte order. */
-	i = htonl(count);
+	//i = htonl(count);
 
-	if (write_cache(pc, &i, sizeof(i)))
+	if (write_cache(pc, &count, sizeof(count)))
 		return 1;
 
 	/* Write the number of bytes that will be encoded. */
@@ -707,7 +708,7 @@ static huffman_node* read_code_table_from_memory(const unsigned char* bufin,
 						 uint32_t* pDataBytes)
 {
 	huffman_node* root = new_nonleaf_node(0, NULL, NULL);
-	uint32_t count;
+	uint8_t count;
 
 	/* Read the number of entries.
 	   (it is stored in network byte order). */
@@ -717,7 +718,7 @@ static huffman_node* read_code_table_from_memory(const unsigned char* bufin,
 		return NULL;
 	}
 
-	count = ntohl(count);
+	//count = ntohl(count);
 
 	/* Read the number of data bytes this encoding represents. */
 	if (memread(bufin, bufinlen, pindex, pDataBytes, sizeof(*pDataBytes)))
@@ -1102,6 +1103,7 @@ static void print_huffman_node_nice(huffman_node *node)
 }
 */
 
+/*
 static void print_huffman_code_nice(huffman_code *code)
 {
 	int i;
@@ -1114,6 +1116,7 @@ static void print_huffman_code_nice(huffman_code *code)
 	}
 	puts("}},");
 }
+*/
 
 /*
 static void print_table_frequencies_nice(SymbolFrequencies sf)
@@ -1126,6 +1129,7 @@ static void print_table_frequencies_nice(SymbolFrequencies sf)
 }
 */
 
+/*
 static void print_table_encoder_nice(SymbolEncoder se)
 {
 	int i;
@@ -1133,6 +1137,7 @@ static void print_table_encoder_nice(SymbolEncoder se)
 		print_huffman_code_nice(se[i]);
 	}
 }
+*/
 
 int print_table_encoder(SymbolEncoder *se, uint32_t symbol_count)
 {
@@ -1146,7 +1151,7 @@ int print_table_frequencies(SymbolFrequencies sf, uint32_t symbol_count)
 
 	se = calculate_huffman_codes(sf);
 	/*print_table_frequencies_nice(sf);*/
-	print_table_encoder_nice(*se);
+	/*print_table_encoder_nice(*se);*/
 	ret = print_table_encoder(se, symbol_count);
 	free_encoder(se);
 

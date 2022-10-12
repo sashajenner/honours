@@ -41,6 +41,9 @@ $(FLZMA2LIB):
 $(FLACLIB):
 	make -C $(FLAC)
 
+$(HUFFMANLIB):
+	make -C $(HUFFMAN)
+
 $(TURBOPFORLIB):
 	make -C $(TURBOPFOR)
 
