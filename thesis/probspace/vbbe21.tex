@@ -59,9 +59,17 @@ However, the exceptions section usually accounts for only 36 bytes of the read o
 
 \subsection{Huffman}
 
-Consider compressing the one-byte data using the Huffman coding algorithm. This requires determining the read's zig-zag delta distribution on an initial pass. Then, the Huffman table is recorded and each byte is encoded with its Huffman code. The problem is that there is an overhead with storing the table.
-Naively, one can store the table by writing the number of entries in the table (1 byte), the table's size in bytes (4 bytes), then each entry's symbol (1 byte), code length (1 byte) and code (code length in bytes). The resulting table consumes
-\[ 5 + 2m + \sum_{i=1}^m\lceil b_i / 8 \rceil \]
-bytes where $m\in\mathbb{Z}\cap[0,255]$ is the number of entries in the table and $b_i$ is the length of the $i$-th entry's code in bits.
+Consider compressing the one-byte data using the Huffman (shortened to \textit{huff}) coding algorithm. This requires determining the read's zig-zag delta distribution on an initial pass. Then, the Huffman table is recorded and each byte is encoded with its Huffman code. The problem is that there is an overhead with storing the table.
+Naively, one can store the table by writing the number of entries in the table (1 byte) then each entry's symbol (1 byte), code length (1 byte) and code (code length in bytes). The resulting table consumes
+\[ 1 + 2m + \sum_{i=1}^m\lceil b_i / 8 \rceil \]
+bytes where $m\in\mathbb{Z}\cap[0,255]$ is the number of entries in the table and $b_i$ is the length of the $i$-th entry's code in bits. The number of entries is the number of unique one-byte zig-zag deltas in the read which is dependent on the read's length. Short reads may only contain 100 unique one-byte deltas whilst long reads may easily contain more than 250 entries. If we estimate that this is roughly 200 and the average code length is 2 bytes then the table consumes
+\[ 1 + 2\times 200 + 200\times 2 = 801 \]
+bytes. The maximum number of entries is 256 so the maximum table size is roughly 1025 bytes.
+
+However, rather than encoding the exact Huffman table of each read it makes more sense to use a shared Huffman table which approximates the zig-zag delta distribution of most reads well.
+%These are bytes we don't need to repeat in each read when each read has a similar distribution of zig-zag deltas.
+For example, 0 is the most common value among reads so naturally its code will have the fewest number of bits and this will be efficient for the majority of reads. One simple approach is to construct the optimal Huffman table for the whole data set of zig-zag deltas. Then, we can store the code table once in the source code and encode each read using the same table. Let's call this method the static Huffman algorithm or \textit{shuff} for short. This table consumes 1042 bytes but we can store it statically alongside the source code, so unless we are considering the Kolmogorov complexity of the data its size is not calculated in the compression size. The distribution of code lengths from this table is shown in Figure \ref{fig:shuff-len}. As we can the distribution splits into two alternating distributions from about 116 onwards which represents the higher frequency of large positive compared to large negative deltas, as previously discussed.
+
+\input{plots/shuff-len}
 
 \subsection{Range Coding}
