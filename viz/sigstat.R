@@ -23,3 +23,13 @@ cat('min: ', min(df[,1]), '\n',
     'mode: ', Mode(df[,1]), '\n',
     'sample sd: ', sd(df[,1]), '\n',
     sep = '')
+
+df_bytes = ceiling(df[,1] / 8)
+
+cat('min: ', min(df_bytes), '\n',
+    'max: ', max(df_bytes), '\n',
+    'mean: ', mean(df_bytes), '\n',
+    'median: ', median(df_bytes), '\n',
+    'mode: ', Mode(df_bytes), '\n',
+    'sample sd: ', sd(df_bytes), '\n',
+    sep = '')
