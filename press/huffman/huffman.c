@@ -486,7 +486,7 @@ static int write_code_table(FILE* out, SymbolEncoder* se, uint32_t symbol_count)
 static int write_code_table_to_memory(buf_cache* pc, SymbolEncoder* se, uint32_t symbol_count)
 {
 	uint32_t i;
-	uint8_t count = 0;
+	uint8_t count = UINT8_MAX;
 	uint64_t bytes = 0;
 
 	/* Determine the number of entries in se. */
@@ -738,8 +738,7 @@ static huffman_node* read_code_table_from_memory(const unsigned char* bufin,
 	*pDataBytes = ntohl(*pDataBytes);
 
 	/* Read the entries. */
-	while (count-- > 0)
-	{
+	do {
 		unsigned int curbit;
 		unsigned char symbol;
 		unsigned char numbits;
@@ -801,7 +800,7 @@ static huffman_node* read_code_table_from_memory(const unsigned char* bufin,
 		}
 
 		free(bytes);
-	}
+	} while (count-- > 0);
 
 	return root;
 }
