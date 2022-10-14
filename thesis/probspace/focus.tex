@@ -1,12 +1,37 @@
-\section{The Focus}
+%\section{The Focus}
+% TODO rename this
+% Frame as a question: how to compress nanopore data efficiently?
+% Quantify the performance in terms of storage and analysis
 
 %TODO why lossless important
 %TODO why not lossy
 %TODO why per read
 
+Consider the problem space to be a region of compression strategies suitable for nanopore data.
+There are many possible, in fact an infinite number of, compression strategies which exist in this space.
+The question that naturally arises is: which strategies are suitable for nanopore data?
+The answer depends entirely on how you intend to use the data.
+
+The intention behind most holders of nanopore data is to use it for research or clinical diagnosis. In both events, the data will typically be basecalled and then analysed. If it is compressed it will need to be decompressed in order to perform this step. Furthermore, many legal regulations require published research and clinical data to be archived for several years. Hence, we can categorise the use-cases of nanopore data into two main categories: short-term analysis and long-term archival. In the short-term, a bioinformatician performing analysis would desire a balance between fast analysis speed and a high compression ratio. However, in the long-term, an archivist would desire a higher compression ratio as long as there is still a reasonable decompression speed. This provides us with two problem subspaces to explore.
+
+A compression strategy exists in the short-term problem subspace if for the typical 1 TiB nanopore data set the following criteria are met:
+\begin{itemize}
+\item compression ratio $\ge 2.5$,
+\item compression time $\le$ 1 hour,
+\item independent read decompression, and
+\item decompression time $\le$ 30 minutes.
+\end{itemize}
+
+has a reasonable compression ratio and speed, and results in a fast analysis speed. Let's define a reasonable compression ratio to be greater than or equal to 2.5. This means that for a 1 TiB data set, the compressed data would consume at most 256 GiB. Compression is often performed once so a reasonable compression time for a 1 TiB data set is less than or equal to 1 hour on a modern CPU with at least 4 threads. If each data point consumes 2 bytes in the uncompressed raw binary format and the average read length is roughly \num{110000}, there are around 550 billion data points and 5 million reads. This equates to $7.2\times 10^{-4}$ seconds on average per read. A compression strategy impacts the speed of analysis through the speed at which it returns a read's uncompressed data, also known as its \textit{access speed}. Many reads are typically requested by an analysis program from random locations in the data so in order to achieve a fast access speed it is important that read decompression is able to be performed in parallel to take advantage of multi-threaded CPU design. That is, each read must be able to be decompressed independently of one another. Necessarily this means that each read must be compressed separately, which is historically how nanopore signal compression has been performed. Then, the major overhead with read access becomes decompression speed.
+
+Analysis typically consists of querying the compressed data for certain reads combined with performing operations over the received data.
+
+First and foremost a suitable compression strategy should result in a compression ratio strictly greater than one. In other words, it should actually compress the data.
+The next restriction is that it should be lossless. In most research applications accuracy is of much higher value than storage space.
+
 This thesis focuses on investigating lossless compression methods which are more space efficient and do not compromise analysis speed.
-In order to not compromise analysis speed it is important that read decompression is able to be performed in parallel to take advantage of multi-threaded CPU design. That is, each read must be able to be decompressed independently of one another.
-Necessarily this means that each read must be compressed separately, which is historically how nanopore signal compression has been performed.
+%In order to not compromise analysis speed it is important that read decompression is able to be performed in parallel to take advantage of multi-threaded CPU design. That is, each read must be able to be decompressed independently of one another.
+%Necessarily this means that each read must be compressed separately, which is historically how nanopore signal compression has been performed.
 % Why analysis requires parallel access of reads?
 
 %and the primary desire of bioinformaticians is a better compression algorithm that does not sacrifice parallel querying.
