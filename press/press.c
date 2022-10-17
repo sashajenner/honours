@@ -3149,7 +3149,7 @@ int huffman_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	vbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
 	free(in_zd);
 
-	memcpy(&nex, out_vb, sizeof nex);
+	(void) memcpy(&nex, out_vb, sizeof nex);
 	offset = sizeof *in_zd;
 	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
 	(void) memcpy(out + offset, out_vb, exlen);
@@ -3181,7 +3181,7 @@ int huffman_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	uint32_t nout_tmp_vb;
 	int ret;
 
-	memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
 	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
 	offset = sizeof *out;
 
@@ -3247,7 +3247,7 @@ int huffman_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	vbbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
 	free(in_zd);
 
-	memcpy(&nex, out_vb, sizeof nex);
+	(void) memcpy(&nex, out_vb, sizeof nex);
 	offset = sizeof *in_zd;
 	exlen = sizeof nex;
 	if (nex > 1) {
@@ -3289,7 +3289,7 @@ int huffman_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	uint32_t nout_tmp_vb;
 	int ret;
 
-	memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
 	exlen = sizeof nex;
 	if (nex > 1) {
 		(void) memcpy(&nex_pos_press, in + sizeof *out + exlen, sizeof nex_pos_press);
@@ -3361,7 +3361,7 @@ int shuffman_vbe21_zd_press_16(SymbolEncoder *se, const int16_t *in,
 	vbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
 	free(in_zd);
 
-	memcpy(&nex, out_vb, sizeof nex);
+	(void) memcpy(&nex, out_vb, sizeof nex);
 	offset = sizeof *in_zd;
 	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
 	(void) memcpy(out + offset, out_vb, exlen);
@@ -3393,7 +3393,7 @@ int shuffman_vbe21_zd_depress_16(huffman_node *root, uint8_t *in, uint64_t nin,
 	uint32_t nout_tmp_vb;
 	int ret;
 
-	memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
 	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
 	offset = sizeof *out;
 
@@ -3459,7 +3459,7 @@ int shuffman_vbbe21_zd_press_16(SymbolEncoder *se, const int16_t *in,
 	vbbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
 	free(in_zd);
 
-	memcpy(&nex, out_vb, sizeof nex);
+	(void) memcpy(&nex, out_vb, sizeof nex);
 	offset = sizeof *in_zd;
 	exlen = sizeof nex;
 	if (nex > 1) {
@@ -3501,7 +3501,7 @@ int shuffman_vbbe21_zd_depress_16(huffman_node *root, uint8_t *in,
 	uint32_t nout_tmp_vb;
 	int ret;
 
-	memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
 	exlen = sizeof nex;
 	if (nex > 1) {
 		(void) memcpy(&nex_pos_press, in + sizeof *out + exlen, sizeof nex_pos_press);
@@ -3704,7 +3704,7 @@ void rice_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	vbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
 	free(in_zd);
 
-	memcpy(&nex, out_vb, sizeof nex);
+	(void) memcpy(&nex, out_vb, sizeof nex);
 	offset = sizeof *in_zd;
 	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
 	(void) memcpy(out + offset, out_vb, exlen);
@@ -3733,7 +3733,7 @@ void rice_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	uint32_t nout_tmp;
 	uint64_t nout_tmp_vb;
 
-	memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
 	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
 	offset = sizeof *out;
 
@@ -3793,7 +3793,7 @@ void rice_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	vbbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
 	free(in_zd);
 
-	memcpy(&nex, out_vb, sizeof nex);
+	(void) memcpy(&nex, out_vb, sizeof nex);
 	offset = sizeof *in_zd;
 	exlen = sizeof nex;
 	if (nex > 1) {
@@ -3832,7 +3832,7 @@ void rice_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	uint32_t nout_tmp;
 	uint64_t nout_tmp_vb;
 
-	memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
 	exlen = sizeof nex;
 	if (nex > 1) {
 		(void) memcpy(&nex_pos_press, in + sizeof *out + exlen, sizeof nex_pos_press);
@@ -3898,7 +3898,7 @@ void rc_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	vbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
 	free(in_zd);
 
-	memcpy(&nex, out_vb, sizeof nex);
+	(void) memcpy(&nex, out_vb, sizeof nex);
 	offset = sizeof *in_zd;
 	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
 	(void) memcpy(out + offset, out_vb, exlen);
@@ -3928,7 +3928,7 @@ void rc_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	uint32_t nout_tmp;
 	uint64_t nout_tmp_vb;
 
-	memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
 	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
 	offset = sizeof *out;
 
@@ -3986,7 +3986,7 @@ void rcc_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	vbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
 	free(in_zd);
 
-	memcpy(&nex, out_vb, sizeof nex);
+	(void) memcpy(&nex, out_vb, sizeof nex);
 	offset = sizeof *in_zd;
 	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
 	(void) memcpy(out + offset, out_vb, exlen);
@@ -4016,7 +4016,7 @@ void rcc_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	uint32_t nout_tmp;
 	uint64_t nout_tmp_vb;
 
-	memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
 	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
 	offset = sizeof *out;
 
@@ -4070,7 +4070,7 @@ void rc_vbbe21_press_16(const uint16_t *in, uint32_t nin, uint8_t *out,
 	out_vb = malloc(nout_tmp_vb);
 	vbbe21_press(in, nin, out_vb, &nout_tmp_vb);
 
-	memcpy(&nex, out_vb, sizeof nex);
+	(void) memcpy(&nex, out_vb, sizeof nex);
 	exlen = sizeof nex;
 	if (nex > 1) {
 		(void) memcpy(&nex_pos_press, out_vb + exlen, sizeof nex_pos_press);
@@ -4108,7 +4108,7 @@ void rc_vbbe21_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
 	uint32_t nout_tmp;
 	uint64_t nout_tmp_vb;
 
-	memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
 	exlen = sizeof nex;
 	if (nex > 1) {
 		(void) memcpy(&nex_pos_press, in + sizeof *out + exlen, sizeof nex_pos_press);
@@ -4171,7 +4171,7 @@ void rc_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	vbbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
 	free(in_zd);
 
-	memcpy(&nex, out_vb, sizeof nex);
+	(void) memcpy(&nex, out_vb, sizeof nex);
 	offset = sizeof *in_zd;
 	exlen = sizeof nex;
 	if (nex > 1) {
@@ -4211,7 +4211,7 @@ void rc_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	uint32_t nout_tmp;
 	uint64_t nout_tmp_vb;
 
-	memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
 	exlen = sizeof nex;
 	if (nex > 1) {
 		(void) memcpy(&nex_pos_press, in + sizeof *out + exlen, sizeof nex_pos_press);
@@ -4279,7 +4279,7 @@ void rcc_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	vbbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
 	free(in_zd);
 
-	memcpy(&nex, out_vb, sizeof nex);
+	(void) memcpy(&nex, out_vb, sizeof nex);
 	offset = sizeof *in_zd;
 	exlen = sizeof nex;
 	if (nex > 1) {
@@ -4319,7 +4319,7 @@ void rcc_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	uint32_t nout_tmp;
 	uint64_t nout_tmp_vb;
 
-	memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
 	exlen = sizeof nex;
 	if (nex > 1) {
 		(void) memcpy(&nex_pos_press, in + sizeof *out + exlen, sizeof nex_pos_press);
@@ -4385,7 +4385,7 @@ void rccm_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	vbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
 	free(in_zd);
 
-	memcpy(&nex, out_vb, sizeof nex);
+	(void) memcpy(&nex, out_vb, sizeof nex);
 	offset = sizeof *in_zd;
 	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
 	(void) memcpy(out + offset, out_vb, exlen);
@@ -4415,7 +4415,7 @@ void rccm_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	uint32_t nout_tmp;
 	uint64_t nout_tmp_vb;
 
-	memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
 	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
 	offset = sizeof *out;
 
@@ -4469,7 +4469,7 @@ void rccm_vbbe21_press_16(const uint16_t *in, uint32_t nin, uint8_t *out,
 	out_vb = malloc(nout_tmp_vb);
 	vbbe21_press(in, nin, out_vb, &nout_tmp_vb);
 
-	memcpy(&nex, out_vb, sizeof nex);
+	(void) memcpy(&nex, out_vb, sizeof nex);
 	exlen = sizeof nex;
 	if (nex > 1) {
 		(void) memcpy(&nex_pos_press, out_vb + exlen, sizeof nex_pos_press);
@@ -4507,7 +4507,7 @@ void rccm_vbbe21_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
 	uint32_t nout_tmp;
 	uint64_t nout_tmp_vb;
 
-	memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
 	exlen = sizeof nex;
 	if (nex > 1) {
 		(void) memcpy(&nex_pos_press, in + sizeof *out + exlen, sizeof nex_pos_press);
@@ -4570,7 +4570,7 @@ void rccm_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	vbbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
 	free(in_zd);
 
-	memcpy(&nex, out_vb, sizeof nex);
+	(void) memcpy(&nex, out_vb, sizeof nex);
 	offset = sizeof *in_zd;
 	exlen = sizeof nex;
 	if (nex > 1) {
@@ -4610,7 +4610,7 @@ void rccm_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	uint32_t nout_tmp;
 	uint64_t nout_tmp_vb;
 
-	memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
 	exlen = sizeof nex;
 	if (nex > 1) {
 		(void) memcpy(&nex_pos_press, in + sizeof *out + exlen, sizeof nex_pos_press);
@@ -4676,7 +4676,7 @@ void rccdf_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	vbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
 	free(in_zd);
 
-	memcpy(&nex, out_vb, sizeof nex);
+	(void) memcpy(&nex, out_vb, sizeof nex);
 	offset = sizeof *in_zd;
 	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
 	(void) memcpy(out + offset, out_vb, exlen);
@@ -4706,7 +4706,7 @@ void rccdf_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	uint32_t nout_tmp;
 	uint64_t nout_tmp_vb;
 
-	memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
 	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
 	offset = sizeof *out;
 
@@ -4766,7 +4766,7 @@ void rccdf_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	vbbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
 	free(in_zd);
 
-	memcpy(&nex, out_vb, sizeof nex);
+	(void) memcpy(&nex, out_vb, sizeof nex);
 	offset = sizeof *in_zd;
 	exlen = sizeof nex;
 	if (nex > 1) {
@@ -4806,7 +4806,7 @@ void rccdf_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	uint32_t nout_tmp;
 	uint64_t nout_tmp_vb;
 
-	memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
 	exlen = sizeof nex;
 	if (nex > 1) {
 		(void) memcpy(&nex_pos_press, in + sizeof *out + exlen, sizeof nex_pos_press);
@@ -4973,12 +4973,12 @@ void rccm_svbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			      sizeof nin_stall_press);
 		offset += sizeof nin_stall_press;
 
-		stall_press = malloc(nin_stall_press);
+		stall_press = calloc(nin_stall_press, 1);
 		(void) memcpy(stall_press, in + offset, nin_stall_press);
 		offset += nin_stall_press;
 
 		nstall = stall_len;
-		stall = malloc(nstall * sizeof *stall);
+		stall = calloc(nstall * sizeof *stall, 1);
 		rccm_vbbe21_submin_depress_16(stall_press, nin_stall_press,
 					      stall, &nstall);
 		free(stall_press);
@@ -5003,8 +5003,8 @@ void rccm_svbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	free(nonstall_press);
 
 	(void) memcpy(out, nonstall, stall_start * sizeof *nonstall);
-	(void) memcpy(out + stall_start + stall_len, nonstall + stall_len,
-		      (nin - stall_len) * sizeof *nonstall);
+	(void) memcpy(out + stall_start + stall_len, nonstall + stall_start,
+		      (nnonstall - stall_start) * sizeof *nonstall);
 	free(nonstall);
 	*nout = nin;
 }
@@ -5043,7 +5043,7 @@ void rccm_vbbe21_submin_press_16(const uint16_t *in, uint64_t nin,
 	vbbe21_press(in_submin, nin, in_vb, &nout_tmp);
 	free(in_submin);
 
-	memcpy(&nex, in_vb, sizeof nex);
+	(void) memcpy(&nex, in_vb, sizeof nex);
 	offset = sizeof min;
 	exlen = sizeof nex;
 	if (nex > 1) {
@@ -5058,7 +5058,7 @@ void rccm_vbbe21_submin_press_16(const uint16_t *in, uint64_t nin,
 	offset += exlen;
 
 	nout_tmp -= exlen;
-	nout_tmp = rcmsenc(in_vb, nout_tmp, out + offset);
+	nout_tmp = rcmsenc(in_vb + exlen, nout_tmp, out + offset);
 
 	free(in_vb);
 	*nout = nout_tmp + offset;
@@ -5079,7 +5079,7 @@ void rccm_vbbe21_submin_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
 	uint64_t nout_tmp_vb;
 	uint16_t min;
 
-	nex = in[sizeof min];
+	(void) memcpy(&nex, in + sizeof min, sizeof nex);
 	exlen = sizeof nex;
 	if (nex > 1) {
 		(void) memcpy(&nex_pos_press, in + sizeof min + exlen, sizeof nex_pos_press);
@@ -5110,7 +5110,7 @@ void rccm_vbbe21_submin_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
 
 	(void) memcpy(&min, in, sizeof min);
 
-	shift_x_u16_u16(min, out_sm, nin, out);
+	shift_x_u16_u16(min, out_sm, *nout, out);
 	free(out_sm);
 
 	*nout = nout_tmp;
