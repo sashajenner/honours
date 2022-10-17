@@ -68,8 +68,25 @@ bytes. The maximum number of entries is 256 so the maximum table size is roughly
 
 However, rather than encoding the exact Huffman table of each read it makes more sense to use a shared Huffman table which approximates the zig-zag delta distribution of most reads well.
 %These are bytes we don't need to repeat in each read when each read has a similar distribution of zig-zag deltas.
-For example, 0 is the most common value among reads so naturally its code will have the fewest number of bits and this will be efficient for the majority of reads. One simple approach is to construct the optimal Huffman table for the whole data set of zig-zag deltas. Then, we can store the code table once in the source code and encode each read using the same table. Let's call this method the static Huffman algorithm or \textit{shuff} for short. This table consumes 1042 bytes but we can store it statically alongside the source code, so unless we are considering the Kolmogorov complexity of the data its size is not calculated in the compression size. The distribution of code lengths from this table is shown in Figure \ref{fig:shuff-len}. As we can the distribution splits into two alternating distributions from about 116 onwards which represents the higher frequency of large positive compared to large negative deltas, as previously discussed.
+For example, 0 is the most common value among reads so naturally its code will have the fewest number of bits and this will be efficient for the majority of reads. One simple approach is to construct the optimal Huffman table for the whole data set of zig-zag deltas. Then, we can store the code table once in the source code and encode each read using the same table. Let's call this method the static Huffman algorithm or \textit{shuff} for short. This table consumes 1042 bytes but we can store it statically alongside the source code, so unless we are considering the Kolmogorov complexity of the data its size is not calculated in the compression size. The distribution of code lengths from this table is shown in Figure \ref{fig:shuff-len}. As we can see the distribution splits into two alternating distributions from about 116 onwards which represents the higher frequency of large positive compared to large negative deltas, as previously discussed.
+
+huff consumes more space than the shuff algorithm since it records a different Huffman table for each read in the compressed data. The space consumed by the Huffman table turns out to be more than the difference between the globally approximated and read-optimal Huffman encoding. For example, on the data set huff applied to vbe21 (hereafter \textit{huff-vbe21}) consumes 36.10 GiB versus 35.85 GiB for shuff-vbe21 which is a difference of $\sim537$ bytes per read. This results is a compression ratio of 2.927 versus 2.948.
+%Moreover, when applied to a different human DNA data set huff-vbe21 consumes
+
+Furthermore, huff takes longer than shuff during compression and decompression.
+During compression, huff must do an initial pass of the read to count the data's frequencies and then construct the Huffman tree and table.
+During decompression, huff must read the table and construct the tree before decoding the data.
+shuff doesn't need to perform any of these operations since it stores the shared table and tree in static memory.
+
+During compression, getting the frequencies takes $O(n)$ time. Then, constructing the tree takes $O(x^2\log x)$ time using the bottom-up construction algorithm where $0\le x \le 256$ is the number of unique bytes or exceptions when being applied to vbe21. Constructing the table requires traversing each branch on the tree which takes $O(x)$ time since there are $2x-1$ nodes in a Huffman tree. Then, recording the table takes $O(x)$ time and encoding the bytes takes $O(n)$ time using the table. In total, the huff algorithm takes $O(n + x^2\log x)$ time for compression while shuff takes $O(n)$ time. Compared to $n$, the size of the input, $x$ is usually a lot smaller so it has a small but true effect on the compression time.
+
+During decompression, huff take $O(n + x)$ time since it must construct the tree whilst shuff takes $O(n)$ time. But in practicality they take the same time. All in all, as long as there is a benefit to using shuff, which there usually is if the approximation is good, shuff is faster than huff during compression and decompression.
 
 \input{plots/shuff-len}
 
 \subsection{Range Coding}
+
+Now consider encoding the one-byte data using range coding (abbreviated to \textit{rc}) rather than Huffman coding. Recall that range coding encodes all the data into one number.
+%blahblahblah range coding
+
+There are variations on the range coding algorithm.

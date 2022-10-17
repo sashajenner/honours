@@ -559,6 +559,14 @@ void rc_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 void rc_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			    uint32_t *nout);
 
+/* zigzag delta vbe21 range coding byte level */
+
+uint64_t rcc_vbe21_zd_bound_16(uint32_t nin);
+void rcc_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			   uint64_t *nout);
+void rcc_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			     uint32_t *nout);
+
 /* vbbe21 range coding */
 
 uint64_t rc_vbbe21_bound_16(uint32_t nin);
@@ -574,6 +582,14 @@ void rc_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 			   uint64_t *nout);
 void rc_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			     uint32_t *nout);
+
+/* zigzag delta vbbe21 range coding */
+
+uint64_t rcc_vbbe21_zd_bound_16(uint32_t nin);
+void rcc_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			    uint64_t *nout);
+void rcc_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			      uint32_t *nout);
 
 /* zigzag delta vbe21 range coding context mixing */
 

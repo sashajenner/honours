@@ -7,22 +7,32 @@
 %TODO why not lossy
 %TODO why per read
 
-Consider the problem space to be a region of compression strategies suitable for nanopore data.
+Consider the problem space to be the region of compression strategies suitable for nanopore data.
 There are many possible, in fact an infinite number of, compression strategies which exist in this space.
 The question that naturally arises is: which strategies are suitable for nanopore data?
 The answer depends entirely on how you intend to use the data.
 
-The intention behind most holders of nanopore data is to use it for research or clinical diagnosis. In both events, the data will typically be basecalled and then analysed. If it is compressed it will need to be decompressed in order to perform this step. Furthermore, many legal regulations require published research and clinical data to be archived for several years. Hence, we can categorise the use-cases of nanopore data into two main categories: short-term analysis and long-term archival. In the short-term, a bioinformatician performing analysis would desire a balance between fast analysis speed and a high compression ratio. However, in the long-term, an archivist would desire a higher compression ratio as long as there is still a reasonable decompression speed. This provides us with two problem subspaces to explore.
+The intention behind most holders of nanopore data is to use it for research or clinical diagnosis. In both events, the data will typically be basecalled and then analysed. If it is compressed it will need to be decompressed in order to perform these steps. Furthermore, many legal regulations require published research and clinical data to be archived for several years meaning that this data will typically be put aside for many years with infrequent or no use. Hence, we can categorise the use-cases of nanopore data into two main categories: short-term analysis and long-term archival. In the short-term, a bioinformatician performing analysis would desire a balance between fast analysis speed and a high compression ratio. However, in the long-term, an archivist would desire a higher compression ratio as long as there is still a practical decompression speed. This provides us with two problem subspaces to explore.
 
-A compression strategy exists in the short-term problem subspace if for the typical 1 TiB nanopore data set the following criteria are met:
+A compression strategy exists in the short-term problem subspace if
+%on a modern computer
+the following criteria are met:
 \begin{itemize}
 \item compression ratio $\ge 2.5$,
-\item compression time $\le$ 1 hour,
+\item compression speed $\le$ 60 mins per TiB,
 \item independent read decompression, and
-\item decompression time $\le$ 30 minutes.
+\item decompression time $\le$ 30 mins per TiB.
 \end{itemize}
+% TODO ignoring I/O
 
-has a reasonable compression ratio and speed, and results in a fast analysis speed. Let's define a reasonable compression ratio to be greater than or equal to 2.5. This means that for a 1 TiB data set, the compressed data would consume at most 256 GiB. Compression is often performed once so a reasonable compression time for a 1 TiB data set is less than or equal to 1 hour on a modern CPU with at least 4 threads. If each data point consumes 2 bytes in the uncompressed raw binary format and the average read length is roughly \num{110000}, there are around 550 billion data points and 5 million reads. This equates to $7.2\times 10^{-4}$ seconds on average per read. A compression strategy impacts the speed of analysis through the speed at which it returns a read's uncompressed data, also known as its \textit{access speed}. Many reads are typically requested by an analysis program from random locations in the data so in order to achieve a fast access speed it is important that read decompression is able to be performed in parallel to take advantage of multi-threaded CPU design. That is, each read must be able to be decompressed independently of one another. Necessarily this means that each read must be compressed separately, which is historically how nanopore signal compression has been performed. Then, the major overhead with read access becomes decompression speed.
+These are arbitrarily chosen restrictions based on the desires of researchers at the Garvan Institute of Medical Research as well as on the current performance of the state-of-the-art method VBZ. In fact, using this data set with at least 2 threads of execution VBZ performs to the above criteria. See Table \ref{tab:vbz}.
+
+\input{plots/vbz-tab}
+
+%has a reasonable compression ratio and speed, and results in a fast analysis speed.
+%Let's define a reasonable compression ratio to be greater than or equal to 2.5. This means that for a 1 TiB data set, the compressed data would consume at most 256 GiB.
+Compression is often performed once so a reasonable compression time for a 1 TiB data set is less than or equal to 1 hour on a modern CPU with at least 4 threads.
+If each data point consumes 2 bytes in the uncompressed raw binary format and the average read length is roughly \num{110000}, there are around 550 billion data points and 5 million reads. This equates to $7.2\times 10^{-4}$ seconds on average per read. A compression strategy impacts the speed of analysis through the speed at which it returns a read's uncompressed data, also known as its \textit{access speed}. Many reads are typically requested by an analysis program from random locations in the data so in order to achieve a fast access speed it is important that read decompression is able to be performed in parallel to take advantage of multi-threaded CPU design. That is, each read must be able to be decompressed independently of one another. Necessarily this means that each read must be compressed separately, which is historically how nanopore signal compression has been performed. Then, the major overhead with read access becomes decompression speed.
 
 Analysis typically consists of querying the compressed data for certain reads combined with performing operations over the received data.
 

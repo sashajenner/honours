@@ -3956,6 +3956,94 @@ void rc_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 }
 
 /*
+ * delta | zigzag | vbe21 | range byte
+ * range on the 1 byte data
+ */
+
+uint64_t rcc_vbe21_zd_bound_16(uint32_t nin)
+{
+	return vb1e2_zd_bound_16(nin);
+}
+
+void rcc_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			   uint64_t *nout)
+{
+	uint16_t *in_zd;
+	uint8_t *out_vb;
+	uint8_t *out_rc;
+	uint64_t nout_tmp;
+	uint64_t nout_tmp_vb;
+	uint32_t exlen;
+	uint16_t nex;
+	uint64_t offset;
+
+	in_zd = zigdelta_16_u16(in, nin);
+
+	(void) memcpy(out, in_zd, sizeof *in_zd);
+
+	nout_tmp_vb = *nout - sizeof *in_zd;
+	out_vb = malloc(nout_tmp_vb);
+	vbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
+	free(in_zd);
+
+	memcpy(&nex, out_vb, sizeof nex);
+	offset = sizeof *in_zd;
+	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
+	(void) memcpy(out + offset, out_vb, exlen);
+	offset += exlen;
+
+	/* I know...this is just a safe upper bound */
+	nout_tmp = rice_bound(nout_tmp_vb - exlen);
+	out_rc = malloc(nout_tmp);
+	nout_tmp = rccsenc(out_vb + exlen, nout_tmp_vb - exlen, out_rc);
+	(void) memcpy(out + offset, out_rc, nout_tmp);
+	free(out_rc);
+
+	*nout = nout_tmp + offset;
+	free(out_vb);
+}
+
+/* *nout must be the exact number of original elements */
+void rcc_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			     uint32_t *nout)
+{
+	uint32_t exlen;
+	uint16_t nex;
+	uint64_t offset;
+	uint8_t *out_vb;
+	uint8_t *out_rc;
+	uint16_t *out_zd;
+	uint32_t nout_tmp;
+	uint64_t nout_tmp_vb;
+
+	memcpy(&nex, in + sizeof *out, sizeof nex);
+	exlen = sizeof nex + nex * (sizeof (uint32_t) + 2);
+	offset = sizeof *out;
+
+	out_vb = malloc(*nout * sizeof *out);
+	(void) memcpy(out_vb, in + offset, exlen);
+	offset += exlen;
+
+	nout_tmp_vb = *nout - nex - 1;
+	out_rc = malloc(nout_tmp_vb);
+	(void) rccsdec(in + offset, *nout - nex - 1, out_rc);
+	(void) memcpy(out_vb + exlen, out_rc, nout_tmp_vb);
+	free(out_rc);
+	nout_tmp_vb += exlen;
+
+	nout_tmp = *nout - 1;
+	out_zd = malloc(*nout * sizeof *out_zd);
+	vbe21_depress(out_vb, nout_tmp_vb, out_zd + 1, &nout_tmp);
+	free(out_vb);
+
+	(void) memcpy(out_zd, in, sizeof *out_zd);
+
+	unzigdelta_u16_16(out_zd, nout_tmp + 1, out);
+	free(out_zd);
+	*nout = nout_tmp + 1;
+}
+
+/*
  * vbbe21 | range
  * range on the 1 byte data
  */
@@ -4142,6 +4230,114 @@ void rc_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	nout_tmp_vb = *nout - nex - 1;
 	out_rc = malloc(nout_tmp_vb);
 	(void) rcsdec(in + offset, *nout - nex - 1, out_rc);
+	(void) memcpy(out_vb + exlen, out_rc, nout_tmp_vb);
+	free(out_rc);
+	nout_tmp_vb += exlen;
+
+	nout_tmp = *nout - 1;
+	out_zd = malloc(*nout * sizeof *out_zd);
+	vbbe21_depress(out_vb, nout_tmp_vb, out_zd + 1, &nout_tmp);
+	free(out_vb);
+
+	(void) memcpy(out_zd, in, sizeof *out_zd);
+
+	unzigdelta_u16_16(out_zd, nout_tmp + 1, out);
+	free(out_zd);
+	*nout = nout_tmp + 1;
+}
+
+/*
+ * delta | zigzag | vbbe21 | range byte level
+ * range on the 1 byte data
+ */
+
+uint64_t rcc_vbbe21_zd_bound_16(uint32_t nin)
+{
+	return vb1e2_zd_bound_16(nin);
+}
+
+void rcc_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			    uint64_t *nout)
+{
+	uint16_t *in_zd;
+	uint8_t *out_vb;
+	uint8_t *out_rc;
+	uint64_t nout_tmp;
+	uint64_t nout_tmp_vb;
+	uint16_t nex_pos_press;
+	uint16_t nex_press;
+	uint16_t exlen;
+	uint16_t nex;
+	uint64_t offset;
+
+	in_zd = zigdelta_16_u16(in, nin);
+
+	(void) memcpy(out, in_zd, sizeof *in_zd);
+
+	nout_tmp_vb = *nout - sizeof *in_zd;
+	out_vb = malloc(nout_tmp_vb);
+	vbbe21_press(in_zd + 1, nin - 1, out_vb, &nout_tmp_vb);
+	free(in_zd);
+
+	memcpy(&nex, out_vb, sizeof nex);
+	offset = sizeof *in_zd;
+	exlen = sizeof nex;
+	if (nex > 1) {
+		(void) memcpy(&nex_pos_press, out_vb + exlen, sizeof nex_pos_press);
+		exlen += sizeof nex_pos_press + nex_pos_press;
+		(void) memcpy(&nex_press, out_vb + exlen, sizeof nex_press);
+		exlen += sizeof nex_press + nex_press;
+	} else if (nex == 1) {
+		exlen += nex * (sizeof (uint32_t) + sizeof (uint16_t));
+	}
+	(void) memcpy(out + offset, out_vb, exlen);
+	offset += exlen;
+
+	/* I know...this is just a safe upper bound */
+	nout_tmp = rice_bound(nout_tmp_vb - exlen);
+	out_rc = malloc(nout_tmp);
+	nout_tmp = rccsenc(out_vb + exlen, nout_tmp_vb - exlen, out_rc);
+	(void) memcpy(out + offset, out_rc, nout_tmp);
+	free(out_rc);
+
+	*nout = nout_tmp + offset;
+	free(out_vb);
+}
+
+/* *nout must be the exact number of original elements */
+void rcc_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			      uint32_t *nout)
+{
+	uint16_t nex_pos_press;
+	uint16_t nex_press;
+	uint16_t exlen;
+	uint16_t nex;
+	uint64_t offset;
+	uint8_t *out_vb;
+	uint8_t *out_rc;
+	uint16_t *out_zd;
+	uint32_t nout_tmp;
+	uint64_t nout_tmp_vb;
+
+	memcpy(&nex, in + sizeof *out, sizeof nex);
+	exlen = sizeof nex;
+	if (nex > 1) {
+		(void) memcpy(&nex_pos_press, in + sizeof *out + exlen, sizeof nex_pos_press);
+		exlen += sizeof nex_pos_press + nex_pos_press;
+		(void) memcpy(&nex_press, in + sizeof *out + exlen, sizeof nex_press);
+		exlen += sizeof nex_press + nex_press;
+	} else if (nex == 1) {
+		exlen += nex * (sizeof (uint32_t) + sizeof (uint16_t));
+	}
+	offset = sizeof *out;
+
+	out_vb = malloc(*nout * sizeof *out);
+	(void) memcpy(out_vb, in + offset, exlen);
+	offset += exlen;
+
+	nout_tmp_vb = *nout - nex - 1;
+	out_rc = malloc(nout_tmp_vb);
+	(void) rccsdec(in + offset, *nout - nex - 1, out_rc);
 	(void) memcpy(out_vb + exlen, out_rc, nout_tmp_vb);
 	free(out_rc);
 	nout_tmp_vb += exlen;

@@ -26,7 +26,7 @@ df = df %>%
     group_by(generic) %>%
     mutate(position = rank(press_ratio))
 
-tikz(file = paste0(path, '.size.tex'), width = 6, height = 5)
+#tikz(file = paste0(path, '.size.tex'), width = 6, height = 5)
 ggplot(df, aes(x=generic, y=press_bytes/(1024^3),
 	       fill=generic,
 	       pattern=base, group=position)) +
@@ -47,9 +47,9 @@ geom_bar_pattern(stat='identity',position = position_dodge(preserve = "single"),
        guides(pattern = guide_legend(override.aes = list(fill = "white")),
        		fill = guide_legend(override.aes = list(pattern = "none")))
        #theme(axis.text.x=element_text(angle=90,hjust=1))
-dev.off()
+#dev.off()
 
-tikz(file = paste0(path, '.ratio.tex'), width = 6, height = 5)
+#tikz(file = paste0(path, '.ratio.tex'), width = 6, height = 5)
 ggplot(df, aes(x=generic, y=press_ratio,
 	       fill=generic,
 	       pattern=base, group=position)) +
@@ -70,4 +70,4 @@ geom_bar_pattern(stat='identity',position = position_dodge(preserve = "single"),
        guides(pattern = guide_legend(override.aes = list(fill = "white")),
        		fill = guide_legend(override.aes = list(pattern = "none")))
        #theme(axis.text.x=element_text(angle=90,hjust=1))
-dev.off()
+#dev.off()

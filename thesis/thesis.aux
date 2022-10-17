@@ -183,48 +183,50 @@
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{chap:probspace}{{4}{31}{Problem Space}{chapter.4}{}}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{4.1}{One Byte, Two Byte Exceptions}}{32}{section.4.1}\protected@file@percent }
-\newlabel{sec:vbbe21}{{4.1}{32}{One Byte, Two Byte Exceptions}{section.4.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Bar plot of the data's size in gibibytes after compressing the zig-zag deltas using two layers; (1) Stream VByte (svb), Stream VByte 16 (svb16) and vbe21; (2) no compression (none), zlib and zstd. The bars are sorted in decreasing order of the compression size.\relax }}{34}{figure.caption.35}\protected@file@percent }
-\newlabel{fig:svb-vbe21-zd-size}{{4.1}{34}{Bar plot of the data's size in gibibytes after compressing the zig-zag deltas using two layers; (1) Stream VByte (svb), Stream VByte 16 (svb16) and vbe21; (2) no compression (none), zlib and zstd. The bars are sorted in decreasing order of the compression size.\relax }{figure.caption.35}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces  Performance results on the data set using only one thread of execution.\relax }}{32}{table.caption.35}\protected@file@percent }
+\newlabel{tab:vbz}{{4.1}{32}{Performance results on the data set using only one thread of execution.\relax }{table.caption.35}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{4.1}{One Byte, Two Byte Exceptions}}{33}{section.4.1}\protected@file@percent }
+\newlabel{sec:vbbe21}{{4.1}{33}{One Byte, Two Byte Exceptions}{section.4.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces  Summary statistics of the number of exceptions per read and the zig-zag delta exceptions themselves in the data.\relax }}{34}{table.caption.37}\protected@file@percent }
+\newlabel{tab:ex}{{4.2}{34}{Summary statistics of the number of exceptions per read and the zig-zag delta exceptions themselves in the data.\relax }{table.caption.37}{}}
 \@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.1.1}{Exceptions Encoding}}{34}{subsection.4.1.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces  Summary statistics of the number of exceptions per read and the zig-zag delta exceptions themselves in the data.\relax }}{35}{table.caption.36}\protected@file@percent }
-\newlabel{tab:ex}{{4.1}{35}{Summary statistics of the number of exceptions per read and the zig-zag delta exceptions themselves in the data.\relax }{table.caption.36}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Histogram of the number of exceptions per read up to 100 which appears to nicely follow an exponential distribution. Values after 100 occur highly infrequently -- there are only 546 out of \num {500000} reads with more than 100 exceptions.\relax }}{35}{figure.caption.37}\protected@file@percent }
-\newlabel{fig:nex-hist}{{4.2}{35}{Histogram of the number of exceptions per read up to 100 which appears to nicely follow an exponential distribution. Values after 100 occur highly infrequently -- there are only 546 out of \num {500000} reads with more than 100 exceptions.\relax }{figure.caption.37}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Histogram of the zig-zag delta exceptions up to 500. This figure is the tail of Figure \ref  {fig:zd-hist}. The right and left tail of Figure \ref  {fig:delta-hist} are `meshed' together during the zig-zag transformation causing the stripped pattern.\relax }}{36}{figure.caption.38}\protected@file@percent }
-\newlabel{fig:ex-hist}{{4.3}{36}{Histogram of the zig-zag delta exceptions up to 500. This figure is the tail of Figure \ref {fig:zd-hist}. The right and left tail of Figure \ref {fig:delta-hist} are `meshed' together during the zig-zag transformation causing the stripped pattern.\relax }{figure.caption.38}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Bar plot of the data's size in gibibytes after compressing the zig-zag deltas using two layers; (1) Stream VByte (svb), Stream VByte 16 (svb16) and vbe21; (2) no compression (none), zlib and zstd. The bars are sorted in decreasing order of the compression size.\relax }}{35}{figure.caption.36}\protected@file@percent }
+\newlabel{fig:svb-vbe21-zd-size}{{4.1}{35}{Bar plot of the data's size in gibibytes after compressing the zig-zag deltas using two layers; (1) Stream VByte (svb), Stream VByte 16 (svb16) and vbe21; (2) no compression (none), zlib and zstd. The bars are sorted in decreasing order of the compression size.\relax }{figure.caption.36}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Histogram of the number of exceptions per read up to 100 which appears to nicely follow an exponential distribution. Values after 100 occur highly infrequently -- there are only 546 out of \num {500000} reads with more than 100 exceptions.\relax }}{36}{figure.caption.38}\protected@file@percent }
+\newlabel{fig:nex-hist}{{4.2}{36}{Histogram of the number of exceptions per read up to 100 which appears to nicely follow an exponential distribution. Values after 100 occur highly infrequently -- there are only 546 out of \num {500000} reads with more than 100 exceptions.\relax }{figure.caption.38}{}}
+\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.1.2}{Huffman}}{36}{subsection.4.1.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Histogram of the zig-zag delta exceptions up to 500. This figure is the tail of Figure \ref  {fig:zd-hist}. The right and left tail of Figure \ref  {fig:delta-hist} are `meshed' together during the zig-zag transformation causing the stripped pattern.\relax }}{37}{figure.caption.39}\protected@file@percent }
+\newlabel{fig:ex-hist}{{4.3}{37}{Histogram of the zig-zag delta exceptions up to 500. This figure is the tail of Figure \ref {fig:zd-hist}. The right and left tail of Figure \ref {fig:delta-hist} are `meshed' together during the zig-zag transformation causing the stripped pattern.\relax }{figure.caption.39}{}}
 \citation{lemire-simd}
-\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.1.2}{Huffman}}{37}{subsection.4.1.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces The Huffman code length of each one-byte zig-zag delta from the shared Huffman table, generated using the frequency distribution of the whole data set.\relax }}{38}{figure.caption.39}\protected@file@percent }
-\newlabel{fig:shuff-len}{{4.4}{38}{The Huffman code length of each one-byte zig-zag delta from the shared Huffman table, generated using the frequency distribution of the whole data set.\relax }{figure.caption.39}{}}
-\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.1.3}{Range Coding}}{38}{subsection.4.1.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\tocsection {}{4.2}{Exploiting the Signal}}{38}{section.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.2.1}{The Stall}}{38}{subsection.4.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.2.2}{Separating the Jumps and Flats}}{38}{subsection.4.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\tocsection {}{4.3}{Subsequence Searching}}{38}{section.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\tocsection {}{4.4}{Other}}{42}{section.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{44}{chapter.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces The Huffman code length of each one-byte zig-zag delta from the shared Huffman table, generated using the frequency distribution of the whole data set.\relax }}{39}{figure.caption.40}\protected@file@percent }
+\newlabel{fig:shuff-len}{{4.4}{39}{The Huffman code length of each one-byte zig-zag delta from the shared Huffman table, generated using the frequency distribution of the whole data set.\relax }{figure.caption.40}{}}
+\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.1.3}{Range Coding}}{40}{subsection.4.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\tocsection {}{4.2}{Exploiting the Signal}}{40}{section.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.2.1}{The Stall}}{40}{subsection.4.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.2.2}{Separating the Jumps and Flats}}{40}{subsection.4.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\tocsection {}{4.3}{Subsequence Searching}}{40}{section.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\tocsection {}{4.4}{Other}}{43}{section.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{45}{chapter.5}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:results}{{5}{44}{Results}{chapter.5}{}}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{6}{Discussion}}{45}{chapter.6}\protected@file@percent }
+\newlabel{chap:results}{{5}{45}{Results}{chapter.5}{}}
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{6}{Discussion}}{46}{chapter.6}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:disc}{{6}{45}{Discussion}{chapter.6}{}}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{6.1}{Future Work}}{45}{section.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{7}{Conclusion}}{46}{chapter.7}\protected@file@percent }
+\newlabel{chap:disc}{{6}{46}{Discussion}{chapter.6}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{6.1}{Future Work}}{46}{section.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{7}{Conclusion}}{47}{chapter.7}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:conclusion}{{7}{46}{Conclusion}{chapter.7}{}}
+\newlabel{chap:conclusion}{{7}{47}{Conclusion}{chapter.7}{}}
 \bibstyle{style/mybibstyle}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{47}{chapter*.40}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{48}{chapter*.41}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:appendix}{{7}{47}{Appendix}{chapter*.40}{}}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{7.1}{Subsequence Searching}}{47}{section.7.1}\protected@file@percent }
-\newlabel{app:cn}{{7.1}{47}{Subsequence Searching}{section.7.1}{}}
-\newlabel{app:cn-dyn}{{7.1}{47}{Subsequence Searching}{section.7.1}{}}
+\newlabel{chap:appendix}{{7}{48}{Appendix}{chapter*.41}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{7.1}{Subsequence Searching}}{48}{section.7.1}\protected@file@percent }
+\newlabel{app:cn}{{7.1}{48}{Subsequence Searching}{section.7.1}{}}
+\newlabel{app:cn-dyn}{{7.1}{48}{Subsequence Searching}{section.7.1}{}}
 \bibdata{references}
 \bibcite{bwt}{{1}{1994}{{Burrows and Wheeler}}{{}}}
 \bibcite{lossy-nano}{{2}{2020{a}}{{Chandak et~al.}}{{Chandak, Tatwawadi, Sridhar, and Weissman}}}
@@ -241,7 +243,7 @@
 \bibcite{genomic-comp}{{13}{2019}{{Hernaez et~al.}}{{Hernaez, Pavlichin, Weissman, and Ochoa}}}
 \bibcite{huffman}{{14}{1952}{{Huffman}}{{}}}
 \bibcite{fgk}{{15}{1985}{{Knuth}}{{}}}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{48}{chapter*.42}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{49}{chapter*.43}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \bibcite{huffman-time}{{16}{1976}{{Leeuwen}}{{}}}
