@@ -30,6 +30,7 @@
 \contentsline {figure}{\numberline {4.2}{\ignorespaces Histogram of the number of exceptions per read up to 100 which appears to nicely follow an exponential distribution. Values after 100 occur highly infrequently -- there are only 546 out of \num {500000} reads with more than 100 exceptions.\relax }}{36}{figure.caption.38}%
 \contentsline {figure}{\numberline {4.3}{\ignorespaces Histogram of the zig-zag delta exceptions up to 500. This figure is the tail of Figure \ref {fig:zd-hist}. The right and left tail of Figure \ref {fig:delta-hist} are `meshed' together during the zig-zag transformation causing the stripped pattern.\relax }}{37}{figure.caption.39}%
 \contentsline {figure}{\numberline {4.4}{\ignorespaces The Huffman code length of each one-byte zig-zag delta from the shared Huffman table, generated using the frequency distribution of the whole data set.\relax }}{39}{figure.caption.40}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces 300 data points from a DNA section in the read with ID e9f08690-171f-476f-9119-5330d0290126. The greatest strictly increasing or decreasing sequences are coloured by their maximum absolute delta.\relax }}{41}{figure.caption.41}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
