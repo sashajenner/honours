@@ -39,15 +39,7 @@ void fwrite_res(FILE *fp, struct result *res)
 
 	res->press_ratio = (double) res->depress_bytes / res->press_bytes;
 
-	(void) fprintf(fp, RESULTS_FORMAT,
-		       res->method_name,
-		       res->pressbound_bytes,
-		       res->press_bytes,
-		       res->press_ratio,
-		       res->depress_bytes,
-		       res->pressbound_clocktime,
-		       res->press_clocktime,
-		       res->depress_clocktime);
+	(void) fprintf(fp, RESULTS_FORMAT, RESULTS_ARGS);
 		       /*res->nflats,
 		       flats_str);*/
 

@@ -20,18 +20,18 @@
 		return 1;\
 	}\
 	\
-	init_res(res); \
-	(res)->method_name = #method; \
 	rec = NULL;\
-	\
 	ret = slow5_get_next(&rec, sfp);\
 	while (ret >= 0) {\
+		init_res(res); \
+		(res)->method_name = #method; \
+		(res)->id = rec->read_id; \
 		(res)->n++;\
 		ASSERT(test_##method(rec->raw_signal, rec->len_raw_signal, res) == EXIT_SUCCESS); \
+		fwrite_res(fp, res); \
 		ret = slow5_get_next(&rec, sfp);\
 	}\
 	slow5_rec_free(rec);\
-	fwrite_res(fp, res); \
 	/* close file */\
 	slow5_close(sfp);\
 }
@@ -44,7 +44,8 @@ if (!(statement)) { \
 
 #define LENGTH(arr) ((sizeof (arr)) / sizeof *arr)
 
-#define RESULTS_HDR ("method\t" \
+#define RESULTS_HDR ("read\t" \
+		     "method\t" \
 		     "pressbound_bytes\t" \
 		     "press_bytes\t" \
 		     "press_ratio\t" \
@@ -55,6 +56,7 @@ if (!(statement)) { \
 		     /*"nflats\t" \
 		     "flats\n")*/
 #define RESULTS_FORMAT ("%s\t" \
+			"%s\t" \
 			"%f\t" \
 			"%f\t" \
 			"%f\t" \
@@ -65,7 +67,8 @@ if (!(statement)) { \
 			/*"%" PRIu32 "\t" \
 			"%s\n")*/
 
-#define RESULTS_ARGS res->method_name, \
+#define RESULTS_ARGS res->id, \
+		     res->method_name, \
 		     res->pressbound_bytes, \
 		     res->press_bytes, \
 		     res->press_ratio, \
@@ -80,6 +83,7 @@ if (!(statement)) { \
 #define UPDATE_RES(res, attr, update) (res->attr += update)
 
 struct result {
+	const char *id;
 	const char *method_name;
 	double depress_clocktime;
 	double press_clocktime;
