@@ -21,9 +21,9 @@ title = paste(name, colname)
 xtitle = 'Data Point'
 ytitle = colname
 
-#x=1:nrow(df)
-x=(29000):(29200)
-#tikz(file = paste0(path, '.homo.tex'), width = 5, height = 5)
+x=1:nrow(df)
+#x=(28900):(29200)
+#tikz(file = paste0(path, '.dna300.tex'), width = 5, height = 5)
 ggplot(data.frame(df[x,]), aes(x, df[x,1])) + #color=cut(x, c(1,14,789,831,3000)))) +
 	geom_line() +
 	xlab('Position in Read') +

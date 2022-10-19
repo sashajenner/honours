@@ -10,6 +10,7 @@ if (length(args) != 1) {
 
 library(ggplot2)
 library(ggtext)
+library(ggrepel)
 library(tikzDevice)
 
 path = args[1]
@@ -33,13 +34,14 @@ for (i in 28900:29199) {
 		start = i
 	} else if (trend != new_trend) {
 		nindec = nindec + 1
-		indec[nindec,] = c(start, i + 1)
+		indec[nindec,] = c(start, i)
 
-		start = i + 1
+		start = i
 	}
 
 	trend = new_trend
 }
+indec[nindec,] = c(start, i)
 
 x=(28900):(29200)
 plot = ggplot(data.frame(df[x,])) +
@@ -54,22 +56,29 @@ for (i in nrow(indec)) {
 for (i in 1:nrow(indec)) {
 	x = indec[i,]$start:indec[i,]$end
 	x_diff = indec[i,]$start:(indec[i,]$end-1)
-	len = indec[i,]$end - indec[i,]$start + 1
+	len = length(x)
 	ld = max(abs(df_diff[x_diff]))
 	df[x,'group'] = rep(ld, len)
-	if (ld > 25)
-		df[x,'>25'] = rep(30, len)
+	#if (len == 2)
+	#	textpos = 1
+	#else
+	#	textpos = len-2
+	if (ld > 24)
+		df[x,'g25'] = 1
 	else
-		df[x,'>25'] = rep(0, len)
+		df[x,'g25'] = 0
 }
 x=(28900):(29200)
-tikz(file = paste0(path, '.jumps.epsilon.tex'), width = 6, height = 5)
+tikz(file = paste0(path, '.jumps.25.tex'), width = 5, height = 5)
 ggplot(data.frame(df[x,])) +
-	geom_line(aes(x, df[x,1], color=group)) +
+	geom_line(aes(x, df[x,1], color=g25)) +
+	#geom_point(aes(x, df[x,1], color=group), size=1) +
 	xlab('Position in Read') +
 	ylab('Raw Signal') +
-	scale_colour_viridis_c() +
-	labs(colour = "Maximum\nAbsolute\nDelta")
+	#scale_colour_viridis_c() +
+	#labs(colour = "Maximum\nAbsolute\nDelta") +
+	#geom_text_repel(aes(x, df[x,1], color=group, label=g25))
+	guides(color='none')
 dev.off()
 
 #print(df[x,])
