@@ -6,6 +6,7 @@ library(ggplot2)
 library(plotly)
 library(htmlwidgets)
 library(tikzDevice)
+library(dplyr)
 
 args = commandArgs(TRUE)
 
@@ -21,19 +22,19 @@ title = paste(name, 'Histogram')
 xtitle = colname
 ytitle = names(df)[2]
 
-min0 = 175
-min100 = 178
-minmil = min(df[df$freq > 10^6,1])
-max0 = 1048
-max100 = 932
-maxmil = max(df[df$freq > 10^6,1])
-mean = 475.224468
+#min0 = 175
+#min100 = 178
+#minmil = min(df[df$freq > 10^6,1])
+#max0 = 1048
+#max100 = 932
+#maxmil = max(df[df$freq > 10^6,1])
+#mean = 475.224468
 
-print(minmil)
-print(maxmil)
+#print(minmil)
+#print(maxmil)
 
-print(sum(df[df$signal>100,2]))
-print(sum(df$signal <= 255 & df$freq != 0))
+#print(sum(df[df$signal>100,2]))
+#print(sum(df$signal <= 255 & df$freq != 0))
 
 #tikz(file = paste0(path, '.hist.tex'), width = 5, height = 5)
 #ggplot(df, aes(x=df[,1], y=df[,2]/10^9)) +
@@ -68,3 +69,8 @@ print(sum(df$signal <= 255 & df$freq != 0))
 #for (i in c(2^1,2^2,2^3,2^4,2^5,2^6,2^7,2^8)) {
 #	cat(log2(i), sum(df$freq[1:i]) / n, '\n')
 #}
+
+df = df %>% mutate(prob = freq / sum(freq))
+prob_nonzero = df$prob[df$prob != 0]
+
+print(-prob_nonzero %*% log2(prob_nonzero))

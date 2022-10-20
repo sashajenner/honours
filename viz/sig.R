@@ -21,9 +21,11 @@ title = paste(name, colname)
 xtitle = 'Data Point'
 ytitle = colname
 
-x=1:nrow(df)
-#x=(28900):(29200)
-#tikz(file = paste0(path, '.dna300.tex'), width = 5, height = 5)
+#x=1:nrow(df)
+#x=1:1000
+stall=c(20,778)
+x=stall[1]:stall[2]
+tikz(file = paste0(path, '.stall.tex'), width = 5, height = 5)
 ggplot(data.frame(df[x,]), aes(x, df[x,1])) + #color=cut(x, c(1,14,789,831,3000)))) +
 	geom_line() +
 	xlab('Position in Read') +
@@ -44,7 +46,7 @@ ggplot(data.frame(df[x,]), aes(x, df[x,1])) + #color=cut(x, c(1,14,789,831,3000)
 	#			    "(789,831]"="blue",
 	#			    "(831,3000]"="black"))
 #ggsave(paste0(path, '.section.pdf'), plot)
-#dev.off()
+dev.off()
 
 #print(df)
 #for (i in 1:nrow(df)) {
