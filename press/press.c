@@ -4646,6 +4646,90 @@ void rccm_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 }
 
 /*
+ * delta | zigzag | svb | range context mixing
+ * range context mixing on all the data
+ */
+
+uint64_t rccm_svb_zd_bound_16(uint32_t nin)
+{
+	return svb_zd_bound_16(nin);
+}
+
+void rccm_svb_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			  uint64_t *nout)
+{
+	uint8_t *out_svb;
+	uint64_t nout_tmp_svb;
+
+	nout_tmp_svb = svb_zd_bound_16(nin);
+	out_svb = malloc(nout_tmp_svb);
+
+	svb_zd_press_16(in, nin, out_svb, &nout_tmp_svb);
+	*nout = rcmsenc(out_svb, nout_tmp_svb, out);
+
+	free(out_svb);
+}
+
+void rccm_svb_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			    uint32_t *nout)
+{
+	uint32_t nout_tmp_svb;
+	uint64_t nout_tmp;
+	uint8_t *out_rc;
+
+	nout_tmp_svb = nin;
+	out_rc = malloc(nout_tmp_svb);
+	(void) rcmsdec(in, nin, out_rc);
+
+	nout_tmp = *nout;
+	svb_zd_depress_16(out_rc, nin, out, &nout_tmp);
+	*nout = nout_tmp;
+	free(out_rc);
+}
+
+/*
+ * delta | zigzag | svb16 | range context mixing
+ * range context mixing on all the data
+ */
+
+uint64_t rccm_svb12_zd_bound(uint32_t nin)
+{
+	return svb12_zd_bound(nin);
+}
+
+void rccm_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			 uint64_t *nout)
+{
+	uint8_t *out_svb;
+	uint64_t nout_tmp_svb;
+
+	nout_tmp_svb = svb12_zd_bound(nin);
+	out_svb = malloc(nout_tmp_svb);
+
+	svb12_zd_press(in, nin, out_svb, &nout_tmp_svb);
+	*nout = rcmsenc(out_svb, nout_tmp_svb, out);
+
+	free(out_svb);
+}
+
+void rccm_svb12_zd_depress(uint8_t *in, uint64_t nin, int16_t *out,
+			   uint32_t *nout)
+{
+	uint32_t nout_tmp_svb;
+	uint64_t nout_tmp;
+	uint8_t *out_rc;
+
+	nout_tmp_svb = nin;
+	out_rc = malloc(nout_tmp_svb);
+	(void) rcmsdec(in, nin, out_rc);
+
+	nout_tmp = *nout;
+	svb12_zd_depress(out_rc, nin, out, &nout_tmp);
+	*nout = nout_tmp;
+	free(out_rc);
+}
+
+/*
  * delta | zigzag | vbe21 | range cdf
  * range cdf on the 1 byte data
  */
@@ -5031,6 +5115,15 @@ void rccm_vbbe21_submin_press_16(const uint16_t *in, uint64_t nin,
 	uint32_t exlen;
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
+	struct stats st;
+	uint16_t *zd;
+
+	get_stats((const int16_t *) in, nin, &st);
+	print_stats(&st);
+	zd = zigdelta_16((const int16_t *) in, nin);
+	get_stats((const int16_t *) zd, nin - 1, &st);
+	free(zd);
+	print_stats(&st);
 
 	min = get_min_u16(in, nin);
 	in_submin = shift_x_u16(-1 * min, in, nin);

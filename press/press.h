@@ -615,6 +615,22 @@ void rccm_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 void rccm_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			       uint32_t *nout);
 
+/* zigzag delta svb range coding context mixing */
+
+uint64_t rccm_svb_zd_bound_16(uint32_t nin);
+void rccm_svb_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			  uint64_t *nout);
+void rccm_svb_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			    uint32_t *nout);
+
+/* zigzag delta svb12 range coding context mixing */
+
+uint64_t rccm_svb12_zd_bound(uint32_t nin);
+void rccm_svb12_zd_press(const int16_t *in, uint32_t nin, uint8_t *out,
+			 uint64_t *nout);
+void rccm_svb12_zd_depress(uint8_t *in, uint64_t nin, int16_t *out,
+			   uint32_t *nout);
+
 /* zigzag delta vbe21 range coding cdf */
 
 uint64_t rccdf_vbe21_zd_bound_16(uint32_t nin);
