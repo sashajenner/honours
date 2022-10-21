@@ -1,7 +1,6 @@
 This is BibTeX, Version 0.99d (TeX Live 2019/Debian)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: thesis.aux
-A level-1 auxiliary file: plots/stall-ratio.aux
 The style file: style/mybibstyle.bst
 Database file #1: references.bib
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
@@ -9,7 +8,7 @@ Warning--empty booktitle in bwt
 Warning--empty journal in huffman-time
 You've used 31 entries,
             3070 wiz_defined-function locations,
-            856 strings with 10469 characters,
+            855 strings with 10448 characters,
 and the built_in function-call counts, 16630 in all, are:
 = -- 1302
 > -- 670

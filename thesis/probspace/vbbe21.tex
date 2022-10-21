@@ -1,92 +1,182 @@
 \section{One Byte, Two Byte Exceptions}
 \label{sec:vbbe21}
+\input{plots/vbe21}
 
-The one byte, two byte exceptions encoding, abbreviated to \textit{vbe21}, encodes a list of integers using one byte for each integer except for integers which cannot fit into one byte, known as \textit{exceptions}, which are encoded using two bytes. Rather than using a control code to mark where normal data and exceptions occur as in the Stream VByte codec (Section \ref{subsubsec:svb}), the exceptions are encoded at the beginning since it is expected that exceptions will occur with small probability.
+The one byte, two byte exceptions encoding, abbreviated to \textit{vbe21},
+encodes a list of integers using one byte for each integer except for integers
+which cannot fit into one byte, known as \textit{exceptions}, which are encoded
+using two bytes. See Figure \ref{fig:vbe21}. Rather than using a control code to
+mark where normal data and exceptions occur as in the Stream VByte codec
+(Section \ref{subsubsec:svb}), the exceptions are encoded at the beginning since
+it is expected that exceptions will occur with small probability.
 
-The number of exceptions is written using 2 bytes, followed by the exceptions' positions in the list using 4 bytes each and the exceptions themselves using 2 bytes each.
+The number of exceptions is written using 2 bytes, followed by the exceptions'
+positions in the list using 4 bytes each, the exceptions themselves using 2
+bytes each and finally the regular one byte data. For example, consider the
+sequence of integers $1024,12,10,4096,0,1,2,1024$. There are three
+exceptions 1024, 4096 and 1024. Hence, vbe21 would use
+\[ 2 + 3(4+2) + 8-3 = 25 \]
+bytes for this sequence. See Figure \ref{fig:vbe21-eg}.
 
-Now, consider applying the zig-zag delta encoding to a read and then compressing using encoding $A$. Let $C_A:\Omega\to\mathbb{N}_0$ be a random variable measuring the resulting compressed size in bytes where $\Omega$ is the space of reads. Then
+\input{plots/vbe21-eg}
+
+Now, consider applying encoding $A$ to a read. Let $C_A:\Omega\to\mathbb{N}_0$
+be a random variable measuring the resulting compressed size in bytes where
+$\Omega$ is the space of reads. Then
 \begin{align*}
 	C_{vbe21} &= 2 + 6X + (N - X)\\
 	&= 2 + 5X + N
 \end{align*}
-where $N$ and $X$ are random variables measuring the read length and number of exceptions respectively.
-Recall from Section \ref{subsec:prob} that the probability that a data point is greater than 255 and therefore outside the one byte range is $\sim 5\times 10^{-5}$. Thus, the expected number of exceptions is
+where $N$ and $X$ are random variables measuring the read length and number of
+exceptions respectively. Recall from Section \ref{subsec:prob} that the
+probability that a zig-zag delta is greater than 255 and therefore outside the one
+byte range is $\sim 5\times 10^{-5}$. Thus, the expected number of zig-zag delta
+exceptions is
 \[ E[X] = (5 \times 10^{-5})E[N] \]
 %Also, the read lengths can be modelled by the Gamma distribution $\Gamma(1.0885,0.0096)$.
 where the expected read length is
 \[ E[N] = 113471.4 \]
-from Table \ref{tab:n}.
+from Table \ref{tab:n}. So $E[X] \approx 5.67$, that is we expect roughly 5 to 6
+exceptions per read when using the zig-zag delta transformation.
 Then, the expected compressed size is given by
 \begin{align*}
-	E[C_{vbe21}] &= 2 + (2.5\times 10^{-4})E[N]+ E[N]\\
+	E[C_{vbe21-zd}] &= 2 + (2.5\times 10^{-4})E[N]+ E[N]\\
 	&= 2 + 1.00025E[N]\\
-	&\approx 113502.
+	&\approx 113502
 \end{align*}
-In comparison, using the Stream VByte 16 (or \textit{svb16}) encoding, the compressed size is given by
+where vbe21-zd means first apply the zig-zag delta encoding then vbe21. In
+comparison, using the Stream VByte 16 (or \textit{svb16}) encoding, the
+compressed size is given by
 \begin{align*}
 	C_{svb16} &= \lceil N/8 \rceil + 2X + (N - X)\\
 	&= \lceil N/8 \rceil + X + N.
 \end{align*}
 Then, the expected compressed size is
 \begin{align*}
-	E[C_{svb16}] &= \lceil E[N]/8 \rceil + (5 \times 10^{-5})E[N] + E[N]\\
+	E[C_{svb16-zd}] &= \lceil E[N]/8 \rceil + (5 \times 10^{-5})E[N] + E[N]\\
 	&= \lceil E[N]/8 \rceil + 1.00005E[N]\\
 	&\approx 127661\\
-	&> E[C_{vbe21}].
+	&> E[C_{vbe21-zd}].
 \end{align*}
-So it is clear that \textit{vbe21} saves more space than \textit{svb16}: roughly 14 KiB on average per read or an estimated 6.6 GiB for the whole data set. This is actually a very accurate estimation; see Figure \ref{fig:svb-vbe21-zd-size}.
+So it is clear that \textit{vbe21-zd} saves more space than \textit{svb16-zd}:
+roughly 14 KiB on average per read or an estimated 6.6 GiB for the whole data
+set. This is actually a very accurate estimation; see Figure
+\ref{fig:svb-vbe21-zd-size}.
 
 \input{plots/svb-vbe21-zd-size}
 
 \subsection{Exceptions Encoding}
 
-The number of exceptions per read ranges from 0 to 3616 but 99\% of reads have between 0 and 42 exceptions. The mean is $\sim$5 and the standard deviation is $\sim$18. See Table \ref{tab:ex}. Its distribution, shown in Figure \ref{fig:nex-hist}, could be nicely fitted by an exponential distribution. Notice that around 20\% of the reads have no exceptions such that their zig-zag deltas lie perfectly between 0 and 255.
+The number of exceptions per read ranges from 0 to 3616 but 99\% of reads have
+between 0 and 42 exceptions. The mean is $\sim$5 and the standard deviation is
+$\sim$18. See Table \ref{tab:ex}. Its distribution, shown in Figure
+\ref{fig:nex-hist}, could be nicely fitted by an exponential distribution.
+Notice that around 20\% of the reads have no exceptions such that their zig-zag
+deltas lie perfectly between 0 and 255.
 
 \input{plots/ex-tab}
 \input{plots/nex-hist}
 
-The exceptions range from 256 to 2317 as expected but 99\% of the exceptions do not go higher than 481. The mean and mode are $\sim$277 and 256 respectively. Refer to Table \ref{tab:ex}. The histogram of exceptions is shown in Figure \ref{fig:ex-hist}. Notably, the frequency of even-numbered exceptions is much greater than adjacent odd-numbered exceptions from 256 up to $\sim$330. This is due to large positive deltas occuring more frequently than large negative deltas as previously discussed in Section \ref{subsec:stripe}.
+The exceptions range from 256 to 2317 as expected but 99\% of the exceptions do
+not go higher than 481. The mean and mode are $\sim$277 and 256 respectively.
+Refer to Table \ref{tab:ex}. The histogram of exceptions is shown in Figure
+\ref{fig:ex-hist}. Notably, the frequency of even-numbered exceptions is much
+greater than adjacent odd-numbered exceptions from 256 up to $\sim$330. This is
+due to large positive deltas occuring more frequently than large negative deltas
+as previously discussed in Section \ref{subsec:stripe}.
 
 \input{plots/ex-hist}
 
-Given this information, there are better ways of storing the exceptions than in a raw sequential format.
+Given this information, there are better ways of storing the exceptions than in
+a raw sequential format.
 
 % TODO show these ways
 % analyse how much better
 
-However, the exceptions section usually accounts for only 36 bytes of the read on average in the vbe21 format. Hence, focussing on compressing the one-byte data section has much more potential benefit.
+However, the exceptions section usually accounts for only 36 bytes of the read
+on average in the vbe21 format. Hence, focussing on compressing the one-byte
+data section has much more potential benefit.
 
 \subsection{Huffman}
 
-Consider compressing the one-byte data using the Huffman (shortened to \textit{huff}) coding algorithm. This requires determining the read's zig-zag delta distribution on an initial pass. Then, the Huffman table is recorded and each byte is encoded with its Huffman code. The problem is that there is an overhead with storing the table.
-Naively, one can store the table by writing the number of entries in the table (1 byte) then each entry's symbol (1 byte), code length (1 byte) and code (code length in bytes). The resulting table consumes
+Consider compressing the one-byte data using the Huffman (shortened to
+\textit{huff}) coding algorithm. This requires determining the read's zig-zag
+delta distribution on an initial pass. Then, the Huffman table is recorded and
+each byte is encoded with its Huffman code. The problem is that there is an
+overhead with storing the table.  Naively, one can store the table by writing
+the number of entries in the table (1 byte) then each entry's symbol (1 byte),
+code length (1 byte) and code (code length in bytes). The resulting table
+consumes
 \[ 1 + 2m + \sum_{i=1}^m\lceil b_i / 8 \rceil \]
-bytes where $m\in\mathbb{Z}\cap[0,255]$ is the number of entries in the table and $b_i$ is the length of the $i$-th entry's code in bits. The number of entries is the number of unique one-byte zig-zag deltas in the read which is dependent on the read's length. Short reads may only contain 100 unique one-byte deltas whilst long reads may easily contain more than 250 entries. If we estimate that this is roughly 200 and the average code length is 2 bytes then the table consumes
+bytes where $m\in\mathbb{Z}\cap[0,255]$ is the number of entries in the table
+and $b_i$ is the length of the $i$-th entry's code in bits. The number of
+entries is the number of unique one-byte zig-zag deltas in the read which is
+dependent on the read's length. Short reads may only contain 100 unique one-byte
+deltas whilst long reads may easily contain more than 250 entries. If we
+estimate that this is roughly 200 and the average code length is 2 bytes then
+the table consumes
 \[ 1 + 2\times 200 + 200\times 2 = 801 \]
-bytes. The maximum number of entries is 256 so the maximum table size is roughly 1025 bytes.
+bytes. The maximum number of entries is 256 so the maximum table size is roughly
+1025 bytes.
 
-However, rather than encoding the exact Huffman table of each read it makes more sense to use a shared Huffman table which approximates the zig-zag delta distribution of most reads well.
+However, rather than encoding the exact Huffman table of each read it makes more
+sense to use a shared Huffman table which approximates the zig-zag delta
+distribution of most reads well.
 %These are bytes we don't need to repeat in each read when each read has a similar distribution of zig-zag deltas.
-For example, 0 is the most common value among reads so naturally its code will have the fewest number of bits and this will be efficient for the majority of reads. One simple approach is to construct the optimal Huffman table for the whole data set of zig-zag deltas. Then, we can store the code table once in the source code and encode each read using the same table. Let's call this method the static Huffman algorithm or \textit{shuff} for short. This table consumes 1042 bytes but we can store it statically alongside the source code, so unless we are considering the Kolmogorov complexity of the data its size is not calculated in the compression size. The distribution of code lengths from this table is shown in Figure \ref{fig:shuff-len}. As we can see the distribution splits into two alternating distributions from about 116 onwards which represents the higher frequency of large positive compared to large negative deltas, as previously discussed.
+For example, 0 is the most common value among reads so naturally its code will
+have the fewest number of bits and this will be efficient for the majority of
+reads. One simple approach is to construct the optimal Huffman table for the
+whole data set of zig-zag deltas. Then, we can store the code table once in the
+source code and encode each read using the same table. Let's call this method
+the static Huffman algorithm or \textit{shuff} for short. This table consumes
+1042 bytes but we can store it statically alongside the source code, so unless
+we are considering the Kolmogorov complexity of the data its size is not
+calculated in the compression size. The distribution of code lengths from this
+table is shown in Figure \ref{fig:shuff-len}. As we can see the distribution
+splits into two alternating distributions from about 116 onwards which
+represents the higher frequency of large positive compared to large negative
+deltas, as previously discussed.
 
-huff consumes more space than the shuff algorithm since it records a different Huffman table for each read in the compressed data. The space consumed by the Huffman table turns out to be more than the difference between the globally approximated and read-optimal Huffman encoding. For example, on the data set huff applied to vbe21 (hereafter \textit{huff-vbe21}) consumes 36.10 GiB versus 35.85 GiB for shuff-vbe21 which is a difference of $\sim537$ bytes per read. This results is a compression ratio of 2.927 versus 2.948.
+huff consumes more space than the shuff algorithm since it records a different
+Huffman table for each read in the compressed data. The space consumed by the
+Huffman table turns out to be more than the difference between the globally
+approximated and read-optimal Huffman encoding. For example, on the data set
+huff applied to vbe21 (hereafter \textit{huff-vbe21}) consumes 36.10 GiB versus
+35.85 GiB for shuff-vbe21 which is a difference of $\sim537$ bytes per read.
+This results is a compression ratio of 2.927 versus 2.948.
 %Moreover, when applied to a different human DNA data set huff-vbe21 consumes
 
 Furthermore, huff takes longer than shuff during compression and decompression.
-During compression, huff must do an initial pass of the read to count the data's frequencies and then construct the Huffman tree and table.
-During decompression, huff must read the table and construct the tree before decoding the data.
-shuff doesn't need to perform any of these operations since it stores the shared table and tree in static memory.
+During compression, huff must do an initial pass of the read to count the data's
+frequencies and then construct the Huffman tree and table.  During
+decompression, huff must read the table and construct the tree before decoding
+the data.  shuff doesn't need to perform any of these operations since it stores
+the shared table and tree in static memory.
 
-During compression, getting the frequencies takes $O(n)$ time. Then, constructing the tree takes $O(x^2\log x)$ time using the bottom-up construction algorithm where $0\le x \le 256$ is the number of unique bytes or exceptions when being applied to vbe21. Constructing the table requires traversing each branch on the tree which takes $O(x)$ time since there are $2x-1$ nodes in a Huffman tree. Then, recording the table takes $O(x)$ time and encoding the bytes takes $O(n)$ time using the table. In total, the huff algorithm takes $O(n + x^2\log x)$ time for compression while shuff takes $O(n)$ time. Compared to $n$, the size of the input, $x$ is usually a lot smaller so it has a small but true effect on the compression time.
+During compression, getting the frequencies takes $O(n)$ time. Then,
+constructing the tree takes $O(x^2\log x)$ time using the bottom-up construction
+algorithm where $0\le x \le 256$ is the number of unique bytes or exceptions
+when being applied to vbe21. Constructing the table requires traversing each
+branch on the tree which takes $O(x)$ time since there are $2x-1$ nodes in a
+Huffman tree. Then, recording the table takes $O(x)$ time and encoding the bytes
+takes $O(n)$ time using the table. In total, the huff algorithm takes
+$O(n + x^2\log x)$ time for compression while shuff takes $O(n)$ time. Compared
+to $n$, the size of the input, $x$ is usually a lot smaller so it has a small
+but true effect on the compression time.
 
-During decompression, huff take $O(n + x)$ time since it must construct the tree whilst shuff takes $O(n)$ time. But in practicality they take the same time. All in all, as long as there is a benefit to using shuff, which there usually is if the approximation is good, shuff is faster than huff during compression and decompression.
+During decompression, huff take $O(n + x)$ time since it must construct the tree
+whilst shuff takes $O(n)$ time. But in practicality they take the same time. All
+in all, as long as there is a benefit to using shuff, which there usually is if
+the approximation is good, shuff is faster than huff during compression and
+decompression.
 
 \input{plots/shuff-len}
 
 \subsection{Range Coding}
 
-Now consider encoding the one-byte data using range coding (abbreviated to \textit{rc}) rather than Huffman coding. Recall that range coding encodes all the data into one number.
+Now consider encoding the one-byte data using range coding (abbreviated to
+\textit{rc}) rather than Huffman coding. Recall that range coding encodes all
+the data into one number.
 %blahblahblah range coding
 
 There are variations on the range coding algorithm.

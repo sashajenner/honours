@@ -1,0 +1,22 @@
+\begin{figure}
+\centering\begin{tikzpicture}[node distance=0cm,start chain=1 going right,start chain=2 going right] \footnotesize
+  \tikzstyle{mytape}=[draw,minimum height=1.4cm]
+    \node(A1)  [on chain=1,mytape,fill=blue!20] {$\underbrace{\overbracket{\texttt{0x00}|\texttt{0x03}}^{\text{2 bytes}}}_{3}$};
+    \node(A2)  [on chain=1,mytape,fill=yellow!20] {$\underbrace{\overbracket{\texttt{0x00}|\texttt{0x00}|\texttt{0x00}|\texttt{0x00}}^{\text{4 bytes}}}_{0}$};
+    \node(A3)  [on chain=1,mytape,fill=yellow!20] {$\underbrace{\overbracket{\texttt{0x00}|\texttt{0x00}|\texttt{0x00}|\texttt{0x03}}^{\text{4 bytes}}}_{3}$};
+    \node(A4)  [on chain=1,mytape,fill=yellow!20] {$\underbrace{\overbracket{\texttt{0x00}|\texttt{0x00}|\texttt{0x00}|\texttt{0x07}}^{\text{4 bytes}}}_{7}$};
+    \node(B1)  [on chain=2,mytape,fill=yellow!35,below of=A1,node distance=1.4cm] {$\underbrace{\overbracket{\texttt{0x04}|\texttt{0x00}}^{\text{2 bytes}}}_{1024}$};
+    \node(B2)  [on chain=2,mytape,fill=yellow!35] {$\underbrace{\overbracket{\texttt{0x10}|\texttt{0x00}}^{\text{2 bytes}}}_{\num{4096}}$};
+    \node(B3)  [on chain=2,mytape,fill=yellow!35] {$\underbrace{\overbracket{\texttt{0x04}|\texttt{0x00}}^{\text{2 bytes}}}_{1024}$};
+    \node(B4)  [on chain=2,mytape,fill=green!35] {$\underbrace{\overbracket{\texttt{0x0c}}^{\text{1 byte}}}_{12}$};
+    \node(B5)  [on chain=2,mytape,fill=green!35] {$\underbrace{\overbracket{\texttt{0x0a}}^{\text{1 byte}}}_{10}$};
+    \node(B6)  [on chain=2,mytape,fill=green!35] {$\underbrace{\overbracket{\texttt{0x00}}^{\text{1 byte}}}_{0}$};
+    \node(B7)  [on chain=2,mytape,fill=green!35] {$\underbrace{\overbracket{\texttt{0x01}}^{\text{1 byte}}}_{1}$};
+    \node(B8)  [on chain=2,mytape,fill=green!35] {$\underbrace{\overbracket{\texttt{0x02}}^{\text{1 byte}}}_{2}$};
+\end{tikzpicture}
+
+	\caption{\label{fig:vbe21-eg} An example of $1024,12,10,4096,
+	0,1,2,1024$ encoded with vbe21. The encoding order is read from left to
+	right and top to bottom. There are 3 exceptions located at positions 0,
+	3 and 7 with values 1024, 4096 and 1024. It uses 25 bytes in total.}
+\end{figure}
