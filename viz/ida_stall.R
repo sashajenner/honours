@@ -45,21 +45,27 @@ press_df_stall = merge(press_df, stall_df, by='read')
 press_df_stall_best = press_df_stall %>%
 			group_by(read) %>%
 			filter(press_bytes == min(press_bytes))
-#ggplot(press_df_stall_best) +
-#	geom_point(aes(x=n, y=press_ratio, color=method), alpha=0.5)
+#tikz(file = paste0(path1, '.best.tex'), width = 6, height = 5)
+plot = ggplot(press_df_stall_best) +
+	geom_point(aes(x=n, y=press_ratio, color=method), alpha=0.4) +
+	xlab('Stall Length') +
+	ylab('Compression Ratio') +
+	labs(color = 'Best Method')
+#dev.off()
+ggsave(paste0(path1, '.best.pdf'), plot)
 
 #ggplot(press_df_stall_best) +
 #	geom_histogram(aes(x=n, fill=method))
-tikz(file = paste0(path1, '.prop.tex'), width = 6, height = 5)
-ticks=c(0, 1500, 2500, 5000, 7500, 10000)
-ggplot(press_df_stall_best) +
-	geom_histogram(aes(x=n, fill=method), position='fill', binwidth=50) +
-	xlab('Stall Length') +
-	ylab('Proportion of Reads') +
-	labs(fill = 'Method') +
-	geom_vline(xintercept = 1500, lintype='dotted') +
-	scale_x_continuous(breaks=ticks,
-			   limits=c(ticks[1], ticks[length(ticks)]))
-dev.off()
+#tikz(file = paste0(path1, '.prop.tex'), width = 6, height = 5)
+#ticks=c(0, 1500, 2500, 5000, 7500, 10000)
+#ggplot(press_df_stall_best) +
+#	geom_histogram(aes(x=n, fill=method), position='fill', binwidth=50) +
+#	xlab('Stall Length') +
+#	ylab('Proportion of Reads') +
+#	labs(fill = 'Method') +
+#	geom_vline(xintercept = 1500, lintype='dotted') +
+#	scale_x_continuous(breaks=ticks,
+#			   limits=c(ticks[1], ticks[length(ticks)]))
+#dev.off()
 #ggplot(press_df_stall_best) +
 #	geom_freqpoly(aes(x=n, color=method))
