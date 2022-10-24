@@ -211,41 +211,45 @@
 \newlabel{fig:stall}{{4.7}{41}{The stall from the read with ID e9f08690-171f-476f-9119-5330d0290126 spanning data points 20 to 778.\relax }{figure.caption.43}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces  Summary statistics of the data's stall lengths.\relax }}{41}{table.caption.44}\protected@file@percent }
 \newlabel{tab:stall-n}{{4.3}{41}{Summary statistics of the data's stall lengths.\relax }{table.caption.44}{}}
-\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.2.2}{Separating the Jumps and Flats}}{42}{subsection.4.2.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.8}{\ignorespaces The 100\% stacked histogram of the compression methods with the highest compression ratio for all the reads in the data versus their stall length. Reads with a stall length $\sim $1500 and greater are more likely to be compressed smaller using stall-fz than rc-vbbe21-zd.\relax }}{43}{figure.caption.45}\protected@file@percent }
-\newlabel{fig:stall-ratio}{{4.8}{43}{The 100\% stacked histogram of the compression methods with the highest compression ratio for all the reads in the data versus their stall length. Reads with a stall length $\sim $1500 and greater are more likely to be compressed smaller using stall-fz than rc-vbbe21-zd.\relax }{figure.caption.45}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.9}{\ignorespaces A scatter plot of the compression methods with the highest compression ratio on each read out of rc-vbbe21-zd and stall-fz. The best compression ratio is plotted against the length of the read's stall. Reads with a stall length $\sim $1500 and greater are more likely to be compressed smaller with stall-fz rather than rc-vbbe21-zd.\relax }}{44}{figure.caption.46}\protected@file@percent }
-\newlabel{fig:stall-best}{{4.9}{44}{A scatter plot of the compression methods with the highest compression ratio on each read out of rc-vbbe21-zd and stall-fz. The best compression ratio is plotted against the length of the read's stall. Reads with a stall length $\sim $1500 and greater are more likely to be compressed smaller with stall-fz rather than rc-vbbe21-zd.\relax }{figure.caption.46}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.8}{\ignorespaces The stall encoding records the stall's starting position in the read, length, compressed size and compressed data. Followed by the non-stall's compressed size and compressed data is recorded. The specific and generic compression algorithms used are known beforehand and hence are not stored. stall-fz uses rc-vbbe21-for and rc-vbbe21-zd as the specific and generic algorithm respectively.\relax }}{42}{figure.caption.45}\protected@file@percent }
+\newlabel{fig:stall-enc}{{4.8}{42}{The stall encoding records the stall's starting position in the read, length, compressed size and compressed data. Followed by the non-stall's compressed size and compressed data is recorded. The specific and generic compression algorithms used are known beforehand and hence are not stored. stall-fz uses rc-vbbe21-for and rc-vbbe21-zd as the specific and generic algorithm respectively.\relax }{figure.caption.45}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.9}{\ignorespaces The dstall encoding stores an extra byte at the beginning to mark whether the stall is being encoded or not. If it is being encoded the remaining data matches the stall encoding. Otherwise, $r_s$ is empty and the whole read is compressed using the generic algorithm as usual. That is, the read's compressed size (4 bytes) and data follows the flag.\relax }}{42}{figure.caption.46}\protected@file@percent }
+\newlabel{fig:dstall-enc}{{4.9}{42}{The dstall encoding stores an extra byte at the beginning to mark whether the stall is being encoded or not. If it is being encoded the remaining data matches the stall encoding. Otherwise, $r_s$ is empty and the whole read is compressed using the generic algorithm as usual. That is, the read's compressed size (4 bytes) and data follows the flag.\relax }{figure.caption.46}{}}
+\@writefile{toc}{\contentsline {subsection}{\tocsubsection {}{4.2.2}{Separating the Jumps, Falls and Flats}}{43}{subsection.4.2.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.10}{\ignorespaces A scatter plot of the compression methods with the highest compression ratio on each read out of rc-vbbe21-zd and stall-fz. The best compression ratio is plotted against the length of the read's stall. Reads with a stall length $\sim $1500 and greater are more likely to be compressed smaller with stall-fz rather than rc-vbbe21-zd.\relax }}{44}{figure.caption.47}\protected@file@percent }
+\newlabel{fig:stall-best}{{4.10}{44}{A scatter plot of the compression methods with the highest compression ratio on each read out of rc-vbbe21-zd and stall-fz. The best compression ratio is plotted against the length of the read's stall. Reads with a stall length $\sim $1500 and greater are more likely to be compressed smaller with stall-fz rather than rc-vbbe21-zd.\relax }{figure.caption.47}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.11}{\ignorespaces An example of 300 data points from a DNA section in the read with ID e9f08690-171f-476f-9119-5330d0290126. Notice the sudden transitions up and down (jumps and falls) between low-variance sections (flats).\relax }}{45}{figure.caption.48}\protected@file@percent }
+\newlabel{fig:dna300-section}{{4.11}{45}{An example of 300 data points from a DNA section in the read with ID e9f08690-171f-476f-9119-5330d0290126. Notice the sudden transitions up and down (jumps and falls) between low-variance sections (flats).\relax }{figure.caption.48}{}}
 \citation{lemire-simd}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.10}{\ignorespaces An example of 300 data points from a DNA section in the read with ID e9f08690-171f-476f-9119-5330d0290126. Notice the sudden transitions up and down between `flatter' sections.\relax }}{45}{figure.caption.47}\protected@file@percent }
-\newlabel{fig:dna300-section}{{4.10}{45}{An example of 300 data points from a DNA section in the read with ID e9f08690-171f-476f-9119-5330d0290126. Notice the sudden transitions up and down between `flatter' sections.\relax }{figure.caption.47}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.11}{\ignorespaces 300 data points from a DNA section in the read with ID e9f08690-171f-476f-9119-5330d0290126. The strictly increasing and decreasing sequences are coloured by their maximum absolute delta. Those with a maximum absolute delta greater than 20 are labelled by this value.\relax }}{46}{figure.caption.48}\protected@file@percent }
-\newlabel{fig:epsilon}{{4.11}{46}{300 data points from a DNA section in the read with ID e9f08690-171f-476f-9119-5330d0290126. The strictly increasing and decreasing sequences are coloured by their maximum absolute delta. Those with a maximum absolute delta greater than 20 are labelled by this value.\relax }{figure.caption.48}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.12}{\ignorespaces The jumps encoding stores the number of jumps and falls, and the first data point in the read since the deltas are being encoded. The starting indices of the jumps and falls are compressed then their lengths are compressed. Next, the deltas of the jumps and the negative deltas of the falls are compressed together, followed by the deltas of the flats. There are opportunities for four different compression techniques given the different data streams.\relax }}{46}{figure.caption.49}\protected@file@percent }
+\newlabel{fig:jumps-enc}{{4.12}{46}{The jumps encoding stores the number of jumps and falls, and the first data point in the read since the deltas are being encoded. The starting indices of the jumps and falls are compressed then their lengths are compressed. Next, the deltas of the jumps and the negative deltas of the falls are compressed together, followed by the deltas of the flats. There are opportunities for four different compression techniques given the different data streams.\relax }{figure.caption.49}{}}
 \@writefile{toc}{\contentsline {section}{\tocsection {}{4.3}{Subsequence Searching}}{46}{section.4.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.12}{\ignorespaces 300 data points from a DNA section in the read with ID e9f08690-171f-476f-9119-5330d0290126. The jumps and falls are highlighted for $\epsilon =24$.\relax }}{47}{figure.caption.49}\protected@file@percent }
-\newlabel{fig:epsilon-25}{{4.12}{47}{300 data points from a DNA section in the read with ID e9f08690-171f-476f-9119-5330d0290126. The jumps and falls are highlighted for $\epsilon =24$.\relax }{figure.caption.49}{}}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{4.4}{Other}}{50}{section.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{52}{chapter.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.13}{\ignorespaces 300 data points from a DNA section in the read with ID e9f08690-171f-476f-9119-5330d0290126. The strictly increasing and decreasing sequences are coloured by their maximum absolute delta. Those with a maximum absolute delta greater than 20 are labelled by this value.\relax }}{47}{figure.caption.50}\protected@file@percent }
+\newlabel{fig:epsilon}{{4.13}{47}{300 data points from a DNA section in the read with ID e9f08690-171f-476f-9119-5330d0290126. The strictly increasing and decreasing sequences are coloured by their maximum absolute delta. Those with a maximum absolute delta greater than 20 are labelled by this value.\relax }{figure.caption.50}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.14}{\ignorespaces 300 data points from a DNA section in the read with ID e9f08690-171f-476f-9119-5330d0290126. The jumps and falls are highlighted for $\epsilon =24$.\relax }}{48}{figure.caption.51}\protected@file@percent }
+\newlabel{fig:epsilon-25}{{4.14}{48}{300 data points from a DNA section in the read with ID e9f08690-171f-476f-9119-5330d0290126. The jumps and falls are highlighted for $\epsilon =24$.\relax }{figure.caption.51}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{4.4}{Other}}{51}{section.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{53}{chapter.5}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:results}{{5}{52}{Results}{chapter.5}{}}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{6}{Discussion}}{53}{chapter.6}\protected@file@percent }
+\newlabel{chap:results}{{5}{53}{Results}{chapter.5}{}}
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{6}{Discussion}}{54}{chapter.6}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:disc}{{6}{53}{Discussion}{chapter.6}{}}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{6.1}{Future Work}}{53}{section.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{7}{Conclusion}}{54}{chapter.7}\protected@file@percent }
+\newlabel{chap:disc}{{6}{54}{Discussion}{chapter.6}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{6.1}{Future Work}}{54}{section.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{7}{Conclusion}}{55}{chapter.7}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:conclusion}{{7}{54}{Conclusion}{chapter.7}{}}
+\newlabel{chap:conclusion}{{7}{55}{Conclusion}{chapter.7}{}}
 \bibstyle{style/mybibstyle}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{55}{chapter*.50}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{56}{chapter*.52}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:appendix}{{7}{55}{Appendix}{chapter*.50}{}}
-\@writefile{toc}{\contentsline {section}{\tocsection {}{7.1}{Subsequence Searching}}{55}{section.7.1}\protected@file@percent }
-\newlabel{app:cn}{{7.1}{55}{Subsequence Searching}{section.7.1}{}}
-\newlabel{app:cn-dyn}{{7.1}{55}{Subsequence Searching}{section.7.1}{}}
+\newlabel{chap:appendix}{{7}{56}{Appendix}{chapter*.52}{}}
+\@writefile{toc}{\contentsline {section}{\tocsection {}{7.1}{Subsequence Searching}}{56}{section.7.1}\protected@file@percent }
+\newlabel{app:cn}{{7.1}{56}{Subsequence Searching}{section.7.1}{}}
+\newlabel{app:cn-dyn}{{7.1}{56}{Subsequence Searching}{section.7.1}{}}
 \bibdata{references}
 \bibcite{bwt}{{1}{1994}{{Burrows and Wheeler}}{{}}}
 \bibcite{lossy-nano}{{2}{2020{a}}{{Chandak et~al.}}{{Chandak, Tatwawadi, Sridhar, and Weissman}}}
@@ -262,7 +266,7 @@
 \bibcite{genomic-comp}{{13}{2019}{{Hernaez et~al.}}{{Hernaez, Pavlichin, Weissman, and Ochoa}}}
 \bibcite{huffman}{{14}{1952}{{Huffman}}{{}}}
 \bibcite{fgk}{{15}{1985}{{Knuth}}{{}}}
-\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{56}{chapter*.52}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{57}{chapter*.54}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \bibcite{huffman-time}{{16}{1976}{{Leeuwen}}{{}}}

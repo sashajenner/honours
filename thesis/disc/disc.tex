@@ -13,6 +13,12 @@ In fact, there are patterns between reads which could be exploited.
 For example, reads originating from the same channel and pore will have been recorded by the same electrode and so will likely have similar properties. This is especially true for reads recorded at a similar timestamp as each nanopore deteriorates over the course of a sequencing run.
 However, such a strategy is not obvious without further investigation.
 
+We have exploited the stall in this thesis but homopolymer and slow sections
+exhibit similar characteristics to the stall and hence could also be separately
+compressed. Furthermore, there may be better ways of transforming and
+compressing the stall which are more space saving than the current FOR \& range
+coding approach.
+
 %Multi-read compression?
 %Lossy
 %Using metadata more

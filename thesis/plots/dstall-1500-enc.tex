@@ -1,0 +1,18 @@
+\usetikzlibrary{decorations.pathreplacing,positioning,calc}
+
+\begin{figure}
+\centering\begin{tikzpicture}[node distance=0cm,start chain=1 going right,start chain=2 going right] \footnotesize
+  \tikzstyle{mytape}=[draw,minimum height=1.5cm]
+	\node(A0)  [on chain=1,mytape,fill=blue!20] {$\underbrace{\overbracket{flag}^{\text{1 byte}}}_{\text{stall encoded flag}}$};
+	\node(A1)  [on chain=1,mytape,fill=yellow!20] {$\underbrace{\overbracket{\text{ }p\text{ }}^{\text{2 bytes}}}_{\text{stall start position}}$};
+	\node(A2)  [on chain=1,mytape,fill=yellow!20] {$\underbrace{\overbracket{|r_s|}^{\text{2 bytes}}}_{\text{stall length}}$};
+	\node(A3)  [on chain=1,mytape,fill=yellow!20] {$\underbrace{\overbracket{m_s}^{\text{2 bytes}}}_{\text{stall compressed size}}$};
+	\node(A4)  [on chain=1,mytape,fill=green!20] {$\underbrace{\overbracket{C_{rc-vbbe21-for}(r_s)}^{m_s\text{ bytes}}}_{\text{stall compressed data}}$};
+	\node(B1)  [on chain=1,mytape,fill=yellow!35] {$\underbrace{\overbracket{m}^{\text{4 bytes}}}_{\text{non-stall compressed size}}$};
+	\node(B2)  [on chain=1,mytape,fill=green!35] {$\underbrace{\overbracket{C_{rc-vbbe21-zd}(r\setminus r_s)}^{m\text{ bytes}}}_{\text{non-stall compressed data}}$};
+	\draw
+	[decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
+	  ($(A1)-(0,0.3)$) -- ($(A4)-(0,0.3)$) node[midway,yshift=-3em]{if $flag=1$};
+\end{tikzpicture}
+	\caption{\label{fig:dstall-1500-enc}.}
+\end{figure}
