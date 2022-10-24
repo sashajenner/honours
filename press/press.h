@@ -655,6 +655,14 @@ void rccm_svbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 void rccm_svbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 				uint32_t *nout);
 
+/* stall >=1500 zigzag delta vbbe21 range coding */
+
+uint64_t dstall_fz_1500_bound_16(uint32_t nin);
+void dstall_fz_1500_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			     uint64_t *nout);
+void dstall_fz_1500_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			       uint32_t *nout);
+
 /*
  * subtract min from all sigs
  * apply vbbe21 range coding

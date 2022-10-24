@@ -4972,7 +4972,7 @@ void rccm_svbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 	uint64_t nin_nonstall_press_tmp;
 
 	exists_stall = find_stall(in, nin, &stall_start, &stall_len);
-	if (stall_len < 1000) {
+	if (stall_len < 140) {
 		exists_stall = 0;
 		stall_len = 0;
 		stall_start = 0;
@@ -5091,6 +5091,94 @@ void rccm_svbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 		      (nnonstall - stall_start) * sizeof *nonstall);
 	free(nonstall);
 	*nout = nin;
+}
+
+/*
+ * stall zigzag delta vbbe21 range coding context mixing
+ * encode stall if its >= 1500
+ * TODO can do len_stall - 1500 and bitpack
+ * [start_stall][len_stall][stall | submin | vbbe21 | rccm]
+ * [non-stall | delta | zigzag | vbbe21 | rccm]
+ */
+
+uint64_t dstall_fz_1500_bound_16(uint32_t nin)
+{
+	return rccm_vbbe21_zd_bound_16(nin);
+}
+
+void dstall_fz_1500_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			     uint64_t *nout)
+{
+	uint16_t stall_start;
+	uint16_t stall_len;
+	uint8_t exists_stall;
+	uint64_t offset;
+	uint16_t *in_stall;
+	int16_t *in_nonstall;
+	uint16_t nin_stall_press;
+	uint64_t nin_stall_press_tmp;
+	uint32_t nin_nonstall_press;
+	uint64_t nin_nonstall_press_tmp;
+
+	exists_stall = find_stall(in, nin, &stall_start, &stall_len);
+	if (stall_len < 1500) {
+		exists_stall = 0;
+		stall_len = 0;
+		stall_start = 0;
+	}
+
+	(void) memcpy(out, &exists_stall, sizeof exists_stall);
+	offset = sizeof exists_stall;
+	if (exists_stall) {
+		stall_start += 20;
+		stall_len -= 40;
+
+		(void) memcpy(out + offset, &stall_start, sizeof stall_start);
+		offset += sizeof stall_start;
+		(void) memcpy(out + offset, &stall_len, sizeof stall_len);
+		offset += sizeof stall_len;
+
+		in_stall = malloc(stall_len * sizeof *in_stall);
+		(void) memcpy(in_stall, in + stall_start,
+			      stall_len * sizeof *in_stall);
+
+		offset += sizeof nin_stall_press;
+		nin_stall_press_tmp = *nout - offset;
+		rccm_vbbe21_submin_press_16(in_stall, stall_len, out + offset,
+					    &nin_stall_press_tmp);
+		free(in_stall);
+		nin_stall_press = nin_stall_press_tmp;
+
+		offset -= sizeof nin_stall_press;
+		(void) memcpy(out + offset, &nin_stall_press,
+			      sizeof nin_stall_press);
+		offset += sizeof nin_stall_press + nin_stall_press;
+	}
+
+	in_nonstall = malloc((nin - stall_len) * sizeof *in_nonstall);
+	(void) memcpy(in_nonstall, in, stall_start * sizeof *in);
+	(void) memcpy(in_nonstall + stall_start, in + stall_start + stall_len,
+		      (nin - stall_len - stall_start) * sizeof *in);
+
+	offset += sizeof nin_nonstall_press;
+	nin_nonstall_press_tmp = *nout - offset;
+	rccm_vbbe21_zd_press_16(in_nonstall, nin - stall_len, out + offset,
+				&nin_nonstall_press_tmp);
+	free(in_nonstall);
+	nin_nonstall_press = nin_nonstall_press_tmp;
+
+	offset -= sizeof nin_nonstall_press;
+	(void) memcpy(out + offset, &nin_nonstall_press,
+		      sizeof nin_nonstall_press);
+	offset += sizeof nin_nonstall_press + nin_nonstall_press;
+
+	*nout = offset;
+}
+
+void dstall_fz_1500_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			       uint32_t *nout)
+{
+	rccm_svbbe21_zd_depress_16(in, nin, out, nout);
 }
 
 /*
