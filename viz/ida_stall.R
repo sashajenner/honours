@@ -52,7 +52,7 @@ plot = ggplot(press_df_stall_best) +
 	ylab('Compression Ratio') +
 	labs(color = 'Best Method')
 #dev.off()
-ggsave(paste0(path1, '.best.pdf'), plot)
+ggsave(paste0(path1, '.best.pdf'), plot, width=6, height=5)
 
 #ggplot(press_df_stall_best) +
 #	geom_histogram(aes(x=n, fill=method))
