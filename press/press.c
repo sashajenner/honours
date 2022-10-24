@@ -5097,6 +5097,7 @@ void rccm_svbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
  * stall zigzag delta vbbe21 range coding context mixing
  * encode stall if its >= 1500
  * TODO can do len_stall - 1500 and bitpack
+ * [is_stall_encoded]
  * [start_stall][len_stall][stall | submin | vbbe21 | rccm]
  * [non-stall | delta | zigzag | vbbe21 | rccm]
  */
@@ -5177,6 +5178,65 @@ void dstall_fz_1500_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 
 void dstall_fz_1500_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			       uint32_t *nout)
+{
+	rccm_svbbe21_zd_depress_16(in, nin, out, nout);
+}
+
+/*
+ * dstall zigzag delta vbbe21 range coding context mixing
+ * encode stall if its better than not
+ * [is_stall_encoded]
+ * [start_stall][len_stall][stall | submin | vbbe21 | rccm]
+ * [non-stall | delta | zigzag | vbbe21 | rccm]
+ */
+
+uint64_t dstall_fz_bound_16(uint32_t nin)
+{
+	return rccm_vbbe21_zd_bound_16(nin);
+}
+
+void dstall_fz_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			uint64_t *nout)
+{
+	uint8_t exists_stall;
+	uint8_t *out_stall;
+	uint8_t *out_nostall;
+	uint64_t nout_stall;
+	uint64_t nout_nostall;
+	uint32_t nout_nostall_cp;
+	uint32_t offset;
+
+	nout_stall = *nout * sizeof *out_stall;
+	nout_nostall = *nout * sizeof *out_nostall;
+
+	out_stall = malloc(nout_stall);
+	out_nostall = malloc(nout_nostall);
+
+	rccm_svbbe21_zd_press_16(in, nin, out_stall, &nout_stall);
+	rccm_vbbe21_zd_press_16(in, nin, out_nostall, &nout_nostall);
+
+	if (nout_stall < nout_nostall) {
+		(void) memcpy(out, out_stall, nout_stall);
+		*nout = nout_stall;
+	} else {
+		exists_stall = 0;
+		(void) memcpy(out, &exists_stall, sizeof exists_stall);
+		offset = sizeof exists_stall;
+		nout_nostall_cp = nout_nostall;
+		(void) memcpy(out + offset, &nout_nostall_cp,
+			      sizeof nout_nostall_cp);
+		offset += sizeof nout_nostall_cp;
+		(void) memcpy(out + offset, out_nostall,
+			      nout_nostall);
+		*nout = nout_nostall + offset;
+	}
+
+	free(out_stall);
+	free(out_nostall);
+}
+
+void dstall_fz_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			  uint32_t *nout)
 {
 	rccm_svbbe21_zd_depress_16(in, nin, out, nout);
 }
