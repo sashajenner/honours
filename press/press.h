@@ -694,6 +694,8 @@ void dwt_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 
 /* jumps */
 
+#define JUMP_FALL_EPSILON (24)
+
 uint64_t jumps_bound_16(uint32_t nin);
 void jumps_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 		    uint64_t *nout);

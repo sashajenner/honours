@@ -5363,7 +5363,7 @@ void rccm_vbbe21_submin_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
  * defined by sequences length n which are
  * - non-empty n >= 1
  * - strictly (in|de)creasing
- * - have at least one diff x_{i+1} - x_i > 25
+ * - have at least one diff x_{i+1} - x_i > 24
  * [num jumps][num falls]
  * [[jump start indices][fall start indices] | diff - 1 | zstd_svb12]
  * [[jump lengths      ][fall lengths      ] - 1 | rccm]
@@ -5428,7 +5428,7 @@ static void find_jumps_16(const int16_t *in_d, uint32_t nin,
 			start = i;
 		}
 
-		if (abs(in_d[i]) > 25)
+		if (abs(in_d[i]) > JUMP_FALL_EPSILON)
 			in_jump = 1;
 	}
 
