@@ -27,16 +27,18 @@
 \contentsline {section}{\tocsection {}{4.1}{One Byte, Two Byte Exceptions}}{33}{section.4.1}%
 \contentsline {subsection}{\tocsubsection {}{4.1.1}{Exceptions Encoding}}{35}{subsection.4.1.1}%
 \contentsline {subsection}{\tocsubsection {}{4.1.2}{Huffman}}{38}{subsection.4.1.2}%
-\contentsline {subsection}{\tocsubsection {}{4.1.3}{Range Coding}}{39}{subsection.4.1.3}%
-\contentsline {section}{\tocsection {}{4.2}{Exploiting the Signal}}{39}{section.4.2}%
-\contentsline {subsection}{\tocsubsection {}{4.2.1}{The Stall}}{40}{subsection.4.2.1}%
-\contentsline {subsection}{\tocsubsection {}{4.2.2}{Separating the Jumps, Falls and Flats}}{43}{subsection.4.2.2}%
-\contentsline {section}{\tocsection {}{4.3}{Subsequence Searching}}{46}{section.4.3}%
-\contentsline {section}{\tocsection {}{4.4}{Other}}{51}{section.4.4}%
-\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{53}{chapter.5}%
-\contentsline {chapter}{\tocchapter {Chapter}{6}{Discussion}}{54}{chapter.6}%
-\contentsline {section}{\tocsection {}{6.1}{Future Work}}{54}{section.6.1}%
-\contentsline {chapter}{\tocchapter {Chapter}{7}{Conclusion}}{55}{chapter.7}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{56}{chapter*.52}%
-\contentsline {section}{\tocsection {}{7.1}{Subsequence Searching}}{56}{section.7.1}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{57}{chapter*.54}%
+\contentsline {subsection}{\tocsubsection {}{4.1.3}{Range Coding}}{40}{subsection.4.1.3}%
+\contentsline {section}{\tocsection {}{4.2}{Exploiting the Signal}}{40}{section.4.2}%
+\contentsline {subsection}{\tocsubsection {}{4.2.1}{The Stall}}{41}{subsection.4.2.1}%
+\contentsline {subsection}{\tocsubsection {}{4.2.2}{The DNA Section}}{44}{subsection.4.2.2}%
+\contentsline {subsubsection}{\tocsubsubsection {}{4.2.2.1}{Subsequence Searching}}{44}{subsubsection.4.2.2.1}%
+\contentsline {subsubsection}{\tocsubsubsection {}{4.2.2.2}{Separating the Jumps, Falls and Flats}}{48}{subsubsection.4.2.2.2}%
+\contentsline {section}{\tocsection {}{4.3}{Wavelets}}{52}{section.4.3}%
+\contentsline {section}{\tocsection {}{4.4}{Other}}{52}{section.4.4}%
+\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{55}{chapter.5}%
+\contentsline {chapter}{\tocchapter {Chapter}{6}{Discussion}}{56}{chapter.6}%
+\contentsline {section}{\tocsection {}{6.1}{Future Work}}{56}{section.6.1}%
+\contentsline {chapter}{\tocchapter {Chapter}{7}{Conclusion}}{57}{chapter.7}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{58}{chapter*.55}%
+\contentsline {section}{\tocsection {}{7.1}{Subsequence Searching}}{58}{section.7.1}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{59}{chapter*.57}%

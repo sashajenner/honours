@@ -58,26 +58,47 @@ Then, the expected compressed size is
 	&\approx 127661\\
 	&> E[C_{vbe21-zd}].
 \end{align*}
-So it is clear that \textit{vbe21-zd} saves more space than \textit{svb16-zd}:
-roughly 14 KiB on average per read or an estimated 6.6 GiB for the whole data
-set. This is actually a very accurate estimation; see Figure
-\ref{fig:svb-vbe21-zd-size}.
 
-\input{plots/svb-vbe21-zd-size}
+This translates into roughly 8 bits per data point for vbe21-zd versus
+9 for svb16-zd.
+%See Table \ref{tab:vbe21-bpp}.
+Intuitively these numbers make sense considering vbe21-zd essentially represents
+most points using one byte each and svb16-zd stores one extra bit per point in
+the control byte section.  Compare this to the entropy of the data which is 7.70
+bits per point or 5.39 for the zig-zag deltas. So it is clear that
+vbe21-zd saves more space than svb16-zd: roughly 14 KiB on average per read or
+an estimated 6.6 GiB for the whole data set. However, this is merely a container
+for the data which is useful for downstream compression; alone it doesn't
+provide great compression results as is obvious when comparing it to the entropy
+of the data.
+
+%\input{plots/vbe21-tab}
 
 \subsection{Exceptions Encoding}
 
-The number of exceptions per read ranges from 0 to 3616 but 99\% of reads have
-between 0 and 42 exceptions. The mean is $\sim$5 and the standard deviation is
-$\sim$18. See Table \ref{tab:ex}. Its distribution, shown in Figure
-\ref{fig:nex-hist}, could be nicely fitted by an exponential distribution.
-Notice that around 20\% of the reads have no exceptions such that their zig-zag
-deltas lie perfectly between 0 and 255.
+There are better ways of storing the exceptions than in a raw sequential format.
+As we have seen there are usually 5 to 6 exceptions per read meaning that
+storing the number of exceptions using two bytes for all reads is wasteful. In
+particular, the number of exceptions per read ranges from 0 to 3616 but 99\% of
+reads have between 0 and 42 exceptions. See Table \ref{tab:ex}. Its
+distribution, shown in Figure \ref{fig:nex-hist}, could be nicely fitted by an
+exponential distribution. In fact, around 20\% of the reads have no exceptions
+such that their zig-zag deltas lie perfectly between 0 and 255.
 
 \input{plots/ex-tab}
 \input{plots/nex-hist}
 
-The exceptions range from 256 to 2317 as expected but 99\% of the exceptions do
+Instead of storing two bytes for the number of exceptions we can bit pack the
+number of exceptions by using the first four bits (a nibble) to represent the
+minimum number of bits needed to represent the number of exceptions, followed
+by those number of bits. The maximum number of exceptions, 3616, would require
+12 bits to represent it -- so a total of $4+12=16$ bits or two bytes which was
+the original storage size. On the other hand, when there are lesser than 16
+exceptions less than one byte is needed to represent the number of exceptions in
+this format.  However, we are talking about saving less than two bytes here
+which is miniscule on the scale of the data.
+
+The exceptions themselves range from 256 to 2317 but 99\% of the exceptions do
 not go higher than 481. The mean and mode are $\sim$277 and 256 respectively.
 Refer to Table \ref{tab:ex}. The histogram of exceptions is shown in Figure
 \ref{fig:ex-hist}. Notably, the frequency of even-numbered exceptions is much
@@ -87,14 +108,29 @@ as previously discussed in Section \ref{subsec:stripe}.
 
 \input{plots/ex-hist}
 
-Given this information, there are better ways of storing the exceptions than in
-a raw sequential format.
+One simple approach to encoding the exceptions is to subtract 256 and bitpack
+them using the first four bits to represent the number of bits used per
+exception. The average exception can then be represented using 0 to 5 bits which
+is better than the naive 16-bit per exception encoding.
+
+Another improvement we can make is on the storage of the exceptions' positions.
+Since the positions are strictly increasing we can take the deltas between each
+positions and subtract one. This will result in smaller values which we can then
+bitpack as before, using 5 bits for the number of bits used per exception
+position. We use 5 instead of 4 bits here since then up to 31 bits can be
+represented per position which accounts for any major outliers given the maximum
+read length is roughly 6 million. If 4 bits were used only position deltas up to
+$2^{2^{4}-1}-1=32767$ could be represented.
+See Figure \ref{fig:vbbe21} for a visual representation of this encoding
+strategy which we'll name \textit{compact vbbe21}.
+
+\input{plots/vbbe21}
 
 % TODO show these ways
 % analyse how much better
 
 However, the exceptions section usually accounts for only 36 bytes of the read
-on average in the vbe21 format. Hence, focussing on compressing the one-byte
+on average in the vbe21-zd format. Hence, focussing on compressing the one-byte
 data section has much more potential benefit.
 
 \subsection{Huffman}

@@ -1,7 +1,7 @@
 \begin{figure}
 \centering\begin{tikzpicture}[node distance=0cm,start chain=1 going right] \footnotesize
-  \tikzstyle{mytape}=[draw,minimum height=1.4cm]
-	\node(A1)  [on chain=1,mytape,fill=blue!20] {$\underbrace{\overbracket{\text{ }e\text{ }}^{\text{2 bytes}}}_{\text{num exceptions}}$};
+  \tikzstyle{mytape}=[draw,minimum height=1.5cm]
+	\node(A1)  [on chain=1,mytape,fill=blue!20] {$\underset{\text{exceptions}}{\underbrace{\overbracket{\text{ }e\text{ }}^{\text{2 bytes}}}_{\text{number of}}}$};
 	\node(A2)  [on chain=1,mytape,fill=yellow!20] {$\underbrace{\overbracket{p_1,p_2,\dots,p_e}^{4e\text{ bytes}}}_{\text{exception positions}}$};
 	\node(A3)  [on chain=1,mytape,fill=yellow!35] {$\underbrace{\overbracket{x_{p_1},x_{p_2},\dots,x_{p_e}}^{2e\text{ bytes}}}_{\text{two byte exceptions}}$};
 	\node(A4)  [on chain=1,mytape,fill=green!35] {$\underbrace{\overbracket{x_{q_1},x_{q_2},\dots,x_{q_{n-e}}}^{n-e\text{ bytes}}}_{\text{one byte data}}$};

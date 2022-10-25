@@ -1,0 +1,21 @@
+\begin{figure}
+\centering\begin{tikzpicture}[node distance=0cm,start chain=1 going right,start chain=2 going right,start chain=3 going right] \footnotesize
+  \tikzstyle{mytape}=[draw,minimum height=1.9cm]
+	\node(A1)  [on chain=1,mytape,fill=yellow!20] {$\underset{\text{of jumps}}{\underbrace{\overbracket{n_j}^{\text{2 bytes}}}_{\text{number}}}$};
+	\node(A2)  [on chain=1,mytape,fill=yellow!20] {$\underset{\text{of falls}}{\underbrace{\overbracket{n_f}^{\text{2 bytes}}}_{\text{number}}}$};
+	\node(A3)  [on chain=1,mytape,fill=yellow!20] {$\underbrace{\overbracket{x_0}^{\text{2 bytes}}}_{\text{first point}}$};
+	\node(B1)  [on chain=2,mytape,fill=green!20,below of=A1,xshift=0.54cm,node distance=1.9cm] {$\underset{\text{flags compressed size}}{\underbrace{\overbracket{m_f}^{\text{4 bytes}}}_{\text{jumps/falls and flats}}}$};
+	\node(B2)  [on chain=2,mytape,fill=green!35] {$\underset{\text{flags compressed data}}{\underbrace{\overbracket{C_{flag}(10101101\dots)}^{m_f\text{ bytes}}}_{\text{jumps/falls and flats}}}$};
+	\node(C1)  [on chain=3,mytape,fill=green!20,below of=B1,xshift=0.11cm,node distance=1.9cm] {$\underset{\text{lengths compressed size}}{\underbrace{\overbracket{m_l}^{\text{4 bytes}}}_{\text{jumps/falls and flats}}}$};
+	\node(C2)  [on chain=3,mytape,fill=green!35] {$\underset{\text{lengths compressed data}}{\underbrace{\overbracket{C_{length}(l_1,\dots,l_{n_j+n_f+n_{fl}})}^{m_l\text{ bytes}}}_{\text{jumps/falls and flats}}}$};
+	\node(D1)  [on chain=4,mytape,fill=orange!20,below of=C1,xshift=-0.33cm,node distance=1.9cm] {$\underset{\text{compressed size}}{\underbrace{\overbracket{m_{jf}}^{\text{4 bytes}}}_{\text{jumps and falls}}}$};
+	\node(D2)  [on chain=4,mytape,fill=orange!35] {$\underset{\text{compressed data}}{\underbrace{\overbracket{C_{jf}(z\delta(jf_1),\dots,z\delta(jf_{n_j+n_f}))}^{m_{jf}\text{ bytes}}}_{\text{jumps and falls}}}$};
+	\node(E1)  [on chain=5,mytape,fill=red!20,below of=D1,xshift=0.2cm,node distance=1.9cm] {$\underbrace{\overbracket{m_{fl}}^{\text{4 bytes}}}_{\text{flats compressed size}}$};
+	\node(E2)  [on chain=5,mytape,fill=red!35] {$\underbrace{\overbracket{C_{flats}(z\delta(fl_1),\dots,z\delta(fl_{n_{fl}}))}^{m_{fl}\text{ bytes}}}_{\text{flats compressed data}}$};
+\end{tikzpicture}
+	\caption{\label{fig:jumps-enc-alt1}An alternative jumps encoding which
+	differentiates jumps from falls by recording their zig-zag deltas rather
+	than absolute deltas. The jumps/falls and flats are differentiated from
+	each other by a flag bit stream where 1 represents a jump/fall and 0 a
+	flat. The lengths of the jumps/falls and flats are interleaved.}
+\end{figure}

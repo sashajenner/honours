@@ -11,13 +11,13 @@
 	\node(D1)  [on chain=4,mytape,fill=orange!20,below of=C1,xshift=-0.33cm,node distance=1.9cm] {$\underset{\text{compressed size}}{\underbrace{\overbracket{m_{jf}}^{\text{4 bytes}}}_{\text{jumps and falls}}}$};
 	\node(D2)  [on chain=4,mytape,fill=orange!35] {$\underset{\text{compressed data}}{\underbrace{\overbracket{C_{jf}(\delta(j_1),\dots,\delta(j_{n_j}),-\delta(f_1),\dots,-\delta(f_{n_f}))}^{m_{jf}\text{ bytes}}}_{\text{jumps and falls}}}$};
 	\node(E1)  [on chain=5,mytape,fill=red!20,below of=D1,xshift=0.2cm,node distance=1.9cm] {$\underbrace{\overbracket{m_{fl}}^{\text{4 bytes}}}_{\text{flats compressed size}}$};
-	\node(E2)  [on chain=5,mytape,fill=red!35] {$\underbrace{\overbracket{C_{flats}(\delta(fl_1),\dots,\delta(fl_{n_{fl}}))}^{m_{fl}\text{ bytes}}}_{\text{flats compressed data}}$};
+	\node(E2)  [on chain=5,mytape,fill=red!35] {$\underbrace{\overbracket{C_{flats}(z\delta(fl_1),\dots,z\delta(fl_{n_{fl}}))}^{m_{fl}\text{ bytes}}}_{\text{flats compressed data}}$};
 \end{tikzpicture}
 	\caption{\label{fig:jumps-enc}The jumps encoding stores the number of
 jumps and falls, and the first data point in the read since the deltas are being
 encoded. The starting indices of the jumps and falls are compressed then their
 lengths are compressed. Next, the deltas of the jumps and the negative deltas of
-the falls are compressed together, followed by the deltas of the flats. There
-are opportunities for four different compression techniques given the different
-data streams.}
+the falls are compressed together, followed by the zig-zag deltas of the flats.
+There are opportunities for four different compression techniques given the
+different data streams.}
 \end{figure}
