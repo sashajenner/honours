@@ -71,3 +71,26 @@ geom_bar_pattern(stat='identity',position = position_dodge(preserve = "single"),
        		fill = guide_legend(override.aes = list(pattern = "none")))
        #theme(axis.text.x=element_text(angle=90,hjust=1))
 #dev.off()
+
+#tikz(file = paste0(path, '.entropy.tex'), width = 6, height = 5)
+ggplot(df, aes(x=generic, y=press_bytes/56735699469*8,
+	       fill=generic,
+	       pattern=base, group=position)) +
+geom_bar_pattern(stat='identity',position = position_dodge(preserve = "single"),
+                   color = "black",
+                   #pattern_fill = "black"
+                   pattern_angle = 45,
+                   #pattern_density = 0.1,
+                   #pattern_spacing = 0.025,
+                   #pattern_key_scale_factor = 0.6,
+		   ) +
+       #geom_bar(stat='identity',position='dodge') +
+       ylab('Entropy (bits per symbol)') +
+       xlab('Second Layer') +
+       labs(pattern = "First Layer",
+	    fill = "Second Layer",
+       ) +
+       guides(pattern = guide_legend(override.aes = list(fill = "white")),
+       		fill = guide_legend(override.aes = list(pattern = "none")))
+       #theme(axis.text.x=element_text(angle=90,hjust=1))
+#dev.off()

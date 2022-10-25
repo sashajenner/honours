@@ -73,4 +73,5 @@ ytitle = names(df)[2]
 df = df %>% mutate(prob = freq / sum(freq))
 prob_nonzero = df$prob[df$prob != 0]
 
+print("entropy (bits per symbol)")
 print(-prob_nonzero %*% log2(prob_nonzero))
