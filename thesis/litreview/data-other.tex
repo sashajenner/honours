@@ -8,7 +8,7 @@ Burrows-Wheeler transform is a data compression preprocessing step used to rearr
 \subsubsection{Integer compression schemes}
 \label{sec:integer-comp}
 
-Bit packing is the process encoding an array of unsigned integers $x_1, x_2, \dots, x_n$
+\label{sec:bitpack} Bit packing is the process encoding an array of unsigned integers $x_1, x_2, \dots, x_n$
 using the smallest number of bits $\hat b$ per integer such that no information is lost.
 Consider the integers $1024,12,10,\num{524288}$. The largest $\num{524288}$ can be represented using 20 bits, hence bit packing represents each integer using $\hat b = 20$ bits. Refer to Figure \ref{fig:bitpack} for a visual depiction.
 Assume that each integer is typically represented using $b$ bits.

@@ -1,0 +1,18 @@
+\begin{figure}
+\centering\begin{tikzpicture}[node distance=0cm,start chain=1 going right] \footnotesize
+  \tikzstyle{mytape}=[draw,minimum height=1.7cm]
+	\node(A1)  [on chain=1,mytape,fill=blue!20] {$\underset{\text{of exceptions}}{\underbrace{\overbracket{b_e}^{\text{4 bits}}}_{\text{bits for number}}}$};
+	\node(A2)  [on chain=1,mytape,fill=blue!20] {$\underset{\text{exceptions}}{\underbrace{\overbracket{\text{ }e\text{ }}^{b_e\text{ bits}}}_{\text{number of}}}$};
+	\node(B1)  [on chain=1,mytape,fill=yellow!20] {$\underset{\text{position}}{\underbrace{\overbracket{b_p}^{5\text{ bits}}}_{\text{bits per exception}}}$};
+	\node(B2)  [on chain=1,mytape,fill=yellow!20] {$\underbrace{\overbracket{p1,\delta(p_1,p_2,\dots,p_e)-1}^{b_pe\text{ bits}}}_{\text{exception positions}}$};
+	\node(C1)  [on chain=1,mytape,fill=yellow!35] {$\underset{\text{byte exception}}{\underbrace{\overbracket{b_x}^{4\text{ bits}}}_{\text{bits per two}}}$};
+	\node(C2)  [on chain=1,mytape,fill=yellow!35] {$\underbrace{\overbracket{(x_{p_1},x_{p_2},\dots,x_{p_e})-256}^{b_xe\text{ bits}}}_{\text{two byte exceptions}}$};
+	\node [on chain=1,mytape,fill=gray!35] {$\underbrace{\overbracket{\text{ }\dots \text{ }}^{<1\text{ byte}}}_{\text{padding}}$};
+	\node(D)  [on chain=1,mytape,fill=green!35] {$\underbrace{\overbracket{x_{q_1},x_{q_2},\dots,x_{q_{n-e}}}^{n-e\text{ bytes}}}_{\text{one byte data}}$};
+\end{tikzpicture}
+	\caption{\label{fig:vbbe21-compact}The compact vbbe21 encoding bit packs the
+	number of exceptions, the deltas of the exceptions' positions and the
+	two byte exceptions subtracted by 256. Less than one byte is used for
+	padding to align the bit packed data to the next byte boundary. Then,
+	the one byte data is recorded as in vbe21.}
+\end{figure}

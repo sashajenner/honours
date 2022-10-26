@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.3.3)  25 OCT 2022 17:08
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.3.3)  26 OCT 2022 17:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1284,7 +1284,7 @@ Chapter 1
 ]
 Chapter 2
 (./litreview/nano.tex (./plots/nano.tex
-<plots/nano.png, id=451, 1953.2975pt x 1237.62375pt>
+<plots/nano.png, id=456, 1953.2975pt x 1237.62375pt>
 File: plots/nano.png Graphic file (type png)
 <use plots/nano.png>
 Package pdftex.def Info: plots/nano.png  used on input line 3.
@@ -1297,7 +1297,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 ]
 (./plots/shannon-comm.tex
-<plots/shannon-comm-system.png, id=467, 1372.12625pt x 598.235pt>
+<plots/shannon-comm-system.png, id=472, 1372.12625pt x 598.235pt>
 File: plots/shannon-comm-system.png Graphic file (type png)
 <use plots/shannon-comm-system.png>
 Package pdftex.def Info: plots/shannon-comm-system.png  used on input line 3.
@@ -1361,7 +1361,7 @@ Overfull \hbox (16.8757pt too wide) in paragraph at lines 7--28
 )) (./data/data.tex [14] [15]
 Chapter 3
 (./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.pa.small.tex
-<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.pa.pdf, id=679, 1445.4pt 
+<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.pa.pdf, id=684, 1445.4pt 
 x 504.88625pt>
 File: plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.pa.pdf Graphic file 
 (type pdf)
@@ -1410,7 +1410,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 (./plots/reads.515e4fd0-8ab1-4845-8866-6772e779712b.raw.tex))
 (./plots/trans-tab.tex)
 (./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.small.tex
-<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.pdf, id=743, 1445.4
+<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.pdf, id=748, 1445.4
 pt x 504.88625pt>
 File: plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.pdf Graphic fi
 le (type pdf)
@@ -1430,7 +1430,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [23]
 [24] [25] (./plots/diff-hist.tex (./plots/reads.blow5.diff.freq.hist.tex))
 (./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.zigzag.small.tex
-<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.zigzag.pdf, id=762,
+<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.zigzag.pdf, id=767,
  1445.4pt x 504.88625pt>
 File: plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.zigzag.pdf Gra
 phic file (type pdf)
@@ -1470,34 +1470,40 @@ Underfull \hbox (badness 10000) in paragraph at lines 5--5
 \T1/ptm/m/n/10.95 Ex-cep-tions
  []
 
-) (./plots/nex-hist.tex (./plots/reads.blow5.nex.freq.hist.tex))
-Underfull \vbox (badness 1769) has occurred while \output is active []
-
- [35]
-(./plots/ex-hist.tex (./plots/reads.blow5.ex.zigzag.freq.hist.tex))
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [36]
-(./plots/vbbe21.tex
-Overfull \hbox (26.22096pt too wide) in paragraph at lines 12--17
+) (./plots/nex-hist.tex (./plots/reads.blow5.nex.freq.hist.tex)) [35] [36]
+(./plots/ex-hist.tex (./plots/reads.blow5.ex.zigzag.freq.hist.tex)) [37]
+(./plots/vbbe21-compact.tex
+Overfull \hbox (22.82552pt too wide) in paragraph at lines 12--17
  [][] 
  []
 
-) [37] [38]
-Overfull \hbox (10.95438pt too wide) in paragraph at lines 192--202
-[]\T1/ptm/m/n/10.95 During com-pres-sion, get-ting the fre-quen-cies takes $\OM
-L/cmm/m/it/10.95 O\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 n\OT1/cmr/m/n/10.95 )
-$ \T1/ptm/m/n/10.95 time. Then, con-struct-ing the tree takes $\OML/cmm/m/it/10
-.95 O\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 x[] [] x\OT1/cmr/m/n/10.95 )$
+) (./plots/vbbe21.tex
+Overfull \hbox (7.10612pt too wide) in paragraph at lines 12--17
+ [][] 
  []
 
-(./plots/shuff-len.tex (./plots/huffman_bitlength.len.tex))
+)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [39])
-(./probspace/exploit-signal.tex (./plots/stall.tex
-(./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.stall.tex) [40])
-(./plots/stall-n-tab.tex) [41] (./plots/stall-enc.tex) (./plots/dstall-enc.tex
+ [38]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [39]
+(./plots/shuff-len.tex (./plots/huffman_bitlength.len.tex)) [40])
+(./probspace/exploit-signal.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [41]
+(./plots/stall.tex
+(./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.stall.tex))
+Underfull \vbox (badness 2894) has occurred while \output is active []
+
+ [42]
+(./plots/stall-n-tab.tex) (./plots/stall-enc.tex)
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [43]
+(./plots/dstall-enc.tex
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
 zlibrarydecorations.pathreplacing.code.tex
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
@@ -1520,8 +1526,8 @@ decorations.pathreplacing.code.tex))
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
 zlibrarycalc.code.tex
 File: tikzlibrarycalc.code.tex 2020/01/08 v3.1.5b (3.1.5b)
-) [42]) (./plots/stall-best.tex
-<plots/reads.blow5.test.svbbe21.read.best.pdf, id=878, 505.89pt x 505.89pt>
+)) [44] (./plots/stall-best.tex
+<plots/reads.blow5.test.svbbe21.read.best.pdf, id=894, 505.89pt x 505.89pt>
 File: plots/reads.blow5.test.svbbe21.read.best.pdf Graphic file (type pdf)
 <use plots/reads.blow5.test.svbbe21.read.best.pdf>
 Package pdftex.def Info: plots/reads.blow5.test.svbbe21.read.best.pdf  used on 
@@ -1530,31 +1536,32 @@ input line 4.
 ) (./probspace/subseq.tex
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [43]
-Underfull \vbox (badness 1867) has occurred while \output is active []
-
- [44 <./plots/reads.blow5.test.svbbe21.read.best.pdf>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [45]
+ [45 <./plots/reads.blow5.test.svbbe21.read.best.pdf>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [46]
-
-LaTeX Warning: Command \; invalid in math mode on input line 88.
-
-
-LaTeX Warning: Command \; invalid in math mode on input line 88.
-
-) (./plots/dna300-section.tex
-(./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.dna300.tex)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [47])
-[48] (./plots/epsilon.tex
+ [47]
+
+LaTeX Warning: Command \; invalid in math mode on input line 88.
+
+
+LaTeX Warning: Command \; invalid in math mode on input line 88.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [48])
+(./plots/dna300-section.tex
+(./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.dna300.tex))
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [49]
+[50] (./plots/epsilon.tex
 (./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.jumps.epsilon.tex
 <plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.jumps.epsilon_ras1.png, i
-d=938, interpolate=true, 1.00375pt x 301.125pt>
+d=954, interpolate=true, 1.00375pt x 301.125pt>
 File: plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.jumps.epsilon_ras1.p
 ng Graphic file (type png)
 <use plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.jumps.epsilon_ras1.pn
@@ -1565,35 +1572,37 @@ umps.epsilon_ras1.png  used on input line 1886.
 ))
 (./plots/epsilon-25.tex
 (./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.jumps.25.tex))
-(./plots/jumps-enc.tex) [49] (./plots/jumps-enc-alt1.tex [50 <./plots/reads.e9f
-08690-171f-476f-9119-5330d0290126.raw.jumps.epsilon_ras1.png>]))
+(./plots/jumps-enc.tex) (./plots/jumps-enc-alt1.tex)
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [51])
 (./probspace/wavelets.tex)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [51]
-[52]
-Underfull \vbox (badness 2913) has occurred while \output is active []
+ [52 <./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.jumps.epsilon_ras1
+.png>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [53])
-(./results/results.tex [54]
+ [53]
+[54]) (./results/results.tex [55]
 Chapter 5
 (./plots/svb-vbe21-zd-size.tex (./plots/reads.blow5.test.vbe21.size.tex)))
-(./disc/disc.tex [55
+(./disc/disc.tex [56
 
 
 ]
 Chapter 6
-) (./conclusion/conclusion.tex [56
+) (./conclusion/conclusion.tex [57
 
 
 ]
 Chapter 7
-) (./appendix/appendix.tex [57
+) (./appendix/appendix.tex [58
 
 
 ]
 Appendix
-) [58
+) [59
 
 
 ] (./thesis.bbl
@@ -1601,7 +1610,7 @@ Bibliography
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [59
+ [60
 
 
 
@@ -1618,21 +1627,21 @@ Underfull \hbox (badness 2302) in paragraph at lines 148--151
 5 https : / / github . com / nanoporetech / vbz _
  []
 
-) [60]
+) [61]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 156.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 156.
  (./thesis.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 156.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 156.
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 26E8D7F77E1B07685E8EA4D326CC56FF;2422.
+(rerunfilecheck)             Checksum: D45A4B2B63F6C45F0997D4BF4AF2E58D;2422.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 156.
  ) 
 Here is how much of TeX's memory you used:
- 30488 strings out of 483107
- 573707 string characters out of 5964631
- 1895100 words of memory out of 5000000
- 44200 multiletter control sequences out of 15000+600000
+ 30508 strings out of 483107
+ 574076 string characters out of 5964631
+ 1896717 words of memory out of 5000000
+ 44215 multiletter control sequences out of 15000+600000
  610487 words of font info for 115 fonts, out of 8000000 for 9000
  220 hyphenation exceptions out of 8191
  52i,25n,71p,1246b,994s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1658,10 +1667,10 @@ s/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucr
 r8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/te
 xmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on thesis.pdf (71 pages, 33038080 bytes).
+Output written on thesis.pdf (72 pages, 33042675 bytes).
 PDF statistics:
- 1158 PDF objects out of 1200 (max. 8388607)
- 1018 compressed objects within 11 object streams
- 207 named destinations out of 1000 (max. 500000)
+ 1169 PDF objects out of 1200 (max. 8388607)
+ 1028 compressed objects within 11 object streams
+ 209 named destinations out of 1000 (max. 500000)
  349 words of extra memory for PDF output out of 10000 (max. 10000000)
 
