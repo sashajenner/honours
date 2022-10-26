@@ -2991,6 +2991,50 @@ void vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	free(out_zd);
 }
 
+/*
+ * delta | zigzag | vbbe21
+ * store first signal at start before vb
+ */
+
+uint64_t vbbe21_zd_bound_16(uint32_t nin)
+{
+	return sizeof (uint16_t) + vb1e2_bound(nin - 1);
+}
+
+void vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			uint64_t *nout)
+{
+	uint16_t *in_zd;
+	uint64_t nout_tmp;
+
+	in_zd = zigdelta_16_u16(in, nin);
+
+	(void) memcpy(out, in_zd, sizeof *in_zd);
+	nout_tmp = *nout - sizeof *in_zd;
+	vbbe21_press(in_zd + 1, nin - 1, out + sizeof *in_zd, &nout_tmp);
+
+	*nout = nout_tmp + sizeof *in_zd;
+	free(in_zd);
+}
+
+void vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			  uint32_t *nout)
+{
+	uint16_t *out_zd;
+	uint32_t nout_tmp;
+
+	out_zd = malloc(nin * sizeof *out_zd);
+	(void) memcpy(out_zd, in, sizeof *out_zd);
+
+	nout_tmp = nin - 1;
+	vbbe21_depress(in + sizeof *out_zd, nin - sizeof *out_zd, out_zd + 1,
+		       &nout_tmp);
+	*nout = nout_tmp + 1;
+
+	unzigdelta_u16_16(out_zd, *nout, out);
+	free(out_zd);
+}
+
 /* delta | zigzag | vb1e2 | zstd */
 
 uint64_t zstd_vb1e2_zd_bound_16(uint32_t nin)
@@ -3075,6 +3119,48 @@ int zstd_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	return ret;
 }
 
+/* delta | zigzag | vbbe21 | zstd */
+
+uint64_t zstd_vbbe21_zd_bound_16(uint32_t nin)
+{
+	return zstd_bound(vbbe21_zd_bound_16(nin));
+}
+
+int zstd_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			    uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_vb;
+	uint8_t *out_vb;
+
+	nout_vb = vb1e2_zd_bound_16(nin);
+	out_vb = malloc(nout_vb);
+
+	vbbe21_zd_press_16(in, nin, out_vb, &nout_vb);
+	ret = zstd_press(out_vb, nout_vb, out, nout);
+
+	free(out_vb);
+	return ret;
+}
+
+int zstd_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			      uint32_t *nout)
+{
+	int ret;
+	uint64_t nout_zstd;
+	uint8_t *out_zstd;
+
+	nout_zstd = zstd_bound(*nout * sizeof *out);
+	out_zstd = malloc(nout_zstd);
+
+	ret = zstd_depress(in, nin, out_zstd, &nout_zstd);
+	if (ret == 0)
+		vbbe21_zd_depress_16(out_zstd, nout_zstd, out, nout);
+
+	free(out_zstd);
+	return ret;
+}
+
 /* delta | zigzag | vbe21 | zlib */
 
 uint64_t zlib_vbe21_zd_bound_16(uint32_t nin)
@@ -3112,6 +3198,48 @@ int zlib_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 	ret = zlib_depress(in, nin, out_zlib, &nout_zlib);
 	if (ret == 0)
 		vbe21_zd_depress_16(out_zlib, nout_zlib, out, nout);
+
+	free(out_zlib);
+	return ret;
+}
+
+/* delta | zigzag | vbbe21 | zlib */
+
+uint64_t zlib_vbbe21_zd_bound_16(uint32_t nin)
+{
+	return zlib_bound(vbbe21_zd_bound_16(nin));
+}
+
+int zlib_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			    uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_vb;
+	uint8_t *out_vb;
+
+	nout_vb = vb1e2_zd_bound_16(nin);
+	out_vb = malloc(nout_vb);
+
+	vbbe21_zd_press_16(in, nin, out_vb, &nout_vb);
+	ret = zlib_press(out_vb, nout_vb, out, nout);
+
+	free(out_vb);
+	return ret;
+}
+
+int zlib_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			      uint32_t *nout)
+{
+	int ret;
+	uint64_t nout_zlib;
+	uint8_t *out_zlib;
+
+	nout_zlib = zlib_bound(*nout * sizeof *out);
+	out_zlib = malloc(nout_zlib);
+
+	ret = zlib_depress(in, nin, out_zlib, &nout_zlib);
+	if (ret == 0)
+		vbbe21_zd_depress_16(out_zlib, nout_zlib, out, nout);
 
 	free(out_zlib);
 	return ret;

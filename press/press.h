@@ -472,6 +472,14 @@ void vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 void vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			 uint32_t *nout);
 
+/* zigzag delta vbbe21 */
+
+uint64_t vbbe21_zd_bound_16(uint32_t nin);
+void vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			uint64_t *nout);
+void vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			  uint32_t *nout);
+
 /* zigzag delta vb1e2 zstd */
 
 uint64_t zstd_vb1e2_zd_bound_16(uint32_t nin);
@@ -488,6 +496,14 @@ int zstd_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 int zstd_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			     uint32_t *nout);
 
+/* zigzag delta vbbe21 zstd */
+
+uint64_t zstd_vbbe21_zd_bound_16(uint32_t nin);
+int zstd_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			    uint64_t *nout);
+int zstd_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			      uint32_t *nout);
+
 /* zigzag delta vbe21 zlib */
 
 uint64_t zlib_vbe21_zd_bound_16(uint32_t nin);
@@ -495,6 +511,14 @@ int zlib_vbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 			   uint64_t *nout);
 int zlib_vbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			     uint32_t *nout);
+
+/* zigzag delta vbbe21 zlib */
+
+uint64_t zlib_vbbe21_zd_bound_16(uint32_t nin);
+int zlib_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			    uint64_t *nout);
+int zlib_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+			      uint32_t *nout);
 
 /* zigzag delta vbe21 huffman */
 
