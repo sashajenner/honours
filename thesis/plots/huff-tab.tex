@@ -1,0 +1,17 @@
+\begin{figure}
+\centering\begin{tikzpicture}[node distance=0cm,start chain=1 going right] \footnotesize
+  \tikzstyle{mytape}=[draw,minimum height=1.7cm]
+	\node(A1)  [on chain=1,mytape,fill=blue!20] {$\underset{\text{entries}}{\underbrace{\overbracket{\text{ }m\text{ }}^{\text{1 byte}}}_{\text{number of}}}$};
+	\node(B1)  [on chain=1,mytape,fill=yellow!20] {$\underbrace{\overbracket{s_1}^{\text{1 byte}}}_{\text{symbol 1}}$};
+	\node(B2)  [on chain=1,mytape,fill=yellow!20] {$\underset{\text{of code 1}}{\underbrace{\overbracket{b_1}^{\text{1 byte}}}_{\text{bit length}}}$};
+	\node(B3)  [on chain=1,mytape,fill=yellow!20] {$\overbracket{\underbrace{c_1}_{\text{code }1}}^{\lceil b_1/8\rceil\text{ bytes}}$};
+	\node(D)   [on chain=1,mytape,fill=gray!20] {$\dots$};
+	\node(C1)  [on chain=1,mytape,fill=yellow!20] {$\underbrace{\overbracket{s_m}^{\text{1 byte}}}_{\text{symbol m}}$};
+	\node(C2)  [on chain=1,mytape,fill=yellow!20] {$\underset{\text{of code }m}{\underbrace{\overbracket{b_m}^{\text{1 byte}}}_{\text{bit length}}}$};
+	\node(C3)  [on chain=1,mytape,fill=yellow!20] {$\overbracket{\underbrace{c_m}_{\text{code }m}}^{\lceil b_m/8\rceil\text{ bytes}}$};
+\end{tikzpicture}
+	\caption{\label{fig:huff-tab} The naive encoding of the Huffman table
+where $c_i$ is the Huffman code symbol $s_i$ with bit length $b_i$; $i$
+ranges from 1 to $m$ (the number of table entries).}
+\end{figure}
+

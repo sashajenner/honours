@@ -1,0 +1,10 @@
+The first thorough analysis of nanopore DNA signal data was conducted including
+understanding its characteristic sections. A new state-of-the-art compression
+method with a better compression ratio and the same theoretical compression and
+decompression time complexity as the previous state-of-the-art was designed. It
+combines a novel encoding of the signal data's zig-zag deltas with
+domain-specific stall encoding and predictive range coding. An alternative
+static huffman method is proposed which also has a higher compression ratio than
+the state-of-the-art but not as much as the range coding method. The first known
+software benchmark of nanopore signal compression methods was written and
+provided for public access.
