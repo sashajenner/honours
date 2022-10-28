@@ -23,3 +23,35 @@ Each base is recorded by roughly 10 signal points (=30 billion points).
 2 bytes per integer (=60 GiB)
 To increase sequencing accuracy each base is recorded many times over. For 20 x coverage (=1 TiB)
 Many labs doing human DNA sequencing at a large rate.
+
+\section{Contributions}
+\begin{itemize}
+\item first thorough analysis of nanopore DNA signal data including
+	understanding its characteristic sections.
+\item first known software benchmark of nanopore signal compression methods.
+\item vbbe21: an encoding container for nanopore signal data which improves the
+	compression ratio of downstream compression methods.
+It encodes the one-byte data as is and the two-byte `exceptions' are bit packed.
+It has the same time complexity for both encoding and decoding as the
+state-of-the-art svb(16).
+\item static huffman: Huffman compression method with a higher compression ratio than
+	the state-of-the-art which uses a predetermined table and tree.
+\item range coding: a compression method with an even higher compression ratio
+	than static huffman using order-0 and order-1 context mixing followed by
+	SSE
+\item stall encoding: dynamic domain-specific frame of reference encoding of the
+	stall which can be paired with another method on the non-stall.
+\item new state-of-the-art method which combines stall encoding, vbbe21 and
+	range coding.
+\end{itemize}
+
+The first thorough analysis of nanopore DNA signal data was conducted including
+understanding its characteristic sections. A new state-of-the-art compression
+method with a better compression ratio and the same theoretical compression and
+decompression time complexity as the previous state-of-the-art was designed. It
+combines a novel encoding of the signal data's zig-zag deltas with
+domain-specific stall encoding and predictive range coding. An alternative
+static huffman method is proposed which also has a higher compression ratio than
+the state-of-the-art but not as much as the range coding method. The first known
+software benchmark of nanopore signal compression methods was written and
+provided for public access.

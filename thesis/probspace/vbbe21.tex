@@ -25,7 +25,7 @@ be a random variable measuring the resulting compressed size in bytes where
 $\Omega$ is the space of possible nanopore reads. Then
 \begin{align*}
 	C_{vbe21} &= \text{exceptions} + \text{one byte data}\\
-	&= (2 + 6X) + (N - X)\\
+	&= (2 + 6X) + (N - X) \tag{$*$}\label{eq:vbe21}\\
 	&= 2 + 5X + N
 \end{align*}
 where $N$ and $X$ are random variables measuring the read length and number of
@@ -73,9 +73,15 @@ for the data which is useful for downstream compression; alone it doesn't
 provide great compression results as is obvious when comparing it to the entropy
 of the data.
 
-vbe21-zd is linear in time complexity during encoding since it requires
+The encoding time complexity of vbe21-zd is linear since it requires
 applying the zig-zag delta transformation and checking which values are
-exceptions. The same is true for decoding and the svb16-zd codec.
+exceptions. The same time complexity is true for decoding since the inverse
+process is conducted. Recall from
+% TODO Section \ref{}
+the literature review
+that the time complexity of the Stream VByte codec family is also linear. Hence,
+both strategies have the same asymptotic time complexity for encoding and
+decoding.
 
 %\input{plots/vbe21-tab}
 
@@ -84,13 +90,14 @@ exceptions. The same is true for decoding and the svb16-zd codec.
 There are better ways of storing the exceptions than in the raw sequential
 format of vbe21.
 As we have seen there are usually 5 to 6 exceptions per read meaning that
-storing the number of exceptions using two bytes which has a range of 0 to 65535
+storing the number of exceptions using two bytes, which has a range of 0 to 65535,
 for all reads is wasteful.
-In particular, the number of exceptions per read ranges from 0 to 3616 but 99\%
-of reads have between 0 and 42 exceptions. See Table \ref{tab:ex}. Its
-distribution, shown in Figure \ref{fig:nex-hist}, could be nicely fitted by an
-exponential distribution. In fact, around 20\% of the reads have no exceptions
-at all.
+In particular, the number of exceptions per read ranges from 0 to 3616 and 99\%
+of the reads have between 0 and 42 exceptions. This is much smaller than 65535.
+See Table \ref{tab:ex} for an statistical overview of the zig-zag delta
+exceptions. Its distribution, shown in Figure \ref{fig:nex-hist}, could be
+nicely fitted by an exponential distribution. In fact, around 20\% of the reads
+have no exceptions at all. There is clearly wasted space being used.
 
 \input{plots/ex-tab}
 \input{plots/nex-hist}
@@ -101,16 +108,16 @@ Refer back to Section \ref{sec:bitpack} for a review of bit packing.
 The maximum number of exceptions, 3616, requires at least
 12 bits to represent it. Using the bit packing approach, $4+12=16$ bits or two
 bytes would be used to represent it -- which is equivalent to the naive
-approach. That is, in the worst case bit packing use the same space as the naive
+approach. That is, in the worst case bit packing uses the same space as the naive
 approach. In the best case when there are zero exceptions only four bits are
-required, and as long as there are lesser than 16 exceptions up to one byte is
+required, and as long as there are less than 16 exceptions up to one byte is
 used. Although this approach clearly saves space, we are talking about saving at
 most 12 bits which is miniscule compared to the scale of the data.
 
 Similarly, we can store the exceptions' data in a more compact form.
 The exceptions themselves range from 256 to 2317 but 99\%
 of the exceptions do not go higher than 481. The mean and mode are $\sim$277 and
-256 respectively. Refer to Table \ref{tab:ex} for a summary and Figure
+256 respectively. Refer back to Table \ref{tab:ex} for a summary and Figure
 \ref{fig:ex-hist} for the histogram. Notably, the frequency of even-numbered
 exceptions is much greater than adjacent odd-numbered exceptions from 256 up to
 $\sim$330. This is due to large positive deltas occuring more frequently than
@@ -119,11 +126,12 @@ One simple approach to encoding the exceptions is to subtract 256 since this is
 the minimum exception value and then apply bit packing using 4 bits as before. The
 average exception can then be represented using
 0 to 5 bits which is better than the naive 16-bit per exception encoding. This
-results in an expected improvement of $(16-5)\times 5-4=51$ bits per read.
+results in an expected decrease of $(16-5)\times 5-4=51$ bits per read.
 In the worst case, the number of bits used per exception for this data will be 12
-or $4 + 12e$ in total, which is better than the naive approach for $e>1$ and
-equivalent for $e=1$. The implications of this is that bit packing the
-exceptions' data never consumes more space than the naive strategy.
+or $4 + 12e$ in total since 2317 is the maximum exception. This is better than
+the naive approach for $e>1$ and equivalent for $e=1$. The implications of this
+is that bit packing the exceptions' data never consumes more space than the
+naive strategy.
 
 \input{plots/ex-hist}
 
@@ -131,12 +139,14 @@ Another improvement we can make is on the storage of the exceptions' positions.
 Since the positions are strictly increasing we can take the deltas between each
 position and subtract one. This will result in smaller values which we can then
 bit pack using 5 bits instead of 4 for the number of bits used.
-5 instead of 4 bits are required to account for any outliers given the maximum
+5 bits are required instead of 4 to account for any outliers given the maximum
 read length is roughly 6 million. If 4 bits were used only position deltas up to
 $2^{2^{4}-1}-1=32767$ could be represented which is clearly short of 6 million.
 
 The strategy which combines all of the above exception bit packing strategies
 and still stores the regular one byte data we will name \textit{compact vbbe21}.
+Notice the extra `b' in \textit{vbbe21}. This refers to the bit packing
+strategy in use.
 See Figure \ref{fig:vbbe21-compact} for a visual representation of this
 encoding. Notice the byte boundary padding which aligns the one byte data to
 byte boundaries for downstream compression methods. For implementation
@@ -151,18 +161,64 @@ the exceptions' positions and data. We shall name this strategy the
 \input{plots/vbbe21}
 
 % TODO analyse how much better
+The storage gap between vbbe21 and compact vbbe21 has an upper bound of
+\begin{align*}
+	\text{vbbe21} - \text{compact vbbe21} &= \text{number of exceptions gap}
+	+ \text{positions gap}\\ &+\text{two byte exceptions gap} + \text{padding gap}\\
+	&< (16-4) + (8-5) + (8-4) + 16\\
+	&= 35
+\end{align*}
+bits
+and a lower bound of
+\[ \text{vbbe21} - \text{compact vbbe21} > (16-12) + (8-5) + (8-4) - 8 = 3 \]
+bits.
+That is, compact vbbe21 saves between 3 and 35 bits compared to regular vbbe21.
+However, an expected measure of the storage gap is a more useful metric for
+comparison. Let's name the non--one-byte-data where the exceptions are handled
+the \textit{exceptions section}. Using Equation \ref{eq:vbe21}, the expected size of
+the vbe21-zd exceptions section in bytes is given by
+\[ 2 + 6E[X] = 36.02. \]
+Now, round up the expected number of exceptions from Table \ref{tab:ex} so it is
+5. Then, the expected number of bits used for the number of exceptions is roughly
+3. Let the expected number of bits used on the positions be 16 since the expected
+read length is \num{113471} and this accounts for position deltas up to
+\num{65535}. Furthermore, let the expected number of bits used on the
+exceptions be 5 since the average exception is 277 and this accounts for
+exceptions up to 287. Also, let the expected padding size be 3.5 bits as this is
+halfway on the padding's range of 0 to 7 bits.
+Then, an estimate of the expected size of the vbbe21-zd exceptions section is
+given by
+\begin{align*}
+	&\text{number of exceptions} + \text{positions} + \text{two byte exceptions} + \text{padding}\\
+	&= \frac{16 + (8+5\times16) + (8+5\times 5) + 2\times3.5}{8}\\
+	&= 18
+\end{align*}
+bytes, versus
+\[ \frac{(4+3) + (5+5\times16) + (4+5\times 5) + 3.5}{8}= 15.56 \]
+bytes
+for the compact vbbe21-zd exceptions section. These sizes are displayed in Table
+\ref{tab:ex-sec-exp}
+for ease of comparison. Now, we can see that the estimated storage gap between
+vbbe21-zd and compact vbbe21-zd is 2.44 bytes or 19.5 bits. Furthermore,
+vbbe21-zd and compact vbbe21-zd are expected to save 17 and 19.44 bytes
+per read respectively when compared to vbe21-zd. So, there is a storage benefit
+to bit packing the exceptions over storing them in a raw sequential format.
 
-The compact and regular vbbe21 algorithms still take linear time during encoding
-and decoding although require more operations than the naive one byte two byte
-exceptions encoding. However, the exceptions section usually accounts for only
-36 bytes of the read on average in the vbe21-zd format. Hence, focussing on
-compressing the one-byte data section has much more potential benefit.
+\input{plots/ex-sec-exp}
 
 % TODO compare improvement in results
 
+In comparison with vbe21, the compact and regular vbbe21 algorithms still take
+linear time during encoding and decoding although they require more computational
+operations to encode and evaluate the bit packed data. However, the exceptions
+section usually accounts for less than 0.05\% of the vbe21-zd encoding
+compared to the one byte data. Hence, focussing
+on compressing the one byte data section has much more potential benefit. This
+will be heavily explored in the remaining sections.
+
 \subsection{Huffman}
 
-Consider compressing the one-byte data using the Huffman
+Consider compressing the one byte data using the Huffman
 (shortened to \textit{huff}) coding algorithm. This requires determining the
 data's distribution on an initial pass. Then, the Huffman table is
 recorded and each byte is encoded with its Huffman code. The problem is that
@@ -175,10 +231,10 @@ table consumes
 \[ 1 + 2m + \sum_{i=1}^m\lceil b_i / 8 \rceil \]
 bytes where $m\in\mathbb{Z}\cap[0,255]$ is the number of entries in the table
 and $b_i$ is the length of the $i$-th entry's code in bits. The number of
-entries is the number of unique one-byte values in the data.
-If we use huff on the one-byte zig-zag deltas of the vbbe21-zd encoding (let's name this strategy
+entries is the number of unique one byte values in the data.
+If we use huff on the one byte zig-zag deltas of the vbbe21-zd encoding (let's name this strategy
 \textit{huff-vbbe21-zd}), the number of entries is
-dependent on the read's length. Short reads may only contain 100 unique one-byte
+dependent on the read's length. Short reads may only contain 100 unique one byte
 deltas whilst long reads may easily contain more than 250 entries. If we
 estimate that this is roughly 200 and the average code length is 2 bytes then
 the table consumes
@@ -186,7 +242,8 @@ the table consumes
 bytes. The maximum number of entries is 256 so the maximum table size is roughly
 1025 bytes.
 
-However, rather than encoding the exact Huffman table of each read it makes more
+However, rather than encoding the exact Huffman table for each read and consuming
+roughly 800 bytes in storage, it makes more
 sense to use a shared Huffman table which approximates the zig-zag delta
 distribution of most reads well. We are at an advantage here in that the zig-zag
 deltas follow a similar distribution between reads.
@@ -196,7 +253,7 @@ have the fewest number of bits and this will be efficient for the majority of
 reads. One simple approach is to construct the optimal Huffman table for the
 whole data set of zig-zag deltas. Then, we can store the code table once in the
 source code and encode each read using the same table. Let's call this method
-the static Huffman algorithm which is being applied to the one-byte zig-zag
+the static Huffman algorithm which is being applied to the one byte zig-zag
 deltas, so \textit{shuff-vbbe21-zd} for short. This table consumes
 1042 bytes but we can store it statically alongside the source code, so unless
 we are considering the Kolmogorov complexity of the data its size is not
@@ -208,9 +265,10 @@ deltas, as previously discussed.
 
 huff-vbbe21-zd consumes more space than the shuff-vbbe21-zd algorithm since it
 records a different Huffman table for each read in the compressed data. The
-space consumed by the Huffman table turns out to be more than the difference
+space consumed by the Huffman table turns out to be more than the size difference
 between the globally approximated and read-optimal Huffman encoding of the
-zig-zag deltas.  See the results section for the details.
+zig-zag deltas.
+%TODO See the results section for the details.
 %For example, on the data set
 %huff applied to vbe21 (hereafter \textit{huff-vbe21}) consumes 36.10 GiB versus
 %35.85 GiB for shuff-vbe21 which is a difference of $\sim537$ bytes per read.
@@ -245,27 +303,51 @@ faster during compression and decompression.
 
 \subsection{Range Coding}
 
-Now consider encoding the one-byte data using range coding rather than Huffman
-coding. Recall that range coding encodes all of the data into one number given
-each symbol's probability of occurrence.  An appropriate initial range of
-numbers is chosen. Then, for each symbol in the data stream the current range is
-narrowed down based on the current symbol's probability of occurrence. A
-representative number from the final range is then chosen as the output.
+Now consider encoding the one byte data using range coding rather than Huffman
+coding. Recall that range coding encodes all of the data into one number. To
+begin with, an initial range of numbers is chosen. Then, for each symbol in the
+data stream the current range is narrowed down based on the current symbol's
+probability of occurrence. A representative number from the final range is then
+chosen as the output.
 
-The probability distribution can be predetermined, calculated by an initial pass
-or predicted adaptively. Most available implementations use models
-for predicting the probability distribution of the next symbol. These typically
-consist of models such as order-0, order-1, order-2 and context mixing which combines
-two such algorithms to yield higher accuracy predictions. Secondary symbol
-estimation (SSE) is a prediction postprocessing approach which uses the combined
-prediction of context mixing and a small context to generate a refined
-prediction. The range coding algorithm which applies order-0 and order-1 context
-mixing with SSE we'll abbreviate to \textit{rccm01sse}.
+The probability distribution of the data can be predetermined, calculated by an
+initial pass or predicted adaptively. Most available implementations use models
+for predicting the probability distribution of the next symbol.
+Some common models include order-0, order-1 and order-2 models, context mixing and
+secondary symbol estimation (SSE). These models are used during encoding and
+decoding such that no distribution needs to be encoded with the compressed data.
 
 The order-$n$ model gives the probability distribution of the next symbol given
 the previous $n$ symbols (context). It is updated at each step to increase the
-revealed symbol's probability when the same context appears again. For example,
-the order-0 model stores the probability distribution of the data up to the
-current symbol.
+revealed symbol's probability when the same context appears again.
+%For example, by the end of the algorithm the order-0 model would have calculated
+%the probability distribution of the one byte data, whilst the order-1 model
+%would have calculated a conditional probability distribution for each value in
+%the data.
+Basically the order-$n$ model queries and updates a frequency table of
+size $S^{n+1}$ where $S$ is the size of the symbol's alphabet.
+It finds the probability of the next symbol by querying the table and
+dividing this count by the total count of the symbols read thus far. To avoid a
+probability of 0 occuring, every value in the table is initialised to the
+same count -- typically a small value between 2 and 10 or a much larger
+value such as $2^{14}$ as in TurboRC.
+There are bytewise and bitwise models which operate at the byte and bit level
+respectively. Bytewise models operate over symbols from the alphabet
+$\{0,1,\dots,255\}$ whilst bitwise models keep track of the frequency of
+bits -- 0s and 1s.
+
+Context mixing algorithms combine two models to yield higher accuracy
+predictions. They predict one bit at a time and are usually based on one of
+two mixing algorithms: linear or logistic mixing. Linear mixing performs
+a weighted average of the models whilst logistic mixing transforms the
+probabilities using logistic modelling which gives more weight to
+probabilites closer to 0 and 1.
+
+Secondary symbol estimation (SSE) is a prediction postprocessing approach which
+uses the combined prediction of context mixing and a small context to generate a
+refined prediction.
+
+The range coding algorithm which applies order-0 and order-1
+context mixing with SSE we'll abbreviate to \textit{rccm01sse}.
 
 % http://mattmahoney.net/dc/dce.html

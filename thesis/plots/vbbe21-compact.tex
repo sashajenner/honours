@@ -10,9 +10,11 @@
 	\node [on chain=1,mytape,fill=gray!35] {$\underbrace{\overbracket{\text{ }\dots \text{ }}^{<1\text{ byte}}}_{\text{padding}}$};
 	\node(D)  [on chain=1,mytape,fill=green!35] {$\underbrace{\overbracket{x_{q_1},x_{q_2},\dots,x_{q_{n-e}}}^{n-e\text{ bytes}}}_{\text{one byte data}}$};
 \end{tikzpicture}
-	\caption{\label{fig:vbbe21-compact}The compact vbbe21 encoding bit packs the
-	number of exceptions, the deltas of the exceptions' positions and the
-	two byte exceptions subtracted by 256. Less than one byte is used for
-	padding to align the bit packed data to the next byte boundary. Then,
-	the one byte data is recorded as in vbe21.}
+	\caption{\label{fig:vbbe21-compact}The compact vbbe21 takes $n$ unsigned
+	16-bit integers and finds those which cannot fit into one byte. These
+	are encoded by bit packing the number of exceptions, the deltas of the
+	exceptions' positions and the two byte exceptions subtracted by 256.
+	Less than one byte is used for padding to align the bit packed data to
+	the next byte boundary. Then, the one byte data is recorded as in
+	vbe21.}
 \end{figure}
