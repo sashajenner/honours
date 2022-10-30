@@ -9,9 +9,9 @@
 	\node(B2)  [on chain=1,mytape,fill=green!35] {$\underbrace{\overbracket{C_{generic}(r\setminus r_s)}^{m\text{ bytes}}}_{\text{non-stall compressed data}}$};
 \end{tikzpicture}
 	\caption{\label{fig:stall-enc}The stall encoding records the stall's
-starting position in the read, length, compressed size and compressed data.
-	Followed by the non-stall's compressed size and compressed data is
-	recorded. The specific and generic compression algorithms used are known
-	beforehand and hence are not stored. stall-fz uses rc-vbbe21-for and
-	rc-vbbe21-zd as the specific and generic algorithm respectively.}
+starting position in the read, length, compressed size and compressed data,
+	followed by the non-stall's compressed size and compressed data.
+	The specific and generic compression algorithms used are known
+	beforehand and hence are not stored. stall-fz uses rccm-vbbe21-for and
+	rccm-vbbe21-zd as the specific and generic algorithm respectively.}
 \end{figure}

@@ -315,11 +315,13 @@ initial pass or predicted adaptively. Most available implementations use models
 for predicting the probability distribution of the next symbol.
 Some common models include order-0, order-1 and order-2 models, context mixing and
 secondary symbol estimation (SSE). These models are used during encoding and
-decoding such that no distribution needs to be encoded with the compressed data.
+decoding meaning that no distribution needs to be encoded with the compressed
+data.
 
 The order-$n$ model gives the probability distribution of the next symbol given
-the previous $n$ symbols (context). It is updated at each step to increase the
-revealed symbol's probability when the same context appears again.
+the previous $n$ symbols (known as the \textit{context}). It is updated at each
+step to increase the revealed symbol's probability when the same context appears
+again.
 %For example, by the end of the algorithm the order-0 model would have calculated
 %the probability distribution of the one byte data, whilst the order-1 model
 %would have calculated a conditional probability distribution for each value in
@@ -334,7 +336,7 @@ value such as $2^{14}$ as in TurboRC.
 There are bytewise and bitwise models which operate at the byte and bit level
 respectively. Bytewise models operate over symbols from the alphabet
 $\{0,1,\dots,255\}$ whilst bitwise models keep track of the frequency of
-bits -- 0s and 1s.
+the binary digits 0 and 1.
 
 Context mixing algorithms combine two models to yield higher accuracy
 predictions. They predict one bit at a time and are usually based on one of
@@ -347,7 +349,19 @@ Secondary symbol estimation (SSE) is a prediction postprocessing approach which
 uses the combined prediction of context mixing and a small context to generate a
 refined prediction.
 
-The range coding algorithm which applies order-0 and order-1
-context mixing with SSE we'll abbreviate to \textit{rccm01sse}.
+Consider the range coding algorithm which applies order-0 and order-1
+context mixing with SSE. We'll abbreviate this strategy to \textit{rc}. The
+TurboRC implementation initialises the order-0, order-1 and SSE models in $O(1)$
+time. Then, for each byte it iterates over its bits and updates the range
+followed by the models. A normalisation procedure built into the encoding
+algorithm is required to ensure that there is always a large enough range for
+further sub-ranges. Overall, the algorithm is $O(n)$ but since it iterates over
+bits rather than bytes and there are many update procedures -- it is slower than
+huff in practice. The same is true for decoding. However, the compression ratio
+of rc is estimated to be better than huff and shuff. This is because range
+coding is as or more optimal as Huffman coding but without the drawback that
+each code length must be a whole number of bits. Furthermore, combined with
+accurate modelling range coding performs just as well without requiring the
+storage of a probability distribution as in huff.
 
 % http://mattmahoney.net/dc/dce.html
