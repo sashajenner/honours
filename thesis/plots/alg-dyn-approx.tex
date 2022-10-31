@@ -1,0 +1,23 @@
+\begin{algorithm}
+	\caption{\label{alg:dyn-approx}Approximate the minimum compressed size $|C_M(x,\hat s)|$ using dynamic programming.}
+\begin{algorithmic}
+\STATE $n \gets |x|$
+\FOR{$a=0$ to $\lfloor\frac{n-k'}{\delta}\rfloor$}
+	\STATE $k \gets k'+a\delta$
+	\FOR{$b=0$ to $\lfloor\frac{n-k}{\delta}\rfloor$}
+		\STATE $i \gets b\delta$
+		\STATE $y \gets (x_i,\dots,x_{i+k-1})$
+		\STATE $l \gets |C_M(y)|$
+		\FOR{$c=0$ to $\lfloor\frac{k-k'}{\delta}\rfloor$}
+			\STATE $j \gets i + k' + c\delta$
+			\STATE $l_{split} \gets OPT_{i,j-1} + OPT_{j,i+k-1}$
+			\IF{$l_{split} < l$}
+				\STATE $l \gets l_{split}$
+			\ENDIF
+		\ENDFOR
+		\STATE $OPT_{i,i+k-1} \gets l$
+	\ENDFOR
+\ENDFOR
+\RETURN $OPT_{0,\lfloor\frac{n-k'}{\delta}\rfloor\delta-1}$
+\end{algorithmic}
+\end{algorithm}

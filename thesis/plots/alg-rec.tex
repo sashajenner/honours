@@ -1,0 +1,18 @@
+\begin{algorithm}
+	\caption{\label{alg:rec}Find the minimum compressed size $|C_M(x,\hat s)|$ recursively.}
+\begin{algorithmic}
+\STATE $n \gets |x|$
+\STATE $l \gets |C_M(x)|$
+\IF{$n\ge 2$}
+	\FOR{$k=0$ to $n-2$}
+		\STATE $x_L \gets (x_0,x_1,\dots,x_k)$
+		\STATE $x_R \gets (x_{k+1},\dots,x_{n-1})$
+		\STATE $l_{split} \gets |C_M(x_L,\hat s)| + |C_M(x_R,\hat s)|$
+		\IF{$l_{split} < l$}
+			\STATE $l \gets l_{split}$
+		\ENDIF
+	\ENDFOR
+\ENDIF
+\RETURN $l$
+\end{algorithmic}
+\end{algorithm}

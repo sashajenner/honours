@@ -1,0 +1,20 @@
+\begin{algorithm}
+	\caption{\label{alg:dyn}Find the minimum compressed size $|C_M(x,\hat s)|$ using dynamic programming.}
+\begin{algorithmic}
+\STATE $n \gets |x|$
+\FOR{$k=1$ to $n$}
+	\FOR{$i=0$ to $n-k$}
+		\STATE $y \gets (x_i,\dots,x_{i+k-1})$
+		\STATE $l \gets |C_M(y)|$
+		\FOR{$j=i$ to $i+k-2$}
+			\STATE $l_{split} \gets OPT_{i,j} + OPT_{j+1,i+k-1}$
+			\IF{$l_{split} < l$}
+				\STATE $l \gets l_{split}$
+			\ENDIF
+		\ENDFOR
+		\STATE $OPT_{i,i+k-1} \gets l$
+	\ENDFOR
+\ENDFOR
+\RETURN $OPT_{0,n-1}$
+\end{algorithmic}
+\end{algorithm}
