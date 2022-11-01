@@ -1,0 +1,111 @@
+\subsubsection{Separating the Jumps, Falls and Flats}
+
+However, since we expect many low-variance sections with steep transitions
+between them we can separate these two types of sections and compress each
+separately. We will name the low-variance sections \textit{flats} and the
+steep transitions up and down; \textit{jumps} and \textit{falls} respectively.
+Since flats oscillate around some level, they should have small zig-zag deltas.
+On the other hand, jumps and flats should have larger absolute deltas.
+
+%Another useful observation is that the signal in a DNA
+%section doesn't tend to stray far from its median -- that is, if it moves
+%upwards it is more likely to move downwards next. This is clear if we refer back
+%to the distribution of deltas (Figure \ref{fig:delta-hist}) which is symmetric
+%except at the tails.
+
+%However, we can take direct advantage of the signal's tendency to jump and fall
+%between flatter sections.
+
+For this reason, consider separating the read into two distributions: the
+zig-zag deltas of flats, and the absolute deltas of jumps and falls. This should
+benefit compression since each distribution will have its own unique properties
+which benefit from different compression strategies. However, storing the
+metadata necessary for the reconstruction of the read from each distribution may
+be too high of a cost to incur any space saving.
+
+Let's define a jump or fall as
+\begin{itemize}
+	\item a sequence of length $m\ge 2$ which is
+	\item strictly increasing or decreasing respectively ($\forall i$ $\delta_i>0$ or $\forall i$ $\delta_i < 0$) with
+	\item at least one absolute delta greater than some $\epsilon$ ($\exists i$ $s.t.$ $|\delta_i|>\epsilon$).
+\end{itemize}
+
+The idea with the third restriction is to actually capture sudden movements
+rather than slowly increasing or decreasing sections, without which all non-zero
+deltas would be labelled part of a jump or fall. The choice of which $\epsilon$
+depends on the data and how much separation between flats and jumps/falls one
+desires. For example, consider Figure \ref{fig:epsilon}. Here, each jump and fall
+is coloured by the maximum epsilon for which it is still considered a jump or
+fall. In other words, it is coloured by its largest absolute delta
+($\max_i\{|\delta_i|\}$). Furthermore, it is labelled by this maximum if it is
+greater than 20. From visual observation it appears that setting $\epsilon=24$
+may define the jumps and falls as is expected. Figure \ref{fig:epsilon-25}
+highlights the jumps and falls for $\epsilon=24$.
+
+\input{plots/epsilon}
+\input{plots/epsilon-25}
+
+The \textit{jumps} encoding separates the two distributions by storing the number of
+jumps and falls, the starting indices and lengths of the jumps and falls, the
+absolute deltas of the jumps and falls, and finally the zig-zag deltas of the
+flats. See Figure \ref{fig:jumps-enc} for more details. Since the deltas are
+being encoded, the first point in the read must be recorded for invertibility.
+Furthermore, because the falls have negative deltas, the absolute value of their
+deltas is recorded. This means the jumps and falls deltas are all positive
+whilst their distance from zero remains the same -- unlike what happens during
+the zig-zag transformation where the data's distance from zero is roughly
+doubled.
+
+\input{plots/jumps-enc}
+
+A caveat with the jumps encoding is that the starting positions of the jumps and flats
+must be recorded since the interleaving order of the jumps and flats is not
+maintained. An alternative approach would be to take the zig-zag deltas of the
+jumps and flats and maintain their order. In which case, recording the starting
+positions would not be necessary since the order has been maintained in the
+zig-zag deltas data stream. The length of jumps which are followed by falls and
+vice-versa could then be represented by a place-holder such as zero since the
+end of the jump would be marked by a negative delta. This works because a
+jump/fall or flat will never have a length of zero. However, a new data stream
+would need to be used to mark when a jump/fall and a flat occurs. Consider a bit
+stream where 1 is a jump/fall and 0 is a flat. The interesting observation is
+that since flats will always be preceded and followed by a jump/fall, 0 will
+always be surrounded by 1s in the bit stream. This gives the potential for
+a reasonable compression strategy on the bit stream. In addition, the length of each
+flat would need to be recorded, such as by combining them with the lengths of
+the jumps and falls. See Figure \ref{fig:jumps-enc-alt1} for a representation of
+the \textit{alternative jumps} encoding. Let's treat this encoding as a
+theoretical proposal and return back to compressing the regular jumps encoding.
+
+\input{plots/jumps-enc-alt1}
+
+We now consider how to compress each data stream in the regular jumps
+encoding. The starting indices of the
+jumps is a strictly increasing
+array given by
+\[p_{j_1}<p_{j_2}<\dots<p_{j_{n_j}}\]
+For this reason, one idea is to take the deltas between each adjacent starting index
+and minus one since no two jumps start at the same position. Using this
+transformation we obtain the following
+\[p_{j_1},p_{j_2}-p_{j_1}-1,\dots,p_{j_{n_j}}-p_{j_{n_j-1}}-1.\]
+This represents the distance between the start of adjacent jumps minus one.
+We could actually decrease this delta further by instead finding the distance
+between the end of one jump and the start of the next. This would require the
+use of the length data and would look like
+\[p_{j_1},p_{j_2}-p_{j_1}-|j_1|,\dots,p_{j_{n_j}}-p_{j_{n_j-1}}-|j_{n_j-1}|.\]
+We could then apply rc-vbbe21. This strategy works similarly for the starting
+indices of the falls. For the lengths of the jumps and falls we can simply minus
+one from each length and then apply range coding without vbbe21 since the
+lengths of the jumps and falls are not expected to exceed 255. Similarly, we can
+subtract one from the deltas of the jumps and falls since no jump/fall can have
+a delta of zero and then apply rc-vbbe21. Finally, the flats' absolute deltas
+are less than or equal to $\epsilon$ so their zig-zag deltas range from 0 to
+$2\epsilon$ meaning we can simply apply range coding without two byte exception
+handling if $\epsilon \le 127$.
+
+Overall, this jumps compression strategy has $O(n)$ time complexity for
+compression and decompression but in practice it is time consuming since the
+positions and length streams add an additional $2(n_j+n_f)=O(n)$ data points.
+Also an extra pass is required to determine which sequences are jumps/falls and
+during decompression there are many transformations required to recombine the
+jumps/falls with the flats.

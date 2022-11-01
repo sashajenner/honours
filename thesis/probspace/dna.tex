@@ -1,0 +1,17 @@
+\subsection{The DNA Section}
+
+\input{plots/dna300-section}
+
+The large majority of the data consists of DNA sections so any gains in
+compression discovered by understanding this type of section should
+result in the largest compression gains overall. Recall that the DNA sections of
+nanopore signal data are characterised by many low-variance subsequences of 10--100
+data points with steep transitions between them. See Figure
+\ref{fig:dna300-section} for an example.
+
+The problem with compressing the DNA sections is that there are a lot of
+apparent irregularities as is expected with information saturated sensor data.
+Furthermore, the zig-zag delta transformation is quite fast and produces a lower
+entropy distribution which is readily compressible making it difficult to outperform.
+
+\input{probspace/jumps}

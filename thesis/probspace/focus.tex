@@ -7,45 +7,110 @@
 %TODO why not lossy
 %TODO why per read
 
-Consider the problem space to be the region of compression strategies suitable for nanopore data.
-There are many possible, in fact an infinite number of, compression strategies which exist in this space.
-The question that naturally arises is: which strategies are suitable for nanopore data?
-The answer depends entirely on how you intend to use the data.
+\textit{What makes a compression method suitable for nanopore signal data?}
 
-The intention behind most holders of nanopore data is to use it for research or clinical diagnosis. In both events, the data will typically be basecalled and then analysed. If it is compressed it will need to be decompressed in order to perform these steps. Furthermore, many legal regulations require published research and clinical data to be archived for several years meaning that this data will typically be put aside for many years with infrequent or no use. Hence, we can categorise the use-cases of nanopore data into two main categories: short-term analysis and long-term archival. In the short-term, a bioinformatician performing analysis would desire a balance between fast analysis speed and a high compression ratio. However, in the long-term, an archivist would desire a higher compression ratio as long as there is still a practical decompression speed. This provides us with two problem subspaces to explore.
+This is a question we must first answer before proceeding with our search for
+novel methods.
+The region of suitable compression methods is known as the \textit{problem space} and
+is the focus of this chapter. But in order to explore the problem space we must
+first define it; a task which depends entirely on how one intends to use the
+data.
 
-A compression strategy exists in the short-term problem subspace if
+The intention behind most holders of nanopore data is either research or
+clinical diagnosis. In both events, the data is usually useless without first
+basecalling it, after which it can be analysed using an assortment of tools.
+If it is compressed it will need to be decompressed in order to
+perform these steps. After analysis the data will typically be put aside for
+many years with infrequent or no use due to many legal regulations requiring
+clinical and published research data to be archived for several years.
+
+Hence, there are two main use-cases for nanopore data: analysis and archival
+which are short- and long-term tasks respectively. In the short-term, a
+bioinformatician performing analysis would desire a balance between fast
+analysis speed and a high compression ratio. However, in the long-term, an
+archivist would desire the highest compression ratio achievable as long as there
+is still a practical decompression speed. This provides us with two problem
+subspaces to further define.
+% Example of long-term archival requirments
+
+Let's define a suitable compression method for nanopore signal data as
+one which
+\begin{enumerate}
+	\item is lossless and
+	\item uses less bits per point than the entropy of the data (7.70 bits per point).
+\end{enumerate}
+This means that a suitable method has a compression ratio of at least $16/7.70 \approx 2.08$.
+Moreover, it must be lossless because for most research and all clinical
+applications accuracy is much more valued than storage space. For
+the analysis subspace let's further define a suitable compression method as one
+\begin{enumerate}
+	\item[(3)] which can independently decompress each read.
+\end{enumerate}
+This is necessary because many
+reads are typically requested by an analysis program from random locations in
+the data. Rather than decompressing the whole data set, it is faster to jump to
+the beginning of a requested read and decompress it independently.
+Necessarily this means that each read must be compressed separately.
+Furthermore, this allows multiple read requests to be handled in parallel by a
+multi-core processor which significantly speeds up analysis.
+
+However, beyond the above definitions, the suitability of a compression method
+for each subspace is highly subjective, depending on the type of analysis being
+performed, the amount of data being archived, its frequency of retrieval, the
+level of access to computational resources, etc. Each specific application
+demands different requirements from the problem space which are hard to predict.
+The best we can do is to generally define an order of suitability for each
+subspace by which one compression method can be definitively compared to
+another. Given suitable methods $M_1$ and $M_2$, $M_1$ is more suitable than
+method $M_2$ (i.e. $M_1>M_2$) for the problem space if
+\[\delta_1-\delta_2 + \alpha(s^c_1-s^c_2) + \beta(s^d_1-s^d_2) > 0\]
+where $\alpha$ and $\beta$ are chosen constants, $\delta_i$ is the expected
+space saving on 1 TiB (in TiB), $s^c_i$ is the speed of compression (TiB per
+hour) and $s^d_i$ is the speed of decompression (TiB per hour) for compression
+method $M_i$ using one thread. If $\alpha = \beta$ then the change in the speed
+of data compression and decompression is given equal weight.
+
+Let's define each constant for the subspaces based on common scenarios faced by
+bioinformaticians working with nanopore signal data. Consider yourself a
+bioinformatician intending to analyse a nanopore signal data set. How many
+more hours per TiB would you wait during compression for an hour quicker per TiB
+during decompression? The answer depends on the bioinformatician and whether
+decompression is the bottleneck during analysis which is typically dominated by
+the running time of basecalling algorithms. But let's say you would wait an
+extra 3 hours. This defines one boundary of the analysis subspace order:
+\[ s^c_1-s^c_2 = 3 \]
+\[ s^d_1-s^d_2 = -1 \]
+\[ \beta = 3\alpha \]
+5 extra hours for the archival subspace.
+
+%A compression strategy exists in the analysis problem space if
 %on a modern computer
-the following criteria are met:
-\begin{itemize}
-\item compression ratio $\ge 2.5$,
-\item compression speed $\le$ 60 mins per TiB,
-\item independent read decompression, and
-\item decompression time $\le$ 30 mins per TiB.
-\end{itemize}
+%it takes at most 1 hour per TiB on average for compression, at most 0.5 hours
+%per TiB on average for decompression and has a compression ratio of at.
+%\begin{itemize}
+%\item a compression ratio $\ge$ state-of-the-art compression ratio,
+%\item a compression speed $\le$ 60 mins per TiB,
+%\item a decompression speed $\le$ 30 mins per TiB, and
+%\item can perform independent read decompression.
+%\end{itemize}
 % TODO ignoring I/O
 
-These are arbitrarily chosen restrictions based on the desires of researchers at the Garvan Institute of Medical Research as well as on the current performance of the state-of-the-art method VBZ. In fact, using this data set with at least 2 threads of execution VBZ performs to the above criteria. See Table \ref{tab:vbz}.
-
-\input{plots/vbz-tab}
+%These are arbitrarily chosen restrictions based on the desires of researchers at
+%the Garvan Institute of Medical Research as well as on the current performance
+%of the state-of-the-art method VBZ. In fact, using this data set with at least 2
+%threads of execution VBZ performs to the above criteria. See Table
+%\ref{tab:vbz}.
 
 %has a reasonable compression ratio and speed, and results in a fast analysis speed.
 %Let's define a reasonable compression ratio to be greater than or equal to 2.5. This means that for a 1 TiB data set, the compressed data would consume at most 256 GiB.
-Compression is often performed once so a reasonable compression time for a 1 TiB data set is less than or equal to 1 hour on a modern CPU with at least 4 threads.
-If each data point consumes 2 bytes in the uncompressed raw binary format and the average read length is roughly \num{110000}, there are around 550 billion data points and 5 million reads. This equates to $7.2\times 10^{-4}$ seconds on average per read. A compression strategy impacts the speed of analysis through the speed at which it returns a read's uncompressed data, also known as its \textit{access speed}. Many reads are typically requested by an analysis program from random locations in the data so in order to achieve a fast access speed it is important that read decompression is able to be performed in parallel to take advantage of multi-threaded CPU design. That is, each read must be able to be decompressed independently of one another. Necessarily this means that each read must be compressed separately, which is historically how nanopore signal compression has been performed. Then, the major overhead with read access becomes decompression speed.
+%Compression is often performed once so a reasonable compression time for a 1 TiB data set is less than or equal to 1 hour on a modern CPU with at least 4 threads.
+%If each data point consumes 2 bytes in the uncompressed raw binary format and the average read length is roughly \num{110000}, there are around 550 billion data points and 5 million reads. This equates to $7.2\times 10^{-4}$ seconds on average per read. A compression strategy impacts the speed of analysis through the speed at which it returns a read's uncompressed data, also known as its \textit{access speed}. Many reads are typically requested by an analysis program from random locations in the data so in order to achieve a fast access speed it is important that read decompression is able to be performed in parallel to take advantage of multi-threaded CPU design. That is, each read must be able to be decompressed independently of one another.
+%Necessarily this means that each read must be compressed separately, which is historically how nanopore signal compression has been performed. Then, the major overhead with read access becomes decompression speed.
 
-Analysis typically consists of querying the compressed data for certain reads combined with performing operations over the received data.
+%Analysis typically consists of querying the compressed data for certain reads combined with performing operations over the received data.
 
-First and foremost a suitable compression strategy should result in a compression ratio strictly greater than one. In other words, it should actually compress the data.
-The next restriction is that it should be lossless. In most research applications accuracy is of much higher value than storage space.
+%First and foremost a suitable compression strategy should result in a compression ratio strictly greater than one. In other words, it should actually compress the data.
+%The next restriction is that it should be lossless. In most research applications accuracy is of much higher value than storage space.
 
-This thesis focuses on investigating lossless compression methods which are more space efficient and do not compromise analysis speed.
-%In order to not compromise analysis speed it is important that read decompression is able to be performed in parallel to take advantage of multi-threaded CPU design. That is, each read must be able to be decompressed independently of one another.
+%This thesis focuses on investigating lossless compression methods which are more space efficient and do not compromise analysis speed.
 %Necessarily this means that each read must be compressed separately, which is historically how nanopore signal compression has been performed.
-% Why analysis requires parallel access of reads?
-
-%and the primary desire of bioinformaticians is a better compression algorithm that does not sacrifice parallel querying.
-
-Lossy compression, although an interesting avenue, is not desirable for most research applications where accuracy is more valued than storage space. For example, long-term archival of scholarly research data must be lossless to allow for public replication of any results.
-% Example of long-term archival requirments
-Hence, in this thesis I focus on lossless per-read compression and do not investigate multi-read or lossy compression strategies.

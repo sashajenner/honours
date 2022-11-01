@@ -1,1 +1,14 @@
-\section{Wavelets}
+\section{Wavelet}
+
+Wavelet compression uses sets of complementary wavelets transforms to decompose
+a signal, representing it by the coefficients of mathematical functions.
+Typically, the wavelet transform approximates the signal meaning that in order
+to achieve lossless compression the residuals between the approximation and the
+actual signal must be encoded. This encoding is more compressible if the
+approximation is accurate. Furthermore, the coefficients must also be recorded
+in order to reconstruct the wavelet transform during decompression.
+
+Discrete wavelet transforms (DWT) is the most commonly used wavelet transform in
+signal compression because it can be implemented naturally using a computer
+since it discretely samples each wavelet. There are several DWT forms namely
+Haar, Daubechies and undecimated.
