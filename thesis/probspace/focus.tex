@@ -61,27 +61,81 @@ level of access to computational resources, etc. Each specific application
 demands different requirements from the problem space which are hard to predict.
 The best we can do is to generally define an order of suitability for each
 subspace by which one compression method can be definitively compared to
-another. Given suitable methods $M_1$ and $M_2$, $M_1$ is more suitable than
-method $M_2$ (i.e. $M_1>M_2$) for the problem space if
-\[\delta_1-\delta_2 + \alpha(s^c_1-s^c_2) + \beta(s^d_1-s^d_2) > 0\]
+another. Given two suitable compression methods $M_1$ and $M_2$, we say that
+$M_2$ is more suitable than $M_1$ (i.e. $M_2>_sM_1$) if
+\[\Delta(M_1,M_2):=\delta_2-\delta_1 - \alpha(t^c_2-t^c_1) - \beta(t^d_2-t^d_1) > 0\]
+and $M_2$ is equally as suitable as $M_1$ (i.e. $M_2\equiv_sM_1$) if
+\[\Delta(M_1,M_2)= 0\]
 where $\alpha$ and $\beta$ are chosen constants, $\delta_i$ is the expected
-space saving on 1 TiB (in TiB), $s^c_i$ is the speed of compression (TiB per
-hour) and $s^d_i$ is the speed of decompression (TiB per hour) for compression
-method $M_i$ using one thread. If $\alpha = \beta$ then the change in the speed
-of data compression and decompression is given equal weight.
+space saving on 1 TiB (in TiB) and $t^c_i,t^d_i$ are the average times to
+compress and decompress 1 TiB (in hours) respectively using one thread with
+method $M_i$. This model is making a lot of assumptions about the linearity of
+the problem space but let's consider it for simplicity.
 
-Let's define each constant for the subspaces based on common scenarios faced by
+Let's define $(\alpha,\beta)$ for each subspace based on the desires of
 bioinformaticians working with nanopore signal data. Consider yourself a
-bioinformatician intending to analyse a nanopore signal data set. How many
-more hours per TiB would you wait during compression for an hour quicker per TiB
-during decompression? The answer depends on the bioinformatician and whether
-decompression is the bottleneck during analysis which is typically dominated by
-the running time of basecalling algorithms. But let's say you would wait an
-extra 3 hours. This defines one boundary of the analysis subspace order:
-\[ s^c_1-s^c_2 = 3 \]
-\[ s^d_1-s^d_2 = -1 \]
-\[ \beta = 3\alpha \]
-5 extra hours for the archival subspace.
+bioinformatician intending to analyse a nanopore signal data set which you have
+compressed with method $M_1$. You daydream of a new method $M_2$ with the same
+space saving as $M_1$ ($\delta_2=\delta_1$) but decompression is an hour quicker
+per TiB ($t^d_2=t^d_1-1$). What is the maximum extra number of hours per TiB
+that you would be willing to spend during compression to use $M_2$ over $M_1$?
+The answer depends on the bioinformatician and whether decompression is a
+bottleneck during analysis which is often dominated by basecalling. But let's
+say you would wait an extra 3 hours per TiB ($t^c_2=t^c_1+3$). Then,
+$M_1\equiv_sM_2$ since any more than 3 hours per TiB and you would instead
+choose $M_1$. Hence,
+\begin{align*}
+	\Delta(M_1,M_2)&=0\\
+	\delta_2-\delta_1-\alpha(t^c_2-t^c_1) - \beta(t^d_2-t^d_1) &= 0\\
+	0-3\alpha + \beta &= 0\\
+	\beta &= 3\alpha.
+\end{align*}
+Now, you are again lost in thought and dream of a different method $M_3$ which
+takes the same time during decompression as $M_1$ ($t^d_3=t^d_1$) but you save
+0.1 of a TiB (102.4 GiB) more per TiB ($\delta_3=\delta_1+0.1$). Again, I ask:
+What is the maximum extra number of hours per TiB that you would be willing to
+spend during compression to use $M_3$ over $M_1$? This is quite a lot of space
+saved and depending on the amount of time and storage available the answer could
+range from 2 to 20 extra hours per TiB. However, for the average
+storage-conscious bioinformatician let's say you would wait up to 10 extra hours
+per TiB and no longer ($t^c_3=t^c_1+10$). Then,
+\begin{align*}
+	\Delta(M_1,M_3)&=0\\
+	\delta_3-\delta_1 - \alpha(t^c_3-t^c_1) - \beta(t^d_3-t^d_1) &= 0\\
+	0.1 - 10\alpha - 0 &=0\\
+	\alpha&=0.01\\
+	\implies \beta&=0.03.
+\end{align*}
+Hence, for the analysis subspace $(\alpha,\beta)=(0.01,0.03)$. For example,
+suppose there exists another compression method $M_4$ which takes the same time
+during compression as $M_1$ ($t_4^c=t_1^c$) but takes an extra hour per TiB
+during decompression ($t_4^d=t_1^d+1$). Then, according to our calculations
+\begin{align*}
+	\Delta(M_1,M_4)&=0\\
+	\delta_4-\delta_1 - 0.01(t^c_4-t^c_1) - 0.03(t^d_4-t^d_1) &= 0\\
+	\delta_4-\delta_1 - 0.03 &= 0\\
+	\delta_4&=\delta_1 + 0.03.\\
+\end{align*}
+That is, you would allow up to an extra hour per TiB during decompression for at
+least 0.03 of a TiB (307.2 GiB) more space saved per TiB if you were using the
+data for analysis.
+
+Now, let's apply the same thought experiments to the archival subspace. Recall
+that $M_2$ has the same space saving as $M_1$ but decompression is an hour
+quicker per TiB. What is the maximum extra number of hours per TiB that you
+would be willing to spend during compression to use $M_2$ over $M_1$? Since
+compression is only performed once during archiving and decompression may be
+performed a handful of times or more, the answer is likely somewhere between 5
+and 10 extra hours per TiB depending on the expected frequency of decompression.
+But let's say you would wait at most 5 extra hours per TiB. Furthermore, recall
+that $M_3$ takes the same time during decompression as $M_1$ but you save
+0.1 of a TiB (102.4 GiB) more per TiB. Again: What is the maximum extra number
+of hours per TiB that you would be willing to spend during compression to use
+$M_3$ over $M_1$? Since storage is the primary concern during archiving, the
+time spent is likely up to 48 extra hours per TiB. This may seem like a long
+time but remember that this is using only one thread and archives will often
+need to be stored untouched for several years. Using these answers we find that
+$(\alpha,\beta)=(\frac{1}{480},\frac{1}{96})$ for the archival subspace.
 
 %A compression strategy exists in the analysis problem space if
 %on a modern computer
@@ -114,3 +168,12 @@ extra 3 hours. This defines one boundary of the analysis subspace order:
 
 %This thesis focuses on investigating lossless compression methods which are more space efficient and do not compromise analysis speed.
 %Necessarily this means that each read must be compressed separately, which is historically how nanopore signal compression has been performed.
+
+These parameters will be used to justify comparisons made in Chapter
+\ref{chap:results}. However, in the meantime let's simply explore the analysis
+subspace which is a subset of the archival subspace. That is, methods which
+are (1) lossless, (2) use less bits per point that the entropy of the data and
+(3) can independently decompress each read. Thus, for the remainder of this
+thesis we will be investigating lossless per-read compression methods. The bits
+used per point restriction is not so difficult to achieve as we'll discover once
+the delta transformation is applied.

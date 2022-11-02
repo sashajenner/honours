@@ -25,20 +25,20 @@
 \contentsline {section}{\tocsection {}{3.2}{Characteristics}}{23}{section.3.2}%
 \contentsline {section}{\tocsection {}{3.3}{Transformations}}{26}{section.3.3}%
 \contentsline {chapter}{\tocchapter {Chapter}{4}{Problem Space}}{32}{chapter.4}%
-\contentsline {section}{\tocsection {}{4.1}{One Byte, Two Byte Exceptions}}{34}{section.4.1}%
-\contentsline {subsection}{\tocsubsection {}{4.1.1}{Exceptions Encoding}}{36}{subsection.4.1.1}%
-\contentsline {subsection}{\tocsubsection {}{4.1.2}{Huffman}}{41}{subsection.4.1.2}%
-\contentsline {subsection}{\tocsubsection {}{4.1.3}{Range Coding}}{43}{subsection.4.1.3}%
-\contentsline {section}{\tocsection {}{4.2}{Exploiting the Signal}}{45}{section.4.2}%
-\contentsline {subsection}{\tocsubsection {}{4.2.1}{Subsequence Searching}}{45}{subsection.4.2.1}%
-\contentsline {subsection}{\tocsubsection {}{4.2.2}{The Stall}}{51}{subsection.4.2.2}%
-\contentsline {subsection}{\tocsubsection {}{4.2.3}{The DNA Section}}{54}{subsection.4.2.3}%
-\contentsline {subsubsection}{\tocsubsubsection {}{4.2.3.1}{Separating the Jumps, Falls and Flats}}{54}{subsubsection.4.2.3.1}%
-\contentsline {section}{\tocsection {}{4.3}{Wavelet}}{61}{section.4.3}%
-\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{62}{chapter.5}%
-\contentsline {chapter}{\tocchapter {Chapter}{6}{Discussion}}{66}{chapter.6}%
-\contentsline {section}{\tocsection {}{6.1}{Future Work}}{66}{section.6.1}%
-\contentsline {chapter}{\tocchapter {Chapter}{7}{Conclusion}}{67}{chapter.7}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{68}{chapter*.63}%
-\contentsline {section}{\tocsection {}{7.1}{Subsequence Searching}}{68}{section.7.1}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{69}{chapter*.65}%
+\contentsline {section}{\tocsection {}{4.1}{One Byte, Two Byte Exceptions}}{36}{section.4.1}%
+\contentsline {subsection}{\tocsubsection {}{4.1.1}{Exceptions Encoding}}{38}{subsection.4.1.1}%
+\contentsline {subsection}{\tocsubsection {}{4.1.2}{Huffman}}{43}{subsection.4.1.2}%
+\contentsline {subsection}{\tocsubsection {}{4.1.3}{Range Coding}}{45}{subsection.4.1.3}%
+\contentsline {section}{\tocsection {}{4.2}{Exploiting the Signal}}{47}{section.4.2}%
+\contentsline {subsection}{\tocsubsection {}{4.2.1}{Subsequence Searching}}{47}{subsection.4.2.1}%
+\contentsline {subsection}{\tocsubsection {}{4.2.2}{The Stall}}{53}{subsection.4.2.2}%
+\contentsline {subsection}{\tocsubsection {}{4.2.3}{The DNA Section}}{56}{subsection.4.2.3}%
+\contentsline {subsubsection}{\tocsubsubsection {}{4.2.3.1}{Separating the Jumps, Falls and Flats}}{57}{subsubsection.4.2.3.1}%
+\contentsline {section}{\tocsection {}{4.3}{Wavelet}}{62}{section.4.3}%
+\contentsline {chapter}{\tocchapter {Chapter}{5}{Results}}{64}{chapter.5}%
+\contentsline {chapter}{\tocchapter {Chapter}{6}{Discussion}}{68}{chapter.6}%
+\contentsline {section}{\tocsection {}{6.1}{Future Work}}{68}{section.6.1}%
+\contentsline {chapter}{\tocchapter {Chapter}{7}{Conclusion}}{69}{chapter.7}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{70}{chapter*.63}%
+\contentsline {section}{\tocsection {}{7.1}{Subsequence Searching}}{70}{section.7.1}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{71}{chapter*.65}%
