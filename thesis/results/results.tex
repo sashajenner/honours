@@ -1,6 +1,39 @@
 \chapter{Results} \label{chap:results}
 
-Each read was compressed separately and stored adjacently. No metadata was stored and so these are not represented in a readable SLOW5 format.
+\input{plots/server}
+
+To evaluate the performance of the compression strategies articulated
+in Section \ref{chap:methodology}, each read from the data was compressed and
+decompressed sequentially using each method (within reason\footnote{Some
+methods proved too time consuming or didn't achieve a high enough compression
+ratio to warrant implementing decompression.}).
+To ensure each method fit the suitability requirement of lossless compression, the
+decompressed data was tested for equality against the original uncompressed data.
+For each read the following metrics were calculated:
+\begin{itemize}
+	\item the read's uncompressed and compressed size (in bytes),
+	\item the time taken to compress the read (in seconds) and
+	\item the time taken to decompress it (in seconds)\footnote{The time was calculated
+		using the \texttt{clock()}\cite{c-clock} C system call.}.
+\end{itemize}
+Then, for each method the total sum of the per-read metrics over the whole data
+set was calculated and recorded.
+
+The experiments were executed on a rack-mounted server with the typical
+specifications of a small high performance computing server. The server's
+specifications are displayed in Table \ref{tab:server}. Despite the potential to
+compress and decompress the reads in parallel using multiple threads, each read
+was compressed and decompressed sequentially. For this reason, consider the time
+results as highly scalable.
+
+In addition to experimenting with the compression strategies from Section
+\ref{chap:methodology}, some popular generic compression encodings were used.
+These include zlib, bzip2, zstd and fast-lzma2.
+
+The space saving, $\delta$, is calculated as follows
+\[ \delta = 1 - \frac{\text{Compressed Size}}{\text{Uncompressed Size}} \]
+and represents the proportion of the uncompressed size that is reduced by
+compressing.
 
 \input{plots/svb-vbe21-zd-size}
 

@@ -22,11 +22,12 @@ NZDSIGS = 56735199469
 NREADS = 500000
 df$method = reorder(df$method, df$press_ratio)
 
-#df_space_tex = df %>% mutate(bps = press_bytes/NZDSIGS * 8) %>%
-#	mutate(press_gib = press_bytes/(1024^3)) %>%
-#	select(method, press_ratio, bps, press_gib) %>%
-#	arrange(press_ratio)
-#print(df_space_tex)
+df_space_tex = df %>% mutate(bps = press_bytes/NZDSIGS * 8) %>%
+	mutate(press_gib = press_bytes/(1024^3)) %>%
+	mutate(space_saving = 1-press_bytes/depress_bytes) %>%
+	select(method, press_ratio, space_saving, bps, press_gib) %>%
+	arrange(press_ratio)
+print(df_space_tex)
 #
 #df_time_tex = df %>% mutate(press_time_mins = press_time/(60)) %>%
 #	mutate(depress_time_mins = depress_time/(60)) %>%
@@ -116,50 +117,50 @@ df_ent$method = reorder(df_ent$method, -df_ent$bps)
 #       #theme(axis.text.x=element_text(angle=90,hjust=1))
 ##dev.off()
 
-ggplot(df, aes(x=method, y=press_ratio, fill=press_time/3600)) +
-       geom_bar(stat='identity',position='dodge') +
-       ylab('Compression Ratio') +
-       xlab('Method') +
-       labs(fill = "Compression Time (hours)") +
-       scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
-       theme(axis.text.x=element_text(angle=90,hjust=1))
-
-ggplot(df, aes(x=method, y=press_ratio, fill=depress_time/3600)) +
-       geom_bar(stat='identity',position='dodge') +
-       ylab('Compression Ratio') +
-       xlab('Method') +
-       labs(fill = "Decompression Time (hours)") +
-       scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
-       theme(axis.text.x=element_text(angle=90,hjust=1))
-
-ggplot(df_ent, aes(x=method, y=bps, fill=press_time/NREADS)) +
-       geom_bar(stat='identity',position='dodge') +
-       ylab('Bits Per Data Point') +
-       xlab('Method') +
-       labs(fill = "Compression Time (seconds/read)") +
-       scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
-       theme(axis.text.x=element_text(angle=90,hjust=1))
-
-ggplot(df_ent, aes(x=method, y=bps, fill=depress_time/NREADS)) +
-       geom_bar(stat='identity',position='dodge') +
-       ylab('Bits Per Data Point') +
-       xlab('Method') +
-       labs(fill = "Decompression Time (seconds/read)") +
-       #scale_fill_viridis_c() +
-       scale_fill_continuous(trans = 'reverse',
-			     #type = 'viridis'
-			     ) +
-       guides(fill = guide_colourbar(reverse = TRUE)) +
-       theme(axis.text.x=element_text(angle=90,hjust=1))
-
-ggplot(df[df$press_ratio > 2.8,], aes(x=method, y=press_ratio, fill=depress_time/NREADS)) +
-       geom_bar(stat='identity',position='dodge') +
-       ylab('Compression Ratio') +
-       xlab('Method') +
-       labs(fill = "Decompression Time (seconds/read)") +
-       #scale_fill_viridis_c() +
-       scale_fill_continuous(trans = 'reverse',
-			     #type = 'viridis'
-			     ) +
-       guides(fill = guide_colourbar(reverse = TRUE)) +
-       theme(axis.text.x=element_text(angle=90,hjust=1))
+#ggplot(df, aes(x=method, y=press_ratio, fill=press_time/3600)) +
+#       geom_bar(stat='identity',position='dodge') +
+#       ylab('Compression Ratio') +
+#       xlab('Method') +
+#       labs(fill = "Compression Time (hours)") +
+#       scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
+#       theme(axis.text.x=element_text(angle=90,hjust=1))
+#
+#ggplot(df, aes(x=method, y=press_ratio, fill=depress_time/3600)) +
+#       geom_bar(stat='identity',position='dodge') +
+#       ylab('Compression Ratio') +
+#       xlab('Method') +
+#       labs(fill = "Decompression Time (hours)") +
+#       scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
+#       theme(axis.text.x=element_text(angle=90,hjust=1))
+#
+#ggplot(df_ent, aes(x=method, y=bps, fill=press_time/NREADS)) +
+#       geom_bar(stat='identity',position='dodge') +
+#       ylab('Bits Per Data Point') +
+#       xlab('Method') +
+#       labs(fill = "Compression Time (seconds/read)") +
+#       scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
+#       theme(axis.text.x=element_text(angle=90,hjust=1))
+#
+#ggplot(df_ent, aes(x=method, y=bps, fill=depress_time/NREADS)) +
+#       geom_bar(stat='identity',position='dodge') +
+#       ylab('Bits Per Data Point') +
+#       xlab('Method') +
+#       labs(fill = "Decompression Time (seconds/read)") +
+#       #scale_fill_viridis_c() +
+#       scale_fill_continuous(trans = 'reverse',
+#			     #type = 'viridis'
+#			     ) +
+#       guides(fill = guide_colourbar(reverse = TRUE)) +
+#       theme(axis.text.x=element_text(angle=90,hjust=1))
+#
+#ggplot(df[df$press_ratio > 2.8,], aes(x=method, y=press_ratio, fill=depress_time/NREADS)) +
+#       geom_bar(stat='identity',position='dodge') +
+#       ylab('Compression Ratio') +
+#       xlab('Method') +
+#       labs(fill = "Decompression Time (seconds/read)") +
+#       #scale_fill_viridis_c() +
+#       scale_fill_continuous(trans = 'reverse',
+#			     #type = 'viridis'
+#			     ) +
+#       guides(fill = guide_colourbar(reverse = TRUE)) +
+#       theme(axis.text.x=element_text(angle=90,hjust=1))

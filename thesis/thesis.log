@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.3.3)  2 NOV 2022 11:11
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.3.3)  2 NOV 2022 17:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1205,7 +1205,7 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: subfig package v1.3 is loaded.
 Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
-<style/usyd-primary-colour.pdf, id=157, 293.095pt x 101.37875pt>
+<style/usyd-primary-colour.pdf, id=161, 293.095pt x 101.37875pt>
 File: style/usyd-primary-colour.pdf Graphic file (type pdf)
 <use style/usyd-primary-colour.pdf>
 Package pdftex.def Info: style/usyd-primary-colour.pdf  used on input line 89.
@@ -1278,7 +1278,7 @@ List of Tables
  [12
 
 
-] (./introduction/introduction.tex
+] [13] (./introduction/introduction.tex
 Chapter 1
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -1292,7 +1292,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 (./litreview/litreview.tex [2]
 Chapter 2
 (./litreview/nano.tex (./plots/nano.tex
-<plots/nano.png, id=485, 1953.2975pt x 1237.62375pt>
+<plots/nano.png, id=498, 1953.2975pt x 1237.62375pt>
 File: plots/nano.png Graphic file (type png)
 <use plots/nano.png>
 Package pdftex.def Info: plots/nano.png  used on input line 3.
@@ -1305,7 +1305,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 ]
 (./plots/shannon-comm.tex
-<plots/shannon-comm-system.png, id=499, 1372.12625pt x 598.235pt>
+<plots/shannon-comm-system.png, id=512, 1372.12625pt x 598.235pt>
 File: plots/shannon-comm-system.png Graphic file (type png)
 <use plots/shannon-comm-system.png>
 Package pdftex.def Info: plots/shannon-comm-system.png  used on input line 3.
@@ -1369,7 +1369,7 @@ Overfull \hbox (16.8757pt too wide) in paragraph at lines 7--28
 )) (./data/data.tex [15] [16]
 Chapter 3
 (./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.pa.small.tex
-<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.pa.pdf, id=712, 1445.4pt 
+<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.pa.pdf, id=725, 1445.4pt 
 x 504.88625pt>
 File: plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.pa.pdf Graphic file 
 (type pdf)
@@ -1416,9 +1416,12 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 (./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.mess.tex))
 (./plots/reads.515e4fd0-8ab1-4845-8866-6772e779712b.raw.wrap.tex
 (./plots/reads.515e4fd0-8ab1-4845-8866-6772e779712b.raw.tex))
-(./plots/trans-tab.tex)
+(./plots/trans-tab.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [24])
 (./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.small.tex
-<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.pdf, id=775, 1445.4
+<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.pdf, id=793, 1445.4
 pt x 504.88625pt>
 File: plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.pdf Graphic fi
 le (type pdf)
@@ -1433,12 +1436,12 @@ th ID e9f08690-171f-476f-9119-
  []
 
 )
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 1701) has occurred while \output is active []
 
- [24]
-[25] [26] (./plots/diff-hist.tex (./plots/reads.blow5.diff.freq.hist.tex))
+ [25]
+[26] (./plots/diff-hist.tex (./plots/reads.blow5.diff.freq.hist.tex))
 (./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.zigzag.small.tex
-<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.zigzag.pdf, id=795,
+<plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.zigzag.pdf, id=808,
  1445.4pt x 504.88625pt>
 File: plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.delta.zigzag.pdf Gra
 phic file (type pdf)
@@ -1462,45 +1465,44 @@ Underfull \vbox (badness 2875) has occurred while \output is active []
 
 
 ]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+[33]
 
- [33]
-
-LaTeX Warning: Command \; invalid in math mode on input line 108.
+LaTeX Warning: Command \; invalid in math mode on input line 111.
 
 
-LaTeX Warning: Command \; invalid in math mode on input line 108.
+LaTeX Warning: Command \; invalid in math mode on input line 111.
 
 
-LaTeX Warning: Command \; invalid in math mode on input line 108.
+LaTeX Warning: Command \; invalid in math mode on input line 111.
 
 
-LaTeX Warning: Command \; invalid in math mode on input line 108.
+LaTeX Warning: Command \; invalid in math mode on input line 111.
 
 
-LaTeX Warning: Command \; invalid in math mode on input line 108.
+LaTeX Warning: Command \; invalid in math mode on input line 111.
 
 
-LaTeX Warning: Command \; invalid in math mode on input line 108.
+LaTeX Warning: Command \; invalid in math mode on input line 111.
 
 
-LaTeX Warning: Command \; invalid in math mode on input line 108.
+LaTeX Warning: Command \; invalid in math mode on input line 111.
 
 
-LaTeX Warning: Command \; invalid in math mode on input line 108.
+LaTeX Warning: Command \; invalid in math mode on input line 111.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [34])
-(./probspace/vbbe21.tex (./plots/vbe21.tex)
+ [34]))
+(./methods/methods.tex [35]
+Chapter 5
+(./probspace/vbbe21.tex (./plots/vbe21.tex) (./plots/vbe21-eg.tex)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [35]
-(./plots/vbe21-eg.tex)
-Underfull \vbox (badness 1742) has occurred while \output is active []
+ [36
 
- [36]
+
+]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [37]
@@ -1509,12 +1511,9 @@ Underfull \hbox (badness 10000) in paragraph at lines 5--5
 \T1/ptm/m/n/10.95 Ex-cep-tions
  []
 
-) (./plots/nex-hist.tex (./plots/reads.blow5.nex.freq.hist.tex))
-Underfull \vbox (badness 1769) has occurred while \output is active []
-
- [38]
-[39] (./plots/ex-hist.tex (./plots/reads.blow5.ex.zigzag.freq.hist.tex))
-Underfull \vbox (badness 4699) has occurred while \output is active []
+[38]) (./plots/nex-hist.tex (./plots/reads.blow5.nex.freq.hist.tex))
+(./plots/ex-hist.tex (./plots/reads.blow5.ex.zigzag.freq.hist.tex) [39])
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [40]
 (./plots/vbbe21-compact.tex
@@ -1527,42 +1526,49 @@ Overfull \hbox (7.10612pt too wide) in paragraph at lines 12--19
  [][] 
  []
 
-) [41] (./plots/ex-sec-exp.tex)
+)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [42]
-(./plots/huff-tab.tex) [43]
+ [41]
+[42] (./plots/ex-sec-exp.tex) (./plots/huff-tab.tex
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [44]
-(./plots/shuff-len.tex (./plots/huffman_bitlength.len.tex))
-Underfull \vbox (badness 3460) has occurred while \output is active []
+ [43])
+[44] (./plots/shuff-len.tex (./plots/huffman_bitlength.len.tex))
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [45]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 3088) has occurred while \output is active []
 
  [46])
-(./probspace/exploit-signal.tex (./probspace/subseq.tex [47]
+(./probspace/exploit-signal.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [47]
+(./probspace/subseq.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [48]
 (./plots/alg-rec.tex
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 2.
 )
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [48]
-[49] (./plots/alg-dyn.tex) [50] (./plots/alg-dyn-approx.tex)
+ [49]
+[50] (./plots/alg-dyn.tex) [51] (./plots/alg-dyn-approx.tex)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [51])
+ [52])
 (./probspace/stall.tex (./plots/stall.tex
 (./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.stall.tex)
 Underfull \vbox (badness 5403) has occurred while \output is active []
 
- [52])
+ [53])
 (./plots/stall-n-tab.tex)
 Underfull \vbox (badness 7522) has occurred while \output is active []
 
- [53]
+ [54]
 (./plots/stall-enc.tex) (./plots/dstall-enc.tex
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
 zlibrarydecorations.pathreplacing.code.tex
@@ -1589,9 +1595,9 @@ File: tikzlibrarycalc.code.tex 2020/01/08 v3.1.5b (3.1.5b)
 ))
 Underfull \vbox (badness 2134) has occurred while \output is active []
 
- [54]
+ [55]
 (./plots/stall-best.tex
-<plots/reads.blow5.test.svbbe21.read.best.pdf, id=1037, 505.89pt x 505.89pt>
+<plots/reads.blow5.test.svbbe21.read.best.pdf, id=1055, 505.89pt x 505.89pt>
 File: plots/reads.blow5.test.svbbe21.read.best.pdf Graphic file (type pdf)
 <use plots/reads.blow5.test.svbbe21.read.best.pdf>
 Package pdftex.def Info: plots/reads.blow5.test.svbbe21.read.best.pdf  used on 
@@ -1600,19 +1606,19 @@ input line 4.
 
 Underfull \vbox (badness 1147) has occurred while \output is active []
 
- [55]))
+ [56]))
 (./probspace/dna.tex (./plots/dna300-section.tex
 (./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.dna300.tex))
 Underfull \vbox (badness 3668) has occurred while \output is active []
 
- [56 <./plots/reads.blow5.test.svbbe21.read.best.pdf>] (./probspace/jumps.tex
+ [57 <./plots/reads.blow5.test.svbbe21.read.best.pdf>] (./probspace/jumps.tex
 Underfull \vbox (badness 1584) has occurred while \output is active []
 
- [57]
+ [58]
 (./plots/epsilon.tex
 (./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.jumps.epsilon.tex
 <plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.jumps.epsilon_ras1.png, i
-d=1064, interpolate=true, 1.00375pt x 301.125pt>
+d=1081, interpolate=true, 1.00375pt x 301.125pt>
 File: plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.jumps.epsilon_ras1.p
 ng Graphic file (type png)
 <use plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.jumps.epsilon_ras1.pn
@@ -1626,43 +1632,43 @@ umps.epsilon_ras1.png  used on input line 1886.
 (./plots/jumps-enc.tex)
 Underfull \vbox (badness 2302) has occurred while \output is active []
 
- [58]
+ [59]
 (./plots/jumps-enc-alt1.tex
 Underfull \vbox (badness 3291) has occurred while \output is active []
 
- [59 <./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.jumps.epsilon_ras1
+ [60 <./plots/reads.e9f08690-171f-476f-9119-5330d0290126.raw.jumps.epsilon_ras1
 .png>])
 Underfull \vbox (badness 4686) has occurred while \output is active []
 
- [60])))
+ [61])))
 Underfull \vbox (badness 5711) has occurred while \output is active []
 
- [61]
+ [62]
 (./probspace/wavelets.tex)) (./results/results.tex
 Underfull \vbox (badness 2418) has occurred while \output is active []
 
- [62]
-[63]
-Chapter 5
-(./plots/svb-vbe21-zd-size.tex (./plots/reads.blow5.test.vbe21.size.tex))
-(./plots/results-space-tab.tex) (./plots/results-timecom-tab.tex)
-(./plots/results-timedec-tab.tex) (./plots/vbz-tab.tex)) (./disc/disc.tex
-[64
-
-
-] [65] [66] [67]
+ [63]
+[64]
 Chapter 6
-) (./conclusion/conclusion.tex [68
+(./plots/server.tex) [65
+
+
+] (./plots/svb-vbe21-zd-size.tex
+(./plots/reads.blow5.test.vbe21.size.tex)) (./plots/results-space-tab.tex)
+(./plots/results-timecom-tab.tex) (./plots/results-timedec-tab.tex)
+(./plots/vbz-tab.tex)) (./disc/disc.tex [66] [67] [68] [69]
+Chapter 7
+) (./conclusion/conclusion.tex [70
 
 
 ]
-Chapter 7
-) (./appendix/appendix.tex [69
+Chapter 8
+) (./appendix/appendix.tex [71
 
 
 ]
 Appendix
-) [70
+) [72
 
 
 ] (./thesis.bbl
@@ -1670,67 +1676,73 @@ Bibliography
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [71
+ [73
 
 
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 143--146
+Underfull \hbox (badness 10000) in paragraph at lines 148--151
 []\T1/ptm/m/n/10.95 nanoporetech. 2022a.  pod5-file-format.  []$\T1/pcr/m/n/10.
 95 https : / / github . com / nanoporetech /
  []
 
 
-Underfull \hbox (badness 2302) in paragraph at lines 148--151
+Underfull \hbox (badness 2302) in paragraph at lines 153--156
 []\T1/ptm/m/n/10.95 nanoporetech. 2022b.  vbz_compression.  []$\T1/pcr/m/n/10.9
 5 https : / / github . com / nanoporetech / vbz _
  []
 
-) [72]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 156.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 156.
+) [74]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 157.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 157.
  (./thesis.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 156.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 156.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 157.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 157.
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: FD7428D9CCA547C43E0F1EFEFE9421E2;2511.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 156.
+(rerunfilecheck)             Checksum: C3A1910EE907BA4C397632887BB1BF10;2569.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 157.
  ) 
 Here is how much of TeX's memory you used:
- 30675 strings out of 483107
- 576279 string characters out of 5964631
- 1899210 words of memory out of 5000000
- 44281 multiletter control sequences out of 15000+600000
+ 30698 strings out of 483107
+ 576573 string characters out of 5964631
+ 1898824 words of memory out of 5000000
+ 44289 multiletter control sequences out of 15000+600000
  610487 words of font info for 115 fonts, out of 8000000 for 9000
  220 hyphenation exceptions out of 8191
  52i,26n,73p,1246b,994s stack positions out of 5000i,500n,10000p,200000b,80000s
- </home/en0cs/.texlive2019/texmf-var/fonts/pk/ljfour/public/bbm/bbm10.657pk>{
-/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-d
-ist/fonts/type1/public/amsfonts/cmextra/cmex9.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/font
-s/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1
-/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/s
-hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucr
-r8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/s
-hare/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on thesis.pdf (84 pages, 33079314 bytes).
+pdfTeX warning (dest): name{Hfootnote.2} has been referenced but does not exi
+st, replaced by a fixed one
+
+pdfTeX warning (dest): name{Hfootnote.1} has been referenced but does not exist
+, replaced by a fixed one
+
+ </home/en0cs/.texlive2019/texmf-var/fonts/pk/ljfour/public/bbm/bbm10.657pk>{/u
+sr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dis
+t/fonts/type1/public/amsfonts/cmextra/cmex9.pfb></usr/share/texlive/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
+10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8
+a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on thesis.pdf (87 pages, 33084601 bytes).
 PDF statistics:
- 1313 PDF objects out of 1440 (max. 8388607)
- 1159 compressed objects within 12 object streams
- 278 named destinations out of 1000 (max. 500000)
- 357 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1348 PDF objects out of 1440 (max. 8388607)
+ 1191 compressed objects within 12 object streams
+ 286 named destinations out of 1000 (max. 500000)
+ 365 words of extra memory for PDF output out of 10000 (max. 10000000)
 

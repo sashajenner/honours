@@ -1,4 +1,4 @@
-\begin{thebibliography}{31}
+\begin{thebibliography}{32}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \providecommand{\urlprefix}{URL }
@@ -103,6 +103,11 @@ David~A. Huffman. 1952.
 \newblock \href{http://dx.doi.org/10.1109/JRPROC.1952.273898}{A method for the
   construction of minimum-redundancy codes}.
 \newblock \emph{Proceedings of the IRE}, 40(9):1098--1101.
+
+\bibitem[{Kerrisk(2021)}]{c-clock}
+Michael Kerrisk. 2021.
+\newblock \emph{clock(3) - Linux manual page}.
+\newblock \url{https://man7.org/linux/man-pages/man3/clock.3.html}.
 
 \bibitem[{Knuth(1985)}]{fgk}
 Donald~E Knuth. 1985.

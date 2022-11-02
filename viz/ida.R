@@ -17,6 +17,9 @@ if (length(args) != 1) {
 path = args[1]
 df = read.delim(path)
 
+# mean stall start?
+cat('mean stall start: ', mean(df$stall_start), '\n', sep='')
+
 # total number of reads?
 cat('num reads: ', nrow(df), '\n', sep='')
 
@@ -110,6 +113,7 @@ cat('signal (pa) var: ', sig_var, '\n', sep='')
 cat('signal (pa) sd: ', sqrt(sig_var), '\n', sep='')
 
 # distribution of signal values in pa? TODO
+hist(df$n)
 
 # start_time vs mean
 #hist(df$channel_num)
