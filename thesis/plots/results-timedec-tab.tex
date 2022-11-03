@@ -1,39 +1,70 @@
 \begin{table}
-    \caption{\label{tab:results-time-dec} The time results.}
+    \caption{\label{tab:results-time-dec} The total compression and
+	decompression time in hours per TiB and the compression ratio after
+	compressing each read from the data sequentially using each of the given
+	methods. The data is equivalent to Table \ref{tab:results-time-com} but
+	it is sorted by the decompression time. The state-of-the-art method is
+	highlighted in grey and the methods which have a greater compression
+	ratio than the state-of-the-art are highlighted in a lighter grey.}
 	\begin{tabular}{|l|l|l|l|}
 	    \hline
-	    Method & Compression Time (mins) & Decompression Time (mins) & Compression Ratio \\
+	    Method & Compression Time (hr / TiB) & Decompression Time (hr / TiB) & Compression Ratio \\
 \hline
-                none    &   0.000000     &    0.000000  & 1.000000\\
-              svb-zd    &   4.574968     &    4.520599  & 1.599930\\
-            svb12-zd    &   4.884166     &    5.935129  & 1.777690\\
-         zstd-svb-zd    &   6.468166     &    6.363193  & 2.928430\\
-            vbe21-zd    &   8.434488     &    6.921886  & 1.999519\\
-       zstd-svb12-zd    &   6.729648     &    7.735955  & 2.928344\\
-       zstd-vbe21-zd    &  10.231834     &    8.688889  & 2.928103\\
-           vbbe21-zd    &  11.448242     &    9.527874  & 1.999714\\
-      zstd-vbbe21-zd    &  13.885918     &   12.066467  & 2.928413\\
-         zlib-svb-zd    &  50.931869     &   12.189664  & 2.783474\\
-       zlib-svb12-zd    &  50.291609     &   13.360884  & 2.786146\\
-       zlib-vbe21-zd    &  52.560527     &   14.130110  & 2.790276\\
-      zlib-vbbe21-zd    &  67.221780     &   18.484874  & 2.790488\\
-        rcc-vbe21-zd    &  35.985621     &   41.157821  & 2.947403\\
-       rcc-vbbe21-zd    &  36.879607     &   42.432635  & 2.947826\\
-        rc-vbbe21-zd    &  35.702923     &   44.383924  & 2.931079\\
-         rc-vbe21-zd    &  36.094531     &   46.550227  & 2.930661\\
-    huffman-vbe21-zd    &  70.179696     &   62.026820  & 2.927298\\
-  shuffman-vbbe21-zd    &  56.186543     &   62.122649  & 2.948147\\
-   shuffman-vbe21-zd    &  55.629624     &   62.553175  & 2.947726\\
-   huffman-vbbe21-zd    &  74.267145     &   65.363246  & 2.927709\\
-      bzip2-svb12-zd    &  99.086223     &   66.040931  & 2.742621\\
- fast-lzma2-svb12-zd    & 463.848391     &   71.445116  & 2.922641\\
-         rccm-svb-zd    & 111.233331     &   96.373265  & 2.990472\\
-       rccm-svb12-zd    &  97.643677     &   99.062281  & 2.990579\\
-      dstall-fz-1500    & 100.266873     &  104.251569  & 2.991704\\
-            stall-fz    & 100.753024     &  104.621378  & 2.991124\\
-           dstall-fz    & 191.945767     &  105.162099  & 2.991729\\
-      rccm-vbbe21-zd    &  97.142015     &  110.668399  & 2.991313\\
-       rccm-vbe21-zd    &  98.018524     &  113.202260  & 2.990877\\
+		none    & 0.00000000      & 0.00000000    &1.000000\\
+                svb     & 0.06735518      & 0.04821316    &0.888940\\
+               svb0     & 0.11477661      & 0.04824026    &0.888940\\
+              svb16     & 0.23034852      & 0.24802138    &0.941234\\
+               zstd     & 2.05226509      & 0.70892108    &1.790916\\
+             svb-zd     & 0.73883975      & 0.73005926    &1.599930\\
+            svb0-zd     & 0.83445915      & 0.75598838    &1.682548\\
+           svb16-zd     & 0.78877395      & 0.95850039    &1.777690\\
+		\rowcolor{gray}
+        zstd-svb-zd     & 1.04458386      & 1.02763119    &2.928430\\
+           vbe21-zd     & 1.36213730      & 1.11785785    &1.999519\\
+       zstd-svb0-zd     & 1.34129640      & 1.12928189    &2.789808\\
+               flac     & 4.15288902      & 1.21167452    &2.893409\\
+          %zstd-flac     & 4.36788652      & 1.21860676    &2.892981\\
+      zstd-svb16-zd     & 1.08681230      & 1.24932700    &2.928344\\
+      zstd-vbe21-zd     & 1.65240171      & 1.40322205    &2.928103\\
+          vbbe21-zd     & 1.84884704      & 1.53871491    &1.999714\\
+               zlib     &28.39558473      & 1.54142078    &2.001465\\
+     zstd-vbbe21-zd     & 2.24252232      & 1.94868791    &2.928413\\
+        zlib-svb-zd     & 8.22530063      & 1.96858373    &2.783474\\
+       zlib-svb0-zd     &11.23940746      & 2.00888074    &2.697205\\
+      zlib-svb16-zd     & 8.12190118      & 2.15773132    &2.786146\\
+      zlib-vbe21-zd     & 8.48832267      & 2.28195836    &2.790276\\
+     zlib-vbbe21-zd     &10.85605856      & 2.98523591    &2.790488\\
+		\rowcolor{lightgray}
+       rc1-vbe21-zd     & 5.81153924      & 6.64682951    &2.947403\\
+		\rowcolor{lightgray}
+      rc1-vbbe21-zd     & 5.95591447      & 6.85270715    &2.947826\\
+		\rowcolor{lightgray}
+      rc0-vbbe21-zd     & 5.76588458      & 7.16783267    &2.931079\\
+		\rowcolor{lightgray}
+       rc0-vbe21-zd     & 5.82912774      & 7.51768231    &2.930661\\
+      huff-vbe21-zd     &11.33375058      &10.01709248    &2.927298\\
+		\rowcolor{lightgray}
+    shuff-vbbe21-zd     & 9.07391018      &10.03256857    &2.948147\\
+		\rowcolor{lightgray}
+     shuff-vbe21-zd     & 8.98396994      &10.10209679    &2.947726\\
+     huff-vbbe21-zd     &11.99385775      &10.55591243    &2.927709\\
+     bzip2-svb16-zd     &16.00204323      &10.66535592    &2.742621\\
+ %fastlzma2-svb16-zd     &74.90972825      &11.53811094    &2.922641\\
+              bzip2     &25.73918708      &12.66451322    &2.750089\\
+		\rowcolor{lightgray}
+       rc01s-svb-zd     &17.96375449      &15.56391103    &2.990472\\
+		\rowcolor{lightgray}
+     rc01s-svb16-zd     &15.76907766      &15.99817668    &2.990579\\
+		\rowcolor{lightgray}
+     dstall-fz-1500     &16.19271379      &16.83622670    &2.991704\\
+		\rowcolor{lightgray}
+           stall-fz     &16.27122516      &16.89594957    &2.991124\\
+		\rowcolor{lightgray}
+          dstall-fz     &30.99850195      &16.98327384    &2.991729\\
+		\rowcolor{lightgray}
+    rc01s-vbbe21-zd     &15.68806122      &17.87252018    &2.991313\\
+		\rowcolor{lightgray}
+     rc01s-vbe21-zd     &15.82961402      &18.28172897    &2.990877\\
 	\hline
     \end{tabular}
 \end{table}

@@ -36,10 +36,10 @@
 \contentsline {subsection}{\tocsubsection {}{5.2.3}{The DNA Section}}{57}{subsection.5.2.3}%
 \contentsline {subsubsection}{\tocsubsubsection {}{5.2.3.1}{Separating the Jumps, Falls and Flats}}{58}{subsubsection.5.2.3.1}%
 \contentsline {section}{\tocsection {}{5.3}{Wavelet}}{63}{section.5.3}%
-\contentsline {chapter}{\tocchapter {Chapter}{6}{Results}}{65}{chapter.6}%
-\contentsline {chapter}{\tocchapter {Chapter}{7}{Discussion}}{70}{chapter.7}%
-\contentsline {section}{\tocsection {}{7.1}{Future Work}}{70}{section.7.1}%
-\contentsline {chapter}{\tocchapter {Chapter}{8}{Conclusion}}{71}{chapter.8}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{72}{chapter*.64}%
-\contentsline {section}{\tocsection {}{8.1}{Subsequence Searching}}{72}{section.8.1}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{73}{chapter*.66}%
+\contentsline {chapter}{\tocchapter {Chapter}{6}{Results}}{64}{chapter.6}%
+\contentsline {chapter}{\tocchapter {Chapter}{7}{Discussion}}{69}{chapter.7}%
+\contentsline {section}{\tocsection {}{7.1}{Future Work}}{69}{section.7.1}%
+\contentsline {chapter}{\tocchapter {Chapter}{8}{Conclusion}}{70}{chapter.8}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{71}{chapter*.63}%
+\contentsline {section}{\tocsection {}{8.1}{Subsequence Searching}}{71}{section.8.1}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{72}{chapter*.65}%

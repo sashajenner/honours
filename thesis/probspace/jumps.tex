@@ -93,12 +93,12 @@ We could actually decrease this delta further by instead finding the distance
 between the end of one jump and the start of the next. This would require the
 use of the length data and would look like
 \[p_{j_1},p_{j_2}-p_{j_1}-|j_1|,\dots,p_{j_{n_j}}-p_{j_{n_j-1}}-|j_{n_j-1}|.\]
-We could then apply rc-vbbe21. This strategy works similarly for the starting
+We could then apply rc01s-vbbe21. This strategy works similarly for the starting
 indices of the falls. For the lengths of the jumps and falls we can simply minus
 one from each length and then apply range coding without vbbe21 since the
 lengths of the jumps and falls are not expected to exceed 255. Similarly, we can
 subtract one from the deltas of the jumps and falls since no jump/fall can have
-a delta of zero and then apply rc-vbbe21. Finally, the flats' absolute deltas
+a delta of zero and then apply rc01s-vbbe21. Finally, the flats' absolute deltas
 are less than or equal to $\epsilon$ so their zig-zag deltas range from 0 to
 $2\epsilon$ meaning we can simply apply range coding without two byte exception
 handling if $\epsilon \le 127$.

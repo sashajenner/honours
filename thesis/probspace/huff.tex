@@ -1,0 +1,85 @@
+\subsection{Huffman}
+
+Consider compressing the one byte data using the Huffman
+(shortened to \textit{huff}) coding algorithm. This requires determining the
+data's distribution on an initial pass. Then, the Huffman table is
+recorded and each byte is encoded with its Huffman code. The problem is that
+there is an overhead with storing the table.  Naively, one can store the table
+by writing the number of entries in the table (1 byte) then each entry's symbol
+(1 byte), code length (1 byte) and code (code length in bytes). See Figure
+\ref{fig:huff-tab} for a picture. The resulting
+table consumes
+\input{plots/huff-tab}
+\[ 1 + 2m + \sum_{i=1}^m\lceil b_i / 8 \rceil \]
+bytes where $m\in\mathbb{Z}\cap[0,255]$ is the number of entries in the table
+and $b_i$ is the length of the $i$-th entry's code in bits. The number of
+entries is the number of unique one byte values in the data.
+If we use huff on the one byte zig-zag deltas of the vbbe21-zd encoding (let's name this strategy
+\textit{huff-vbbe21-zd}), the number of entries is
+dependent on the read's length. Short reads may only contain 100 unique one byte
+deltas whilst long reads may easily contain more than 250 entries. If we
+estimate that this is roughly 200 and the average code length is 2 bytes then
+the table consumes
+\[ 1 + 2\times 200 + 200\times 2 = 801 \]
+bytes. The maximum number of entries is 256 so the maximum table size is roughly
+1025 bytes.
+
+However, rather than encoding the exact Huffman table for each read and consuming
+roughly 800 bytes in storage, it makes more
+sense to use a shared Huffman table which approximates the zig-zag delta
+distribution of most reads well. We are at an advantage here in that the zig-zag
+deltas follow a similar distribution between reads.
+%These are bytes we don't need to repeat in each read when each read has a similar distribution of zig-zag deltas.
+For example, 0 is the most common zig-zag delta among reads so naturally its code will
+have the fewest number of bits and this will be efficient for the majority of
+reads. One simple approach is to construct the optimal Huffman table for the
+whole data set of zig-zag deltas. Then, we can store the code table once in the
+source code and encode each read using the same table. Let's call this method
+the static Huffman algorithm which is being applied to the one byte zig-zag
+deltas, so \textit{shuff-vbbe21-zd} for short. This table consumes
+1042 bytes but we can store it statically alongside the source code, so unless
+we are considering the Kolmogorov complexity of the data its size is not
+calculated in the compression size. The distribution of code lengths from this
+table is shown in Figure \ref{fig:shuff-len}. The figure shows the distribution
+splits into two alternating distributions from about 116 onwards which
+represents the higher frequency of large positive compared to large negative
+deltas, as previously discussed.
+
+huff-vbbe21-zd consumes more space than the shuff-vbbe21-zd algorithm since it
+records a different Huffman table for each read in the compressed data. The
+space consumed by the Huffman table turns out to be more than the size difference
+between the globally approximated and read-optimal Huffman encoding of the
+zig-zag deltas.
+%TODO See the results section for the details.
+%For example, on the data set
+%huff applied to vbe21 (hereafter \textit{huff-vbe21}) consumes 36.10 GiB versus
+%35.85 GiB for shuff-vbe21 which is a difference of $\sim537$ bytes per read.
+%This results is a compression ratio of 2.927 versus 2.948.
+%%Moreover, when applied to a different human DNA data set huff-vbe21 consumes
+Furthermore, huff-vbbe21-zd takes longer than shuff-vbbe21-zd during compression and decompression.
+During compression, huff-vbbe21-zd must do an initial pass of the read to count the data's
+frequencies and then construct the Huffman tree and table. During
+decompression, huff-vbbe21-zd must read the table and construct the tree before decoding
+the data. shuff-vbbe21-zd doesn't need to perform any of these operations since it
+pre-calculates the shared table and tree and stores them in static memory.
+
+During compression, calculating the frequencies takes $O(n)$ time. Then,
+constructing the tree takes $O(x^2\log x)$ time using the bottom-up construction
+% TODO add reference here
+algorithm where $0\le x \le 256$ is the number of unique bytes or exceptions
+when being applied to vbe21. Constructing the table requires traversing each
+branch on the tree which takes $O(x)$ time since there are $2x-1$ nodes in a
+Huffman tree. Then, recording the table takes $O(x)$ time and encoding the bytes
+takes $O(n)$ time using the table. In total, the huff-vbbe21-zd algorithm takes
+$O(n + x^2\log x)$ time for compression while shuff-vbbe21-zd takes $O(n)$ time. Compared
+to $n$, the size of the input, $x$ is usually a lot smaller so it has a small
+but true effect on the compression time.
+
+During decompression, huff-vbbe21-zd take $O(n + x)$ time since it must construct the tree
+whilst shuff-vbbe21-zd takes $O(n)$ time. But in practicality they take the same time. All
+in all, as long as there is a space benefit to using shuff-vbbe21-zd, which there usually
+is if the approximation is good, there is no reason to using huff-vbbe21-zd since shuff-vbbe21-zd is
+faster during compression and decompression.
+
+\input{plots/shuff-len}
+

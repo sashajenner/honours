@@ -1,0 +1,65 @@
+\subsection{Range Coding}
+
+Now consider encoding the one byte data using range coding rather than Huffman
+coding. Recall that range coding encodes all of the data into one number. To
+begin with, an initial range of numbers is chosen. Then, for each symbol in the
+data stream the current range is narrowed down based on the current symbol's
+probability of occurrence. A representative number from the final range is then
+chosen as the output.
+
+The probability distribution of the data can be predetermined, calculated by an
+initial pass or predicted adaptively. Most available implementations use models
+for predicting the probability distribution of the next symbol.
+Some common models include order-0, order-1 and order-2 models, context mixing and
+secondary symbol estimation (SSE). These models are used during encoding and
+decoding meaning that no distribution needs to be encoded with the compressed
+data.
+
+The order-$n$ model gives the probability distribution of the next symbol given
+the previous $n$ symbols (known as the \textit{context}). It is updated at each
+step to increase the revealed symbol's probability when the same context appears
+again.
+%For example, by the end of the algorithm the order-0 model would have calculated
+%the probability distribution of the one byte data, whilst the order-1 model
+%would have calculated a conditional probability distribution for each value in
+%the data.
+Basically the order-$n$ model queries and updates a frequency table of
+size $S^{n+1}$ where $S$ is the size of the symbol's alphabet.
+It finds the probability of the next symbol by querying the table and
+dividing this count by the total count of the symbols read thus far. To avoid a
+probability of 0 occuring, every value in the table is initialised to the
+same count -- typically a small value between 2 and 10 or a much larger
+value such as $2^{14}$ as in TurboRC.
+There are bytewise and bitwise models which operate at the byte and bit level
+respectively. Bytewise models operate over symbols from the alphabet
+$\{0,1,\dots,255\}$ whilst bitwise models keep track of the frequency of
+the binary digits 0 and 1. Let the range coding algorithms which use the order-0
+and order-1 models respectively be named \textit{rc0} and \textit{rc1}.
+
+Context mixing algorithms combine two models to yield higher accuracy
+predictions. They predict one bit at a time and are usually based on one of
+two mixing algorithms: linear or logistic mixing. Linear mixing performs
+a weighted average of the models whilst logistic mixing transforms the
+probabilities using logistic modelling which gives more weight to
+probabilites closer to 0 and 1.
+
+Secondary symbol estimation (SSE) is a prediction postprocessing approach which
+uses the combined prediction of context mixing and a small context to generate a
+refined prediction.
+
+Consider the range coding algorithm which applies order-0 and order-1
+context mixing with SSE. We'll abbreviate this strategy to \textit{rc01s}. The
+TurboRC implementation initialises the order-0, order-1 and SSE models in $O(1)$
+time. Then, for each byte it iterates over its bits and updates the range
+followed by the models. A normalisation procedure built into the encoding
+algorithm is required to ensure that there is always a large enough range for
+further sub-ranges. Overall, the algorithm is $O(n)$ but since it iterates over
+bits rather than bytes and there are many update procedures -- it is slower than
+huff in practice. The same is true for decoding. However, the compression ratio
+of rc01s is estimated to be better than huff and shuff. This is because range
+coding is as or more optimal as Huffman coding but without the drawback that
+each code length must be a whole number of bits. Furthermore, combined with
+accurate modelling range coding performs just as well without requiring the
+storage of a probability distribution as in huff.
+
+% http://mattmahoney.net/dc/dce.html

@@ -1,0 +1,131 @@
+\subsection{Exceptions Encoding}
+
+There are better ways of storing the exceptions than in the raw sequential
+format of vbe21.
+As we have seen there are usually 5 to 6 exceptions per read meaning that
+storing the number of exceptions using two bytes, which has a range of 0 to 65535,
+for all reads is wasteful.
+In particular, the number of exceptions per read ranges from 0 to 3616 and 99\%
+of the reads have between 0 and 42 exceptions. This is much smaller than 65535.
+See Table \ref{tab:ex} for an statistical overview of the zig-zag delta
+exceptions. Its distribution, shown in Figure \ref{fig:nex-hist}, could be
+nicely fitted by an exponential distribution. In fact, around 20\% of the reads
+have no exceptions at all. There is clearly wasted space being used.
+
+\input{plots/ex-tab}
+\input{plots/nex-hist}
+
+Instead of storing two bytes for the number of exceptions we can bit pack the
+number of exceptions using four bits to represent the number of bits used.
+Refer back to Section \ref{sec:bitpack} for a review of bit packing.
+The maximum number of exceptions, 3616, requires at least
+12 bits to represent it. Using the bit packing approach, $4+12=16$ bits or two
+bytes would be used to represent it -- which is equivalent to the naive
+approach. That is, in the worst case bit packing uses the same space as the naive
+approach. In the best case when there are zero exceptions only four bits are
+required, and as long as there are less than 16 exceptions up to one byte is
+used. Although this approach clearly saves space, we are talking about saving at
+most 12 bits which is miniscule compared to the scale of the data.
+
+Similarly, we can store the exceptions' data in a more compact form.
+The exceptions themselves range from 256 to 2317 but 99\%
+of the exceptions do not go higher than 481. The mean and mode are $\sim$277 and
+256 respectively. Refer back to Table \ref{tab:ex} for a summary and Figure
+\ref{fig:ex-hist} for the histogram. Notably, the frequency of even-numbered
+exceptions is much greater than adjacent odd-numbered exceptions from 256 up to
+$\sim$330. This is due to large positive deltas occuring more frequently than
+large negative deltas as previously discussed in Section \ref{subsec:stripe}.
+One simple approach to encoding the exceptions is to subtract 256 since this is
+the minimum exception value and then apply bit packing using 4 bits as before. The
+average exception can then be represented using
+0 to 5 bits which is better than the naive 16-bit per exception encoding. This
+results in an expected decrease of $(16-5)\times 5-4=51$ bits per read.
+In the worst case, the number of bits used per exception for this data will be 12
+or $4 + 12e$ in total since 2317 is the maximum exception. This is better than
+the naive approach for $e>1$ and equivalent for $e=1$. The implications of this
+is that bit packing the exceptions' data never consumes more space than the
+naive strategy.
+
+\input{plots/ex-hist}
+
+Another improvement we can make is on the storage of the exceptions' positions.
+Since the positions are strictly increasing we can take the deltas between each
+position and subtract one. This will result in smaller values which we can then
+bit pack using 5 bits instead of 4 for the number of bits used.
+5 bits are required instead of 4 to account for any outliers given the maximum
+read length is roughly 6 million. If 4 bits were used only position deltas up to
+$2^{2^{4}-1}-1=32767$ could be represented which is clearly short of 6 million.
+
+The strategy which combines all of the above exception bit packing strategies
+and still stores the regular one byte data we will name \textit{compact vbbe21}.
+Notice the extra `b' in \textit{vbbe21}. This refers to the bit packing
+strategy in use.
+See Figure \ref{fig:vbbe21-compact} for a visual representation of this
+encoding. Notice the byte boundary padding which aligns the one byte data to
+byte boundaries for downstream compression methods. For implementation
+simplicity consider a similar strategy which does not bit pack the number of
+exceptions, bit packs the exception' positions and data using one byte for the
+number of bits used rather than 5 and 4 respectively, and uses padding between
+the exceptions' positions and data. We shall name this strategy the
+\textit{regular vbbe21} encoding or \textit{vbbe21} for short. See Figure
+\ref{fig:vbbe21} for a pictorial representation.
+
+\input{plots/vbbe21-compact}
+\input{plots/vbbe21}
+
+% TODO analyse how much better
+The storage gap between vbbe21 and compact vbbe21 has an upper bound of
+\begin{align*}
+	\text{vbbe21} - \text{compact vbbe21} &= \text{number of exceptions gap}
+	+ \text{positions gap}\\ &+\text{two byte exceptions gap} + \text{padding gap}\\
+	&< (16-4) + (8-5) + (8-4) + 16\\
+	&= 35
+\end{align*}
+bits
+and a lower bound of
+\[ \text{vbbe21} - \text{compact vbbe21} > (16-12) + (8-5) + (8-4) - 8 = 3 \]
+bits.
+That is, compact vbbe21 saves between 3 and 35 bits compared to regular vbbe21.
+However, an expected measure of the storage gap is a more useful metric for
+comparison. Let's name the non--one-byte-data where the exceptions are handled
+the \textit{exceptions section}. Using Equation \ref{eq:vbe21}, the expected size of
+the vbe21-zd exceptions section in bytes is given by
+\[ 2 + 6E[X] = 36.02. \]
+Now, round up the expected number of exceptions from Table \ref{tab:ex} so it is
+5. Then, the expected number of bits used for the number of exceptions is roughly
+3. Let the expected number of bits used on the positions be 16 since the expected
+read length is \num{113471} and this accounts for position deltas up to
+\num{65535}. Furthermore, let the expected number of bits used on the
+exceptions be 5 since the average exception is 277 and this accounts for
+exceptions up to 287. Also, let the expected padding size be 3.5 bits as this is
+halfway on the padding's range of 0 to 7 bits.
+Then, an estimate of the expected size of the vbbe21-zd exceptions section is
+given by
+\begin{align*}
+	&\text{number of exceptions} + \text{positions} + \text{two byte exceptions} + \text{padding}\\
+	&= \frac{16 + (8+5\times16) + (8+5\times 5) + 2\times3.5}{8}\\
+	&= 18
+\end{align*}
+bytes, versus
+\[ \frac{(4+3) + (5+5\times16) + (4+5\times 5) + 3.5}{8}= 15.56 \]
+bytes
+for the compact vbbe21-zd exceptions section. These sizes are displayed in Table
+\ref{tab:ex-sec-exp}
+for ease of comparison. Now, we can see that the estimated storage gap between
+vbbe21-zd and compact vbbe21-zd is 2.44 bytes or 19.5 bits. Furthermore,
+vbbe21-zd and compact vbbe21-zd are expected to save 17 and 19.44 bytes
+per read respectively when compared to vbe21-zd. So, there is a storage benefit
+to bit packing the exceptions over storing them in a raw sequential format.
+
+\input{plots/ex-sec-exp}
+
+% TODO compare improvement in results
+
+In comparison with vbe21, the compact and regular vbbe21 algorithms still take
+linear time during encoding and decoding although they require more computational
+operations to encode and evaluate the bit packed data. However, the exceptions
+section usually accounts for less than 0.05\% of the vbe21-zd encoding
+compared to the one byte data. Hence, focussing
+on compressing the one byte data section has much more potential benefit. This
+will be heavily explored in the remaining sections.
+

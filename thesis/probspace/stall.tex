@@ -55,15 +55,15 @@ stall encoding.
 
 Consider our stall-specific encoding to be the FOR encoding followed by the
 regular vbbe21 encoding (vbbe21) and range coding (altogether
-\textit{rc-vbbe21-for}). Furthermore, let the generic algorithm be the
+\textit{rc01s-vbbe21-for}). Furthermore, let the generic algorithm be the
 vbbe21-zd encoding followed by range coding (altogether
-\textit{rc-vbbe21-zd}).
+\textit{rc01s-vbbe21-zd}).
 We shall name the stall encoding which uses the stall-specific encoding
-rc-vbbe21-for and the generic encoding rc-vbbe21-zd: \textit{stall-fz}.
+rc01s-vbbe21-for and the generic encoding rc01s-vbbe21-zd: \textit{stall-fz}.
 Similarly, we shall name \textit{dstall-fz} the dstall encoding which uses the
 same stall-specific and generic encodings as stall-fz.
 
-The compression ratio of stall-fz outperforms the generic method rc-vbbe21-zd
+The compression ratio of stall-fz outperforms the generic method rc01s-vbbe21-zd
 more often than not on reads with stalls of length greater than or equal to
 1500. See Figure
 \ref{fig:stall-best}. This means we could simply choose to encode the stall
