@@ -6,6 +6,8 @@ library(ggplot2)
 library(ggpattern)
 library(tikzDevice)
 library(dplyr)
+library(ggtext)
+library(ggrepel)
 
 # check args
 args = commandArgs(TRUE)
@@ -19,6 +21,7 @@ df = read.delim(path)
 
 #df_P11 = df[df$data == 'P11',]
 NZDSIGS = 56735199469
+NSIGS = 56735699469
 NREADS = 500000
 df$method = reorder(df$method, df$press_ratio)
 
@@ -27,13 +30,68 @@ df_space_tex = df %>% mutate(bps = press_bytes/NZDSIGS * 8) %>%
 	mutate(space_saving = 1-press_bytes/depress_bytes) %>%
 	select(method, press_ratio, space_saving, bps, press_gib) %>%
 	arrange(press_ratio)
-print(df_space_tex)
-#
+#print(df_space_tex)
+
 #df_time_tex = df %>% mutate(press_time_mins = press_time/(60)) %>%
 #	mutate(depress_time_mins = depress_time/(60)) %>%
 #	arrange(press_time) %>%
 #	select(method, press_time_mins, depress_time_mins, press_ratio)
+df_time_tex = df %>% mutate(press_time_hpt = (press_time/3600)/(depress_bytes/(1024^4))) %>%
+	mutate(depress_time_hpt = (depress_time/3600)/(depress_bytes/(1024^4))) %>%
+	arrange(depress_time) %>%
+	select(method, press_time_hpt, depress_time_hpt, press_ratio)
 #print(df_time_tex)
+
+df = df %>% mutate(bps = press_bytes/NZDSIGS * 8) %>%
+	mutate(press_gib = press_bytes/(1024^3)) %>%
+	mutate(space_saving = 1-press_bytes/depress_bytes) %>%
+	mutate(press_time_hpt = (press_time/3600)/(depress_bytes/(1024^4))) %>%
+	mutate(depress_time_hpt = (depress_time/3600)/(depress_bytes/(1024^4)))
+
+space_time_boundary_c = c("none",
+			"svb-zd",
+			"svb16-zd",
+			"zstd-svb-zd",
+			"rc0-vbbe21-zd",
+			"rc1-vbe21-zd",
+			"rc1-vbbe21-zd",
+			"shuff-vbbe21-zd",
+			"rc01s-vbbe21-zd",
+			"dstall-fz-1500",
+			"dstall-fz")
+
+space_time_boundary_d = c("none",
+			  "zstd",
+			  "zstd-svb-zd",
+			  "rc1-vbe21-zd",
+			  "rc1-vbbe21-zd",
+			  "shuff-vbbe21-zd",
+			  "rc01s-svb-zd",
+			  "rc01s-svb16-zd",
+			  "dstall-fz-1500",
+			  "dstall-fz")
+
+method_boundary_c = c()
+for (method in df$method) {
+	if (method %in% space_time_boundary_c) {
+		method_boundary_c = c(method_boundary_c, method)
+	} else {
+		method_boundary_c = c(method_boundary_c, "")
+	}
+}
+df$method_boundary_c = method_boundary_c
+df_boundary_c = df[df$method_boundary_c != "",]
+
+method_boundary_d = c()
+for (method in df$method) {
+	if (method %in% space_time_boundary_d) {
+		method_boundary_d = c(method_boundary_d, method)
+	} else {
+		method_boundary_d = c(method_boundary_d, "")
+	}
+}
+df$method_boundary_d = method_boundary_d
+df_boundary_d = df[df$method_boundary_d != "",]
 
 # vbe21
 
@@ -117,50 +175,184 @@ df_ent$method = reorder(df_ent$method, -df_ent$bps)
 #       #theme(axis.text.x=element_text(angle=90,hjust=1))
 ##dev.off()
 
-#ggplot(df, aes(x=method, y=press_ratio, fill=press_time/3600)) +
-#       geom_bar(stat='identity',position='dodge') +
-#       ylab('Compression Ratio') +
-#       xlab('Method') +
-#       labs(fill = "Compression Time (hours)") +
-#       scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
-#       theme(axis.text.x=element_text(angle=90,hjust=1))
-#
-#ggplot(df, aes(x=method, y=press_ratio, fill=depress_time/3600)) +
-#       geom_bar(stat='identity',position='dodge') +
-#       ylab('Compression Ratio') +
-#       xlab('Method') +
-#       labs(fill = "Decompression Time (hours)") +
-#       scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
-#       theme(axis.text.x=element_text(angle=90,hjust=1))
-#
-#ggplot(df_ent, aes(x=method, y=bps, fill=press_time/NREADS)) +
-#       geom_bar(stat='identity',position='dodge') +
-#       ylab('Bits Per Data Point') +
-#       xlab('Method') +
-#       labs(fill = "Compression Time (seconds/read)") +
-#       scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
-#       theme(axis.text.x=element_text(angle=90,hjust=1))
-#
-#ggplot(df_ent, aes(x=method, y=bps, fill=depress_time/NREADS)) +
-#       geom_bar(stat='identity',position='dodge') +
-#       ylab('Bits Per Data Point') +
-#       xlab('Method') +
-#       labs(fill = "Decompression Time (seconds/read)") +
-#       #scale_fill_viridis_c() +
-#       scale_fill_continuous(trans = 'reverse',
-#			     #type = 'viridis'
-#			     ) +
-#       guides(fill = guide_colourbar(reverse = TRUE)) +
-#       theme(axis.text.x=element_text(angle=90,hjust=1))
-#
-#ggplot(df[df$press_ratio > 2.8,], aes(x=method, y=press_ratio, fill=depress_time/NREADS)) +
-#       geom_bar(stat='identity',position='dodge') +
-#       ylab('Compression Ratio') +
-#       xlab('Method') +
-#       labs(fill = "Decompression Time (seconds/read)") +
-#       #scale_fill_viridis_c() +
-#       scale_fill_continuous(trans = 'reverse',
-#			     #type = 'viridis'
-#			     ) +
-#       guides(fill = guide_colourbar(reverse = TRUE)) +
-#       theme(axis.text.x=element_text(angle=90,hjust=1))
+#tikz(file = paste0(path, '.ratio.hbar.tex'), width = 5, height = 5)
+ggplot(df, aes(x=method, y=press_ratio
+		,fill=factor(ifelse(method=="zstd-svb-zd","1","0"))
+	       )) +
+	       #, fill=press_time_hpt)) +
+       scale_fill_manual(name = "method", values=c("grey50", "grey35")) +
+       geom_col() +
+       ylab('Compression Ratio') +
+       xlab('Method') +
+       geom_hline(yintercept=16/7.70) +
+       geom_hline(yintercept=16/5.39, linetype='dashed') +
+       #labs(fill = "Compression Time (hrs / TiB)") +
+       #scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
+       #theme(axis.text.x=element_text(angle=90,hjust=1)) +
+       scale_x_discrete(limits = rev(levels(df$method))) +
+       coord_flip() +
+       theme(legend.position='none')
+       #+geom_segment(aes(yend = 3, xend = 14, y = 3.3, x = 14),
+#		    arrow = arrow(length = unit(0.5, "cm")))
+#dev.off()
+
+ggplot(df, aes(x=method, y=bps
+		,fill=factor(ifelse(method=="zstd-svb-zd","1","0"))
+	       )) +
+	       #, fill=press_time_hpt)) +
+       scale_fill_manual(name = "method", values=c("grey50", "grey35")) +
+       geom_col() +
+       ylab('Bits per Symbol') +
+       xlab('Method') +
+       geom_hline(yintercept=7.70) +
+       geom_hline(yintercept=5.39, linetype='dashed') +
+       #labs(fill = "Compression Time (hrs / TiB)") +
+       #scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
+       #theme(axis.text.x=element_text(angle=90,hjust=1)) +
+       scale_x_discrete(limits = rev(levels(df$method))) +
+       coord_flip() +
+       theme(legend.position='none')
+
+#tikz(file = paste0(path, '.ss.hbar.tex'), width = 5, height = 5)
+ggplot(df, aes(x=method, y=space_saving
+		,fill=factor(ifelse(method=="zstd-svb-zd","1","0"))
+		)) +
+	       #, fill=press_time_hpt)) +
+       geom_col() +
+       ylab('Space Saving') +
+       xlab('Method') +
+       scale_fill_manual(name = "method", values=c("grey50", "grey35")) +
+       geom_hline(yintercept=1-7.70/16) +
+       geom_hline(yintercept=1-5.39/16, linetype='dashed') +
+       #labs(fill = "Compression Time (hrs / TiB)") +
+       #scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
+       #theme(axis.text.x=element_text(angle=90,hjust=1)) +
+       scale_x_discrete(limits = rev(levels(df$method))) +
+       coord_flip() +
+       theme(legend.position='none')
+#dev.off()
+
+#tikz(file = paste0(path, '.ss-ct.boundary.tex'), width = 5, height = 5)
+ggplot(df_boundary_c, aes(x=space_saving, y=press_time_hpt
+		#,colour=factor(ifelse(method=="zstd-svb-zd","1","0"))
+		)) +
+	       #, fill=press_time_hpt)) +
+       geom_line() +
+       geom_point(aes(colour=factor(ifelse(method=="zstd-svb-zd","1","0")))) +
+       ylab('Compression Time (hr / TiB)') +
+       xlab('Space Saving') +
+       scale_color_manual(name = "method", values=c("grey50", "red")) +
+       #labs(fill = "Compression Time (hrs / TiB)") +
+       #scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
+       #theme(axis.text.x=element_text(angle=90,hjust=1)) +
+       #scale_x_discrete(limits = rev(levels(df$method))) +
+       #coord_flip() +
+       theme(legend.position='none') +
+	geom_text_repel(aes(label=method_boundary_c, colour=factor(ifelse(method=="zstd-svb-zd","1","0"))))
+#dev.off()
+
+ggplot(df_boundary_c, aes(x=press_ratio, y=press_time_hpt
+		,colour=factor(ifelse(method=="zstd-svb-zd","1","0"))
+		)) +
+	       #, fill=press_time_hpt)) +
+       geom_point() +
+       ylab('Compression Time (hr / TiB)') +
+       xlab('Compression Ratio') +
+       scale_color_manual(name = "method", values=c("grey50", "red")) +
+       #labs(fill = "Compression Time (hrs / TiB)") +
+       #scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
+       #theme(axis.text.x=element_text(angle=90,hjust=1)) +
+       #scale_x_discrete(limits = rev(levels(df$method))) +
+       #coord_flip() +
+       theme(legend.position='none') +
+	geom_text_repel(aes(label=method_boundary_c))
+
+ggplot(df, aes(x=space_saving, y=press_time_hpt
+		,colour=factor(ifelse(method=="zstd-svb-zd","1","0"))
+		)) +
+	       #, fill=press_time_hpt)) +
+       geom_point(alpha=0.5) +
+       ylab('Compression Time (hr / TiB)') +
+       xlab('Space Saving') +
+       scale_color_manual(name = "method", values=c("grey50", "red")) +
+       #labs(fill = "Compression Time (hrs / TiB)") +
+       #scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
+       #theme(axis.text.x=element_text(angle=90,hjust=1)) +
+       #scale_x_discrete(limits = rev(levels(df$method))) +
+       #coord_flip() +
+       theme(legend.position='none') +
+	geom_text_repel(aes(label=method_boundary_c))
+
+#tikz(file = paste0(path, '.ss-dt.boundary.tex'), width = 5, height = 5)
+ggplot(df_boundary_d, aes(x=space_saving, y=depress_time_hpt
+		,colour=factor(ifelse(method=="zstd-svb-zd","1","0"))
+		)) +
+	       #, fill=press_time_hpt)) +
+       geom_point() +
+       ylab('Decompression Time (hr / TiB)') +
+       xlab('Space Saving') +
+       scale_color_manual(name = "method", values=c("grey50", "red")) +
+       #labs(fill = "Compression Time (hrs / TiB)") +
+       #scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
+       #theme(axis.text.x=element_text(angle=90,hjust=1)) +
+       #scale_x_discrete(limits = rev(levels(df$method))) +
+       #coord_flip() +
+       theme(legend.position='none') +
+	geom_text_repel(aes(label=method_boundary_d))
+#dev.off()
+
+ggplot(df, aes(x=space_saving, y=depress_time_hpt
+		,colour=factor(ifelse(method=="zstd-svb-zd","1","0"))
+		)) +
+	       #, fill=press_time_hpt)) +
+       geom_point(alpha=0.5) +
+       ylab('Decompression Time (hr / TiB)') +
+       xlab('Space Saving') +
+       scale_color_manual(name = "method", values=c("grey50", "red")) +
+       #labs(fill = "Compression Time (hrs / TiB)") +
+       #scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
+       #theme(axis.text.x=element_text(angle=90,hjust=1)) +
+       #scale_x_discrete(limits = rev(levels(df$method))) +
+       #coord_flip() +
+       theme(legend.position='none') +
+	geom_text_repel(aes(label=method_boundary_d))
+
+ggplot(df, aes(x=method, y=press_ratio, fill=depress_time/3600)) +
+       geom_bar(stat='identity',position='dodge') +
+       ylab('Compression Ratio') +
+       xlab('Method') +
+       labs(fill = "Decompression Time (hours)") +
+       scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
+       theme(axis.text.x=element_text(angle=90,hjust=1))
+
+ggplot(df_ent, aes(x=method, y=bps, fill=press_time/NREADS)) +
+       geom_bar(stat='identity',position='dodge') +
+       ylab('Bits Per Data Point') +
+       xlab('Method') +
+       labs(fill = "Compression Time (seconds/read)") +
+       scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
+       theme(axis.text.x=element_text(angle=90,hjust=1))
+
+ggplot(df_ent, aes(x=method, y=bps, fill=depress_time/NREADS)) +
+       geom_bar(stat='identity',position='dodge') +
+       ylab('Bits Per Data Point') +
+       xlab('Method') +
+       labs(fill = "Decompression Time (seconds/read)") +
+       #scale_fill_viridis_c() +
+       scale_fill_continuous(trans = 'reverse',
+			     #type = 'viridis'
+			     ) +
+       guides(fill = guide_colourbar(reverse = TRUE)) +
+       theme(axis.text.x=element_text(angle=90,hjust=1))
+
+ggplot(df[df$press_ratio > 2.8,], aes(x=method, y=press_ratio, fill=depress_time/NREADS)) +
+       geom_bar(stat='identity',position='dodge') +
+       ylab('Compression Ratio') +
+       xlab('Method') +
+       labs(fill = "Decompression Time (seconds/read)") +
+       #scale_fill_viridis_c() +
+       scale_fill_continuous(trans = 'reverse',
+			     #type = 'viridis'
+			     ) +
+       guides(fill = guide_colourbar(reverse = TRUE)) +
+       theme(axis.text.x=element_text(angle=90,hjust=1))

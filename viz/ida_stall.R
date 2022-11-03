@@ -21,9 +21,9 @@ path1 = args[1]
 press_df = read.delim(path1)
 press_df = press_df %>%
 		mutate(method = str_replace_all(method, '_', "-")) %>%
-		mutate(method = str_replace(method, 'rccm', 'rc')) %>%
-		mutate(method = str_replace(method, 'rc-svbbe21-zd', 'stall-fz'))
-press_df = press_df[press_df$method != 'rc-vbe21-zd',]
+		mutate(method = str_replace(method, 'rccm', 'rc01s')) %>%
+		mutate(method = str_replace(method, 'rc01s-svbbe21-zd', 'stall-fz'))
+press_df = press_df[press_df$method != 'rc01s-vbe21-zd',]
 
 path2 = args[2]
 stall_df = read.delim(path2)
@@ -52,7 +52,7 @@ plot = ggplot(press_df_stall_best) +
 	ylab('Compression Ratio') +
 	labs(color = 'Best Method')
 #dev.off()
-ggsave(paste0(path1, '.best.pdf'), plot, width=6, height=5)
+ggsave(paste0(path1, '.best.pdf'), plot, width=7, height=5)
 
 #ggplot(press_df_stall_best) +
 #	geom_histogram(aes(x=n, fill=method))
