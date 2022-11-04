@@ -2,14 +2,13 @@
 
 \input{plots/server}
 
-To evaluate the performance of the compression strategies articulated
-in Section \ref{chap:methodology}, each read from the data was compressed and
-decompressed sequentially using each method (within reason\footnote{Some
-methods proved too time consuming or didn't achieve a high enough compression
-ratio to warrant implementing decompression.}).
-To ensure each method fit the suitability requirement of lossless compression, the
-decompressed data was tested for equality against the original uncompressed data.
-For each read the following metrics were calculated:
+To evaluate the performance of the existing and novel compression strategies, each read
+from the data was compressed and decompressed sequentially using each method
+(within reason\footnote{Some novel methods proved too time consuming or didn't achieve
+a high enough compression ratio to warrant implementing decompression.}).  To
+ensure every method fit the suitability requirement of lossless compression, the
+decompressed data was tested for equality against the original uncompressed
+data.  For each read the following metrics were calculated:
 \begin{itemize}
 	\item the read's uncompressed and compressed size (in bytes),
 	\item the time taken to compress the read (in seconds) and
@@ -26,19 +25,90 @@ compress and decompress the reads in parallel using multiple threads, each read
 was compressed and decompressed sequentially. For this reason, consider the time
 results as highly scalable.
 
-In addition to experimenting with the compression strategies from Section
-\ref{chap:methodology}, some popular generic compression encodings were used.
-These include zlib, bzip2, zstd and fast-lzma2.
+The space results from these experiments are shown in Table
+\ref{tab:results-space}. For each method, the compression ratio, space saving,
+number of bits used per symbol on average and total compressed size (in GiB) are displayed. Recall
+that the compression ratio and space saving are defined as
+\[ \text{Compression Ratio} = \frac{\text{Uncompressed Size}}{\text{Compressed
+Size}} \]
+and
+\[ \text{Space Saving} = 1-\frac{\text{Compressed Size}}{\text{Uncompressed
+Size}}. \]
+The compression ratio can be interpreted as the factor by which the uncompressed
+size is decreased as a result of compression. Whilst the space saving is
+interpreted as the proportion of the uncompressed data which is now available
+(or saved) as a result of compression.
 
-The space saving, $\delta$, is calculated as follows
-\[ \delta = 1 - \frac{\text{Compressed Size}}{\text{Uncompressed Size}} \]
-and represents the proportion of the uncompressed size that is reduced by
-compressing.
+The time results are then shown in Tables \ref{tab:results-time-com} and
+\ref{tab:results-time-dec} which are sorted (fastest to slowest) by the
+compression and decompression time respectively. The time is displayed in
+the units hours per TiB such that the results are independent of the data's
+size. The compression ratio is also shown as a means of comparison with the
+space results.
 
-\input{plots/svb-vbe21-zd-size}
+For all the Tables \ref{tab:results-space}, \ref{tab:results-time-com} and \ref{tab:results-time-dec},
+the state-of-the-art method zstd-svb-zd is highlighted in light grey and the
+methods which achieved more space saving than zstd-svb-zd are highlighted in a
+darker grey.
+
+For ease of comparison, the space results are plotted using bar plots in Figures
+\ref{fig:results-ratio}, \ref{fig:results-ss} and
+\ref{fig:results-bps}. In all these Figures, the dark gray bar represents
+the state-of-the-art method and the solid and dotted vertical lines represents
+the entropy of the data and its deltas respectively. Figures \ref{fig:results-ratio} and
+\ref{fig:results-ss} show the compression ratio and space saving respectively for all
+methods. Whilst Figure \ref{fig:results-bps} shows the bits used per symbol on
+average and the total compressed size (in Gib) for each method using a dual
+$x$-axis.
+
+In order to compare the effect of the vbe21 and vbbe21 encodings, a two-way
+table of the space savings of the methods constructed by applying one encoding from the
+first layer (svb-zd, svb16-zd, vbe21-zd and vbbe21-zd) followed by another from
+the second layer (zlib, zstd and rc01s) is displayed in Table
+\ref{tab:results-layer}. The constructed method with the highest space saving for
+each method in the second layer is highlighted in grey and the method with the
+highest space saving overall is highlighted in a darker grey.
+
+The compression and decompression time (in hours per TiB) is plotted against the
+space saving for all methods in Figures \ref{fig:results-ss-ct-big} and
+\ref{fig:results-ss-dt-big} respectively. Then, for better clarity, enlarged and
+simplified plots of the same data are shown in Figures \ref{fig:results-ss-ct-small}
+and \ref{fig:results-ss-dt-small} respectively. These enlarged Figures depict the
+methods which save as or more space than the state-of-the-art and also exist on
+the space--(de)compression-time frontier. For each method on the
+space--(de)compression-time frontier there is no other method which has a
+greater space saving and (de)compresses in less time. These methods are labelled
+in all sub-plots of Figure \ref{fig:results-ss-t} and coloured in red is the
+state-of-the-art method.
+
+Finally, in Figure \ref{fig:results-ct-dt} the compression time is plotted
+against the decompression time (in hours per TiB) for all methods which save as
+or more space than the state-of-the-art method. The scatter plot is coloured by
+this space saving value and all the methods are labelled with there respective
+point.
+
+All the above results will now be discussed in detail in the following chapter.
+
+%In addition to experimenting with the compression strategies from Section
+%\ref{chap:methodology}, some popular generic compression encodings were used.
+%These include zlib, bzip2, zstd and fast-lzma2.
+
+%The space saving, $\delta$, is calculated as follows
+%\[ \delta = 1 - \frac{\text{Compressed Size}}{\text{Uncompressed Size}} \]
+%and represents the proportion of the uncompressed size that is reduced by
+%compressing.
+
+%\input{plots/svb-vbe21-zd-size}
 
 \input{plots/results-space-tab}
 \input{plots/results-timecom-tab}
 \input{plots/results-timedec-tab}
+\input{plots/results-layer-tab}
+
+\input{plots/results-ratio-bar}
+\input{plots/results-ss-bar}
+\input{plots/results-bps-bar}
+\input{plots/results-ss-t}
+\input{plots/results-ct-dt}
 
 %\input{plots/vbz-tab}

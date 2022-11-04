@@ -37,9 +37,9 @@
 \contentsline {subsubsection}{\tocsubsubsection {}{5.2.3.1}{Separating the Jumps, Falls and Flats}}{58}{subsubsection.5.2.3.1}%
 \contentsline {section}{\tocsection {}{5.3}{Wavelet}}{63}{section.5.3}%
 \contentsline {chapter}{\tocchapter {Chapter}{6}{Results}}{64}{chapter.6}%
-\contentsline {chapter}{\tocchapter {Chapter}{7}{Discussion}}{69}{chapter.7}%
-\contentsline {section}{\tocsection {}{7.1}{Future Work}}{69}{section.7.1}%
-\contentsline {chapter}{\tocchapter {Chapter}{8}{Conclusion}}{70}{chapter.8}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{71}{chapter*.63}%
-\contentsline {section}{\tocsection {}{8.1}{Subsequence Searching}}{71}{section.8.1}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{72}{chapter*.65}%
+\contentsline {chapter}{\tocchapter {Chapter}{7}{Discussion}}{74}{chapter.7}%
+\contentsline {section}{\tocsection {}{7.1}{Future Work}}{74}{section.7.1}%
+\contentsline {chapter}{\tocchapter {Chapter}{8}{Conclusion}}{75}{chapter.8}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{76}{chapter*.68}%
+\contentsline {section}{\tocsection {}{8.1}{Subsequence Searching}}{76}{section.8.1}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{77}{chapter*.70}%

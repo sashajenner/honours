@@ -3,7 +3,7 @@
 	decompression time in hours per TiB and the compression ratio after
 	compressing each read from the data sequentially using each of the given
 	methods. The data is equivalent to Table \ref{tab:results-time-com} but
-	it is sorted by the decompression time. The state-of-the-art method is
+	it is sorted by the decompression time (fastest to slowest). The state-of-the-art method is
 	highlighted in grey and the methods which have a greater compression
 	ratio than the state-of-the-art are highlighted in a lighter grey.}
 	\begin{tabular}{|l|l|l|l|}
@@ -11,9 +11,9 @@
 	    Method & Compression Time (hr / TiB) & Decompression Time (hr / TiB) & Compression Ratio \\
 \hline
 		none    & 0.00000000      & 0.00000000    &1.000000\\
-                svb     & 0.06735518      & 0.04821316    &0.888940\\
-               svb0     & 0.11477661      & 0.04824026    &0.888940\\
-              svb16     & 0.23034852      & 0.24802138    &0.941234\\
+                %svb     & 0.06735518      & 0.04821316    &0.888940\\
+               %svb0     & 0.11477661      & 0.04824026    &0.888940\\
+              %svb16     & 0.23034852      & 0.24802138    &0.941234\\
                zstd     & 2.05226509      & 0.70892108    &1.790916\\
              svb-zd     & 0.73883975      & 0.73005926    &1.599930\\
             svb0-zd     & 0.83445915      & 0.75598838    &1.682548\\
