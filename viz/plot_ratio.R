@@ -175,8 +175,8 @@ df_ent$method = reorder(df_ent$method, -df_ent$bps)
 #       #theme(axis.text.x=element_text(angle=90,hjust=1))
 ##dev.off()
 
-#tikz(file = paste0(path, '.ratio.hbar.tex'), width = 5, height = 5)
-ggplot(df, aes(x=method, y=press_ratio
+#tikz(file = paste0(path, '.ratio.bar.tex'), width = 5, height = 4)
+plot = ggplot(df, aes(x=method, y=press_ratio
 		,fill=factor(ifelse(method=="zstd-svb-zd","1","0"))
 	       )) +
 	       #, fill=press_time_hpt)) +
@@ -195,8 +195,10 @@ ggplot(df, aes(x=method, y=press_ratio
        #+geom_segment(aes(yend = 3, xend = 14, y = 3.3, x = 14),
 #		    arrow = arrow(length = unit(0.5, "cm")))
 #dev.off()
+ggsave(paste0(path, '.ratio.bar.pdf'), plot, width=5, height=4)
 
-ggplot(df, aes(x=method, y=bps
+#tikz(file = paste0(path, '.bps.bar.tex'), width = 5, height = 5)
+plot = ggplot(df, aes(x=method, y=bps
 		,fill=factor(ifelse(method=="zstd-svb-zd","1","0"))
 	       )) +
 	       #, fill=press_time_hpt)) +
@@ -211,10 +213,14 @@ ggplot(df, aes(x=method, y=bps
        #theme(axis.text.x=element_text(angle=90,hjust=1)) +
        scale_x_discrete(limits = rev(levels(df$method))) +
        coord_flip() +
-       theme(legend.position='none')
+       theme(legend.position='none') +
+       scale_y_continuous(name = "Bits per Symbol", sec.axis =
+			  sec_axis(~./8*NZDSIGS/(1024^3), name = "Compressed Size (GiB)"))
+#dev.off()
+ggsave(paste0(path, '.bps.bar.pdf'), plot, width=5, height=5)
 
-#tikz(file = paste0(path, '.ss.hbar.tex'), width = 5, height = 5)
-ggplot(df, aes(x=method, y=space_saving
+#tikz(file = paste0(path, '.ss.bar.tex'), width = 5, height = 4)
+plot = ggplot(df, aes(x=method, y=space_saving
 		,fill=factor(ifelse(method=="zstd-svb-zd","1","0"))
 		)) +
 	       #, fill=press_time_hpt)) +
@@ -231,13 +237,13 @@ ggplot(df, aes(x=method, y=space_saving
        coord_flip() +
        theme(legend.position='none')
 #dev.off()
+ggsave(paste0(path, '.ss.bar.pdf'), plot, width=5, height=4)
 
-#tikz(file = paste0(path, '.ss-ct.boundary.tex'), width = 5, height = 5)
 ggplot(df_boundary_c, aes(x=space_saving, y=press_time_hpt
 		#,colour=factor(ifelse(method=="zstd-svb-zd","1","0"))
 		)) +
 	       #, fill=press_time_hpt)) +
-       geom_line() +
+       geom_line(alpha=0.4) +
        geom_point(aes(colour=factor(ifelse(method=="zstd-svb-zd","1","0")))) +
        ylab('Compression Time (hr / TiB)') +
        xlab('Space Saving') +
@@ -249,7 +255,6 @@ ggplot(df_boundary_c, aes(x=space_saving, y=press_time_hpt
        #coord_flip() +
        theme(legend.position='none') +
 	geom_text_repel(aes(label=method_boundary_c, colour=factor(ifelse(method=="zstd-svb-zd","1","0"))))
-#dev.off()
 
 ggplot(df_boundary_c, aes(x=press_ratio, y=press_time_hpt
 		,colour=factor(ifelse(method=="zstd-svb-zd","1","0"))
@@ -267,11 +272,12 @@ ggplot(df_boundary_c, aes(x=press_ratio, y=press_time_hpt
        theme(legend.position='none') +
 	geom_text_repel(aes(label=method_boundary_c))
 
-ggplot(df, aes(x=space_saving, y=press_time_hpt
+#tikz(file = paste0(path, '.ss-ct.tex'), width = 4, height = 4)
+plot = ggplot(df, aes(x=space_saving, y=press_time_hpt
 		,colour=factor(ifelse(method=="zstd-svb-zd","1","0"))
 		)) +
 	       #, fill=press_time_hpt)) +
-       geom_point(alpha=0.5) +
+       geom_point(alpha=0.6) +
        ylab('Compression Time (hr / TiB)') +
        xlab('Space Saving') +
        scale_color_manual(name = "method", values=c("grey50", "red")) +
@@ -282,6 +288,27 @@ ggplot(df, aes(x=space_saving, y=press_time_hpt
        #coord_flip() +
        theme(legend.position='none') +
 	geom_text_repel(aes(label=method_boundary_c))
+#dev.off()
+ggsave(paste0(path, '.ss-ct.pdf'), plot, width=4, height=4)
+
+df_06 = df_boundary_c[df_boundary_c$space_saving > 0.6,]
+plot = ggplot(df_06, aes(x=space_saving, y=press_time_hpt
+		,colour=factor(ifelse(method=="zstd-svb-zd","1","0"))
+		)) +
+	       #, fill=press_time_hpt)) +
+       geom_point(alpha=0.8) +
+       ylab('Compression Time (hr / TiB)') +
+       xlab('Space Saving') +
+       scale_color_manual(name = "method", values=c("grey50", "red")) +
+       #labs(fill = "Compression Time (hrs / TiB)") +
+       #scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
+       #theme(axis.text.x=element_text(angle=90,hjust=1)) +
+       #scale_x_discrete(limits = rev(levels(df$method))) +
+       #coord_flip() +
+       theme(legend.position='none') +
+	geom_text_repel(aes(label=method_boundary_c))
+#dev.off()
+ggsave(paste0(path, '.ss-ct06.pdf'), plot, width=4, height=4)
 
 #tikz(file = paste0(path, '.ss-dt.boundary.tex'), width = 5, height = 5)
 ggplot(df_boundary_d, aes(x=space_saving, y=depress_time_hpt
@@ -301,11 +328,12 @@ ggplot(df_boundary_d, aes(x=space_saving, y=depress_time_hpt
 	geom_text_repel(aes(label=method_boundary_d))
 #dev.off()
 
-ggplot(df, aes(x=space_saving, y=depress_time_hpt
+#tikz(file = paste0(path, '.ss-dt.tex'), width = 4, height = 4)
+plot = ggplot(df, aes(x=space_saving, y=depress_time_hpt
 		,colour=factor(ifelse(method=="zstd-svb-zd","1","0"))
 		)) +
 	       #, fill=press_time_hpt)) +
-       geom_point(alpha=0.5) +
+       geom_point(alpha=0.6) +
        ylab('Decompression Time (hr / TiB)') +
        xlab('Space Saving') +
        scale_color_manual(name = "method", values=c("grey50", "red")) +
@@ -316,6 +344,27 @@ ggplot(df, aes(x=space_saving, y=depress_time_hpt
        #coord_flip() +
        theme(legend.position='none') +
 	geom_text_repel(aes(label=method_boundary_d))
+#dev.off()
+ggsave(paste0(path, '.ss-dt.pdf'), plot, width=4, height=4)
+
+df_06 = df_boundary_d[df_boundary_d$space_saving > 0.6,]
+plot = ggplot(df_06, aes(x=space_saving, y=depress_time_hpt
+		,colour=factor(ifelse(method=="zstd-svb-zd","1","0"))
+		)) +
+	       #, fill=press_time_hpt)) +
+       geom_point(alpha=0.8) +
+       ylab('Decompression Time (hr / TiB)') +
+       xlab('Space Saving') +
+       scale_color_manual(name = "method", values=c("grey50", "red")) +
+       #labs(fill = "Compression Time (hrs / TiB)") +
+       #scale_fill_continuous(high = "#132B43", low = "#56B1F7") +
+       #theme(axis.text.x=element_text(angle=90,hjust=1)) +
+       #scale_x_discrete(limits = rev(levels(df$method))) +
+       #coord_flip() +
+       theme(legend.position='none') +
+	geom_text_repel(aes(label=method_boundary_d))
+#dev.off()
+ggsave(paste0(path, '.ss-dt06.pdf'), plot, width=4, height=4)
 
 ggplot(df, aes(x=method, y=press_ratio, fill=depress_time/3600)) +
        geom_bar(stat='identity',position='dodge') +
@@ -356,3 +405,14 @@ ggplot(df[df$press_ratio > 2.8,], aes(x=method, y=press_ratio, fill=depress_time
 			     ) +
        guides(fill = guide_colourbar(reverse = TRUE)) +
        theme(axis.text.x=element_text(angle=90,hjust=1))
+
+df_06 = df[df$space_saving > 0.6,]
+plot = ggplot(df_06, aes(y=press_time_hpt, x=depress_time_hpt)) +
+	geom_point(alpha=0.8, aes(colour=space_saving)) +
+	xlab('Decompression Time (hr / TiB)') +
+	ylab('Compression Time (hr / TiB)') +
+       scale_colour_viridis_c() +
+       #scale_color_manual(name = "method", values=c("grey50", "red")) +
+       labs(colour = "Space Saving") +
+	geom_text_repel(aes(label=method), max.time=10, max.iter=1000000)
+ggsave(paste0(path, '.ct-dt.pdf'), plot, width=7, height=6)
