@@ -1,25 +1,157 @@
 \chapter{Discussion} \label{chap:disc}
 
-\section{Future Work}
+In this chapter, we provide a final discussion of the results obtained thus far.
+Firstly, we evaluate the results presented in Chapter \ref{chap:results} as
+well as those found through side-experimentation (Section \ref{chap:disc:exp}).
+We conclude with a discussion of open problems in the domain and future work to
+be explored (Section \ref{chap:disc:future}).
 
-Different length reads may have different characteristics which are exploitable for a compression algorithm.
-Reads from the same pore or channel may have similar characteristics as well.
-Different data sets:
-RNA exploration,
-different Nanopore devices.
+\section{Experiments} \label{chap:disc:exp}
 
-It is very likely that there exists a multi-read compression strategy which is great for space reduction and hence archival purposes.
-In fact, there are patterns between reads which could be exploited.
-For example, reads originating from the same channel and pore will have been recorded by the same electrode and so will likely have similar properties. This is especially true for reads recorded at a similar timestamp as each nanopore deteriorates over the course of a sequencing run.
-However, such a strategy is not obvious without further investigation.
+Overall, we found that range coding (rc0, rc1 and rc01s), static huffman (shuff)
+and stall encoding outperformed the state-of-the-art method (zstd-svb-zd) in
+terms of overall space saving. The order-0 order-1 SSE range coder
+(rc01s) exceeded the entropy of the zig-zag deltas (5.39 bits per symbol) with
+the best method rc01s-vbbe21-zd achieving 5.35 bits per symbol. The dynamic stall
+encodings (dstall-fz-1500 and dstall-fz) narrowly performed better than this by
+0.0007 bits and 0.00075 bits per symbol respectively. rc01s and stall-based
+methods saved between 0.708\% and 0.722\% more space than the
+state-of-the-art. This is equates to roughly 7.3 GiB per TiB which isn't much
+except when you consider the amount of data being archived in practice.
+% TODO how much is archived?
+For every 140 TiB an extra TiB is saved compared to the state-of-the-art. This
+is an estimated saving of \$283 a year per 140 TiB when using Standard
+Google Cloud data storage in Sydney. For data which is archived for up to 10
+years, this results in a significant saving of almost \$3000 per 140 TiB.
+
+  %More generally, these methods reduce the data to about one-third of its
+  %original size which is a huge space saving in total.
+
+Let's now explore the effect of the regular and compact one byte, two
+byte exceptions encodings (vbe21 and vbbe21) versus cannonical and 16-bit Stream
+VByte on compression. Table \ref{tab:results-layer} reveals that for range
+coding (rc01s) the exceptions encodings produce a greater space saving than
+Stream VByte and, in particular, vbbe21 results in the greatest space saving
+overall. This is most likely because range coding is not only dependent on the
+data's distribution but also on the input size. To support this claim
+notice that the first and fourth rows in Table \ref{tab:results-layer} share the
+same ordering of space saving. That is, the order of space saving before
+compression (worst to best: svb-zd, svb16-zd, vbe21-zd and vbbe21-zd) remains
+unchanged after compressing with range coding. zlib also observes the same
+pattern, most likely because it primarily uses Huffman coding. However, zstd
+favours svb-zd followed by vbbe21-zd, svb16-zd and vbe21-zd. This likely related
+to the composition of svb-zd which will consist of many \texttt{00} words
+followed by (mostly) one byte data. The repetition of \texttt{0} in the control
+byte header will be more compressible for zstd since it heavily relies on
+the dictionary-based encoding LZ4. It is clear that vbbe21 has a positive impact
+on space saving, not only alone but also for downstream compression methods.
+% TODO reference? https://github.com/lz4/lz4/blob/dev/doc/lz4_Frame_format.md
+
+% TODO talk about compression and decompression times
+The fastest method to compress the data beyond its entropy was the
+state-of-the-art method zstd-svb-zd at roughly 1 hour per TiB. The same is true
+for decompression with zstd-svb-zd taking roughly the same amount time. The next
+fastest method was flac at roughly 4 hours per TiB during compression and 1.2
+hours per TiB during decompression. However, its compression ratio is worse than
+zstd-svb-zd meaning that it does not lie on the space-time frontiers depicted in
+Figure \ref{fig:results-ss-t} and so is less successful according to all
+metrics. The next fastest family of methods were the range coding order-0 and
+order-1 (rc0 and rc1) based methods;
+visible as a cluster of four in Figure \ref{fig:results-ct-dt}. These methods
+took around 6 times as long as the state-of-the-art during compression and
+decompression but incured an added space saving of roughly 0.2\% or 2 GiB per
+TiB. rc1-vbbe21-zd produced the most space saving for this family at around
+0.661. This implies that the order-1 model is more successful than the order-0
+model at predicting the zigzag-deltas. The order-1 models also took on average
+half an hour quicker per TiB than the order-0 models during decompression and
+roughly the same time during compression.
+
+The range coding family modelled by order-0 order-1 SSE (rc01s) including the stall
+encodings all gave similar space savings and time costs -- with
+the exception of dstall-fz which took twice as long during compression. The
+space saving of this family is roughly 0.666 at a cost of 16--17 hours per TiB
+during compression and decompression. This equates to 0.7\% more space saved
+than the state-of-the-art but at a factor of 16--17 times slower.
+The SSE range coding family is much slower than the simple order-$n$ models
+since it must maintain an order-0 and order-1 model as well as process their
+output whilst operating at the bit rather than byte level. However, by combining
+both models it is the only family to overcome the entropy of the zig-zag deltas
+meaning that it understands the data more intimately than a simple
+distribution-based model.
+
+Huffman coding performed somewhere between that of the two range coding
+families. Notably, the static Huffman (shuff) method outperformed the regular
+Huffman (huff) method for both space and time metrics. As expected, this means
+that the Huffman table consumed more space than the difference between
+the globally approximated and read-optimal Huffman encodings. shuff-vbbe21-zd
+was the best performing method in this family, with a space saving of 0.661,
+compression time of 9 hours per TiB and decompression time of 10 hours per TiB.
+However, this space saving is only marginally better than rc1-vbbe21-zd whilst it
+took roughly 1.5 times longer during both compression and decompression. In
+theory, both methods should have the same asymptotic running time, but in
+practice, the efficiency of different implementations becomes a driving factor
+which influences the final time results.
+
+Recall from Chapter \ref{chap:probspace} that we can compare two suitable
+compression methods by calculating
+\[\Delta(M_1,M_2):=\delta_2-\delta_1 - \alpha(t^c_2-t^c_1) - \beta(t^d_2-t^d_1).\]
+If $\Delta(M_1,M_2)>0$ then $M_2$ is more suitable than $M_1$. Moreover, recall
+that we derived that $(\alpha,\beta)=(0.01,0.03)$ for the analysis subspace and
+$(\alpha,\beta)=(\frac{1}{960},\frac{1}{192})$ for the archival subspace. Using
+this equation we can compare the suitability of the novel methods to that of the
+state-of-the-art for the analysis and archival subspace. In particular, for an
+increase in space saving
+by 0.007 -- which is what the best method achieves -- the compression and
+decompression time must satisfy
+\[ t^c+3t^d-4.7<0 \]
+to be more suitable for the analysis subspace and satisfy
+\[ t^c+5t^d-12.72<0 \]
+to be more suitable for the archival subspace. None of the novel methods with a
+space saving around 0.007 satisfy these equations. The problem is that the
+state-of-the-art method is highly optimised whilst the novel methods have been
+simply implemented to work. As a result, for now these novel methods are perhaps
+unsuitable for analysis and archival unless time is not an issue. However,
+future work dedicated to optimisation and multithreading could easily increase
+the suitability of these methods.
+
+% TODO talk about subsequence searching
+% TODO talk about jumps,flats method
+% TODO talk about wavelets
+
+\section{Future Work} \label{chap:disc:future}
+
+There is a lot of room for future work now that increases in space saving have
+been discovered. In particular, integrating the novel methods into slow5lib
+which has a pre-existing multithreading framework would easily increase the
+suitability of these methods. Also, better implementations of each method could
+help decrease their time costs.
+
+Beyond implementation specifics, there are many ideas yet to explore. For
+instance, the metadata of each read such as its length, pore and channel could
+be exploited during compression. This hints at the idea of a multi-read
+compression strategy which may be great for archival purposes where
+decompression is infrequent.
+One multi-read strategy could exploit the fact that
+reads generated by the same channel and pore will have been
+recorded by the same electrode and so will likely have similar properties. This
+is especially true for reads which were generated at similar timestamps as each
+nanopore deteriorates over the course of its sequencing lifetime.
 
 We have exploited the stall in this thesis but homopolymer and slow sections
 exhibit similar characteristics to the stall and hence could also be separately
-compressed. Furthermore, there may be better ways of transforming and
-compressing the stall which are more space saving than the current FOR \& range
-coding approach.
+compressed. Furthermore, there may be more successful transformations of the
+stall which increase space saving than the current strategy which combines FOR
+and range coding.
 
-%Multi-read compression?
+There are also other nanopore data sets to analyse and understand. Non-human
+data sets may present other challenges or advantages. The same is true for RNA
+and non-PromethION data.
+
+%One solution , multithreading across reads has the
+%potential to significantly decrease the running time of these methods. Further
+%work dedicated to optimising the implementations could easily place these
+%methods within the archival subspace if not the analysis subspace.
+
 %Lossy
-%Using metadata more
 %Differential coding over larger distances
+%range coding with a static distribution

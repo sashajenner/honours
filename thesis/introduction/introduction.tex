@@ -2,27 +2,73 @@
 
 % Explain what I am doing and why to my Mum...
 % Outline of Chapters
-
-% Contributions to research?
+	% One sentence per chapter
+% Contributions
 % 	Evaluate current state of the art
 % 	Testing environment setup (eg github)
 % 	Design and implement superior algo
 
-Nanopore sequencing is used to determine the nucleotide sequence (A, C, T or U, and G) of a DNA or RNA molecule.
-It typically produces around 1 TiB of data for a human DNA sequencing run.
+The DNA sequence of an organism encodes the information necessary for its
+survival and reproduction.
+Because of its key role in living organisms, DNA sequencing has become a
+burgeoning field in both academic research and clinical medicine.
+%Knowledge of this sequence can be used to identify,
+%diagnose and treat genetic diseases.
+Nanopore sequencing is one such approach used to determine the order of
+nucleobases (A, C, T and G) in a DNA molecule.
+
+Nanopore sequencing records the ionic current as a DNA molecule passes through a
+nanoscale protein pore (or \textit{nanopore}). Disturbances in the resulting
+current signal are used to determine the nucleobases of the DNA molecule.
+
+The problem is that nanopore sequencing produces a huge volume of data which is
+being recorded at an increasing rate and often needs to be archived for several
+years due to certain data regulations.
+For instance, the Genomic Technologies Group at the Garvan Institute of Medical
+Research regularly perform between 5 and 10 clinical human DNA sequencing runs a
+week which need to be archived for up to 10 years. This amounts to between 260
+and 520 TiB a year or up to an additional USD \$6000 a year when archiving with
+Google Cloud Storage. Over 10 years this cost accumulates to roughly USD
+\$\num{330000}.
+
+Data compression solves this problem by removing statistical redundancies in the
+data and hence decreasing its size.
+Lossless data compression achieves
+this without losing any information in the process. Decompression can then be
+performed to reobtain the original data. Data compression was founded on the
+principles of information theory laid out by Shannon in 1948. Entropy encoding
+is one such technique which encodes each symbol with a binary code. Huffman
+coding is a famous example which encodes the most frequently occuring symbols with the
+smallest codes and the least frequent with the largest. Arithmetic or range
+coding is another such method which encodes a sequence of symbols as one number
+within some range. These methods attempt to approach the entropy of the data
+which represents the level of uncertainty inherent in the data's distribution.
+
+The state-of-the-art method used to compress nanopore signal data takes the
+differences between each successive point, applies a 
+
+% Past methods
+
+%Hence, compressing the data as much as possible without losing any information
+%is highly desired.
+
+%It typically produces around 1 TiB of data for
+%a human DNA sequencing run.
 % How many runs by some well known institute or project to put into perspective?
 % G42 (60 promethions 50 samples a week per prom = 3000 samples), Nottingham, UCSC, Washington
-The Genomic Technologies Group at the Garvan Institute of Medical Research regularly perform 5-10 clinical human DNA sequencing runs a week which need to be archived for up to 10 years. This amounts to between 260 and 520 TiB a year.
+%The Genomic Technologies Group at the Garvan Institute of Medical Research
+%regularly perform 5-10 clinical human DNA sequencing runs a week which need to
+%be archived for up to 10 years. This amounts to between 260 and 520 TiB a year.
 % How much data produced in certain years, for different projects, etc. ?
 % normal research 5 years
 % medical related 5-10 years
 % NHMRC ARC uni data regulations
 
-Around 3 billion bases in the human genome.
-Each base is recorded by roughly 10 signal points (=30 billion points).
-2 bytes per integer (=60 GiB)
-To increase sequencing accuracy each base is recorded many times over. For 20 x coverage (=1 TiB)
-Many labs doing human DNA sequencing at a large rate.
+%Around 3 billion bases in the human genome.
+%Each base is recorded by roughly 10 signal points (=30 billion points).
+%2 bytes per integer (=60 GiB)
+%To increase sequencing accuracy each base is recorded many times over. For 20 x coverage (=1 TiB)
+%Many labs doing human DNA sequencing at a large rate.
 
 \section{Contributions}
 \begin{itemize}
@@ -55,3 +101,5 @@ static huffman method is proposed which also has a higher compression ratio than
 the state-of-the-art but not as much as the range coding method. The first known
 software benchmark of nanopore signal compression methods was written and
 provided for public access.
+
+\section{Thesis Outline}

@@ -64,10 +64,12 @@ $x$-axis.
 In order to compare the effect of the vbe21 and vbbe21 encodings, a two-way
 table of the space savings of the methods constructed by applying one encoding from the
 first layer (svb-zd, svb16-zd, vbe21-zd and vbbe21-zd) followed by another from
-the second layer (zlib, zstd and rc01s) is displayed in Table
+the second layer (none, zlib, zstd and rc01s) is displayed in Table
 \ref{tab:results-layer}. The constructed method with the highest space saving for
 each method in the second layer is highlighted in grey and the method with the
-highest space saving overall is highlighted in a darker grey.
+highest space saving overall is highlighted in a darker grey. The `none'
+compression method in the second layer means that no compression was applied in
+that step.
 
 The compression and decompression time (in hours per TiB) is plotted against the
 space saving for all methods in Figures \ref{fig:results-ss-ct-big} and

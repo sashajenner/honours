@@ -1,0 +1,22 @@
+\begin{table}
+    \caption{\label{tab:results-layer}A two-way table of the space saving after
+applying a compression method in the first layer followed by one in the second
+layer. The method with the highest space saving for each second layer is
+highlighted in grey, and the method with the highest space saving overall is
+highlighted in a darker grey.}
+    \begin{tabular}{l|l|l|l|l|l|}
+\multicolumn{6}{c}{First Layer} \\
+\cline{2-6}
+\parbox[t]{3mm}{\multirow{5}{*}{\rotatebox[origin=c]{90}{Second Layer}}} &
+& svb-zd & svb16-zd & vbe21-zd & vbbe21-zd \\
+\cline{2-6}
+	    &none &0.37497255&0.43747228&0.49987982&\cellcolor{lightgray}0.49992849\\
+\cline{2-6}
+&zlib & 0.64073678 & 0.64108121 & 0.64161254 & \cellcolor{lightgray}0.64163978\\
+\cline{2-6}
+&zstd & \cellcolor{lightgray}0.65852009 & 0.65851007 & 0.65848199 & 0.65851816\\
+\cline{2-6}
+&rc01s & 0.66560461 & 0.66561660 & 0.66564996 & \cellcolor{gray}0.66569862\\
+\cline{2-6}
+    \end{tabular}
+\end{table}

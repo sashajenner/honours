@@ -4,7 +4,8 @@
 \contentsline {chapter}{\tocchapter {Chapter}{}{List of Figures}}{vii}{chapter*.6}%
 \contentsline {chapter}{\tocchapter {Chapter}{}{List of Tables}}{xii}{chapter*.6}%
 \contentsline {chapter}{\tocchapter {Chapter}{1}{Introduction}}{1}{chapter.1}%
-\contentsline {section}{\tocsection {}{1.1}{Contributions}}{1}{section.1.1}%
+\contentsline {section}{\tocsection {}{1.1}{Contributions}}{2}{section.1.1}%
+\contentsline {section}{\tocsection {}{1.2}{Thesis Outline}}{2}{section.1.2}%
 \contentsline {chapter}{\tocchapter {Chapter}{2}{Literature Review}}{3}{chapter.2}%
 \contentsline {section}{\tocsection {}{2.1}{Nanopore Sequencing}}{3}{section.2.1}%
 \contentsline {section}{\tocsection {}{2.2}{Data Compression}}{4}{section.2.2}%
@@ -38,8 +39,9 @@
 \contentsline {section}{\tocsection {}{5.3}{Wavelet}}{63}{section.5.3}%
 \contentsline {chapter}{\tocchapter {Chapter}{6}{Results}}{64}{chapter.6}%
 \contentsline {chapter}{\tocchapter {Chapter}{7}{Discussion}}{74}{chapter.7}%
-\contentsline {section}{\tocsection {}{7.1}{Future Work}}{74}{section.7.1}%
-\contentsline {chapter}{\tocchapter {Chapter}{8}{Conclusion}}{75}{chapter.8}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{76}{chapter*.68}%
-\contentsline {section}{\tocsection {}{8.1}{Subsequence Searching}}{76}{section.8.1}%
-\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{77}{chapter*.70}%
+\contentsline {section}{\tocsection {}{7.1}{Experiments}}{74}{section.7.1}%
+\contentsline {section}{\tocsection {}{7.2}{Future Work}}{76}{section.7.2}%
+\contentsline {chapter}{\tocchapter {Chapter}{8}{Conclusion}}{78}{chapter.8}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{Appendix}}{79}{chapter*.68}%
+\contentsline {section}{\tocsection {}{8.1}{Subsequence Searching}}{79}{section.8.1}%
+\contentsline {chapter}{\tocchapter {Chapter}{}{Bibliography}}{80}{chapter*.70}%

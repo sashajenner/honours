@@ -1,0 +1,33 @@
+\begin{figure}
+\centering
+%\input{plots/reads.blow5.test.ss-ct}
+\subfloat[\label{fig:results-ss-ct-big}]{
+\includegraphics[scale=0.7,valign=t]{plots/reads.blow5.test.ss-ct.pdf}
+}
+\subfloat[\label{fig:results-ss-ct-small}]{
+\includegraphics[scale=0.7,valign=t]{plots/reads.blow5.test.ss-ct06.pdf}
+}
+
+\subfloat[\label{fig:results-ss-dt-big}]{
+\includegraphics[scale=0.7,valign=t]{plots/reads.blow5.test.ss-dt.pdf}
+}
+\subfloat[\label{fig:results-ss-dt-small}]{
+\includegraphics[scale=0.7,valign=t]{plots/reads.blow5.test.ss-dt06.pdf}
+}
+\caption{\label{fig:results-ss-t}The (de)compression time (in hours per TiB)
+	versus space saving of various methods. The state-of-the-art method is
+	coloured in red and the labelled methods are on the
+	space--(de)compression-time frontier. That is, for each labelled method
+	in Figures \ref{fig:results-ss-ct-big} and
+	\ref{fig:results-ss-ct-small}
+	there is no other compression method which produces a greater space
+	saving in less time. Whilst for each labelled method in Figures
+	\ref{fig:results-ss-dt-big} and \ref{fig:results-ss-dt-small} there is
+	no other compression method which has a greater space saving and
+	decompresses in less time.
+	Figures \ref{fig:results-ss-ct-big} and \ref{fig:results-ss-dt-big} show all the
+	methods. Whilst Figures \ref{fig:results-ss-ct-small} and
+	\ref{fig:results-ss-dt-small} show the methods which are on their
+	respective froniter and have a space saving greater than or equal to the
+	state-of-the-art.}
+\end{figure}
