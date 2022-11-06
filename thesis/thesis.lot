@@ -4,7 +4,7 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \contentsline {table}{\numberline {2.1}{\ignorespaces The number of bytes used and their control code for different supported integer ranges in classical 32-bit, 0-based and 16-bit Stream VByte.\relax }}{12}{table.caption.12}%
-\contentsline {table}{\numberline {2.2}{\ignorespaces A timeline of the major events in the literature.\relax }}{17}{table.caption.16}%
+\contentsline {table}{\numberline {2.2}{\ignorespaces A timeline of the major events in the literature.\relax }}{15}{table.caption.15}%
 \addvspace {10\p@ }
 \contentsline {table}{\numberline {3.1}{\ignorespaces Some constant metadata of the NA12878 data set.\relax }}{19}{table.caption.18}%
 \contentsline {table}{\numberline {3.2}{\ignorespaces The variable metadata of the read with ID e9f08690-171f-476f-9119-5330d0290126 from the NA12878 data set.\relax }}{19}{table.caption.19}%
@@ -21,10 +21,10 @@
 \contentsline {table}{\numberline {5.3}{\ignorespaces Summary statistics of the data's stall lengths.\relax }}{56}{table.caption.51}%
 \addvspace {10\p@ }
 \contentsline {table}{\numberline {6.1}{\ignorespaces Specifications of the server used for the experiments.\relax }}{65}{table.caption.60}%
-\contentsline {table}{\numberline {6.2}{\ignorespaces The compression ratio, bits used per symbol and compressed size (in GiB) of the data set after compressing each read sequentially using each of the given methods. It is sorted by compression ratio (lowest to highest) and the state-of-the-art method is highlighted in grey. The methods which have a greater compression ratio than the state-of-the-art are highlighted in a lighter grey. The two horizontal lines represent the entropy of the data (7.70 bits per symbol) and the entropy of the deltas (5.39 bits per symbol). Hence, methods below the first horizontal line have fewer bits per symbol than the entropy of the data and so are suitable. A hyphen (`-') between methods means that they are applied to the original data in layers from right to left.\relax }}{68}{table.caption.61}%
-\contentsline {table}{\numberline {6.3}{\ignorespaces The total compression and decompression time in hours per TiB and the compression ratio after compressing each read from the data sequentially using each of the given methods. It is sorted by the compression time (fastest to slowest) and the state-of-the-art method is highlighted in grey. The methods which have a greater compression ratio than the state-of-the-art are highlighted in a lighter grey.\relax }}{69}{table.caption.62}%
-\contentsline {table}{\numberline {6.4}{\ignorespaces The total compression and decompression time in hours per TiB and the compression ratio after compressing each read from the data sequentially using each of the given methods. The data is equivalent to Table \ref {tab:results-time-com} but it is sorted by the decompression time (fastest to slowest). The state-of-the-art method is highlighted in grey and the methods which have a greater compression ratio than the state-of-the-art are highlighted in a lighter grey.\relax }}{70}{table.caption.63}%
-\contentsline {table}{\numberline {6.5}{\ignorespaces A two-way table of the space saving after applying a compression method in the first layer followed by one in the second layer. The method with the highest space saving for each second layer is highlighted in grey, and the method with the highest space saving overall is highlighted in a darker grey.\relax }}{71}{table.caption.64}%
+\contentsline {table}{\numberline {6.2}{\ignorespaces The compression ratio, bits used per symbol and compressed size (in GiB) of the data set after compressing each read sequentially using each of the given methods.}}{68}{table.caption.61}%
+\contentsline {table}{\numberline {6.3}{\ignorespaces The total compression and decompression time in hours per TiB and the compression ratio after compressing each read from the data sequentially using each of the given methods. It is sorted by the compression time (fastest to slowest).}}{70}{table.caption.62}%
+\contentsline {table}{\numberline {6.4}{\ignorespaces The total compression and decompression time in hours per TiB and the compression ratio after compressing each read from the data sequentially using each of the given methods. It is sorted by the decompression time (fastest to slowest).}}{71}{table.caption.63}%
+\contentsline {table}{\numberline {6.5}{\ignorespaces A two-way table of the space saving after applying a compression method in the first layer followed by one in the second layer.}}{72}{table.caption.64}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

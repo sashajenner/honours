@@ -14,7 +14,7 @@
 	[decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
 	  ($(A1)-(0,0.3)$) -- ($(A4)-(0,0.3)$) node[midway,yshift=-3em]{if $flag=1$};
 \end{tikzpicture}
-	\caption{\label{fig:dstall-enc}The dstall encoding stores an extra byte
+	\caption[The dstall encoding.]{\label{fig:dstall-enc}The dstall encoding stores an extra byte
 	at the beginning to mark whether the stall is being encoded or not. If
 	it is being encoded the remaining data matches the stall encoding.
 	Otherwise, $r_s$ is empty and the whole read is compressed using the

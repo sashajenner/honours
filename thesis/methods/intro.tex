@@ -1,0 +1,16 @@
+In this chapter we will design several novel lossless compression methods for
+nanopore signal data.
+Firstly, we begin by presenting a more appropriate container for downstream
+compression known as vbbe21 -- with the intention to replace the role of svb.
+Then, we estimate the effect of applying Huffman coding and range coding to the
+one byte data of vbbe21.
+
+Attempts to exploit the characteristics of the signal data follow. Optimal and
+approximating subsequence searching algorithms are presented and analysed.
+Encoding the stall separately is then explored, followed by a partitioning of the
+data into three types of sequences: jumps, falls and flats.
+
+All the methods presented are implemented in the GitHub repository available
+here: \url{https://github.com/sashajenner/honours}. The benchmarking program is
+also provided which can be used on any nanopore signal data set as long as it's
+in the SLOW5 file format.

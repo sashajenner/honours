@@ -1,7 +1,9 @@
 \subsection{Range Coding}
 
 Now consider encoding the one byte data using range coding rather than Huffman
-coding. Recall that range coding encodes all of the data into one number. To
+coding. Recall
+from Section \ref{sec:data:entropy:range}
+that range coding encodes all of the data into one number. To
 begin with, an initial range of numbers is chosen. Then, for each symbol in the
 data stream the current range is narrowed down based on the current symbol's
 probability of occurrence. A representative number from the final range is then

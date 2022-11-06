@@ -8,7 +8,7 @@
 	\node(B1)  [on chain=1,mytape,fill=yellow!35] {$\underbrace{\overbracket{m}^{\text{4 bytes}}}_{\text{non-stall compressed size}}$};
 	\node(B2)  [on chain=1,mytape,fill=green!35] {$\underbrace{\overbracket{C_{generic}(r\setminus r_s)}^{m\text{ bytes}}}_{\text{non-stall compressed data}}$};
 \end{tikzpicture}
-	\caption{\label{fig:stall-enc}The stall encoding records the stall's
+	\caption[The stall encoding.]{\label{fig:stall-enc}The stall encoding records the stall's
 starting position in the read, length, compressed size and compressed data,
 	followed by the non-stall's compressed size and compressed data.
 	The specific and generic compression algorithms used are known

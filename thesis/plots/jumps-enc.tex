@@ -13,7 +13,7 @@
 	\node(E1)  [on chain=5,mytape,fill=red!20,below of=D1,xshift=0.2cm,node distance=1.9cm] {$\underbrace{\overbracket{m_{fl}}^{\text{4 bytes}}}_{\text{flats compressed size}}$};
 	\node(E2)  [on chain=5,mytape,fill=red!35] {$\underbrace{\overbracket{C_{flats}(z\delta(fl_1),\dots,z\delta(fl_{n_{fl}}))}^{m_{fl}\text{ bytes}}}_{\text{flats compressed data}}$};
 \end{tikzpicture}
-	\caption{\label{fig:jumps-enc}The jumps encoding stores the number of
+	\caption[The jumps encoding.]{\label{fig:jumps-enc}The jumps encoding stores the number of
 jumps and falls, and the first data point in the read since the deltas are being
 encoded. The starting indices of the jumps and falls are compressed then their
 lengths are compressed. Next, the deltas of the jumps and the negative deltas of

@@ -7,48 +7,57 @@ Warning--string name "march" is undefined
 --line 437 of file references.bib
 Warning--string name "march" is undefined
 --line 446 of file references.bib
+Warning--string name "july" is undefined
+--line 464 of file references.bib
+Warning--string name "july" is undefined
+--line 473 of file references.bib
+Warning--string name "july" is undefined
+--line 482 of file references.bib
+Warning--string name "march" is undefined
+--line 499 of file references.bib
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 Warning--empty booktitle in bwt
+Warning--empty journal in png
 Warning--empty journal in huffman-time
-You've used 33 entries,
+You've used 41 entries,
             3070 wiz_defined-function locations,
-            863 strings with 10715 characters,
-and the built_in function-call counts, 17379 in all, are:
-= -- 1367
-> -- 690
-< -- 25
-+ -- 269
-- -- 222
-* -- 1247
-:= -- 2818
-add.period$ -- 133
-call.type$ -- 33
-change.case$ -- 243
-chr.to.int$ -- 31
-cite$ -- 35
-duplicate$ -- 1252
-empty$ -- 1362
-format.name$ -- 299
-if$ -- 3407
+            906 strings with 11809 characters,
+and the built_in function-call counts, 20996 in all, are:
+= -- 1682
+> -- 781
+< -- 35
++ -- 306
+- -- 249
+* -- 1437
+:= -- 3408
+add.period$ -- 166
+call.type$ -- 41
+change.case$ -- 298
+chr.to.int$ -- 42
+cite$ -- 44
+duplicate$ -- 1531
+empty$ -- 1655
+format.name$ -- 338
+if$ -- 4130
 int.to.chr$ -- 3
 int.to.str$ -- 1
-missing$ -- 264
-newline$ -- 171
-num.names$ -- 132
-pop$ -- 487
+missing$ -- 317
+newline$ -- 211
+num.names$ -- 164
+pop$ -- 595
 preamble$ -- 1
-purify$ -- 206
+purify$ -- 247
 quote$ -- 0
-skip$ -- 502
+skip$ -- 646
 stack$ -- 0
-substring$ -- 732
-swap$ -- 611
-text.length$ -- 2
+substring$ -- 900
+swap$ -- 729
+text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 294
-warning$ -- 2
-while$ -- 117
+type$ -- 366
+warning$ -- 3
+while$ -- 146
 width$ -- 0
-write$ -- 421
-(There were 4 warnings)
+write$ -- 521
+(There were 9 warnings)

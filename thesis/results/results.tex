@@ -18,6 +18,16 @@ data.  For each read the following metrics were calculated:
 Then, for each method the total sum of the per-read metrics over the whole data
 set was calculated and recorded.
 
+The optimal subsequence searching algorithms were found to be too time consuming
+in practice and the approximating subsequence algorithm did not achieve a competitive
+compression ratio. Furthermore, the jumps encoding did not perform well either.
+It was found that setting $\epsilon$ to larger values, such that fewer
+jumps/falls were defined, caused the compression ratio to increase and approach
+that the flats encoding. That is, separating the signal as defined in Section
+\ref{sec:jumps} only decreased the compression ratio. Wavelet-based methods were
+also briefly explored, but they were found to be too space consuming to maintain
+the requirement of lossless compression.
+
 The experiments were executed on a rack-mounted server with the typical
 specifications of a small high performance computing server. The server's
 specifications are displayed in Table \ref{tab:server}. Despite the potential to

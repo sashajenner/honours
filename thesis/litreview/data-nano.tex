@@ -1,11 +1,32 @@
 \subsection{Nanopore Compression}
 
-There have been many studies investigating genomic data compression \cite{genomic-comp}. Few, however, have successfully focussed on losslessly compressing the signal data produced directly from nanopore sequencing. One tool called Picopore does not produce any novel insights, but rather, increases the level of gzip compression to the highest possible \cite{picopore}. VBZ16, described in section \ref{sec:state-of-the-art}, is the current state-of-the-art encoding introduced by ONT in 2019.
+There have been many studies investigating genomic data compression
+\cite{genomic-comp}. Few, however, have successfully focussed on losslessly
+compressing nanopore signal data. One tool called Picopore does not produce any
+novel insights, but rather, increases the level of gzip compression to the
+highest possible \cite{picopore}.
+%VBZ16, described in section \ref{sec:state-of-the-art}, is the current state-of-the-art encoding introduced by ONT in 2019.
 
-Rather interestingly, there has been some recent research effects to investigate lossy compression of nanopore signal data. Chandak et. al. found that lossy time-series compressors (LFZip and SZ) tend to have a very small impact on the downstream analysis of nanopore data \cite{lossy-nano, lfzip}. In particular, after reducing the input size by 35-50\%, basecalling and consensus accuracy is reduced by less than 0.2\% and 0.002\% respectively. However, they seem to overlook the prospect of a more efficient lossless compression technique for nanopore signal data:
+Rather interestingly, there has been some recent research effects to investigate
+lossy compression of nanopore signal data. Chandak et. al. found that lossy
+time-series compressors (LFZip and SZ) tend to have a very small impact on the
+downstream analysis of nanopore data \cite{lossy-nano, lfzip}.
+%In particular,
+%after reducing the input size by 35-50\%, basecalling and consensus accuracy is
+%reduced by less than 0.2\% and 0.002\% respectively.
+However, they seem to overlook the prospect of a more efficient lossless
+compression technique for nanopore signal data:
 \begin{displayquote}
-``obtaining further improvements in lossless compression (to VBZ16) is challenging due to the inherently noisy nature of the current measurements'' \cite{lossy-nano}.
+``obtaining further improvements in lossless compression is challenging due to the inherently noisy nature of the current measurements'' \cite{lossy-nano}.
 \end{displayquote}
-For this reason and perhaps due to the novel nature of nanopore sequencing, little has been further attempted in the literature to losslessly compressing nanopore signal data.
+For this reason and perhaps due to the novelty of nanopore sequencing, little
+has been further attempted in the literature to losslessly compressing nanopore
+signal data.
 
-Fortunately, signal data similar in form to nanopore signal data is commonly recorded and extensively researched. Some examples include electrograms of the brain (EEG) and heart (ECG); seismic and radio waves; telemetry data from astronomy; and sonar signals. MCDRC is a deep learning approach to losslessly compressing sensor signal data based on a recurrent neural network architecture known as a multi-channel recurrent unit \cite{mcdrc}. Its results are quite promising, outperforming existing techniques such as BSC, PAQ and CMIX.
+%Fortunately, signal data similar in form to nanopore signal data is commonly
+%recorded and extensively researched. Some examples include electrograms of the
+%brain (EEG) and heart (ECG); seismic and radio waves; telemetry data from
+%astronomy; and sonar signals. MCDRC is a deep learning approach to losslessly
+%compressing sensor signal data based on a recurrent neural network architecture
+%known as a multi-channel recurrent unit \cite{mcdrc}. Its results are quite
+%promising, outperforming existing techniques such as BSC, PAQ and CMIX.

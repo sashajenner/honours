@@ -1,4 +1,4 @@
-\begin{thebibliography}{33}
+\begin{thebibliography}{41}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \providecommand{\urlprefix}{URL }
@@ -30,13 +30,6 @@ Shubham Chandak, Kedar Tatwawadi, Chengtao Wen, Lingyun Wang, Juan
 \newblock In \emph{2020 Data Compression Conference Proceedings (DCC)}, volume
   2020-March, pages 342--351.
 
-\bibitem[{Chen et~al.(2021)Chen, Wu, and Luo}]{mcdrc}
-Qianhao Chen, Wenqi Wu, and Wei Luo. 2021.
-\newblock \href{https://www.mdpi.com/2076-3417/11/21/10240}{Lossless
-  compression of sensor signals using an untrained multi-channel recurrent
-  neural predictor}.
-\newblock \emph{Applied Sciences}, 11(21).
-
 \bibitem[{Collet and Kucherawy(2018)}]{zstd}
 Yann Collet and Murray Kucherawy. 2018.
 \newblock \href{https://www.rfc-editor.org/info/rfc8478}{{Zstandard Compression
@@ -61,6 +54,13 @@ David Deamer, Mark Akeson, and Daniel Branton. 2016.
   sequencing}.
 \newblock \emph{Nature Biotechnology}.
 
+\bibitem[{for Standardization(2004)}]{png}
+International~Organization for Standardization. 2004.
+\newblock Iso/iec 15948:2004 information technology -- computer graphics and
+  image processing -- portable network graphics (png): Functional
+  specification.
+\newblock \url{https://www.iso.org/standard/29581.html}.
+
 \bibitem[{Gage(1994)}]{byte-pair}
 Phillip Gage. 1994.
 \newblock
@@ -84,11 +84,24 @@ Scott Gigante. 2017.
   without loss of functionality}.
 \newblock \emph{F1000Research}, 6.
 
+\bibitem[{Goldstein et~al.(1998)Goldstein, Ramakrishnan, and Shaft}]{for}
+J~Goldstein, R~Ramakrishnan, and U~Shaft. 1998.
+\newblock Compressing relations and indexes.
+\newblock In \emph{Proceedings of the Fourteenth International Conference on
+  Data Engineering}, ICDE ’98, pages 370--379. IEEE Computer Society,
+  Washington, DC, USA.
+
 \bibitem[{Google(2022)}]{google-zigzag}
 Google. 2022.
 \newblock Protocol buffers: Encoding: Signed integers.
 \newblock
   \url{https://developers.google.com/protocol-buffers/docs/encoding#types}.
+
+\bibitem[{Group(2004)}]{compress}
+The~Open Group. 2004.
+\newblock \emph{compress - Shell and Utilities Reference}, third edition.
+\newblock
+  \url{https://pubs.opengroup.org/onlinepubs/009695399/utilities/compress.html}.
 
 \bibitem[{Hernaez et~al.(2019)Hernaez, Pavlichin, Weissman, and
   Ochoa}]{genomic-comp}
@@ -103,6 +116,17 @@ David~A. Huffman. 1952.
 \newblock \href{http://dx.doi.org/10.1109/JRPROC.1952.273898}{A method for the
   construction of minimum-redundancy codes}.
 \newblock \emph{Proceedings of the IRE}, 40(9):1098--1101.
+
+\bibitem[{IANA(1993)}]{zip}
+IANA. 1993.
+\newblock \emph{Registration of a new MIME Content-Type/Subtype -
+  application/zip}.
+\newblock \url{https://www.iana.org/assignments/media-types/application/zip}.
+
+\bibitem[{IETF(2012)}]{gzip}
+IETF. 2012.
+\newblock \emph{The 'application/zlib' and 'application/gzip' Media Types}.
+\newblock \url{https://datatracker.ietf.org/doc/html/rfc6713}.
 
 \bibitem[{Kerrisk(2021)}]{c-clock}
 Michael Kerrisk. 2021.
@@ -131,6 +155,11 @@ Daniel Lemire, Nathan Kurz, and Christoph Rupp. 2018.
 \newblock \href{https://doi.org/10.1016%2Fj.ipl.2017.09.011}{Stream {VByte} :
   Faster byte-oriented integer compression}.
 \newblock \emph{Information Processing Letters}, 130:1--6.
+
+\bibitem[{Mahoney(2013)}]{mahoney}
+Matt Mahoney. 2013.
+\newblock Data compression explained.
+\newblock \url{http://mattmahoney.net/dc/dce.html#Section_522}.
 
 \bibitem[{Marks(2021)}]{lara}
 Lara Marks. 2021.
@@ -165,6 +194,13 @@ ONT. 2022.
 \newblock Flow cells and nanopores.
 \newblock \url{https://nanoporetech.com/how-it-works/flow-cells-and-nanopores}.
 
+\bibitem[{Ramakrishnan and Saha(1997)}]{ecg}
+A.G. Ramakrishnan and S.~Saha. 1997.
+\newblock \href{http://dx.doi.org/10.1109/10.649997}{Ecg coding by
+  wavelet-based linear prediction}.
+\newblock \emph{IEEE Transactions on Biomedical Engineering},
+  44(12):1253--1261.
+
 \bibitem[{Rissanen(1976)}]{arithmetic-coding}
 J.~J. Rissanen. 1976.
 \newblock \href{http://dx.doi.org/10.1147/rd.203.0198}{Generalized kraft
@@ -177,6 +213,11 @@ A.H. Robinson and C.~Cherry. 1967.
   prototype television bandwidth compression scheme}.
 \newblock \emph{Proceedings of the IEEE}, 55(3):356--364.
 
+\bibitem[{Seward(2019)}]{bzip2}
+Julian Seward. 2019.
+\newblock \emph{bzip2 and libbzip2, version 1.0.8}.
+\newblock \url{https://sourceware.org/bzip2/manual/manual.html}.
+
 \bibitem[{Shannon(1948)}]{shannon}
 C.~E. Shannon. 1948.
 \newblock \href{http://dx.doi.org/10.1002/j.1538-7305.1948.tb01338.x}{A
@@ -187,6 +228,11 @@ C.~E. Shannon. 1948.
 Jeffrey~Scott Vitter. 1987.
 \newblock Design and analysis of dynamic huffman codes.
 \newblock \emph{Journal of the ACM}.
+
+\bibitem[{W3C(1990)}]{gif}
+W3C. 1990.
+\newblock \emph{Graphics Interchange Format, Version 89a}.
+\newblock \url{https://www.w3.org/Graphics/GIF/spec-gif89a.txt}.
 
 \bibitem[{Wang et~al.(2021)Wang, Zhao, Bollas, Wang, and Au}]{Wang2021}
 Yunhao Wang, Yue Zhao, Audrey Bollas, Yuru Wang, and Kin~Fai Au. 2021.

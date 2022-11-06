@@ -13,7 +13,7 @@
 	\node(E1)  [on chain=5,mytape,fill=red!20,below of=D1,xshift=0.2cm,node distance=1.9cm] {$\underbrace{\overbracket{m_{fl}}^{\text{4 bytes}}}_{\text{flats compressed size}}$};
 	\node(E2)  [on chain=5,mytape,fill=red!35] {$\underbrace{\overbracket{C_{flats}(z\delta(fl_1),\dots,z\delta(fl_{n_{fl}}))}^{m_{fl}\text{ bytes}}}_{\text{flats compressed data}}$};
 \end{tikzpicture}
-	\caption{\label{fig:jumps-enc-alt1}The alternative jumps encoding which
+	\caption[The alternative jumps encoding.]{\label{fig:jumps-enc-alt1}The alternative jumps encoding which
 	differentiates jumps from falls by recording their zig-zag deltas rather
 	than absolute deltas. The jumps/falls and flats are differentiated from
 	each other by a flag bit stream where 1 represents a jump/fall and 0 a

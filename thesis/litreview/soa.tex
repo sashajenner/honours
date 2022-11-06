@@ -1,0 +1,66 @@
+\section{The State-of-the-Art}
+\label{sec:state-of-the-art}
+
+This leads us to the current state-of-the-art approach for compressing nanopore
+signal data which we will appropriately name zstd-svb-zd, although VBZ is the
+name ONT uses to describe it \cite{vbz}.
+
+%VBZ16 is equivalent to VBZ \cite{vbz} but Stream VByte is replaced with Stream VByte 16.
+
+zstd-svb-zd consists of the following encodings applied successively:
+\begin{enumerate}
+\item differential coding,
+\item zig-zag encoding,
+\item svb and
+\item zstd.
+\end{enumerate}
+
+Differential coding is a bijective function from $\mathbb{R}^n\to\mathbb{R}^n$ classically defined as
+\[ (x_1, x_2, \dots, x_n) \mapsto (\delta_1,\delta_2,\dots,\delta_n) = (x_1, x_2 - x_1, x_3-x_2,\dots,x_n-x_{n-1}). \]
+That is, the original data is replaced by the differences (or \textit{deltas}) between successive data points.
+This transformation is beneficial for compression if the deltas are smaller than
+the data itself or more repetitive.
+Both the encoding and decoding algorithms for differential coding only require one pass of the data.
+However, computation of the \textit{prefix sum} during decompression, defined as
+\[ x_1, x_1 + \delta_2, x_1 + \delta_2 + \delta_3, \dots \]
+is typically a bottleneck in SIMD optimised applications.
+For this reason, there are SIMD-based variations which compute larger deltas, such as $\delta_i = x_i - x_{i-4}$, in exchange for faster decompression times \cite{lemire-simd}.
+For nanopore signal data, larger deltas may not actually result in poor compression ratio performance and may be desirable if fast query time is of higher interest.
+
+The zig-zag encoding is another bijection defined as
+\begin{align*}
+	z&:\mathbb{Z}\to\mathbb{N}_0,\\
+	z&(x)=2|x|-\mathbbm{1}_{x<0}(x).
+\end{align*}
+That is, the negative integers are interleaved with the positive integers such that 0 maps to 0, -1 to 1, 1 to 2, -2 to 3 and so forth.
+See Figure \ref{fig:zigzag} for a mathematical depiction of the zig-zag encoding.
+This encoding allows downstream compression methods to assume all integers are positive and hence ignore the sign-bit from the two's-complement representation.
+Whilst also keeping the relative magnitude of numbers the same -- numbers close to zero remain close to zero and vice-versa for numbers far from zero.
+The zig-zag encoding $z$ of a $b$-bit integer $x$ can be efficiently computed and decoded using standard bitwise operations:
+\begin{lstlisting}
+z = (x << 1) ^ (x >> (b - 1))
+x = (z >>> 1) ^ -(z & 1)
+\end{lstlisting}
+This technique is used for signed integers in Google Protocol Buffers and is briefly described in their Developer Guide \cite{google-zigzag}.
+
+\input{plots/zigzag-fig}
+
+Altogether, the state-of-the-art compression method first applies differential
+coding followed by zig-zag encoding to obtain the `zig-zag deltas' of the data.
+Then, svb is applied to the zig-zag deltas followed by the zstd algorithm. ONT
+believe that using svb16 instead of svb here achieves better compression, but the
+benchmark results presented in Chapter \ref{chap:results} reveal otherwise.
+Hence, zstd-svb-zd is the current state-of-the-art approach for losslessly
+compressing nanopore signal data.
+
+zstd-svb-zd is fast in practice for both compression and decompression. This is
+mostly because its sub-methods (zstd and svb) have been highly optimised.
+Furthermore, it only requires at least four passes of the data during
+compression; finding the zig-zag deltas takes two, svb takes one and zstd
+requires at least one. The same is true for decompression. However, the method
+is very generic, only using the fact that the signal's deltas are small to
+achieve better compression. Hence, by analysing the data and understanding its
+characteristics, we should be able to save more space.
+
+This leads us to the following chapter, where we will conduct a systematic
+analysis of the data, its characteristics and transformations.

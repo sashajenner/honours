@@ -10,7 +10,7 @@
 	- methods remove any results
 		- huffman
 - sunday todo
-	- abstract
+		- abstract
 	- make github of methods and benchmark
 	- make sure intro and outro to all chapters
 	- signature
@@ -19,6 +19,7 @@
 	- spell check all
 	- proof read all slowly
 	- reduce plot size
+	- search for ??
 - common methods
 	- zstd
 	- zlib

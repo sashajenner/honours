@@ -10,7 +10,7 @@
 	\node(C2)  [on chain=1,mytape,fill=yellow!20] {$\underset{\text{of code }m}{\underbrace{\overbracket{b_m}^{\text{1 byte}}}_{\text{bit length}}}$};
 	\node(C3)  [on chain=1,mytape,fill=yellow!20] {$\overbracket{\underbrace{c_m}_{\text{code }m}}^{\lceil b_m/8\rceil\text{ bytes}}$};
 \end{tikzpicture}
-	\caption{\label{fig:huff-tab} The naive encoding of the Huffman table
+	\caption[The naive encoding of the Huffman table.]{\label{fig:huff-tab} The naive encoding of the Huffman table
 where $c_i$ is the Huffman code of symbol $s_i$ with bit length $b_i$; $i$
 ranges from 1 to $m$ (the number of table entries).}
 \end{figure}

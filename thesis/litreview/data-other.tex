@@ -1,11 +1,32 @@
 \subsection{Other Encodings}
 \label{sec:data-other}
 
-There are many other lossless data compression schemes described in the literature. Run-length encoding is one such method which encodes substrings consisting of repeated consecutive symbols, known as \textit{runs}, with their repeated symbol and length. First employed in 1967 for transmission of analogue television signals, run-length encoding proves beneficial when there are many runs, especially of long length \cite{rle}. Unfortunately, nanopore signal data does not contain many such runs and would likely encode poorly under this method.
+The DEFLATE format is a widely popular encoding which combines LZ77 and Huffman
+coding. It is used in ZIP, gzip and the PNG file format, and is supported by the
+zlib library \cite{zip,gzip,png}. Zstandard or \textit{zstd} (pronounced 'zee
+standard') is a lossless data compression algorithm which combines LZ77 and a
+fast entropy-coding stage \cite{zstd}. It has a similar compression ratio to
+DEFLATE but performs much faster, especially during decompression.
 
-Burrows-Wheeler transform is a data compression preprocessing step used to rearrange data in order to increase its number of runs \cite{bwt}. It is easily reversible, such that the original untransformed data can be obtained from the Burrows-Wheeler transformed data. It has been used to great effect in bioinformatics to compress to basecalled genomic data in the form of FASTQ files \cite{bwt-genomic}.
+There are many other lossless data compression schemes described in the
+literature. Run-length encoding is one such method which encodes substrings
+consisting of repeated consecutive symbols, known as \textit{runs}, with their
+repeated symbol and length. First employed in 1967 for transmission of analogue
+television signals, run-length encoding proves beneficial when there are many
+runs, especially of long length \cite{rle}. Unfortunately, nanopore signal data
+does not contain many such runs and would likely encode poorly under this method
+without first applying some transformation.
 
-\subsubsection{Integer compression schemes}
+Burrows-Wheeler transform is a data compression preprocessing step used to
+rearrange data in order to increase its number of runs \cite{bwt}. It is easily
+reversible, such that the original untransformed data can be obtained from the
+Burrows-Wheeler transformed data. It has been used to great effect in
+bioinformatics to compress to basecalled genomic data in the form of FASTQ files
+\cite{bwt-genomic}. bzip2 is a popular implementation of the Burrows-Wheeler
+transform which is more effective than DEFLATE and LZW but performs slower
+\cite{bzip2}.
+
+\subsubsection{Integer compression}
 \label{sec:integer-comp}
 
 \label{sec:bitpack} Bit packing is the process encoding an array of unsigned integers $x_1, x_2, \dots, x_n$
@@ -28,7 +49,14 @@ It can be computed even faster by using an alternative bit packing layout and ex
 
 \input{plots/bitpack}
 % TODO move footnotes to the right spot
-\footnotetext[1]{Figure \ref{fig:bitpack} is heavily inspired by Figure 1 from \cite{lemire-simd}.}
+\footnotetext[3]{Figure \ref{fig:bitpack} is heavily inspired by Figure 1 from \cite{lemire-simd}.}
+
+% FOR encoding
+The Frame-Of-Reference (FOR) encoding subtracts the minimum value from all
+integers before proceeding with bit packing \cite{for}. This potentially decreases the
+number of bits $\hat b$ used per integer and is especially successful if the
+integers have a small range. The minimum value is recorded before the bit packed
+data.
 
 \label{subsubsec:svb}
 Stream VByte is a specialised codec for compressing 32-bit unsigned integers \cite{svb}. It stores each integer using a variable number of bytes (1 to 4) depending on its size. Integers in the range $[2^{8(n-1)},2^{8n}-1]$ are represented using $n>0$ bytes. For example, integers in the range $[1,255]$ are losslessly represented using 1 byte. The integer 0 is a special case missing from the above formula which is classically represented using 1 byte. There is however a variation which instead encodes 0 using 0 bytes and integers in the 3 byte range $[2^{16},2^{24}-1]$ with 4 bytes rather than 3. This is advantageous if 0 occurs more often than integers in the 3 byte range. See Table \ref{tab:groupsvb} for a comparison of the classical and 0-based encoding. The number of bytes used for each integer is stored in an array of control bytes which prefaces the actual data. 2-bit words are used to store the number of bytes used for each integer with 00, 01, 10 and 11 corresponding to 1, 2, 3 and 4 bytes respectively (or 0, 1, 2 and 4 bytes in the 0-based variation). See Figures \ref{fig:groupsvb} for an example of how the encodings are structured.
@@ -36,51 +64,13 @@ Stream VByte is a specialised codec for compressing 32-bit unsigned integers \ci
 %\input{plots/svb-byte}
 \input{plots/svb-table-comb}
 \input{plots/svb}
-\footnotetext[2]{Figures \ref{fig:groupsvb} and \ref{fig:svb-16} are modified versions of Figures 1--3 from \cite{svb}.}
 
-Another variation to this encoding for 16-bit unsigned integers, known as Stream VByte 16, was developed by Oxford Nanopore Technologies in 2022 for compressing nanopore signal data in the POD5 file format \cite{pod5}. It is the same as the classical Stream VByte encoding described above except that each integer is stored using 1 or 2 bytes rather than 1 to 4 bytes. Since there are two different byte lengths, each of the byte lengths is stored using 1 bit; byte lengths 1 and 2 correspond to bit values 0 and 1 respectively. See Table \ref{tab:groupsvb} and Figure \ref{fig:svb-16}. If each integer lies in the range $[0, 2^{16})$ this method saves one bit per integer on average versus classical 32-bit Stream VByte. Due to their similarities, I hypothesise that the compression and decompression speed of Stream VByte 16 is similar if not better than classical Stream VByte. But there is no existing benchmark in the literature which compares both algorithms.
+Another variation to this encoding for 16-bit unsigned integers, known as Stream VByte 16, was developed by ONT in 2022 for compressing nanopore signal data in the POD5 file format \cite{pod5}. It is the same as the classical Stream VByte encoding described above except that each integer is stored using 1 or 2 bytes rather than 1 to 4 bytes. Since there are two different byte lengths, each of the byte lengths is stored using 1 bit; byte lengths 1 and 2 correspond to bit values 0 and 1 respectively. See Table \ref{tab:groupsvb} and Figure \ref{fig:svb-16}. If each integer lies in the range $[0, 2^{16})$ this method saves one bit per integer on average versus classical 32-bit Stream VByte. Due to their similarities, I hypothesise that the compression and decompression speed of Stream VByte 16 is similar if not better than classical Stream VByte. But there is no existing benchmark in the literature which compares both algorithms.
 
 \input{plots/svb-16}
 
-\subsubsection{State-of-the-Art}
-\label{sec:state-of-the-art}
+\footnotetext[4]{Figures \ref{fig:groupsvb} and \ref{fig:svb-16} are modified versions of Figures 1--3 from \cite{svb}.}
 
-This leads us to the current state-of-the-art approach for compressing nanopore signal data which we will name \textit{VBZ16}. VBZ16 is equivalent to VBZ \cite{vbz} but Stream VByte is replaced with Stream VByte 16. VBZ16 consists of the following encodings applied successively:
-
-\begin{enumerate}
-\item differential coding,
-\item zig-zag encoding,
-\item Stream VByte 16 and
-\item Zstandard \cite{zstd}.
-\end{enumerate}
-
-Differential coding is a bijective function from $\mathbb{R}^n\to\mathbb{R}^n$ classically defined as
-\[ (x_1, x_2, \dots, x_n) \mapsto (\delta_1,\delta_2,\dots,\delta_n) = (x_1, x_2 - x_1, x_3-x_2,\dots,x_n-x_{n-1}). \]
-That is, the original data is replaced by the differences (or \textit{deltas}) between successive data points.
-This transformation is beneficial if the deltas are smaller than the data itself allowing for better compression ratios.
-Both the encoding and decoding algorithms for differential coding only require one pass of the data.
-However, computation of the \textit{prefix sum} during decompression, defined as
-\[ x_1, x_1 + \delta_2, x_1 + \delta_2 + \delta_3, \dots \]
-is typically a bottleneck in SIMD optimised applications.
-For this reason, there are SIMD-based variations which compute larger deltas, such as $\delta_i = x_i - x_{i-4}$, in exchange for faster decompression times \cite{lemire-simd}.
-For nanopore signal data, larger deltas may not actually result in poor compression ratio performance and may be desirable if fast query time is of higher interest.
-
-Zig-zag encoding is another bijection defined as
-\begin{align*}
-	z&:\mathbb{Z}\to\mathbb{N}_0,\\
-	z&(x)=2|x|-\mathbbm{1}_{x<0}(x).
-\end{align*}
-That is, the negative integers are interleaved with the positive integers such that 0 maps to 0, -1 to 1, 1 to 2, -2 to 3 and so forth.
-See Figure \ref{fig:zigzag}.
-This encoding allows downstream compression methods to assume all integers are positive and hence ignore the sign-bit from the two's-complement representation.
-Whilst also keeping the relative magnitude of numbers the same - numbers close to zero remain close to zero and vice-versa for numbers far from zero.
-The zig-zag encoding $z$ of a $b$-bit integer $x$ can be efficiently computed and decoded using standard bitwise operations:
-\begin{lstlisting}
-z = (x << 1) ^ (x >> (b - 1))
-x = (z >>> 1) ^ -(z & 1)
-\end{lstlisting}
-This technique is used for signed integers in Google Protocol Buffers and is briefly described in their Developer Guide \cite{google-zigzag}.
-
-\input{plots/zigzag-fig}
-
-This requires at least four passes over the input data depending on how many passes Zstandard performs.
+For the remainder of the thesis, let \textit{svb}, \textit{svb0} and
+\textit{svb16} refer to classical 32-bit, 0-based and 16-bit Stream VByte
+respectively.

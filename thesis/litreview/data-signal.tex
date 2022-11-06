@@ -1,5 +1,22 @@
-\subsection{Signal Compression}
+\subsubsection{Signal compression}
 
-\subsubsection{Wavelet Compression}
+A \textit{wavelet} is a brief oscillation which starts and ends with an
+amplitude of zero. Sets of complementary wavelets are desired for wavelet-based
+compression since they can reversibly decompose a signal. Wavelet transforms are
+more useful than Fourier transforms for approximating signal data with sharp
+peaks and non-periodic behaviour. Wavelet compression is most applicable to
+image data but has been successfully applied to audio and video data as well as
+electrocardiograph (ECG) signals \cite{ecg}. It is used in the JPEG 2000 standard.
 
-A \textit{wavelet} is a brief oscillation which starts and ends with an amplitude of zero. Sets of complementary wavelets are desired for wavelet-based compression since they can reversibly decompose a signal. Wavelet transforms are more useful than Fourier transforms for approximating signal data with sharp peaks and non-periodic behaviour. Wavelet compression is most applicable to image data but has been successfully applied to audio and video data as well as electrocardiograph (ECG) signals. It is used in the JPEG 2000 standard.
+Wavelet compression decomposes a signal into the coefficients of mathematical
+functions.
+Typically, the wavelet transform approximates the signal meaning that in order
+to achieve lossless compression the residuals between the approximation and the
+actual signal must be encoded. This encoding is more compressible if the
+approximation is accurate. Furthermore, the coefficients must also be recorded
+in order to reconstruct the wavelet transform during decompression.
+
+Discrete wavelet transforms (DWT) is the most commonly used wavelet transform in
+signal compression because it can be implemented naturally using a computer
+since it discretely samples each wavelet. There are several DWT forms namely
+Haar, Daubechies and undecimated.

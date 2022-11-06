@@ -6,7 +6,7 @@
 	\node(A3)  [on chain=1,mytape,fill=yellow!35] {$\underbrace{\overbracket{x_{p_1},x_{p_2},\dots,x_{p_e}}^{2e\text{ bytes}}}_{\text{two byte exceptions}}$};
 	\node(A4)  [on chain=1,mytape,fill=green!35] {$\underbrace{\overbracket{x_{q_1},x_{q_2},\dots,x_{q_{n-e}}}^{n-e\text{ bytes}}}_{\text{one byte data}}$};
 \end{tikzpicture}
-	\caption{\label{fig:vbe21} The vbe21 encoding takes two byte integers
+	\caption[The vbe21 encoding.]{\label{fig:vbe21} The vbe21 encoding takes two byte integers
 	$x_1,x_2,\dots,x_n$ and encodes those which cannot fit into one byte as
 	\textit{exceptions} at the beginning of the stream. There are $e$
 	exceptions which are recorded by their original positions
