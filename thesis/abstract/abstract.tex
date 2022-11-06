@@ -1,7 +1,47 @@
 \chapter*{Abstract}
 
-Storing DNA digitally is expensive as it heavily consumes disk space. Hence,
-compression of this DNA data is highly desirable. However, for efficient
-analysis of this data, decompression time must not be overwhelming. A balance
-between the compression rate and decompression time should be taken.
+Lossless compression of nanopore DNA signal data with more space saving than the
+state-of-the-art is highly desirable due to the magnitude and rate of research
+and clinical nanopore data being produced.
+Nanopore DNA sequencing produces a characteristic signal which represents the
+ionic current over time as a molecule's DNA strand passes through a nanoscale
+protein pore.
+This signal is used to determine the order of DNA nucleobases (A,
+C, T \& G) in the molecule; useful for medical diagnosis and forestic biology
+amongst other applications.
+Data compression is necessary for reducing the signal's long-term storage costs
+which are estimated to be in the order of an extra \$6000 each year for a medium
+clinical research facility.
+
+In this thesis, we provide a systematic analysis of nanopore DNA signal data
+including the articulation of its characteristic features and transformations.
+The problem space of suitable compression methods is theorised and several novel
+approaches to compressing nanopore signal data are detailed including a novel
+variable byte encoding vbbe21, a static Huffman encoding, optimal subsequence
+searching, stall encoding and separation into the jumps, falls and flats.
+The first comprehensive benchmark of existing and novel compression methods for
+nanopore signal data is conducted on the NA12878 data set.
+A new state-of-the-art space saving of 0.666 is achieved using dstall-fz
+compared to the previous best of 0.659. This combines vbbe21 with dynamic stall
+encoding and range coding modelled by order-0 order-1 secondary symbol
+estimation (SSE).
+
+For archiving purposes, it is advised to use the dstall-fz-1500 method which
+closely approximates the decision boundary of dstall-fz in half the compression
+time -- achieving a space saving of 0.666. For faster compression and
+decompression speed than dstall-fz-1500 but better compression than the previous
+state-of-the-art, rc1-vbbe21-zd is recommended which achieves a space saving of
+0.661. If analysis speed is the utmost priority, it is advised to continue using
+the previous state-of-the-art zstd-svb-zd until faster implementations of the
+articulated methods are available.
+
+%Nanopore DNA sequencing is one approach used to determine the order of DNA
+%nucleobases (A, C, T \& G) in a molecule
+
+%These data sets are often sensitive
+
+%Storing DNA digitally is expensive as it heavily consumes disk space. Hence,
+%compression of this DNA data is highly desirable. However, for efficient
+%analysis of this data, decompression time must not be overwhelming. A balance
+%between the compression rate and decompression time should be taken.
 

@@ -5,48 +5,50 @@ The style file: style/mybibstyle.bst
 Database file #1: references.bib
 Warning--string name "march" is undefined
 --line 437 of file references.bib
+Warning--string name "march" is undefined
+--line 446 of file references.bib
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 Warning--empty booktitle in bwt
 Warning--empty journal in huffman-time
-You've used 32 entries,
+You've used 33 entries,
             3070 wiz_defined-function locations,
-            859 strings with 10554 characters,
-and the built_in function-call counts, 17013 in all, are:
-= -- 1334
-> -- 680
-< -- 24
-+ -- 265
-- -- 219
-* -- 1231
-:= -- 2751
-add.period$ -- 129
-call.type$ -- 32
-change.case$ -- 236
-chr.to.int$ -- 30
-cite$ -- 34
-duplicate$ -- 1226
-empty$ -- 1334
-format.name$ -- 295
-if$ -- 3336
+            863 strings with 10715 characters,
+and the built_in function-call counts, 17379 in all, are:
+= -- 1367
+> -- 690
+< -- 25
++ -- 269
+- -- 222
+* -- 1247
+:= -- 2818
+add.period$ -- 133
+call.type$ -- 33
+change.case$ -- 243
+chr.to.int$ -- 31
+cite$ -- 35
+duplicate$ -- 1252
+empty$ -- 1362
+format.name$ -- 299
+if$ -- 3407
 int.to.chr$ -- 3
 int.to.str$ -- 1
-missing$ -- 259
-newline$ -- 166
-num.names$ -- 128
-pop$ -- 478
+missing$ -- 264
+newline$ -- 171
+num.names$ -- 132
+pop$ -- 487
 preamble$ -- 1
-purify$ -- 201
+purify$ -- 206
 quote$ -- 0
-skip$ -- 487
+skip$ -- 502
 stack$ -- 0
-substring$ -- 719
-swap$ -- 602
+substring$ -- 732
+swap$ -- 611
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 285
+type$ -- 294
 warning$ -- 2
-while$ -- 114
+while$ -- 117
 width$ -- 0
-write$ -- 409
-(There were 3 warnings)
+write$ -- 421
+(There were 4 warnings)

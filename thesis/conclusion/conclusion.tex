@@ -1,4 +1,35 @@
 \chapter{Conclusion} \label{chap:conclusion}
 
-The conclusion goes here.
+Nanopore sequencing is a next-generation approach to DNA sequencing known for
+its speed, portability, long reads and real-time analysis. Its increasing
+popularity has been further influenced by the advent of the COVID-19 pandemic
+which resulted in approximately one quarter of all SARS-CoV-2 virus genomes
+being sequenced by nanopore devices \cite{lara}. This popularity has caused a
+dramatic increase in data storage costs pertaining to the magnitude of the data
+which is around 1 TB per human DNA sequencing run.
+The current approach to compressing this data does not consider its
+unique characteristics and thus misses crucial space saving opportunities.
 
+As a result, we set out to discover lossless compression methods for archiving
+nanopore signal data which achieve more space saving that the current
+state-of-the-art.
+Data compression is fundamentally an artificial intelligence problem of
+understanding the data and making the correct predictions. Hence, after
+providing the background material for the thesis, we conducted a systematic
+analysis of the signal data including an examination of its characteristics and
+suitable transformations.
+Then, we explored several strategies which exploit the signal data's
+characteristics including the vbbe21-zd encoding, static Huffman, optimal
+subsequence searching, stall-specific encoding and separating the jumps and
+falls from the flats.
+After setting up the first comprehensive benchmark of existing and novel
+compression methods for nanopore signal data, a large experiment was conducted
+wherein each read from the downsampled NA12878 data set was compressed and
+decompressed sequentially using each method.
+Space and time metrics were collected and a superior space saving of 0.666
+versus 0.659 -- which outperforms the entropy of the deltas -- was achieved
+using the dstall-fz method. This strategy combines vbbe21 with dynamic stall
+encoding and range coding modelled by order-0 order-1 SSE. Furthermore, an
+alternative dynamic stall encoder, dstall-fz-1500, was found to approximate the
+decision boundary of dstall-fz whilst achieving the same space saving of 0.666 in
+half the compression time.

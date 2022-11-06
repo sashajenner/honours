@@ -1,4 +1,4 @@
-\begin{thebibliography}{32}
+\begin{thebibliography}{33}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \providecommand{\urlprefix}{URL }
@@ -131,6 +131,12 @@ Daniel Lemire, Nathan Kurz, and Christoph Rupp. 2018.
 \newblock \href{https://doi.org/10.1016%2Fj.ipl.2017.09.011}{Stream {VByte} :
   Faster byte-oriented integer compression}.
 \newblock \emph{Information Processing Letters}, 130:1--6.
+
+\bibitem[{Marks(2021)}]{lara}
+Lara Marks. 2021.
+\newblock Nanopore sequencing.
+\newblock
+  \url{https://www.whatisbiotechnology.org/index.php/science/summary/nanopore/nanopore-sequencing-makes-it-possible-to-decode-the}.
 
 \bibitem[{Martin(1979)}]{range-coding}
 G.~Nigel~N. Martin. 1979.

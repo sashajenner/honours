@@ -15,42 +15,50 @@ burgeoning field in both academic research and clinical medicine.
 %Knowledge of this sequence can be used to identify,
 %diagnose and treat genetic diseases.
 Nanopore sequencing is one such approach used to determine the order of
-nucleobases (A, C, T and G) in a DNA molecule.
+DNA nucleobases (A, C, T and G) in a molecule.
 
 Nanopore sequencing records the ionic current as a DNA molecule passes through a
-nanoscale protein pore (or \textit{nanopore}). Disturbances in the resulting
-current signal are used to determine the nucleobases of the DNA molecule.
+nanoscale protein pore (or \textit{nanopore}).
+This process is depicted in Figure \ref{fig:dna-nano}.
+Disturbances in the ionic current
+signal are used by computational algorithms to determine the DNA sequence.
+Oxford Nanopore Technologies (ONT) is the leading producer of nanopore
+sequencing machines -- such as the portable MinION shown in Figure \ref{fig:minion}.
+
+\input{plots/minion}
+\input{plots/dna-nano}
 
 The problem is that nanopore sequencing produces a huge volume of data which is
 being recorded at an increasing rate and often needs to be archived for several
 years due to certain data regulations.
 For instance, the Genomic Technologies Group at the Garvan Institute of Medical
 Research regularly perform between 5 and 10 clinical human DNA sequencing runs a
-week which need to be archived for up to 10 years. This amounts to between 260
-and 520 TiB a year or up to an additional USD \$6000 a year when archiving with
-Google Cloud Storage. Over 10 years this cost accumulates to roughly USD
-\$\num{330000}.
+week which need to be archived for up to 10 years.
+This amounts to between 260 and 520 terabytes of new data each year, which costs
+up to USD \$6000 a year to archive using Google Cloud Storage. Over 10 years,
+this amount of data would accumulate to almost 28 petabytes or roughly USD
+\$\num{330000} in storage costs.
 
-Data compression solves this problem by removing statistical redundancies in the
-data and hence decreasing its size.
-Lossless data compression achieves
-this without losing any information in the process. Decompression can then be
-performed to reobtain the original data. Data compression was founded on the
-principles of information theory laid out by Shannon in 1948. Entropy encoding
-is one such technique which encodes each symbol with a binary code. Huffman
-coding is a famous example which encodes the most frequently occuring symbols with the
-smallest codes and the least frequent with the largest. Arithmetic or range
-coding is another such method which encodes a sequence of symbols as one number
-within some range. These methods attempt to approach the entropy of the data
-which represents the level of uncertainty inherent in the data's distribution.
+Data compression solves this problem by identifying and removing statistical
+redundancies in the data and hence decreasing its overall size.
+Compression methods which achieves this without losing any information are
+known as \textit{lossless}. These methods can then be reversed to decompress the
+compressed data and reobtain the original information. One such lossless
+compression method, known as entropy encoding, attempts to approach the entropy
+of the data -- the level of uncertainty inherent in the data's distribution --
+by replacing each symbol with a binary code. Huffman coding is a famous example
+of entropy encoding which uses the probability distribution of the symbols to
+construct optimal-length binary codes.
 
-The state-of-the-art method used to compress nanopore signal data takes the
-differences between each successive point, applies a 
-
-% Past methods
-
-%Hence, compressing the data as much as possible without losing any information
-%is highly desired.
+The state-of-the-art method used to compress nanopore signal data begins by
+taking the differences between each successive point. These differences, or
+\textit{deltas}, are then transformed to the positive integers by the zig-zag
+encoding. Each zig-zag delta is recorded using the minimum number of bytes
+possible in an encoding known as Stream VByte. Then, this is compressed using
+zstd -- a very fast compression algorithm which combines entropy encoding with
+dictionary-matching. This method reduces the data to 34.1\% of its original
+size. However, it remains to discover whether more space can be saved through a
+better understanding of nanopore signal data.
 
 %It typically produces around 1 TiB of data for
 %a human DNA sequencing run.
@@ -71,35 +79,46 @@ differences between each successive point, applies a
 %Many labs doing human DNA sequencing at a large rate.
 
 \section{Contributions}
-\begin{itemize}
-\item first thorough analysis of nanopore DNA signal data including
-	understanding its characteristic sections.
-\item first known software benchmark of nanopore signal compression methods.
-\item vbbe21: an encoding container for nanopore signal data which improves the
-	compression ratio of downstream compression methods.
-It encodes the one-byte data as is and the two-byte `exceptions' are bit packed.
-It has the same time complexity for both encoding and decoding as the
-state-of-the-art svb(16).
-\item static huffman: Huffman compression method with a higher compression ratio than
-	the state-of-the-art which uses a predetermined table and tree.
-\item range coding: a compression method with an even higher compression ratio
-	than static huffman using order-0 and order-1 context mixing followed by
-	SSE
-\item stall encoding: dynamic domain-specific frame of reference encoding of the
-	stall which can be paired with another method on the non-stall.
-\item new state-of-the-art method which combines stall encoding, vbbe21 and
-	range coding.
-\end{itemize}
 
-The first thorough analysis of nanopore DNA signal data was conducted including
-understanding its characteristic sections. A new state-of-the-art compression
-method with a better compression ratio and the same theoretical compression and
-decompression time complexity as the previous state-of-the-art was designed. It
-combines a novel encoding of the signal data's zig-zag deltas with
-domain-specific stall encoding and predictive range coding. An alternative
-static huffman method is proposed which also has a higher compression ratio than
-the state-of-the-art but not as much as the range coding method. The first known
-software benchmark of nanopore signal compression methods was written and
-provided for public access.
+The first systematic analysis of nanopore DNA signal data architecture was
+conducted including the articulation of characteristic features as relevant to
+data compression. A novel measure for comparing the practical suitability of two
+compression methods is proposed.
+
+A new state-of-the-art compression method was designed which reduces the data to 33.4\%
+of its original size (0.7\% better than the previous state-of-the-art). It
+combines a novel encoding of the signal data's zig-zag deltas known as vbbe21
+with dynamic domain-specific stall encoding and predictive range coding. Three
+range coding model predictors -- order-0, order-1 and secondary symbol
+estimation (SSE) -- were evaluated and found to reduce the data to 34.1\%,
+33.9\% and 33.4\% of its original size respectively.
+An alternative static Huffman compression method is proposed which also
+outperforms the state-of-the-art in terms of space reduction, reducing the data
+to 33.9\% of its original size.
+
+The first detailed and comprehensive benchmark of nanopore signal data
+compression, including both existing and novel methods, was conducted and
+released for public access.
 
 \section{Thesis Outline}
+
+To begin with, we provide a detailed introduction to nanopore sequencing,
+information theory and data compression (Chapter \ref{chap:litreview}). Then, we
+explore the nature of the data through a systematic analysis which involves
+identifying its characteristics and understanding its relevant transformations
+(Chapter \ref{chap:data}).
+
+Next, the problem space is defined with respect to the requirements of
+practicing bioinformaticians and a mathematical metric for comparing the
+suitability of two compression methods is presented (Chapter
+\ref{chap:probspace}). Afterwards, several novel encodings and compression
+methods for nanopore signal data are proposed and detailed, including the
+evaluation of their running times and space savings (Chapter
+\ref{chap:methodology}).
+
+The results of a comprehensive benchmark of the existing and novel methods are
+then contextualised, presented and visualised (Chapter \ref{chap:results}).
+Following this is a detailed discussion of the results including their impact
+and limitations, as well as an overview of future work in the landscape of
+nanopore signal compression (Chapter \ref{chap:disc}). Finally, we conclude by
+summarising the crucial findings of this thesis (Chapter \ref{chap:conclusion}).
