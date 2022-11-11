@@ -1,0 +1,34 @@
+- motivation/objective
+
+When a human DNA sample is sequenced using nanopore technology, around half a
+trillion data points are recorded.
+This also happens to be the surface area of the Earth in metres squared - so
+we're talking about a lot of data here.
+This data is regularly recorded, analysed and then archived for up to
+10 years. As you can imagine, this accumulates a lot of data. For example, my
+colleagues at the Garvan Institute of Medical Research produce up to half a
+petabyte each year.
+Storing this much data is not cheap
+
+Using Google Cloud storage to archive this data would cost
+up to 100 grand a year.
+
+One solution to reducing these storage costs is lossless compression.
+
+without losing any data.
+
+does
+not lose any data. The state-of-the-art compression method reduces the data to
+34.1% of its original size. But this method does not consider the data's unique
+characteristics. A specificall
+
+- background lit
+- method
+- main results
+- discussion/evaluation/contribution
+- conclusion/future work
+
+Large data sets produced from nanopore sequencing are regularly recorded
+and often require long-term archiving due to strict research and clinical data
+regulations.
+

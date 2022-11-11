@@ -1,0 +1,255 @@
+\documentclass{beamer}
+\setbeamertemplate{navigation symbols}{}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{takahashi}
+\usepackage{xcolor}
+\definecolor{blue}{rgb}{0.2,0.2,0.7}
+\usepackage{tikz}
+\usepackage[export]{adjustbox}
+\newcommand{\stack}[1]{\begin{tabular}{@{}c@{}}#1\end{tabular}}
+
+\title{Lossless Compression Methods for Archiving Nanopore DNA Signal Data}
+\author{
+	Sasha Jenner\\
+	John Stavrakakis\\
+	Ira Deveson\\
+	Hasindu Gamaarachchi
+}
+\institute{B Science and B Adv Studies}
+\date{}
+
+\begin{document}
+\maketitle
+
+% motivation/objectiv
+%\takahashi{\color{blue}{The problem?}}
+%\takahashi{
+%	\stack{
+%	AACATTAAAC AATTCAAATG\\
+%	TGTGTGCGTC TGTCTGAATT\\
+%	CATTTAATTA TTCGTTAATT\\
+%	GATTTTCTAC ACAATTAATA\\
+%	...}
+%}
+%\begin{frame}
+%	\includegraphics[scale=0.25]{nano.png}
+%\end{frame}
+%\begin{frame}
+%	\includegraphics[scale=0.17]{sig.png}
+%\end{frame}
+%\takahashi{
+%	\stack{
+%	1039,588,588,593,586,\\
+%	574,570,585,588,586,\\
+%	578,582,584,586,597,\\
+%	...}
+%}
+%\takahashi{3 000 000 000 bases}
+%\takahashi{
+%	\stack{
+%	3 000 000 000 bases $\times 40$\\
+%	= 120 000 000 000 recorded bases}
+%}
+%\takahashi{
+%	\stack{
+%	3 000 000 000 bases $\times 40$\\
+%	= 120 000 000 000 recorded bases $\times 10$\\
+%	= 1 200 000 000 000 integers}
+%}
+%\takahashi{
+%	\stack{
+%	3 000 000 000 bases $\times 40$\\
+%	= 120 000 000 000 recorded bases $\times 10$\\
+%	= 1 200 000 000 000 integers $\times 2$\\
+%	= 2 400 000 000 000 bytes\\
+%	= 2.4 TB}
+%}
+%\takahashi{10 TB per week}
+%\takahashi{Space $\propto$ \$\$}
+%\takahashi{Decompression $\propto$ Analysis}
+% objectives (research questions)
+%\takahashi{\color{blue}{Objective}}
+%\takahashi{Develop a better lossless encoder}
+%\takahashi{What lossless encoder is better?}
+
+% background lit
+%\takahashi{\color{blue}{The Literature}}
+%\takahashi{Data compression}
+%\takahashi{.mp3, .gz, .zip, .7z}
+%\takahashi{How does it work?}
+%\takahashi{More frequent = Less bits}
+%\takahashi{Huffman coding}
+%\takahashi{
+%	\stack{
+%	AACATTAAAC AATTCAAATG\\
+%	TGTGTGCGTC TGTCTGAATT\\
+%	CATTTAATTA TTCGTTAATT\\
+%	GATTTTCTAC ACAATTAATA\\
+%	...}
+%}
+%\begin{frame}
+%	\begin{figure}
+%	\begin{adjustbox}{minipage=\linewidth,scale=1.5}
+%		\hspace*{2cm}
+%	\begin{tabular}{ c|c }
+%		Symbol & Code\\
+%		A & 00\\
+%		C & 01\\
+%		G & 10\\
+%		T & 11
+%	\end{tabular}
+%	\end{adjustbox}
+%	\end{figure}
+%\end{frame}
+%\takahashi{
+%	\stack{
+%	00000100111100000001 00001111010000001110\\
+%	11101110111001101101 11101101111000001111\\
+%	01001111110000111100 11110110111100001111\\
+%	10001111111101110001 00010000111100001100\\
+%	...}
+%}
+%\begin{frame}
+%	\begin{columns}[t]
+%	\begin{column}{.5\textwidth}
+%	\begin{figure}
+%	\begin{tabular}{ c|c|c }
+%		Symbol & Frequency & Code\\
+%		A & 27 & 00\\
+%		C & 11 & 010\\
+%		G & 9 & 011\\
+%		T & 33 & 1
+%	\end{tabular}
+%	\end{figure}
+%	\end{column}
+%	\begin{column}{.5\textwidth}
+%	\begin{figure}
+%	\begin{tikzpicture}
+%		\node{80}
+%		child {
+%			node{57}
+%			child {node{A} edge from parent node[left]{0}}
+%			child {
+%				node{20}
+%				child {node{C} edge from parent node[left]{0}}
+%				child {node{G} edge from parent node[right]{1}}
+%				 edge from parent node[right]{1}
+%			}
+%			edge from parent node[left]{0}
+%		}
+%		child {node{T} edge from parent node[right]{1}};
+%	\end{tikzpicture}
+%	\end{figure}
+%	\end{column}
+%	\end{columns}
+%\end{frame}
+%\takahashi{
+%	\stack{
+%	00000100011000000010 0000110100000001011\\
+%	1011101110110100111010 101110101011000011\\
+%	0100011100001100 1101001111000011\\
+%	011001111010100010 000100000110000100\\
+%	...}
+%}
+%\takahashi{Compression Ratio = $\frac{2\times 80 bits}{147 bits} \approx 1.1$}
+%\takahashi{gzip}
+%%\begin{frame}
+%%	\includegraphics[scale=1]{gzip.png}
+%%\end{frame}
+%\takahashi{VBZ}
+%\takahashi{
+%	\stack{
+%	Integer sequence\\
+%	Differences\\
+%	Map to unsigned\\
+%	Stream VByte\\
+%	Zstandard}
+%}
+%% TODO scale up
+%%\begin{frame}
+%%	\begin{enumerate}
+%%	\item Integer sequence
+%%	\item Differences
+%%	\item Map to unsigned
+%%	\item Stream VByte
+%%	\item Zstandard
+%%	\end{enumerate}
+%%\end{frame}
+%\takahashi{
+%	\frametitle{Integer sequence}
+%	\stack{
+%	1039,588,588,593,586,\\
+%	574,570,585,588,586,\\
+%	578,582,584,586,597,\\
+%	...}
+%}
+%\takahashi{
+%	\frametitle{Differences}
+%	\stack{
+%	1039,-451,0,5,-7,\\
+%	-12,-4,15,3,-2,\\
+%	-8,4,2,2,11,\\
+%	...}
+%}
+%\takahashi{
+%	\frametitle{Map to unsigned}
+%	\stack{
+%	2078,901,0,10,13,\\
+%	23,7,30,6,3,\\
+%	15,8,4,4,22,\\
+%	...}
+%}
+%\takahashi{
+%	\frametitle{Stream VByte}
+%	\stack{
+%	10|10|00|01|01|\\
+%	01|01|01|01|01|\\
+%	01|01|01|01|01|\\
+%	...\\
+%	0x1e 0x08|0x85 0x03||0x0a|0x0d|\\
+%	0x17|0x07|0x1e|0x06|0x03|\\
+%	0x0f|0x08|0x04|0x04|0x16|\\
+%	...}
+%}
+%\takahashi{Zstandard}
+
+% method
+%\takahashi{\color{blue}{Research Method}}
+%\takahashi{1. Determine the features of the data}
+%\takahashi{2. Experiment with existing encoders}
+%\takahashi{3. Develop a better lossless encoder}
+%\takahashi{(a) Higher best compression ratio}
+%\takahashi{
+%	\stack{
+%	(b) Higher compression-time ratio\\
+%	$=\frac{\text{compression ratio}}{\text{time taken}}$}
+%}
+
+% results
+%\takahashi{\color{blue}{Plan}}
+%\begin{frame}
+%	\begin{figure}
+%	\begin{adjustbox}{minipage=\linewidth,scale=1.5}
+%	\begin{tabular}{c|c}
+%		Task & Timeline\\
+%		Data features & 8/3 -- 15/6\\
+%		Encoding experiments & 10/5 -- 1/10 \\
+%		Develop new encoder & 1/8 -- 1/10 \\
+%		Test encoder & 12/9 -- 17/10 \\
+%		Thesis & Sep -- Nov\\
+%		Presentation & Oct -- Nov
+%	\end{tabular}
+%	\end{adjustbox}
+%	\end{figure}
+%\end{frame}
+
+% discussion/evaluation/contribution
+
+% conclusion/future work
+
+% questions
+\takahashi{Questions?}
+
+\end{document}
