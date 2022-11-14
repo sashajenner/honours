@@ -27,17 +27,44 @@ state-of-the-art. This would then alleviate some of the financial costs that
 come with archiving nanopore data.
 
 Hence, my objective was to design a compression method which (1) outperforms the
-state-of-the-art in terms of compressed size, and (2) is suitable for the most
+state-of-the-art in terms of compressed size, and (2) is suitable for most
 nanopore applications. Now, I will present to you the background literature
 necessary for understanding my work.
 
 - background lit
 
-Lossless compression represents data using fewer bits without losing any
-information.
-Not losing any information means that the original data can be
-reobtained through decompression. This is pretty handy - the only problem is
-that compression takes time and uses computational resources.
+Nanopore sequencing, which emerged in the 1980s, is one approach used in
+bioinformatics to determine the order of DNA nucleobases in a molecule. That is,
+the sequence of DNA bases A,C,T and G. It achieves this by recording the ionic
+current as a DNA molecule passes through a nanoscale protein pore (or nanopore).
+Disturbances in the current signal are used by computational algorithms to
+determine the molecule's DNA sequence.
+
+The MinION is the most portable nanopore sequencer weighing only half a
+kilogram. It consists of one flow cell with thousands of nanopores in groups of
+four. Each group is assigned an electrode from the sensor chip which is
+controlled and measured by the ASIC. A DNA sample is inserted into the flow cell
+and its many DNA strands pass through the available nanopores in parallel. Each
+time a strand passes through a nanopore, a signal known as a read is a recorded
+and digitised as a sequence of 16-bit signed integers. Nanopore data thus
+consists of many of these read sequences.
+
+Now, let's move on to compression. Data compression is the process of encoding
+information using fewer bits. There are two main classes; lossless and lossy.
+Lossless compression does not lose information in the process of encoding, such
+that the original data can be fully reconstructed. This reconstruction process
+is known as decompression. Lossy compression, on the other hand, partially
+discards information such that only an approximate replica of the original data
+can be obtained through decompression. Lossy compression can achieve better
+space saving at the cost of inaccuracy.
+
+Data compression relies on the framework of information theory established by
+Shannon in 1948. He introduced the concept of information entropy and showed
+that it represents a mathematical limit on how well a data stream can be
+losslessly compressed. The entropy of a random variable is the average level of
+information or uncertainty inherent in variable's possible outcomes. That is,
+lossless compression approaches the entropy of a data source by removing
+statistical redundancies, or wasted space.
 
 - method
 - main results
