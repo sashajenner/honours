@@ -59,14 +59,43 @@ can be obtained through decompression. Lossy compression can achieve better
 space saving at the cost of inaccuracy.
 
 Data compression relies on the framework of information theory established by
-Shannon in 1948. He introduced the concept of information entropy and showed
-that it represents a mathematical limit on how well a data stream can be
-losslessly compressed. The entropy of a random variable is the average level of
-information or uncertainty inherent in variable's possible outcomes. That is,
-lossless compression approaches the entropy of a data source by removing
-statistical redundancies, or wasted space.
+Shannon in 1948. Shannon introduced the concept of information entropy which is
+the average level of information or uncertainty inherent in a random variable.
+He showed that the entropy is mathematical limit on how well a data stream can
+be losslessly compressed. That is, a lossless compression method can approach
+the entropy of a data source by removing statistical redundancies, or wasted
+space.
+
+Entropy coding is a class of data compression which attempts to reach the
+entropy of the data source. This is typically achieved through encoding
+fixed-width symbols with variable-length binary codes. Huffman coding is one
+such compression method which recursively constructs a binary tree from the
+bottom up. The two symbols with the lowest frequency are used to construct a new
+node. This node is the parent of the two symbols and has their combined
+frequency. This process continues until there is only one node left which is the
+root of the tree. The code of each symbol is then found by traversing the tree
+from root to leaf and concatenating a 0 if the left edge is taken, otherwise a
+1. Among all methods which replace symbols with codes, where the probability
+distribution of the alphabet is known beforehand - Huffman coding achieves the
+smallest compressed size.
+
+However, arithmetic or range coding can compress smaller and closer to the
+entropy of the data by replacing the data with number in a range.
+
+-- svb
+-- for
+-- wavelets
+-- nanopore compression
+-- state-of-the-art
 
 - method
+
+-- data
+-- one byte two byte exceptions
+-- the stall
+-- subsequence searching
+-- dna section
+
 - main results
 - discussion/evaluation/contribution
 - conclusion/future work
