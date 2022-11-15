@@ -39,43 +39,49 @@
 	\frametitle{Motivation}
 	\stack{
 	Walk around Earth\\
+	7700 times\\
 	\\
-	65 000 000\\
+	500 000 000 000\\
 	steps
+	}
+}
+\takahashi{
+	\frametitle{Motivation}
+	\stack{
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+		\centering
+		1. Record
+		\includegraphics[width=\textwidth]{img/nano-record3.jpg}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+		\centering
+		2. Analyse
+		\includegraphics[width=\textwidth]{img/nano-analysis2.jpg}
+		\end{column}
+	\end{columns}\\
+	3. Archive \\
+	\includegraphics[width=0.5\textwidth]{img/nano-archive3.jpg}
 	}
 }
 %\begin{frame}
 %	\frametitle{Motivation}
-%	\begin{columns}
-%		\begin{column}{0.5\textwidth}
-%		\includegraphics[width=\textwidth]{img/nano-record3.jpg}
-%		\end{column}
-%		\begin{column}{0.5\textwidth}
-%		\includegraphics[width=\textwidth]{img/nano-analysis2.jpg}
-%		\end{column}
-%	\end{columns}
 %	\begin{figure}
-%	\includegraphics[width=0.5\textwidth]{img/nano-archive3.jpg}
+%	\begin{subfigure}{0.49\textwidth}
+%		\includegraphics[width=\textwidth]{img/nano-record3.jpg}
+%		\caption{Record}
+%	\end{subfigure}
+%	\hfill
+%	\begin{subfigure}{0.49\textwidth}
+%		\includegraphics[width=\textwidth]{img/nano-analysis2.jpg}
+%		\caption{Analyse}
+%	\end{subfigure}
+%	\begin{subfigure}{0.49\textwidth}
+%		\includegraphics[width=\textwidth]{img/nano-archive3.jpg}
+%		\caption{Archive}
+%	\end{subfigure}
 %	\end{figure}
 %\end{frame}
-\begin{frame}
-	\frametitle{Motivation}
-	\begin{figure}
-	\begin{subfigure}{0.49\textwidth}
-		\includegraphics[width=\textwidth]{img/nano-record3.jpg}
-		\caption{Record}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.49\textwidth}
-		\includegraphics[width=\textwidth]{img/nano-analysis2.jpg}
-		\caption{Analyse}
-	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
-		\includegraphics[width=\textwidth]{img/nano-archive3.jpg}
-		\caption{Archive}
-	\end{subfigure}
-	\end{figure}
-\end{frame}
 \takahashi{
 	\frametitle{Motivation}
 	\stack{
@@ -106,61 +112,41 @@
 	\stack{
 	State-of-the-Art\\
 	\\
-	Space saving 0.659\\
-	Too generic
+	Space saving: 65.9\%\\
+	Downside: Too generic
 	}
 }
-%\takahashi{
-%	\stack{
-%	AACATTAAAC AATTCAAATG\\
-%	TGTGTGCGTC TGTCTGAATT\\
-%	CATTTAATTA TTCGTTAATT\\
-%	GATTTTCTAC ACAATTAATA\\
-%	...}
-%}
-%\begin{frame}
-%	\includegraphics[scale=0.25]{nano.png}
-%\end{frame}
-%\begin{frame}
-%	\includegraphics[scale=0.17]{sig.png}
-%\end{frame}
-%\takahashi{
-%	\stack{
-%	1039,588,588,593,586,\\
-%	574,570,585,588,586,\\
-%	578,582,584,586,597,\\
-%	...}
-%}
-%\takahashi{3 000 000 000 bases}
-%\takahashi{
-%	\stack{
-%	3 000 000 000 bases $\times 40$\\
-%	= 120 000 000 000 recorded bases}
-%}
-%\takahashi{
-%	\stack{
-%	3 000 000 000 bases $\times 40$\\
-%	= 120 000 000 000 recorded bases $\times 10$\\
-%	= 1 200 000 000 000 integers}
-%}
-%\takahashi{
-%	\stack{
-%	3 000 000 000 bases $\times 40$\\
-%	= 120 000 000 000 recorded bases $\times 10$\\
-%	= 1 200 000 000 000 integers $\times 2$\\
-%	= 2 400 000 000 000 bytes\\
-%	= 2.4 TB}
-%}
-%\takahashi{10 TB per week}
-%\takahashi{Space $\propto$ \$\$}
-%\takahashi{Decompression $\propto$ Analysis}
-% objectives (research questions)
-%\takahashi{\color{blue}{Objective}}
-%\takahashi{Develop a better lossless encoder}
-%\takahashi{What lossless encoder is better?}
+\takahashi{
+	\frametitle{Objective}
+	\stack{
+	Design compression method\\
+	\\
+	1. More space saving\\
+	2. Suitable for nanopore
+	}
+}
 
 % background lit
-%\takahashi{\color{blue}{The Literature}}
+%\takahashi{\color{blue}{Background}}
+\takahashi{
+	\frametitle{Background}
+	\includegraphics{img/nano.png}
+}
+\takahashi{
+	\frametitle{Background}
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+		\centering
+		Lossless (Original): 260K
+		\includegraphics[width=\textwidth]{img/magpie.jpg}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+		\centering
+		Lossy: 36K
+		\includegraphics[width=\textwidth]{img/magpie-lossy.jpg}
+		\end{column}
+	\end{columns}
+}
 %\takahashi{Data compression}
 %\takahashi{.mp3, .gz, .zip, .7z}
 %\takahashi{How does it work?}

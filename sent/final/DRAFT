@@ -17,9 +17,10 @@ grand a year - that's not cheap.
 
 One solution to reducing these storage costs is data compression.
 Data compression represents data in a clever way which uses less bits than the
-original.
-The state-of-the-art compression method for nanopore data reduces it to
-34.1% of its original size.
+original. The process can be likened to cleaning up your wardrobe - by
+folding and stacking your clothes you can gain more storage at the cost of time.
+The state-of-the-art compression method for nanopore data saves 65.9% of the
+original data.
 However, this method does not consider the data's unique properties. Therefore,
 a more targetted compression method for nanopore data which understands its
 characteristics should be able to compress it even smaller than the
@@ -27,7 +28,7 @@ state-of-the-art. This would then alleviate some of the financial costs that
 come with archiving nanopore data.
 
 Hence, my objective was to design a compression method which (1) outperforms the
-state-of-the-art in terms of compressed size, and (2) is suitable for most
+state-of-the-art in terms of space saved, and (2) is suitable for most
 nanopore applications. Now, I will present to you the background literature
 necessary for understanding my work.
 
