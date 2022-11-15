@@ -5,6 +5,8 @@
 \usepackage{amssymb}
 \usepackage{takahashi}
 \usepackage{xcolor}
+\usepackage{subcaption}
+\renewcommand\thesubfigure{\arabic{subfigure}}
 \definecolor{blue}{rgb}{0.2,0.2,0.7}
 \usepackage{tikz}
 \usepackage[export]{adjustbox}
@@ -23,8 +25,91 @@
 \begin{document}
 \maketitle
 
-% motivation/objectiv
-%\takahashi{\color{blue}{The problem?}}
+% motivation/objective
+\takahashi{
+	\frametitle{Motivation}
+	\stack{
+	Human DNA\\
+	\\
+	500 000 000 000\\
+	data points
+	}
+}
+\takahashi{
+	\frametitle{Motivation}
+	\stack{
+	Walk around Earth\\
+	\\
+	65 000 000\\
+	steps
+	}
+}
+%\begin{frame}
+%	\frametitle{Motivation}
+%	\begin{columns}
+%		\begin{column}{0.5\textwidth}
+%		\includegraphics[width=\textwidth]{img/nano-record3.jpg}
+%		\end{column}
+%		\begin{column}{0.5\textwidth}
+%		\includegraphics[width=\textwidth]{img/nano-analysis2.jpg}
+%		\end{column}
+%	\end{columns}
+%	\begin{figure}
+%	\includegraphics[width=0.5\textwidth]{img/nano-archive3.jpg}
+%	\end{figure}
+%\end{frame}
+\begin{frame}
+	\frametitle{Motivation}
+	\begin{figure}
+	\begin{subfigure}{0.49\textwidth}
+		\includegraphics[width=\textwidth]{img/nano-record3.jpg}
+		\caption{Record}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.49\textwidth}
+		\includegraphics[width=\textwidth]{img/nano-analysis2.jpg}
+		\caption{Analyse}
+	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+		\includegraphics[width=\textwidth]{img/nano-archive3.jpg}
+		\caption{Archive}
+	\end{subfigure}
+	\end{figure}
+\end{frame}
+\takahashi{
+	\frametitle{Motivation}
+	\stack{
+	Year 1\\
+	\\
+	520 terabytes\\
+	\$10 000
+	}
+}
+\takahashi{
+	\frametitle{Motivation}
+	\stack{
+	Year 10...\\
+	\\
+	5 petabytes\\
+	\$100 000
+	}
+}
+\takahashi{
+	\frametitle{Motivation}
+	\stack{
+	Data compression\\
+	\includegraphics{img/wardrobe.jpg}
+	}
+}
+\takahashi{
+	\frametitle{Motivation}
+	\stack{
+	State-of-the-Art\\
+	\\
+	Space saving 0.659\\
+	Too generic
+	}
+}
 %\takahashi{
 %	\stack{
 %	AACATTAAAC AATTCAAATG\\
