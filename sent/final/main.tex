@@ -1,4 +1,5 @@
 \documentclass{beamer}
+\usefonttheme{professionalfonts}
 \setbeamertemplate{navigation symbols}{}
 \usepackage{graphicx}
 \usepackage{amsfonts}
@@ -137,8 +138,9 @@
 	\begin{columns}
 		\begin{column}{0.5\textwidth}
 		\centering
-		Lossless (Original): 260K
-		\includegraphics[width=\textwidth]{img/magpie.jpg}
+		Original: 7270K\\
+		Lossless: 260K
+		\includegraphics[width=\textwidth]{img/magpie-orig.jpg}
 		\end{column}
 		\begin{column}{0.5\textwidth}
 		\centering
@@ -146,6 +148,20 @@
 		\includegraphics[width=\textwidth]{img/magpie-lossy.jpg}
 		\end{column}
 	\end{columns}
+}
+\takahashi{
+	\frametitle{Background}
+	\stack{
+	Entropy $H(X)$: measure of information\\
+	\\
+	Coin toss: 1 bit\\
+	}
+}
+\takahashi{
+	\frametitle{Background}
+	\stack{
+	Huffman coding
+	}
 }
 %\takahashi{Data compression}
 %\takahashi{.mp3, .gz, .zip, .7z}
