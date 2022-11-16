@@ -1,11 +1,10 @@
-\documentclass{beamer}
+\documentclass[table,dvipsnames]{beamer}
 \usefonttheme{professionalfonts}
 \setbeamertemplate{navigation symbols}{}
 \usepackage{graphicx}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{takahashi}
-\usepackage{xcolor}
 \usepackage{subcaption}
 \renewcommand\thesubfigure{\arabic{subfigure}}
 \definecolor{blue}{rgb}{0.2,0.2,0.7}
@@ -89,26 +88,9 @@
 \takahashi{
 	\frametitle{Motivation}
 	\stack{
-	Year 1\\
-	\\
-	520 terabytes\\
-	\$10 000
-	}
-}
-\takahashi{
-	\frametitle{Motivation}
-	\stack{
-	Year 10...\\
-	\\
-	5 petabytes\\
-	\$100 000
-	}
-}
-\takahashi{
-	\frametitle{Motivation}
-	\stack{
-	Data compression\\
-	\includegraphics{img/wardrobe.jpg}
+	1 PB / year\\
+	$\Downarrow$\\
+	Compression
 	}
 }
 \takahashi{
@@ -126,9 +108,20 @@
 	Design compression method\\
 	\\
 	1. More space saving\\
-	2. Suitable for nanopore
+	2. Suitable for nanopore\\
 	}
 }
+\begin{frame}
+	\frametitle{Objective}
+	\centering
+	\Huge Suitable?
+	\begin{itemize}
+			\huge
+		\item Lossless
+		\item Better than naive entropy (>52\%)
+		\item Random access
+	\end{itemize}
+\end{frame}
 
 % background lit
 %\takahashi{\color{blue}{Background}}
@@ -139,41 +132,34 @@
 \takahashi{
 	\frametitle{Background}
 	\stack{
-		\includegraphics{img/reads.515e4fd0-8ab1-4845-8866-6772e779712b.raw.pres.nox.pdf}\\
+		\Huge Read 1\\
+		\includegraphics{img/reads.515e4fd0-8ab1-4845-8866-6772e779712b.raw.pres.pdf}\\
+		\\\Huge ...\\
+		\\
+		\\
+		\Huge Read \num{500000}\\
 		\includegraphics{img/reads.99671b17-feb4-492b-b119-77daf8e5794e.raw.pres.pdf}
 	}
 }
 \takahashi{
 	\frametitle{Background}
 	\stack{
+		Read 1\\
 		...,462,455,463,464,466,467,460,464,465,463,...\\
+		\\...\\
 		\\
+		Read \num{500000}\\
 		...,407,411,412,400,408,402,402,407,409,406,...
 	}
-}
-\takahashi{
-	\frametitle{Background}
-	\begin{columns}
-		\begin{column}{0.5\textwidth}
-		\centering
-		Original: 7270K\\
-		Lossless: 260K
-		\includegraphics[width=\textwidth]{img/magpie-orig.jpg}
-		\end{column}
-		\begin{column}{0.5\textwidth}
-		\centering
-		Lossy: 36K
-		\includegraphics[width=\textwidth]{img/magpie-lossy.jpg}
-		\end{column}
-	\end{columns}
 }
 \takahashi{
 	\frametitle{Background}
 	\stack{
 	Entropy $H(X)$: measure of information\\
 	\\
-	%Coin toss: 1 bit\\
-	\includegraphics[width=0.2\textwidth]{img/dollar.jpg}
+	Coin toss = 1 bit\\
+	Dice throw = 2.58 bits\\
+	Nanopore data = 7.70 bits
 	}
 }
 \takahashi{
@@ -217,6 +203,7 @@
 		child {node{T} edge from parent node[right]{1}};
 	\end{tikzpicture}
 	\end{figure}
+		AAC: 0000010
 	\end{column}
 	\end{columns}
 	}
@@ -224,14 +211,52 @@
 \takahashi{
 	\frametitle{Background}
 	\stack{
-	Range coding
+	\huge Range coding\\
+	\\
+	\begin{columns}
+	\begin{column}{.5\textwidth}
+		\centering
+	\stack{
+	AACATTAAAC AATTCAAATG\\
+	TGTGTGCGTC TGTCTGAATT\\
+	CATTTAATTA TTCGTTAATT\\
+	GATTTTCTAC ACAATTAATA\\
+	\\
+	\begin{tabular}{ c|c|c }
+		Symbol & Frequency & Range\\
+		A & 27 & $[0, 2700)$\\
+		C & 11 & $[2700, 3800)$\\
+		G & 9 & $[3800, 4700)$\\
+		T & 33 & $[4700, 8000)$
+	\end{tabular}
+	}
+	\end{column}
+	\begin{column}{.5\textwidth}
+		\centering
+	A: $[0, 2700)$\\
+	AA: $[0, 911)$\\
+	AAC: $[307, 433)$\\
+	...
+	\end{column}
+	\end{columns}
 	}
 }
+%\begin{frame}
+%	\frametitle{Method}
+%	\centering
+%	\Huge Wavelets
+%	\begin{itemize}
+%			\huge
+%		\item Image (JPEG 2000)
+%		\item ECG signals
+%		\item Lossy
+%	\end{itemize}
+%\end{frame}
 %\begin{frame}
 %	\frametitle{Background}
 %	Input: 0,1,2,1024\\
 %	svb
-%	\input{img/svbeg}
+%	\input{img/svb-orig}
 %	\\
 %	svb16
 %	\input{img/svb16}
@@ -239,17 +264,23 @@
 \takahashi{
 	\frametitle{Background}
 	\stack{
-		Stream VByte\\
-		32-bit (svb)\\
-		\includegraphics[width=0.5\textwidth]{img/svb.png}\\
-		16-bit (svb16)\\
-		\includegraphics[width=0.5\textwidth]{img/svb16.png}
-	}
-}
-\takahashi{
-	\frametitle{Background}
-	\stack{
-	Wavelets
+		\huge Stream VByte (svb)\\
+		\\
+	\begin{columns}
+	\begin{column}{.5\textwidth}
+		\centering
+	\begin{tabular}{ c|c }
+		Num Bytes & Control Code\\
+		1 & 00\\
+		2 & 01\\
+		3 & 10\\
+		4 & 11
+	\end{tabular}
+	\end{column}
+	\begin{column}{.5\textwidth}
+		\includegraphics[width=\textwidth]{img/svborig.png}
+	\end{column}
+	\end{columns}
 	}
 }
 \takahashi{
@@ -282,150 +313,12 @@
 	\end{columns}
 	}
 }
-%\takahashi{Data compression}
-%\takahashi{.mp3, .gz, .zip, .7z}
-%\takahashi{How does it work?}
-%\takahashi{More frequent = Less bits}
-%\takahashi{Huffman coding}
-%\takahashi{
-%	\stack{
-%	AACATTAAAC AATTCAAATG\\
-%	TGTGTGCGTC TGTCTGAATT\\
-%	CATTTAATTA TTCGTTAATT\\
-%	GATTTTCTAC ACAATTAATA\\
-%	...}
-%}
-%\begin{frame}
-%	\begin{figure}
-%	\begin{adjustbox}{minipage=\linewidth,scale=1.5}
-%		\hspace*{2cm}
-%	\begin{tabular}{ c|c }
-%		Symbol & Code\\
-%		A & 00\\
-%		C & 01\\
-%		G & 10\\
-%		T & 11
-%	\end{tabular}
-%	\end{adjustbox}
-%	\end{figure}
-%\end{frame}
-%\takahashi{
-%	\stack{
-%	00000100111100000001 00001111010000001110\\
-%	11101110111001101101 11101101111000001111\\
-%	01001111110000111100 11110110111100001111\\
-%	10001111111101110001 00010000111100001100\\
-%	...}
-%}
-%\begin{frame}
-%	\begin{columns}[t]
-%	\begin{column}{.5\textwidth}
-%	\begin{figure}
-%	\begin{tabular}{ c|c|c }
-%		Symbol & Frequency & Code\\
-%		A & 27 & 00\\
-%		C & 11 & 010\\
-%		G & 9 & 011\\
-%		T & 33 & 1
-%	\end{tabular}
-%	\end{figure}
-%	\end{column}
-%	\begin{column}{.5\textwidth}
-%	\begin{figure}
-%	\begin{tikzpicture}
-%		\node{80}
-%		child {
-%			node{57}
-%			child {node{A} edge from parent node[left]{0}}
-%			child {
-%				node{20}
-%				child {node{C} edge from parent node[left]{0}}
-%				child {node{G} edge from parent node[right]{1}}
-%				 edge from parent node[right]{1}
-%			}
-%			edge from parent node[left]{0}
-%		}
-%		child {node{T} edge from parent node[right]{1}};
-%	\end{tikzpicture}
-%	\end{figure}
-%	\end{column}
-%	\end{columns}
-%\end{frame}
-%\takahashi{
-%	\stack{
-%	00000100011000000010 0000110100000001011\\
-%	1011101110110100111010 101110101011000011\\
-%	0100011100001100 1101001111000011\\
-%	011001111010100010 000100000110000100\\
-%	...}
-%}
-%\takahashi{Compression Ratio = $\frac{2\times 80 bits}{147 bits} \approx 1.1$}
-%\takahashi{gzip}
-%%\begin{frame}
-%%	\includegraphics[scale=1]{gzip.png}
-%%\end{frame}
-%\takahashi{VBZ}
-%\takahashi{
-%	\stack{
-%	Integer sequence\\
-%	Differences\\
-%	Map to unsigned\\
-%	Stream VByte\\
-%	Zstandard}
-%}
-%% TODO scale up
-%%\begin{frame}
-%%	\begin{enumerate}
-%%	\item Integer sequence
-%%	\item Differences
-%%	\item Map to unsigned
-%%	\item Stream VByte
-%%	\item Zstandard
-%%	\end{enumerate}
-%%\end{frame}
-%\takahashi{
-%	\frametitle{Integer sequence}
-%	\stack{
-%	1039,588,588,593,586,\\
-%	574,570,585,588,586,\\
-%	578,582,584,586,597,\\
-%	...}
-%}
-%\takahashi{
-%	\frametitle{Differences}
-%	\stack{
-%	1039,-451,0,5,-7,\\
-%	-12,-4,15,3,-2,\\
-%	-8,4,2,2,11,\\
-%	...}
-%}
-%\takahashi{
-%	\frametitle{Map to unsigned}
-%	\stack{
-%	2078,901,0,10,13,\\
-%	23,7,30,6,3,\\
-%	15,8,4,4,22,\\
-%	...}
-%}
-%\takahashi{
-%	\frametitle{Stream VByte}
-%	\stack{
-%	10|10|00|01|01|\\
-%	01|01|01|01|01|\\
-%	01|01|01|01|01|\\
-%	...\\
-%	0x1e 0x08|0x85 0x03||0x0a|0x0d|\\
-%	0x17|0x07|0x1e|0x06|0x03|\\
-%	0x0f|0x08|0x04|0x04|0x16|\\
-%	...}
-%}
-%\takahashi{Zstandard}
 
 % method
 \takahashi{
 	\frametitle{Method}
 	\stack{
-	\huge The Data\\
+		\huge Test Data (5\%)\\
 	\\
 	\input{img/data-tab}
 	}
@@ -433,7 +326,61 @@
 \takahashi{
 	\frametitle{Method}
 	\stack{
-	\huge Start Sections\\
+	\huge Differential Coding\\
+	\\
+	\input{img/trans-tab}
+	}
+}
+\takahashi{
+	\frametitle{Method}
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+			\centering
+			\stack{
+		\Large None\\
+		\\
+			\includegraphics[width=\textwidth]{img/freq.png}
+			}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\centering
+			\stack{
+		\Large Zig-Zag Delta\\
+		\\
+			\includegraphics[width=\textwidth]{img/zd-hist.png}
+			}
+		\end{column}
+	\end{columns}
+}
+\takahashi{
+	\frametitle{Method}
+	\stack{
+	\LARGE Remove redundancy (vbe21)\\
+	\\
+	%\input{img/start-sections}
+	\input{img/vbe21}
+	\\
+	\\
+	Space saving improvement: 6.24\%
+	}
+}
+\takahashi{
+	\frametitle{Method}
+	\stack{
+	\huge Even smaller (vbbe21)\\
+	\\
+	%\input{img/start-sections}
+	\includegraphics[width=\textwidth]{img/vbbe21.png}
+	\\
+	\\
+	\Large Space saving improvement: 6.25\%
+	}
+}
+\takahashi{
+	\frametitle{Method}
+	\stack{
+	\Huge The Stall\\
+	\\
 	%\input{img/start-sections}
 	\input{img/reads.e9f08690-171f-476f-9119-5330d0290126.raw.section}
 	}
@@ -441,7 +388,40 @@
 \takahashi{
 	\frametitle{Method}
 	\stack{
-	\huge DNA Section\\
+	\huge Encoding the Stall\\
+	\\
+	\\
+	%\input{img/start-sections}
+	\input{img/stall-enc}\\
+	\\
+	\\
+	\large
+	\begin{tabular}{cl}
+		Specific: & Frame of reference +\\
+		Generic: & Zig-zag delta\\
+		\hline
+		=& stall-fz
+	\end{tabular}
+	}
+}
+\takahashi{
+	\frametitle{Method}
+	\stack{
+	\huge Dynamic Stall\\
+	\\
+	\includegraphics[width=\textwidth]{img/stalllen.png}
+	\\
+	\Large
+	\begin{tabular}{ll}
+		dstall: & choose best\\
+		dstall-1500: & if length $\ge$ 1500, encode stall
+	\end{tabular}
+	}
+}
+\takahashi{
+	\frametitle{Method}
+	\stack{
+	\Huge DNA Section\\
 	%\input{img/start-sections}
 	\input{img/reads.e9f08690-171f-476f-9119-5330d0290126.raw.dna}
 	}
@@ -449,47 +429,103 @@
 \takahashi{
 	\frametitle{Method}
 	\stack{
-	\huge Homopolymer Section\\
-	%\input{img/start-sections}
-	\input{img/reads.e9f08690-171f-476f-9119-5330d0290126.raw.homo}
+	\huge Jumps and Falls\\
+	\\
+	\includegraphics[width=\textwidth]{img/epsilon.png}
 	}
 }
 \takahashi{
 	\frametitle{Method}
 	\stack{
-	\huge Slow Section\\
+	\huge Minimum Absolute Delta = 25\\
+	\\
+	\includegraphics[width=\textwidth]{img/epsilon25.png}
+	}
+}
+%\takahashi{
+%	\frametitle{Method}
+%	\stack{
+%	\huge Wavelets\\
+%	\includegraphics[width=\textwidth]{img/reconstructed.png}
+%	}
+%}
+\begin{frame}
+	\frametitle{Results}
+	\centering
+	\stack{
+	\Huge First Benchmark
+	\\
+	\\
+	}
+	\begin{itemize}
+			\huge
+		\item Sequential (de)compression
+		\item Lossless
+		\item Size and time
+	\end{itemize}
+	\stack{
+	\\
+	\\
+	\large\url{https://github.com/sashajenner/honours}
+	}
+\end{frame}
+\takahashi{
+	\frametitle{Results}
+	\input{img/results-space-tab}
+}
+\takahashi{
+	\frametitle{Results}
+	\includegraphics[width=\textwidth]{img/results-ct-dt.png}
+}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15)
+-- cycle;}
+\begin{frame}
+	\frametitle{Discussion}
+	\centering
+	\stack{
+	\Huge Objective Complete
+	\\
+	\\
+	}
+	\begin{itemize}
+			\huge
+		\item vbbe21 > svb
+		\item Range coding exceeds entropy
+		\item Space saving improvement: 0.72\%
+		%\item 1 TB extra every 140 TB
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Future Work}
+	\centering
+	\stack{
+	\Huge Even better?\\
+	\\
+	}
+	\begin{itemize}
+			\huge
+		\item Multithreading
+		\item Multi-read compression
+		\item Other data: RNA, non-human
+	\end{itemize}
+\end{frame}
+\takahashi{
+	\frametitle{Future Work}
+	\stack{
+	\huge Other Sections\\
 	%\input{img/start-sections}
 	\input{img/reads.99671b17-feb4-492b-b119-77daf8e5794e.raw.slow}
 	}
 }
 \takahashi{
-	\frametitle{Method}
-	One byte two byte exceptions
-}
-\takahashi{
-	\frametitle{Method}
-	The stall
-}
-\takahashi{
-	\frametitle{Method}
-	DNA section
-}
-\takahashi{
-	\frametitle{Results}
-	Benchmark
-}
-\takahashi{
-	\frametitle{Results}
-	Plots/table
-}
-\takahashi{
-	\frametitle{Discussion}
-}
-\takahashi{
-	\frametitle{Future Work}
-}
-\takahashi{
 	\frametitle{Conclusion}
+	\stack{
+		Recommend dstall-fz-1500\\
+		for archiving\\
+		\\
+		Superior space saving\\
+		66.6\% vs 65.9\%
+	}
 }
 %\takahashi{\color{blue}{Research Method}}
 %\takahashi{1. Determine the features of the data}

@@ -1,0 +1,18 @@
+%\begin{figure}
+%\centering
+	\begin{tikzpicture}[node distance=0cm,start chain=1 going right,start chain=2 going right] \footnotesize
+  \tikzstyle{mytape}=[draw,minimum height=1.5cm]
+	\node(A1)  [on chain=1,mytape,fill=yellow!20] {$\underbrace{\overbracket{\text{ }p\text{ }}^{\text{2 bytes}}}_{\text{stall start position}}$};
+	\node(A2)  [on chain=1,mytape,fill=yellow!20] {$\underbrace{\overbracket{|r_s|}^{\text{2 bytes}}}_{\text{stall length}}$};
+	\node(A3)  [on chain=1,mytape,fill=yellow!20] {$\underbrace{\overbracket{m_s}^{\text{2 bytes}}}_{\text{stall compressed size}}$};
+	\node(A4)  [on chain=1,mytape,fill=green!20] {$\underbrace{\overbracket{C_{specific}(r_s)}^{m_s\text{ bytes}}}_{\text{stall compressed data}}$};
+	\node(B1)  [on chain=1,mytape,fill=yellow!35] {$\underbrace{\overbracket{m}^{\text{4 bytes}}}_{\text{non-stall compressed size}}$};
+	\node(B2)  [on chain=1,mytape,fill=green!35] {$\underbrace{\overbracket{C_{generic}(r\setminus r_s)}^{m\text{ bytes}}}_{\text{non-stall compressed data}}$};
+\end{tikzpicture}
+%	\caption[The stall encoding.]{\label{fig:stall-enc}The stall encoding records the stall's
+%starting position in the read, length, compressed size and compressed data,
+%	followed by the non-stall's compressed size and compressed data.
+%	The specific and generic compression algorithms used are known
+%	beforehand and hence are not stored. stall-fz uses rc01s-vbbe21-for and
+%	rc01s-vbbe21-zd as the specific and generic algorithm respectively.}
+%\end{figure}
