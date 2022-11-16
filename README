@@ -39,3 +39,7 @@ The following metrics are recorded:
 2. Run it on a data set.
 
 	./press/test SLOW5_DATA
+
+Or, use the example data set with 3 reads.
+
+	./press/test data/three-reads.blow5
