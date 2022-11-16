@@ -22,14 +22,17 @@ xtitle = 'Data Point'
 ytitle = colname
 
 #x=1:nrow(df)
-#x=1:1000
-stall=c(20,778)
-x=stall[1]:stall[2]
-tikz(file = paste0(path, '.stall.tex'), width = 5, height = 5)
-ggplot(data.frame(df[x,]), aes(x, df[x,1])) + #color=cut(x, c(1,14,789,831,3000)))) +
+x=900:1100
+#stall=c(20,778)
+#x=stall[1]:stall[2]
+#tikz(file = paste0(path, '.stall.tex'), width = 5, height = 5)
+plot = ggplot(data.frame(df[x,]), aes(x, df[x,1])) + #color=cut(x, c(1,14,789,831,3000)))) +
 	geom_line() +
 	xlab('Position in Read') +
-	ylab('Raw Signal')
+	ylab('Raw Signal') +
+	theme(axis.title.x=element_blank(),
+	      axis.text.x=element_blank(),
+	      axis.ticks.x=element_blank())
 	#xlim(0,1500) +
 	#geom_rect(aes(xmin=1, xmax=14, ymin=-Inf,ymax=Inf),fill='red',alpha=0.002) +
 	#geom_vline(xintercept=65719,colour='red',alpha=0.9) +
@@ -45,8 +48,8 @@ ggplot(data.frame(df[x,]), aes(x, df[x,1])) + #color=cut(x, c(1,14,789,831,3000)
 	#			    "(14,789]"="green",
 	#			    "(789,831]"="blue",
 	#			    "(831,3000]"="black"))
-#ggsave(paste0(path, '.section.pdf'), plot)
-dev.off()
+ggsave(paste0(path, '.pres.nox.pdf'), plot, width=8, height=2.5)
+#dev.off()
 
 #print(df)
 #for (i in 1:nrow(df)) {

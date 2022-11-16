@@ -1,0 +1,38 @@
+Lossless Nanopore Compression
+=============================
+This is a final year undergraduate Computer Science honours project for the
+University of Sydney.
+
+Objective
+---------
+Design lossless compression methods with better space saving than the
+state-of-the-art; zstd-svb-zd (a.k.a VBZ).
+
+Contributions
+-------------
+- First systematic analysis of nanopore data
+- New state-of-the-art
+- First comprehensive benchmark of existing and novel methods
+
+Data
+----
+A downsampled human DNA data set (NA12878) with 500 000 reads was used for
+analysis and benchmarking.
+
+Download: https://slow5.page.link/na12878_prom_sub_slow5.
+
+Benchmark
+---------
+Sequential read compression and decompression is performed. To ensure the
+methods are lossless, the decompressed data is compared to the uncompressed
+data for equality.
+
+The following metrics are recorded:
+- Compressed size
+- Compression time
+- Decompression time
+
+Compile the benchmark and run it on a data set:
+
+1. `make -C press`
+2. `./press/test SLOW5_DATA`
