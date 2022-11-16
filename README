@@ -32,7 +32,10 @@ The following metrics are recorded:
 - Compression time
 - Decompression time
 
-Compile the benchmark and run it on a data set:
+1. Compile the benchmark.
 
-1. `make -C press`
-2. `./press/test SLOW5_DATA`
+	make -C press
+
+2. Run it on a data set.
+
+	./press/test SLOW5_DATA
