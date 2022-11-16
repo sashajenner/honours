@@ -1,0 +1,14 @@
+%\subfloat[\label{fig:svb}Compressed classical Stream VByte bytes]{
+\centering\begin{tikzpicture}[node distance=0cm,start chain=1 going right,start chain=2 going right] \footnotesize
+  \tikzstyle{mytape}=[draw,minimum height=1.4cm]
+    \node(Z2)  [on chain=1,mytape,fill=yellow!35] {$0|0|0|1$};
+
+               % \node [above of=Z2,node distance=1cm,fill=blue!10] {\parbox{7cm}{\footnotesize Control bytes are stored in a separate address than the data bytes.}};
+    \node(B1)  [on chain=1,mytape,fill=green!35] {$\underbrace{\overbracket{\texttt{0x00}}^{\text{1 byte}}}_{0}$};
+    \node(B2)  [on chain=1,mytape,fill=green!35] {$\underbrace{\overbracket{\texttt{0x01}}^{\text{1 byte}}}_{1}$};
+    \node(B3)  [on chain=1,mytape,fill=green!35] {$\underbrace{\overbracket{\texttt{0x02}}^{\text{1 byte}}}_{2}$};
+    \node(B4)  [on chain=1,mytape,fill=green!35] {$\underbrace{\overbracket{\texttt{0x04}|\texttt{0x00}}^{\text{2 bytes}}}_{\num{1024}}$};
+
+
+\end{tikzpicture}
+%	\caption[An example of $1024,12,10,\num{1048576}, 0,1,2,1024$ compressed with classical and 0-based Stream VByte.]{\label{fig:groupsvb} An example of $1024,12,10,\num{1048576}, 0,1,2,1024$ compressed with classical and 0-based Stream VByte\protect\footnotemark[4].}

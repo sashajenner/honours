@@ -10,6 +10,9 @@
 \renewcommand\thesubfigure{\arabic{subfigure}}
 \definecolor{blue}{rgb}{0.2,0.2,0.7}
 \usepackage{tikz}
+\usetikzlibrary{chains,positioning}
+\usepackage{mathtools}
+\usepackage{siunitx}
 \usepackage[export]{adjustbox}
 \newcommand{\stack}[1]{\begin{tabular}{@{}c@{}}#1\end{tabular}}
 
@@ -135,6 +138,21 @@
 }
 \takahashi{
 	\frametitle{Background}
+	\stack{
+		\includegraphics{img/reads.515e4fd0-8ab1-4845-8866-6772e779712b.raw.pres.nox.pdf}\\
+		\includegraphics{img/reads.99671b17-feb4-492b-b119-77daf8e5794e.raw.pres.pdf}
+	}
+}
+\takahashi{
+	\frametitle{Background}
+	\stack{
+		...,462,455,463,464,466,467,460,464,465,463,...\\
+		\\
+		...,407,411,412,400,408,402,402,407,409,406,...
+	}
+}
+\takahashi{
+	\frametitle{Background}
 	\begin{columns}
 		\begin{column}{0.5\textwidth}
 		\centering
@@ -154,13 +172,114 @@
 	\stack{
 	Entropy $H(X)$: measure of information\\
 	\\
-	Coin toss: 1 bit\\
+	%Coin toss: 1 bit\\
+	\includegraphics[width=0.2\textwidth]{img/dollar.jpg}
 	}
 }
 \takahashi{
 	\frametitle{Background}
 	\stack{
-	Huffman coding
+	\huge Huffman coding\\
+	\begin{columns}
+	\begin{column}{.5\textwidth}
+		\centering
+	\stack{
+	AACATTAAAC AATTCAAATG\\
+	TGTGTGCGTC TGTCTGAATT\\
+	CATTTAATTA TTCGTTAATT\\
+	GATTTTCTAC ACAATTAATA\\
+	\\
+	\begin{tabular}{ c|c|c }
+		Symbol & Frequency & Code\\
+		A & 27 & 00\\
+		C & 11 & 010\\
+		G & 9 & 011\\
+		T & 33 & 1
+	\end{tabular}
+	}
+	\end{column}
+	\begin{column}{.5\textwidth}
+	\centering
+	\begin{figure}
+	\begin{tikzpicture}
+		\node{80}
+		child {
+			node{57}
+			child {node{A} edge from parent node[left]{0}}
+			child {
+				node{20}
+				child {node{C} edge from parent node[left]{0}}
+				child {node{G} edge from parent node[right]{1}}
+				 edge from parent node[right]{1}
+			}
+			edge from parent node[left]{0}
+		}
+		child {node{T} edge from parent node[right]{1}};
+	\end{tikzpicture}
+	\end{figure}
+	\end{column}
+	\end{columns}
+	}
+}
+\takahashi{
+	\frametitle{Background}
+	\stack{
+	Range coding
+	}
+}
+%\begin{frame}
+%	\frametitle{Background}
+%	Input: 0,1,2,1024\\
+%	svb
+%	\input{img/svbeg}
+%	\\
+%	svb16
+%	\input{img/svb16}
+%\end{frame}
+\takahashi{
+	\frametitle{Background}
+	\stack{
+		Stream VByte\\
+		32-bit (svb)\\
+		\includegraphics[width=0.5\textwidth]{img/svb.png}\\
+		16-bit (svb16)\\
+		\includegraphics[width=0.5\textwidth]{img/svb16.png}
+	}
+}
+\takahashi{
+	\frametitle{Background}
+	\stack{
+	Wavelets
+	}
+}
+\takahashi{
+	\frametitle{Background}
+	\stack{
+	\Huge State-of-the-Art (zstd-svb-zd)\\
+	\\
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+			\begin{enumerate}
+			\item Nanopore data
+			\item Differences (delta)
+			\item Map to unsigned (zig-zag)
+			\item Stream VByte
+			\item Zstandard
+			\end{enumerate}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+			\begin{enumerate}[]
+				\item 462,455,463,464
+				\item 462,-7,8,1
+				\item 924,13,16,2
+				\item
+					\includegraphics[width=.7\textwidth]{img/svbeg.png}
+				\item $\cdots$
+			\end{enumerate}
+			\end{figure}
+		\end{column}
+	\end{columns}
 	}
 }
 %\takahashi{Data compression}
@@ -303,6 +422,75 @@
 %\takahashi{Zstandard}
 
 % method
+\takahashi{
+	\frametitle{Method}
+	\stack{
+	\huge The Data\\
+	\\
+	\input{img/data-tab}
+	}
+}
+\takahashi{
+	\frametitle{Method}
+	\stack{
+	\huge Start Sections\\
+	%\input{img/start-sections}
+	\input{img/reads.e9f08690-171f-476f-9119-5330d0290126.raw.section}
+	}
+}
+\takahashi{
+	\frametitle{Method}
+	\stack{
+	\huge DNA Section\\
+	%\input{img/start-sections}
+	\input{img/reads.e9f08690-171f-476f-9119-5330d0290126.raw.dna}
+	}
+}
+\takahashi{
+	\frametitle{Method}
+	\stack{
+	\huge Homopolymer Section\\
+	%\input{img/start-sections}
+	\input{img/reads.e9f08690-171f-476f-9119-5330d0290126.raw.homo}
+	}
+}
+\takahashi{
+	\frametitle{Method}
+	\stack{
+	\huge Slow Section\\
+	%\input{img/start-sections}
+	\input{img/reads.99671b17-feb4-492b-b119-77daf8e5794e.raw.slow}
+	}
+}
+\takahashi{
+	\frametitle{Method}
+	One byte two byte exceptions
+}
+\takahashi{
+	\frametitle{Method}
+	The stall
+}
+\takahashi{
+	\frametitle{Method}
+	DNA section
+}
+\takahashi{
+	\frametitle{Results}
+	Benchmark
+}
+\takahashi{
+	\frametitle{Results}
+	Plots/table
+}
+\takahashi{
+	\frametitle{Discussion}
+}
+\takahashi{
+	\frametitle{Future Work}
+}
+\takahashi{
+	\frametitle{Conclusion}
+}
 %\takahashi{\color{blue}{Research Method}}
 %\takahashi{1. Determine the features of the data}
 %\takahashi{2. Experiment with existing encoders}

@@ -1,0 +1,20 @@
+\begin{figure}
+\centering
+\centering\begin{tikzpicture}[node distance=0cm,start chain=1 going right] \footnotesize
+  \tikzstyle{mytape}=[draw,minimum height=1.4cm]
+    \node(BIG1)  [on chain=1,mytape,fill=yellow!20] {$\overbracket{1|0|0|1|0|0|0|1}^{\text{control byte}}$};
+
+    \node(A1)  [on chain=1,mytape,fill=green!20,node distance=2cm] {$\underbrace{\overbracket{\texttt{0x04}|\texttt{0x00}}^{\text{2 bytes}}}_{1024}$};
+    \node(A2)  [on chain=1,mytape,fill=green!20] {$\underbrace{\overbracket{\texttt{0x0c}}^{\text{1 byte}}}_{12}$};
+    \node(A3)  [on chain=1,mytape,fill=green!20] {$\underbrace{\overbracket{\texttt{0x0a}}^{\text{1 byte}}}_{10}$};
+	\node(A4)  [on chain=1,mytape,fill=green!20] {$\underbrace{\overbracket{\texttt{0x10}|\texttt{0x00}}^{\text{2 bytes}}}_{\num{4096}}$};
+    \node(B1)  [on chain=1,mytape,fill=green!20] {$\underbrace{\overbracket{\texttt{0x00}}^{\text{1 byte}}}_{0}$};
+    \node(B2)  [on chain=1,mytape,fill=green!20] {$\underbrace{\overbracket{\texttt{0x01}}^{\text{1 byte}}}_{1}$};
+    \node(B3)  [on chain=1,mytape,fill=green!20] {$\underbrace{\overbracket{\texttt{0x02}}^{\text{1 byte}}}_{2}$};
+    \node(B4)  [on chain=1,mytape,fill=green!20] {$\underbrace{\overbracket{\texttt{0x04}|\texttt{0x00}}^{\text{2 bytes}}}_{\num{1024}}$};
+
+\end{tikzpicture}
+	\caption[\label{fig:svb-16}Compressed 16-bit Stream VByte bytes
+	for $1024,12,10,4096, 0,1,2,1024$.]{\label{fig:svb-16}Compressed 16-bit Stream VByte bytes
+	for $1024,12,10,4096, 0,1,2,1024$\footnotemark[4].}
+\end{figure}

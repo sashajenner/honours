@@ -5,8 +5,7 @@ questions: 5-10 minutes
 
 When a human DNA sample is sequenced using nanopore technology, around half a
 trillion data points are recorded.
-To put this into perspective, it would take you 65 million steps to walk around
-the Earth - so were talking about a lot of data here.
+To put this into perspective, if you took the same amount of steps you could walk around the Earth 7700 times - so were talking about a lot of data here.
 This data is regularly recorded, analysed and then archived for up to
 10 years.
 As you can imagine, this process results in some very large archives.
@@ -29,14 +28,14 @@ come with archiving nanopore data.
 
 Hence, my objective was to design a compression method which (1) outperforms the
 state-of-the-art in terms of space saved, and (2) is suitable for most
-nanopore applications. Now, I will present to you the background literature
-necessary for understanding my work.
+nanopore bioinformatics tasks. Now, I will present to you the background
+literature necessary for understanding my work.
 
 - background lit
 
 Nanopore sequencing, which emerged in the 1980s, is one approach used in
 bioinformatics to determine the order of DNA nucleobases in a molecule. That is,
-the sequence of DNA bases A,C,T and G. It achieves this by recording the ionic
+the sequence of DNA bases A,C,G and T. It achieves this by recording the ionic
 current as a DNA molecule passes through a nanoscale protein pore (or nanopore).
 Disturbances in the current signal are used by computational algorithms to
 determine the molecule's DNA sequence.
@@ -48,7 +47,7 @@ controlled and measured by the ASIC. A DNA sample is inserted into the flow cell
 and its many DNA strands pass through the available nanopores in parallel. Each
 time a strand passes through a nanopore, a signal known as a read is a recorded
 and digitised as a sequence of 16-bit signed integers. Nanopore data thus
-consists of many of these read sequences.
+consists of millions of these read sequences.
 
 Now, let's move on to compression. Data compression is the process of encoding
 information using fewer bits. There are two main classes; lossless and lossy.
