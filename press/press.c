@@ -3996,7 +3996,36 @@ void rice_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 }
 
 /*
- * delta | zigzag | vbe21 | range
+ * delta | zigzag | range
+ * range on the 1 byte data
+ */
+
+uint64_t rc_zd_bound_16(uint32_t nin)
+{
+	return MAX(256, nin * 1.5);
+}
+
+void rc_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+		    uint64_t *nout)
+{
+	uint16_t *in_zd;
+
+	in_zd = zigdelta_16_u16(in, nin);
+	in_zd[0] /= 2;
+
+	*nout = rcsenc((unsigned char *) in_zd, nin * sizeof *in_zd, out);
+	free(in_zd);
+}
+
+/* *nout must be the exact number of original elements */
+void rc_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out, uint32_t *nout)
+{
+	(void) rcsdec(in, *nout, (unsigned char *) out);
+	unzigdelta_inplace_16(out, *nout);
+}
+
+/*
+ * delta | zigzag | range
  * range on the 1 byte data
  */
 
@@ -4635,21 +4664,20 @@ void rccm_vbbe21_depress_16(uint8_t *in, uint64_t nin, uint16_t *out,
 	uint32_t nout_tmp;
 	uint64_t nout_tmp_vb;
 
-	(void) memcpy(&nex, in + sizeof *out, sizeof nex);
+	(void) memcpy(&nex, in, sizeof nex);
 	exlen = sizeof nex;
 	if (nex > 1) {
-		(void) memcpy(&nex_pos_press, in + sizeof *out + exlen, sizeof nex_pos_press);
+		(void) memcpy(&nex_pos_press, in + exlen, sizeof nex_pos_press);
 		exlen += sizeof nex_pos_press + nex_pos_press;
-		(void) memcpy(&nex_press, in + sizeof *out + exlen, sizeof nex_press);
+		(void) memcpy(&nex_press, in + exlen, sizeof nex_press);
 		exlen += sizeof nex_press + nex_press;
 	} else if (nex == 1) {
 		exlen += nex * (sizeof (uint32_t) + sizeof (uint16_t));
 	}
-	offset = sizeof *out;
 
 	out_vb = malloc(*nout * sizeof *out);
-	(void) memcpy(out_vb, in + offset, exlen);
-	offset += exlen;
+	(void) memcpy(out_vb, in, exlen);
+	offset = exlen;
 
 	nout_tmp_vb = *nout - nex;
 	out_rc = malloc(nout_tmp_vb);

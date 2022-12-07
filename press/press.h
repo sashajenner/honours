@@ -575,6 +575,13 @@ void rice_vbbe21_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 void rice_vbbe21_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 			       uint32_t *nout);
 
+/* zigzag delta range coding */
+
+uint64_t rc_zd_bound_16(uint32_t nin);
+void rc_zd_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+		    uint64_t *nout);
+void rc_zd_depress_16(uint8_t *in, uint64_t nin, int16_t *out, uint32_t *nout);
+
 /* zigzag delta vbe21 range coding */
 
 uint64_t rc_vbe21_zd_bound_16(uint32_t nin);
