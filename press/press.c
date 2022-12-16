@@ -5419,6 +5419,7 @@ void rccm_vbbe21_submin_press_16(const uint16_t *in, uint64_t nin,
 	uint32_t exlen;
 	uint16_t nex_pos_press;
 	uint16_t nex_press;
+	/*
 	struct stats st;
 	uint16_t *zd;
 
@@ -5428,6 +5429,7 @@ void rccm_vbbe21_submin_press_16(const uint16_t *in, uint64_t nin,
 	get_stats((const int16_t *) zd, nin - 1, &st);
 	free(zd);
 	print_stats(&st);
+	*/
 
 	min = get_min_u16(in, nin);
 	in_submin = shift_x_u16(-1 * min, in, nin);

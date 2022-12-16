@@ -17,7 +17,7 @@ SLOW5 = ~/work/garvan/slow5/slow5tools/slow5lib
 SLOW5INCLUDE = $(SLOW5)/include
 SLOW5LIB = $(SLOW5)/lib/libslow5.a
 HUFFMAN = huffman
-HUFFMANLIB = $(HUFFMAN)/huffman.c
+HUFFMANLIB = $(HUFFMAN)/libhuffman.a
 TURBORC = Turbo-Range-Coder
 TURBORCLIB = $(TURBORC)/librc.a
 SIGTK = sigtk
@@ -28,6 +28,9 @@ LIB = $(SVBLIB) $(BZIP2LIB) $(FLZMA2LIB) $(FLACLIB) $(TURBOPFORLIB) $(SLOW5LIB) 
 
 test: $(OBJ) $(LIB)
 	$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
+
+press.a: $(OBJ) $(LIB)
+	$(AR) rcsT $@ $^
 
 $(SVBLIB):
 	make -C $(SVB)
