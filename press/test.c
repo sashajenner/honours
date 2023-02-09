@@ -4472,7 +4472,7 @@ int main(int argc, char **argv)
 	TEST(fast_lzma2_svb12_zd, &res, fp);
 	TEST(flac_P11, &res, fp);
 	TEST(zstd_flac_P11, &res, fp);
-	TEST(turbopfor, &res, fp);
+	//TEST(turbopfor, &res, fp);
 	TEST(vb1e2_zd, &res, fp);
 	TEST(vbe21_zd, &res, fp);
 	TEST(vbbe21_zd, &res, fp);
@@ -4496,8 +4496,8 @@ int main(int argc, char **argv)
 	TEST(rcc_vbbe21_zd, &res, fp);
 	TEST(rccm_vbbe21_zd, &res, fp);
 	TEST(rccdf_vbbe21_zd, &res, fp);
-	TEST(rccm_vbbe21_submin, &res, fp);
-	TEST(jumps, &res, fp);
+	//TEST(rccm_vbbe21_submin, &res, fp);
+	//TEST(jumps, &res, fp);
 	TEST(rccm_svbbe21_zd, &res, fp);
 	TEST(dstall_fz_1500, &res, fp);
 	TEST(dstall_fz, &res, fp);

@@ -2534,27 +2534,37 @@ void turbopfor_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
 
 uint64_t vb1e2_bound(uint32_t nin)
 {
-	return sizeof (uint8_t) + VB1E2_MAX_EXCEPTIONS * (sizeof (uint32_t) + 2) + nin - VB1E2_MAX_EXCEPTIONS;
+	//return sizeof (uint8_t) + VB1E2_MAX_EXCEPTIONS * (sizeof (uint32_t) + 2) + nin - VB1E2_MAX_EXCEPTIONS;
+	/*
+	 * practical loose upper bound
+	 * which estimates that 20% of data is exceptions
+	 */
+	return sizeof (uint8_t) + nin * 0.2 * (sizeof (uint32_t) + 2) + nin * 0.8;
 }
 
 void vb1e2_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		 uint64_t *nout)
 {
-	uint16_t nex;
+	uint32_t nex;
 	uint32_t *ex_pos;
+	uint64_t ex_pos_buff_s;
 	uint32_t i;
 	uint32_t j;
 	uint64_t offset;
 	uint8_t nbytes;
 
+	ex_pos_buff_s = UINT16_MAX;
 	nex = 0;
-	ex_pos = malloc(VB1E2_MAX_EXCEPTIONS * sizeof *ex_pos);
+	ex_pos = malloc(ex_pos_buff_s * sizeof *ex_pos);
 
 	for (i = 0; i < nin; i++) {
 		if (in[i] > UINT8_MAX) {
 			ex_pos[nex++] = i;
 			if (nex == 0)
 				fprintf(stderr, "error: vb1e2 too many exceptions\n");
+		} else if (nex == ex_pos_buff_s) {
+			ex_pos_buff_s *= 2;
+			ex_pos = realloc(ex_pos, ex_pos_buff_s * sizeof *ex_pos);
 		}
 	}
 
@@ -2582,7 +2592,7 @@ void vb1e2_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 
 void vb1e2_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout)
 {
-	uint16_t nex;
+	uint32_t nex;
 	uint32_t *ex_pos;
 	uint32_t i;
 	uint32_t j;
@@ -2627,14 +2637,16 @@ uint64_t vbe21_bound(uint32_t nin)
 void vbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		 uint64_t *nout)
 {
-	uint16_t nex;
+	uint32_t nex;
 	uint32_t *ex_pos;
+	uint64_t ex_pos_buff_s;
 	uint32_t i;
 	uint32_t j;
 	uint64_t offset;
 
+	ex_pos_buff_s = UINT16_MAX;
 	nex = 0;
-	ex_pos = malloc(VB1E2_MAX_EXCEPTIONS * sizeof *ex_pos);
+	ex_pos = malloc(ex_pos_buff_s * sizeof *ex_pos);
 
 	for (i = 0; i < nin; i++) {
 		if (in[i] > UINT8_MAX) {
@@ -2642,6 +2654,9 @@ void vbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 			nex++;
 			if (nex == 0)
 				fprintf(stderr, "error: vbe21 too many exceptions\n");
+		} else if (nex == ex_pos_buff_s) {
+			ex_pos_buff_s *= 2;
+			ex_pos = realloc(ex_pos, ex_pos_buff_s * sizeof *ex_pos);
 		}
 	}
 
@@ -2671,7 +2686,7 @@ void vbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 
 void vbe21_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout)
 {
-	uint16_t nex;
+	uint32_t nex;
 	uint32_t *ex_pos;
 	uint32_t i;
 	uint32_t j;
@@ -2722,23 +2737,25 @@ uint64_t vbbe21_bound(uint32_t nin)
 void vbbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		  uint64_t *nout)
 {
-	uint16_t nex;
+	uint32_t nex;
 	uint16_t *ex;
 	uint8_t *ex_press;
 	uint32_t *ex_pos;
+	uint64_t ex_pos_buff_s;
 	uint32_t *ex_pos_delta;
 	uint8_t *ex_pos_press;
 	uint8_t minbits;
 	uint64_t nr_press_tmp;
-	uint16_t nex_pos_press;
-	uint16_t nex_press;
+	uint32_t nex_pos_press;
+	uint32_t nex_press;
 	uint32_t i;
 	uint32_t j;
 	uint64_t offset;
 
 	nex = 0;
-	ex_pos = malloc(VB1E2_MAX_EXCEPTIONS * sizeof *ex_pos);
-	ex = malloc(VB1E2_MAX_EXCEPTIONS * sizeof *ex);
+	ex_pos_buff_s = UINT16_MAX;
+	ex_pos = malloc(ex_pos_buff_s * sizeof *ex_pos);
+	ex = malloc(ex_pos_buff_s * sizeof *ex);
 
 	for (i = 0; i < nin; i++) {
 		if (in[i] > UINT8_MAX) {
@@ -2747,6 +2764,10 @@ void vbbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 			nex++;
 			if (nex == 0)
 				fprintf(stderr, "error: vbbe21 too many exceptions\n");
+		} else if (nex == ex_pos_buff_s) {
+			ex_pos_buff_s *= 2;
+			ex_pos = realloc(ex_pos, ex_pos_buff_s * sizeof *ex_pos);
+			ex = realloc(ex, ex_pos_buff_s * sizeof *ex);
 		}
 	}
 
@@ -2763,7 +2784,7 @@ void vbbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		(void) uint_press_32(minbits, ex_pos_delta, nex, ex_pos_press,
 				     &nr_press_tmp);
 		free(ex_pos_delta);
-		nex_pos_press = (uint16_t) nr_press_tmp;
+		nex_pos_press = (uint32_t) nr_press_tmp;
 		/*nex_pos_press = bitnd1pack32(ex_pos, nex, ex_pos_press);*/
 
 		(void) memcpy(out + offset, &nex_pos_press, sizeof nex_pos_press);
@@ -2786,7 +2807,7 @@ void vbbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		nr_press_tmp = uint_bound_16(minbits, nex);
 		ex_press = malloc(nr_press_tmp);
 		(void) uint_press_16(minbits, ex, nex, ex_press, &nr_press_tmp);
-		nex_press = (uint16_t) nr_press_tmp;
+		nex_press = (uint32_t) nr_press_tmp;
 
 		(void) memcpy(out + offset, &nex_press, sizeof nex_press);
 		offset += sizeof nex_press;
@@ -2823,13 +2844,13 @@ void vbbe21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 
 void vbbe21_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout)
 {
-	uint16_t nex;
+	uint32_t nex;
 	uint16_t *ex;
 	uint32_t *ex_pos;
 	uint8_t *ex_pos_press;
 	uint8_t *ex_press;
-	uint16_t nex_press;
-	uint16_t nex_pos_press;
+	uint32_t nex_press;
+	uint32_t nex_pos_press;
 	uint64_t nex_pos_delta;
 	uint64_t nex_cp;
 	uint32_t i;
