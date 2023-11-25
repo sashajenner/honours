@@ -5352,31 +5352,31 @@ int main(int argc, char **argv)
 	TEST(zlib_vbse21_zd, &res, fp);
 	TEST(huffman_vbe21_zd, &res, fp);
 	TEST(shuffman_vbe21_zd, &res, fp);
-	//TEST(rice_vbe21_zd, &res, fp); assertion `depress_len == nr_sigs' failed
+	TEST(rice_vbe21_zd, &res, fp);
 	TEST(rc_zd, &res, fp);
-	//TEST(rc_vbe21_zd, &res, fp); assertion `depress_len == nr_sigs' failed
-	//TEST(rcc_vbe21_zd, &res, fp); assertion `depress_len == nr_sigs' failed
-	//TEST(rccm_vbe21_zd, &res, fp); assertion `depress_len == nr_sigs' failed
-	//TEST(rccdf_vbe21_zd, &res, fp); assertion `depress_len == nr_sigs' failed
+	TEST(rc_vbe21_zd, &res, fp);
+	TEST(rcc_vbe21_zd, &res, fp);
+	TEST(rccm_vbe21_zd, &res, fp);
+	TEST(rccdf_vbe21_zd, &res, fp);
 	TEST(huffman_vbbe21_zd, &res, fp);
 	TEST(shuffman_vbbe21_zd, &res, fp);
-	//TEST(rice_vbbe21_zd, &res, fp); assertion `depress_len == nr_sigs' failed
-	//TEST(rc_vbbe21_zd, &res, fp); assertion `depress_len == nr_sigs' failed
-	//TEST(rcc_vbbe21_zd, &res, fp); assertion `depress_len == nr_sigs' failed
-	//TEST(rccm_vbbe21_zd, &res, fp); assertion `depress_len == nr_sigs' failed
-	//TEST(rccdf_vbbe21_zd, &res, fp); assertion `depress_len == nr_sigs' failed
+	TEST(rice_vbbe21_zd, &res, fp);
+	TEST(rc_vbbe21_zd, &res, fp);
+	TEST(rcc_vbbe21_zd, &res, fp);
+	TEST(rccm_vbbe21_zd, &res, fp);
+	TEST(rccdf_vbbe21_zd, &res, fp);
 	TEST(huffman_vbse21_zd, &res, fp);
 	TEST(shuffman_vbse21_zd, &res, fp);
-	//TEST(rice_vbse21_zd, &res, fp); assertion `depress_len == nr_sigs' failed
-	//TEST(rc_vbse21_zd, &res, fp); assertion `depress_len == nr_sigs' failed
-	//TEST(rcc_vbse21_zd, &res, fp); assertion `depress_len == nr_sigs' failed
-	//TEST(rccm_vbse21_zd, &res, fp); assertion `depress_len == nr_sigs' failed
-	//TEST(rccdf_vbse21_zd, &res, fp); assertion `depress_len == nr_sigs' failed
-	//TEST(rccm_vbbe21_submin, &res, fp); assertion `depress_len == nr_sigs' failed
+	TEST(rice_vbse21_zd, &res, fp);
+	TEST(rc_vbse21_zd, &res, fp);
+	TEST(rcc_vbse21_zd, &res, fp);
+	TEST(rccm_vbse21_zd, &res, fp);
+	TEST(rccdf_vbse21_zd, &res, fp);
+	TEST(rccm_vbbe21_submin, &res, fp);
 	//TEST(jumps, &res, fp); assertion `sigs_depress[i] == sigs[i]' failed
-	//TEST(rccm_svbbe21_zd, &res, fp); assertion `sigs_depress[i] == sigs[i]' failed
-	//TEST(dstall_fz_1500, &res, fp); assertion `sigs_depress[i] == sigs[i]' failed
-	//TEST(dstall_fz, &res, fp);  assertion `sigs_depress[i] == sigs[i]' failed
+	TEST(rccm_svbbe21_zd, &res, fp);
+	TEST(dstall_fz_1500, &res, fp);
+	TEST(dstall_fz, &res, fp);
 	TEST(rccm_svb_zd, &res, fp);
 	TEST(rccm_svb12_zd, &res, fp);
 	TEST(hasgam_vbse21_zdq, &res, fp);
