@@ -11,6 +11,7 @@
 #include "trans.h"
 #include "util.h"
 #include "flat.h"
+#include "ex_zd.h"
 #include "streamvbyte/include/streamvbyte.h"
 #include "streamvbyte/include/streamvbyte_zigzag.h"
 #include "streamvbyte/include/streamvbytedelta.h"
@@ -2925,7 +2926,7 @@ void vbbe21_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout)
  * variable byte 1 except 2 before svb
  * [num exceptions]
  * [num bytes of next block][exception indices | diff - 1 | svb0124]
- * [num bytes of next block][exceptions - 256 | svb12]
+ * [num bytes of next block][exceptions - 256 | bitpack]
  * data
  */
 
@@ -2950,6 +2951,7 @@ void vbse21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 	uint32_t i;
 	uint32_t j;
 	uint64_t offset;
+	uint8_t minbits;
 
 	nex = 0;
 	ex_pos_buff_s = UINT16_MAX;
@@ -2998,9 +3000,17 @@ void vbse21_press(const uint16_t *in, uint32_t nin, uint8_t *out,
 		free(ex_pos_press);
 		offset += nex_pos_press;
 
+		/*
 		nr_press_tmp = svb12_bound(nex);
 		ex_press = malloc(nr_press_tmp);
 		svb12_press(ex, nex, ex_press, &nr_press_tmp);
+		nex_press = (uint32_t) nr_press_tmp;
+		*/
+
+		minbits = uint_get_minbits_16(ex, nex);
+		nr_press_tmp = uint_bound_16(minbits, nex);
+		ex_press = malloc(nr_press_tmp);
+		(void) uint_press_16(minbits, ex, nex, ex_press, &nr_press_tmp);
 		nex_press = (uint32_t) nr_press_tmp;
 
 		(void) memcpy(out + offset, &nex_press, sizeof nex_press);
@@ -3048,6 +3058,7 @@ void vbse21_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout)
 	uint32_t i;
 	uint32_t j;
 	uint64_t offset;
+	uint64_t nex_cp;
 
 	(void) memcpy(&nex, in, sizeof nex);
 	offset = sizeof nex;
@@ -3081,7 +3092,9 @@ void vbse21_depress(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout)
 			(void) memcpy(ex_press, in + offset, nex_press);
 			offset += nex_press;
 
-			svb12_depress(ex_press, nex, ex);
+			nex_cp = nex;
+			(void) uint_depress_16(ex_press, nex, ex, &nex_cp);
+			//svb12_depress(ex_press, nex, ex);
 			free(ex_press);
 		} else if (nex == 1) {
 			(void) memcpy(ex_pos, in + offset, nex * sizeof *ex_pos);
@@ -7112,4 +7125,139 @@ void jumps_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 
 void jumps_depress_16(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout)
 {
+}
+
+/*
+ * hasindu's "ex-zd"
+ * qts | delta | zigzag | vbse21
+ */
+
+uint64_t hasgam_vbse21_zdq_bound_16(uint32_t nin)
+{
+	return svb_bound(vbse21_zd_bound_16(nin));
+}
+
+int hasgam_vbse21_zdq_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			       uint64_t *nout)
+{
+	uint8_t *out_tmp;
+
+	out_tmp = ptr_compress_ex_zd_v0(in, nin * sizeof *in, (size_t *) nout);
+	if (!out_tmp)
+		return -1;
+
+	(void) memcpy(out, out_tmp, *nout);
+	free(out_tmp);
+
+	return 0;
+}
+
+int hasgam_vbse21_zdq_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+				 uint32_t *nout)
+{
+	int16_t *out_tmp;
+	size_t nout_bytes;
+	uint32_t i;
+
+	out_tmp = ptr_depress_ex_zd(in, nin, &nout_bytes);
+	if (!out_tmp)
+		return -1;
+
+	*nout = nout_bytes / sizeof *out;
+
+	/* probably a better way to do this */
+	for (i = 0; i < *nout; i++)
+		out[i] = out_tmp[i];
+
+	free(out_tmp);
+
+	return 0;
+}
+
+/* qts | delta | zigzag | vbse21 | zlib */
+
+uint64_t zlib_hasgam_vbse21_zdq_bound_16(uint32_t nin)
+{
+	return zlib_bound(hasgam_vbse21_zdq_bound_16(nin));
+}
+
+int zlib_hasgam_vbse21_zdq_press_16(const int16_t *in, uint32_t nin,
+				    uint8_t *out, uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_ex_zd;
+	uint8_t *out_ex_zd;
+
+	nout_ex_zd = hasgam_vbse21_zdq_bound_16(nin);
+	out_ex_zd = malloc(nout_ex_zd);
+
+	ret = hasgam_vbse21_zdq_press_16(in, nin, out_ex_zd, &nout_ex_zd);
+	if (ret == 0)
+		ret = zlib_press(out_ex_zd, nout_ex_zd, out, nout);
+
+	free(out_ex_zd);
+	return ret;
+}
+
+int zlib_hasgam_vbse21_zdq_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+				      uint32_t *nout)
+{
+	int ret;
+	uint64_t nout_zlib;
+	uint8_t *out_zlib;
+
+	nout_zlib = zlib_bound(*nout * sizeof *out);
+	out_zlib = malloc(nout_zlib);
+
+	ret = zlib_depress(in, nin, out_zlib, &nout_zlib);
+	if (ret == 0)
+		ret = hasgam_vbse21_zdq_depress_16(out_zlib, nout_zlib, out,
+						   nout);
+
+	free(out_zlib);
+	return ret;
+}
+
+/* qts | delta | zigzag | vbse21 | zstd */
+
+uint64_t zstd_hasgam_vbse21_zdq_bound_16(uint32_t nin)
+{
+	return zstd_bound(hasgam_vbse21_zdq_bound_16(nin));
+}
+
+int zstd_hasgam_vbse21_zdq_press_16(const int16_t *in, uint32_t nin,
+				    uint8_t *out, uint64_t *nout)
+{
+	int ret;
+	uint64_t nout_ex_zd;
+	uint8_t *out_ex_zd;
+
+	nout_ex_zd = hasgam_vbse21_zdq_bound_16(nin);
+	out_ex_zd = malloc(nout_ex_zd);
+
+	ret = hasgam_vbse21_zdq_press_16(in, nin, out_ex_zd, &nout_ex_zd);
+	if (ret == 0)
+		ret = zstd_press(out_ex_zd, nout_ex_zd, out, nout);
+
+	free(out_ex_zd);
+	return ret;
+}
+
+int zstd_hasgam_vbse21_zdq_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+				      uint32_t *nout)
+{
+	int ret;
+	uint64_t nout_zstd;
+	uint8_t *out_zstd;
+
+	nout_zstd = zstd_bound(*nout * sizeof *out);
+	out_zstd = malloc(nout_zstd);
+
+	ret = zstd_depress(in, nin, out_zstd, &nout_zstd);
+	if (ret == 0)
+		ret = hasgam_vbse21_zdq_depress_16(out_zstd, nout_zstd, out,
+						   nout);
+
+	free(out_zstd);
+	return ret;
 }

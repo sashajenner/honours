@@ -1,7 +1,7 @@
 CC = cc
 CFLAGS = -g -Wall -Werror
 LDFLAGS = -lm -lz -lzstd -lpthread
-OBJ = test.o press.o trans.o flat.o bitmap.o stats.o util.o
+OBJ = test.o press.o trans.o flat.o bitmap.o stats.o util.o ex_zd.o
 JNNLIB = $(JNN)/jnn.o
 SVB = streamvbyte
 SVBLIB = $(SVB)/libstreamvbyte.so.0.0.1
@@ -59,7 +59,7 @@ $(SIGTKLIB):
 test.o: test.c test.h press.h bitmap.h
 	$(CC) $< $(CFLAGS) -I $(SLOW5INCLUDE) -c -o $@
 
-press.o: press.c press.h bitmap.h stats.h trans.h util.h flat.h
+press.o: press.c press.h bitmap.h stats.h trans.h util.h flat.h ex_zd.h
 	$(CC) $< $(CFLAGS) -I $(SLOW5INCLUDE) -c -o $@
 
 trans.o: trans.c trans.h
@@ -75,6 +75,9 @@ stats.o: stats.c stats.h
 	$(CC) $< $(CFLAGS) -c -o $@
 
 util.o: util.c util.h
+	$(CC) $< $(CFLAGS) -c -o $@
+
+ex_zd.o: ex_zd.c ex_zd.h trans.h
 	$(CC) $< $(CFLAGS) -c -o $@
 
 clean:

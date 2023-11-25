@@ -835,6 +835,30 @@ void jumps_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
 		    uint64_t *nout);
 void jumps_depress_16(uint8_t *in, uint64_t nin, uint16_t *out, uint32_t *nout);
 
+/* hasindu's "ex-zd": qts zigzag delta vbse21 */
+
+uint64_t hasgam_vbse21_zdq_bound_16(uint32_t nin);
+int hasgam_vbse21_zdq_press_16(const int16_t *in, uint32_t nin, uint8_t *out,
+			       uint64_t *nout);
+int hasgam_vbse21_zdq_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+				 uint32_t *nout);
+
+/* "ex-zd" zlib: qts zigzag delta vbse21 zlib */
+
+uint64_t zlib_hasgam_vbse21_zdq_bound_16(uint32_t nin);
+int zlib_hasgam_vbse21_zdq_press_16(const int16_t *in, uint32_t nin,
+				    uint8_t *out, uint64_t *nout);
+int zlib_hasgam_vbse21_zdq_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+				      uint32_t *nout);
+
+/* "ex-zd" zstd: qts zigzag delta vbse21 zstd */
+
+uint64_t zstd_hasgam_vbse21_zdq_bound_16(uint32_t nin);
+int zstd_hasgam_vbse21_zdq_press_16(const int16_t *in, uint32_t nin,
+				    uint8_t *out, uint64_t *nout);
+int zstd_hasgam_vbse21_zdq_depress_16(uint8_t *in, uint64_t nin, int16_t *out,
+				      uint32_t *nout);
+
 /* TODO
  * determine flats more coarsely
  * flat using other methods
