@@ -5172,8 +5172,8 @@ int main(int argc, char **argv)
 	TEST(rcc_vbse21_zd, &res, fp);
 	TEST(rccm_vbse21_zd, &res, fp);
 	TEST(rccdf_vbse21_zd, &res, fp);
-	//TEST(rccm_vbbe21_submin, &res, fp);
-	//TEST(jumps, &res, fp);
+	TEST(rccm_vbbe21_submin, &res, fp);
+	//TEST(jumps, &res, fp); assertion `sigs_depress[i] == sigs[i]' failed
 	TEST(rccm_svbbe21_zd, &res, fp);
 	TEST(dstall_fz_1500, &res, fp);
 	TEST(dstall_fz, &res, fp);
