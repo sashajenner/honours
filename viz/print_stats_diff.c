@@ -1,5 +1,5 @@
 /*
- * print statistics for each read in tsv format
+ * print statistics of the signal differences for each read in tsv format
  * given (s|b)low5 file
  * cc print_stats_diff.c stats.c -lm -I PATH_TO_SLOW5LIB_INCLUDE PATH_TO_LIBSLOW5 -o print_stats_diff
  * ./print_stats (S|B)LOW5_FILE

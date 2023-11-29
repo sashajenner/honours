@@ -1,0 +1,136 @@
+viz
+===
+Tools for SLOW5 data transformation, analysis and visualisation are found here.
+
+The Raw Format
+--------------
+Apart from SLOW5 files, some of these tools read and write newline-separated
+numerical data with a header, or simply 'numbers in a column'. For example:
+
+	raw_signal
+	649
+	565
+	541
+	535
+	535
+
+Run the following script to combine all the signal data from a SLOW5 file into
+this format:
+
+	./get_sigs.sh SLOW5 > SLOW5.raw
+
+From now on, let's refer to this format as "the raw format".
+
+Transformations
+---------------
+The following programs take a SLOW5 file as input, perform a transformation, and
+output data in the raw format:
+
+get_deltas_slow5.c   | successive differences
+get_deltas_slow5_2.c | second-order differences
+
+The following programs take the raw format as input, perform a transformation,
+and output the modified data:
+
+get_deltas.c | successive differences
+get_zigzag.c | zigzag
+get_zd.c     | zigzag differences
+
+Analysis
+--------
+The following programs take a SLOW5 file as input, analyse it in some way, and
+output data in the raw format:
+
+get_exceptions.c | exceptional differences
+get_len_sigs.sh  | read count
+
+The following programs take the raw format as input and analyse it in some way:
+
+sigstat.c | count, min, max, mean, var, sd
+freq.c    | frequency table
+prob.c    | probablity table
+parity.c  | frequency table of even and odd numbers
+trally.c  | transition frequency table
+
+The following programs take a SLOW5 file as input and generate frequency tables
+of the signal values:
+
+freq_slow5.c          | frequency table
+create_freq_tables.sh | raw and pA frequency tables
+
+The following programs take the frequency table data as input and analyse it in
+some way:
+
+freq_analysis.R | count, min, q1, mean, median, q3, max, mode, var, std, entropy
+get_mode.R      | mode
+get_quartile.R  | quartiles
+
+Run the following script to create raw and pA signal frequency tables (if not
+already created) and save analysis results to disk:
+
+	./analyse_dist.sh SLOW5
+
+Read Analysis
+-------------
+The following programs take a SLOW5 file as input, perform a transformation to
+each read's signals, and then output statistics and meta-data for each read:
+
+print_stats.c         | no transformation
+print_stats_diff.c    | successive differences
+print_stats_stall.c   | stall
+
+The statistics include the signal count, and the min, max, mean, var and sd of
+the raw signals, as well as after converting to pico-amperes (pA). The meta-data
+includes the read ID, digitisation, offset, range, rate, channel number, median
+before, read number, start mux and start time.
+
+The following program take this statistics data as input and analyses it:
+
+ida.R | read analysis
+
+The following programs takes a SLOW5 file as input and generate a frequency
+table of the read lengths:
+
+freq_readlen_slow5.c         | read length frequency table (print)
+create_freq_table_readlen.sh | read length frequency table (write to disk)
+
+Run the following script to create the read length frequency table (if not
+already created) and save analysis results to disk:
+
+	./analyse_dist_readlen.sh SLOW5
+
+Visualisation
+-------------
+The following programs take the raw format as input and generate some
+visualisations:
+
+sig.R      | line plot
+sighist.R  | histogram
+sigdense.R | density histogram
+
+The following program takes as input a frequency table and creates a histogram:
+
+freq_plot.R | histogram
+
+Run the following script to create raw and pA frequency tables (if not already
+created) and save histogram plots to disk:
+
+	./plot_dist.sh SLOW5
+
+Similarly, for the read length frequency table:
+
+	./plot_dist_readlen.sh SLOW5
+
+The following program takes as input the transition frequency table data from
+trally.c and generates some visualisations:
+
+trally.R | transition heatmap
+
+The following program takes the compression benchmark output from the
+../press/test.c program as input, and generates some visualisations:
+
+plot_ratio.R | compression benchmark viz
+
+Other
+-----
+util/rm_hdr.sh | print a SLOW5 file without the header

@@ -10,7 +10,7 @@ int getsig(char *line, int16_t *sig)
 
 	*sig = strtol(line, &endptr, 10);
 	if (endptr[0] != '\n') {
-		perror("parsing failed");
+		/*perror("parsing failed");*/
 		return 1;
 	}
 
