@@ -3,9 +3,9 @@
 # given the read statistics in tsv format
 USAGE = 'usage: ./ida.R STATS_TSV'
 
-library(ggplot2)
-library(tidyverse)
-library(tikzDevice)
+#library(ggplot2)
+#library(tidyverse)
+#library(tikzDevice)
 
 # check args
 args = commandArgs(TRUE)
@@ -53,24 +53,24 @@ cat('read length mode: ', getmode(df$n), '\n', sep='')
 
 # distribution of read lengths?
 
-den = density(df$n)
-dat = data.frame(x = den$x, y = den$y)
+#den = density(df$n)
+#dat = data.frame(x = den$x, y = den$y)
 
-library(MASS)
-fit.gamma <- fitdistr(as.numeric(df$n/10), "gamma", lower = c(0, 0))
-fit.exp <- fitdistr(as.numeric(df$n/10), "exponential", lower = c(0, 0))
+#library(MASS)
+#fit.gamma <- fitdistr(as.numeric(df$n/10), "gamma", lower = c(0, 0))
+#fit.exp <- fitdistr(as.numeric(df$n/10), "exponential", lower = c(0, 0))
 
-print(fit.gamma$estimate)
+#print(fit.gamma$estimate)
 
 #tikz(file = paste0(path, '.nhist.tex'), width = 5, height = 5)
-ggplot(dat) +
-	geom_histogram(data = as.data.frame(df$n), aes(x=df$n/10, y=..density..), binwidth=1) +
-	geom_line(aes(x=dat$x/10, y=dgamma(dat$x/10,fit.gamma$estimate["shape"],
-				    fit.gamma$estimate["rate"])),
-		  color="red", size = 1) +
-	geom_line(aes(x=dat$x/10, y=dexp(dat$x/10, fit.exp$estimate["rate"])),
-		  color="blue", size = 1) +
-	xlim(0,1000)
+#ggplot(dat) +
+#	geom_histogram(data = as.data.frame(df$n), aes(x=df$n/10, y=..density..), binwidth=1) +
+#	geom_line(aes(x=dat$x/10, y=dgamma(dat$x/10,fit.gamma$estimate["shape"],
+#				    fit.gamma$estimate["rate"])),
+#		  color="red", size = 1) +
+#	geom_line(aes(x=dat$x/10, y=dexp(dat$x/10, fit.exp$estimate["rate"])),
+#		  color="blue", size = 1) +
+#	xlim(0,1000)
 	#xlab('Read Length ($\\times 10^3$)') +
 	#ylab('Count')
 	#theme(axis.text.y=element_blank(),
@@ -88,11 +88,11 @@ cat('raw signal max: ', max(df$max), '\n', sep='')
 cat('raw signal mean: ', sum(df$mean * df$n) / num_sigs, '\n', sep='')
 
 # variance of signal values?
-raw_sig_var = sum(df$var * df$n) / num_sigs
-cat('raw signal var: ', raw_sig_var, '\n', sep='')
+#raw_sig_var = sum(df$var * df$n) / num_sigs
+#cat('raw signal var: ', raw_sig_var, '\n', sep='')
 
 # standard deviation of signal values?
-cat('raw signal sd: ', sqrt(raw_sig_var), '\n', sep='')
+#cat('raw signal sd: ', sqrt(raw_sig_var), '\n', sep='')
 
 # distribution of signal values? TODO
 
@@ -106,11 +106,11 @@ cat('signal (pa) max: ', max(df$max_pa), '\n', sep='')
 cat('signal (pa) mean: ', sum(df$mean_pa * df$n) / num_sigs, '\n', sep='')
 
 # variance of signal values?
-sig_var = sum(df$var_pa * df$n) / num_sigs
-cat('signal (pa) var: ', sig_var, '\n', sep='')
+#sig_var = sum(df$var_pa * df$n) / num_sigs
+#cat('signal (pa) var: ', sig_var, '\n', sep='')
 
 # standard deviation of signal values?
-cat('signal (pa) sd: ', sqrt(sig_var), '\n', sep='')
+#cat('signal (pa) sd: ', sqrt(sig_var), '\n', sep='')
 
 # distribution of signal values in pa? TODO
 hist(df$n)

@@ -1,48 +1,52 @@
 /*
- * print statistics of the signal differences for each read in tsv format
+ * get the deltas between slow5 signals
  * given (s|b)low5 file
- * cc print_stats_diff.c stats.c -lm -I PATH_TO_SLOW5LIB_INCLUDE PATH_TO_LIBSLOW5 -o print_stats_diff
- * ./print_stats (S|B)LOW5_FILE
+ * output as one column with 'raw_signal_delta' as the header
+ * cc get_deltas_slow5.c -I PATH_TO_SLOW5LIB_INCLUDE PATH_TO_LIBSLOW5 -o get_deltas_slow5
+ * ./get_deltas_slow5 (S|B)LOW5_FILE
  */
 
 #include <stdio.h>
 #include <stdint.h>
+#include <inttypes.h>
 #include <slow5/slow5.h>
-#include "stats.h"
 
 #define USAGE ("usage: %s (S|B)LOW5_FILE\n")
 
-void print_all_stats(struct slow5_file *fp)
+void print_all_deltas(struct slow5_file *fp)
 {
 	struct slow5_rec *rec;
-	struct stats rec_info;
 	int ret;
 	uint64_t i;
+	int16_t diff;
+	int16_t cur;
+	int16_t prev_1;
+	int16_t prev_2;
 
 	/* init */
 	rec = NULL;
-	init_stats(&rec_info);
 
-	/* print header */
-	print_hdr_stats();
+	puts("raw_signal_delta");
 
 	/* print each read's statistics */
 	ret = slow5_get_next(&rec, fp);
 	while (ret >= 0) {
-		update_stats_start(rec, &rec_info);
-		for (i = 0; i < rec->len_raw_signal - 1; i++) {
-			update_stats(rec->raw_signal[i + 1] - rec->raw_signal[i], &rec_info);
-		}
-		update_stats_end(rec, &rec_info);
-		print_stats(&rec_info);
+		prev_1 = rec->raw_signal[0];
+		prev_2 = rec->raw_signal[1];
+		for (i = 2; i < rec->len_raw_signal; i++) {
+			cur = rec->raw_signal[i];
+			diff = cur - prev_1;
+			prev_1 = prev_2;
+			prev_2 = cur;
 
-		init_stats(&rec_info);
+			printf("%" PRId16 "\n", diff);
+		}
+
 		ret = slow5_get_next(&rec, fp);
 	}
 
 	/* let it go */
 	slow5_rec_free(rec);
-	/*free_stats(rec_info);*/
 }
 
 int main(int argc, char **argv)
@@ -63,7 +67,7 @@ int main(int argc, char **argv)
 	}
 
 	/* do the work */
-	print_all_stats(fp);
+	print_all_deltas(fp);
 
 	/* close file */
 	slow5_close(fp);
