@@ -55,8 +55,10 @@ trally.c  | transition frequency table
 The following programs take a SLOW5 file as input and generate frequency tables
 of the signal values:
 
-freq_slow5.c          | frequency table
-create_freq_tables.sh | raw and pA frequency tables
+freq_slow5.c                | frequency table
+freq_slow5_delta.c          | differences frequency table
+create_freq_tables.sh       | raw and pA frequency tables
+create_freq_tables_delta.sh | delta and zigzag delta frequency tables
 
 The following programs take the frequency table data as input and analyse it in
 some way:
@@ -64,11 +66,17 @@ some way:
 freq_analysis.R | count, min, q1, mean, median, q3, max, mode, var, std, entropy
 get_mode.R      | mode
 get_quartile.R  | quartiles
+freq_rawtopa.R  | pA transformation
+freq_zigzag.R   | zigzag transformation
 
 Run the following script to create raw and pA signal frequency tables (if not
 already created) and save analysis results to disk:
 
 	./analyse_dist.sh SLOW5
+
+Similarly, for the differences and zigzag differences signal frequency tables:
+
+	./analyse_dist_delta.sh SLOW5
 
 Read Analysis
 -------------
@@ -116,6 +124,10 @@ Run the following script to create raw and pA frequency tables (if not already
 created) and save histogram plots to disk:
 
 	./plot_dist.sh SLOW5
+
+Similarly, for the differences and zigzag differences frequency tables:
+
+	./plot_dist_delta.sh SLOW5
 
 Similarly, for the read length frequency table:
 

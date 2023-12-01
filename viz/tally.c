@@ -5,9 +5,6 @@
 #include "tally.h"
 #include "getsig.h"
 
-#define TALLY_SZ (65536) /* 2^16 */
-#define TALLY_SZ_EXP (8192) /* 2^13 */
-
 uint64_t *gettally(FILE *fp, int16_t *min, int16_t *max)
 {
 	uint64_t *tally;
@@ -30,58 +27,12 @@ uint64_t *gettally(FILE *fp, int16_t *min, int16_t *max)
 		return NULL;
 	}
 
-	while ((ret = getnextsig(fp, line, n, &x)) == 0) {
-		tally[(x << 1) ^ (x >> 15)] ++;
-		if (x < *min)
-			*min = x;
-		if (x > *max)
-			*max = x;
-	}
+	while ((ret = getnextsig(fp, line, n, &x)) == 0)
+		updatetally(tally, x, min, max);
 
 	free(line);
 
 	if (ret != 1) {
-		free(tally);
-		return NULL;
-	}
-
-	return tally;
-}
-
-uint64_t *gettally_slow5(struct slow5_file *fp, int16_t *min, int16_t *max)
-{
-	uint64_t *tally;
-	struct slow5_rec *rec;
-	int16_t x;
-	int ret;
-	uint64_t i;
-
-	rec = NULL;
-	*min = INT16_MAX;
-	*max = INT16_MIN;
-
-	tally = calloc(TALLY_SZ_EXP, sizeof (*tally));
-	if (!tally)
-		return NULL;
-
-	ret = slow5_get_next(&rec, fp);
-
-	while (ret >= 0) {
-		for (i = 0; i < rec->len_raw_signal; i++) {
-			x = rec->raw_signal[i];
-			tally[(x << 1) ^ (x >> 15)] ++;
-			if (x < *min)
-				*min = x;
-			if (x > *max)
-				*max = x;
-		}
-
-		ret = slow5_get_next(&rec, fp);
-	}
-
-	slow5_rec_free(rec);
-
-	if (ret != SLOW5_ERR_EOF) {
 		free(tally);
 		return NULL;
 	}

@@ -1,16 +1,17 @@
 /*
- * print the frequencies of signal raw values in a TSV format
+ * print the frequencies of the differences between the signal raw values
+ * in a TSV format
  * given (s|b)low5 file
  * e.g.
  *
  * signal	freq
- * 500	3
- * 501	0
- * 502	10
+ * -10	7
+ * -9	13
+ * -6	44
  * ...
  *
- * cc freq_slow5.c getsig.c tally.c -I PATH_TO_SLOW5LIB_INCLUDE PATH_TO_LIBSLOW5 -o freq_slow5
- * ./freq_slow5 (S|B)LOW5_FILE
+ * cc freq_delta_slow5.c getsig.c tally.c -I PATH_TO_SLOW5LIB_INCLUDE PATH_TO_LIBSLOW5 -o freq_delta_slow5
+ * ./freq_delta_slow5 (S|B)LOW5_FILE
  */
 
 #include <stdio.h>
@@ -21,11 +22,14 @@
 
 #define USAGE ("usage: %s (S|B)LOW5_FILE\n")
 
-uint64_t *gettally_slow5(struct slow5_file *fp, int16_t *min, int16_t *max)
+uint64_t *gettally_delta_slow5(struct slow5_file *fp, int16_t *min,
+			       int16_t *max)
 {
 	uint64_t *tally;
 	struct slow5_rec *rec;
 	int16_t x;
+	int16_t cur;
+	int16_t prev;
 	int ret;
 	uint64_t i;
 
@@ -40,9 +44,14 @@ uint64_t *gettally_slow5(struct slow5_file *fp, int16_t *min, int16_t *max)
 	ret = slow5_get_next(&rec, fp);
 
 	while (ret >= 0) {
-		for (i = 0; i < rec->len_raw_signal; i++) {
-			x = rec->raw_signal[i];
-			updatetally(tally, x, min, max);
+		if (rec->len_raw_signal > 1) {
+			prev = rec->raw_signal[0];
+			for (i = 1; i < rec->len_raw_signal; i++) {
+				cur = rec->raw_signal[i];
+				x = cur - prev;
+				updatetally(tally, x, min, max);
+				prev = cur;
+			}
 		}
 
 		ret = slow5_get_next(&rec, fp);
@@ -58,13 +67,14 @@ uint64_t *gettally_slow5(struct slow5_file *fp, int16_t *min, int16_t *max)
 	return tally;
 }
 
+
 void printtally_slow5(struct slow5_file *fp)
 {
 	uint64_t *tally;
 	uint16_t min;
 	uint16_t max;
 
-	tally = gettally_slow5(fp, &min, &max);
+	tally = gettally_delta_slow5(fp, &min, &max);
 	printtally(tally, min, max);
 
 	free(tally);

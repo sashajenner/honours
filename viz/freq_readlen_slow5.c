@@ -9,7 +9,7 @@
  * 502	10
  * ...
  *
- * cc freq_readlen_slow5.c getsig.c tally_u64.c -I PATH_TO_SLOW5LIB_INCLUDE PATH_TO_LIBSLOW5 -o freq_readlen_slow5
+ * cc freq_readlen_slow5.c tally_u64.c -I PATH_TO_SLOW5LIB_INCLUDE PATH_TO_LIBSLOW5 -o freq_readlen_slow5
  * ./freq_readlen_slow5 (S|B)LOW5_FILE
  */
 
@@ -20,6 +20,48 @@
 #include "tally_u64.h"
 
 #define USAGE ("usage: %s (S|B)LOW5_FILE\n")
+
+uint64_t *gettally_readlen_slow5(struct slow5_file *fp, uint64_t *min,
+				 uint64_t *max)
+{
+	uint64_t *tally;
+	struct slow5_rec *rec;
+	uint64_t x;
+	int ret;
+	uint64_t i;
+
+	rec = NULL;
+	*min = UINT64_MAX;
+	*max = 0;
+	tally = NULL;
+
+	ret = slow5_get_next(&rec, fp);
+
+	while (ret >= 0) {
+		x = rec->len_raw_signal;
+		if (x < *min)
+			*min = x;
+		if (x > *max) {
+			*max = x;
+			/* +1 to accomodate for 0 */
+			tally = realloc(tally, (x + 1) * sizeof (*tally));
+			if (!tally)
+				return NULL;
+		}
+		tally[x] ++;
+
+		ret = slow5_get_next(&rec, fp);
+	}
+
+	slow5_rec_free(rec);
+
+	if (ret != SLOW5_ERR_EOF) {
+		free(tally);
+		return NULL;
+	}
+
+	return tally;
+}
 
 void printtally_readlen_slow5(struct slow5_file *fp)
 {

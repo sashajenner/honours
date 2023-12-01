@@ -1,7 +1,7 @@
 #!/bin/sh
 # create the frequency table of read lengths
 # given a SLOW5 file
-# if they already don't exist
+# if it already doesn't exist
 USAGE="usage: $0 (B|S)LOW5_FILE"
 
 if [ $# -ne 1 ]
