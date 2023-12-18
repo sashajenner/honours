@@ -5,6 +5,8 @@ OBJ = test.o press.o trans.o flat.o bitmap.o stats.o util.o ex_zd.o
 JNNLIB = $(JNN)/jnn.o
 SVB = streamvbyte
 SVBLIB = $(SVB)/libstreamvbyte.so.0.0.1
+SVB16 = streamvbyte16
+SVB16LIB = $(SVB16)/libstreamvbyte16.a
 BZIP2 = bzip2
 BZIP2LIB = $(BZIP2)/libbz2.a
 FLZMA2 = fast-lzma2
@@ -22,7 +24,7 @@ TURBORC = Turbo-Range-Coder
 TURBORCLIB = $(TURBORC)/librc.a
 SIGTK = sigtk
 SIGTKLIB = $(SIGTK)/build/jnn.o $(SIGTK)/build/sigtk.o
-LIB = $(SVBLIB) $(BZIP2LIB) $(FLZMA2LIB) $(FLACLIB) $(TURBOPFORLIB) $(SLOW5LIB) $(HUFFMANLIB) $(TURBORCLIB) $(SIGTKLIB)
+LIB = $(SVBLIB) $(SVB16LIB) $(BZIP2LIB) $(FLZMA2LIB) $(FLACLIB) $(TURBOPFORLIB) $(SLOW5LIB) $(HUFFMANLIB) $(TURBORCLIB) $(SIGTKLIB)
 
 .PHONY = clean $(LIB)
 
@@ -35,6 +37,9 @@ press.a: $(OBJ) $(LIB)
 $(SVBLIB):
 	make -C $(SVB)
 
+$(SVB16LIB):
+	make -C $(SVB16)
+
 $(BZIP2LIB):
 	make -C $(BZIP2)
 
@@ -42,7 +47,7 @@ $(FLZMA2LIB):
 	make -C $(FLZMA2)
 
 $(FLACLIB):
-	make -C $(FLAC)
+	cd $(FLAC) && ./configure && make && cd ../
 
 $(HUFFMANLIB):
 	make -C $(HUFFMAN)
@@ -83,5 +88,6 @@ ex_zd.o: ex_zd.c ex_zd.h trans.h
 clean:
 	rm $(OBJ) test
 	make -C $(SVB) clean
+	make -C $(SVB16) clean
 	make -C $(BZIP2) clean
 	make -C $(FLZMA2) clean
