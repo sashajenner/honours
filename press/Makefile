@@ -15,7 +15,7 @@ FLAC = flac-1.3.4
 FLACLIB = $(FLAC)/src/libFLAC/.libs/libFLAC.so
 TURBOPFOR = TurboPFor-Integer-Compression
 TURBOPFORLIB = $(TURBOPFOR)/libic.a
-SLOW5 = ~/work/garvan/slow5/slow5tools/slow5lib
+SLOW5 = ~/slow5tools/slow5lib
 SLOW5INCLUDE = $(SLOW5)/include
 SLOW5LIB = $(SLOW5)/lib/libslow5.a
 HUFFMAN = huffman
@@ -86,7 +86,7 @@ ex_zd.o: ex_zd.c ex_zd.h trans.h
 	$(CC) $< $(CFLAGS) -c -o $@
 
 clean:
-	rm $(OBJ) test
+	rm -f $(OBJ) test
 	make -C $(SVB) clean
 	make -C $(SVB16) clean
 	make -C $(BZIP2) clean

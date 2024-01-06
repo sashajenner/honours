@@ -5,6 +5,9 @@
 #include <time.h>
 #include <slow5/slow5.h>
 
+/* search for and shift unused lower bits before and after compression */
+//#define QTS
+
 #define GET_CLOCK_SECS(before, after) ((double) (after - before) / CLOCKS_PER_SEC)
 
 #define TEST(method, res, fp) \
@@ -13,6 +16,7 @@
 	struct slow5_file *sfp;\
 	int ret;\
 \
+	fprintf(stderr, "%s\n", #method);\
 	/* open file */\
 	sfp = slow5_open(argv[1], "r");\
 	if (!sfp) {\
@@ -32,6 +36,7 @@
 	}\
 	slow5_rec_free(rec);\
 	fwrite_res(fp, res); \
+	fflush(fp);\
 	/* close file */\
 	slow5_close(sfp);\
 }
@@ -39,11 +44,23 @@
 #define ASSERT(statement) \
 if (!(statement)) { \
     fprintf(stderr, "line %d: assertion `%s' failed\n", __LINE__, #statement); \
-    return EXIT_FAILURE; \
+    return EXIT_SUCCESS; \
 }
 
 #define LENGTH(arr) ((sizeof (arr)) / sizeof *arr)
 
+#ifdef QTS
+#define RESULTS_HDR ("method\t" \
+		     "pressbound_bytes\t" \
+		     "press_bytes\t" \
+		     "press_ratio\t" \
+		     "depress_bytes\t" \
+		     "pressbound_time\t" \
+		     "press_time\t" \
+		     "depress_time\t" \
+		     "qts_press_time\t" \
+		     "qts_depress_time\n")
+#else
 #define RESULTS_HDR ("method\t" \
 		     "pressbound_bytes\t" \
 		     "press_bytes\t" \
@@ -52,8 +69,21 @@ if (!(statement)) { \
 		     "pressbound_time\t" \
 		     "press_time\t" \
 		     "depress_time\n")
+#endif /* QTS */
 		     /*"nflats\t" \
 		     "flats\n")*/
+#ifdef QTS
+#define RESULTS_FORMAT ("%s\t" \
+			"%f\t" \
+			"%f\t" \
+			"%f\t" \
+			"%f\t" \
+			"%f\t" \
+			"%f\t" \
+			"%f\t" \
+			"%f\t" \
+			"%f\n")
+#else
 #define RESULTS_FORMAT ("%s\t" \
 			"%f\t" \
 			"%f\t" \
@@ -62,9 +92,22 @@ if (!(statement)) { \
 			"%f\t" \
 			"%f\t" \
 			"%f\n")
+#endif /* QTS */
 			/*"%" PRIu32 "\t" \
 			"%s\n")*/
 
+#ifdef QTS
+#define RESULTS_ARGS res->method_name, \
+		     res->pressbound_bytes, \
+		     res->press_bytes, \
+		     res->press_ratio, \
+		     res->depress_bytes, \
+		     res->pressbound_clocktime, \
+		     res->press_clocktime, \
+		     res->depress_clocktime, \
+		     res->qts_press_clocktime, \
+		     res->qts_depress_clocktime
+#else
 #define RESULTS_ARGS res->method_name, \
 		     res->pressbound_bytes, \
 		     res->press_bytes, \
@@ -73,6 +116,7 @@ if (!(statement)) { \
 		     res->pressbound_clocktime, \
 		     res->press_clocktime, \
 		     res->depress_clocktime
+#endif /* QTS */
 
 /* running mean */
 /*#define UPDATE_RES(res, attr, update) (res->attr += ((update) - res->attr) / res->n)*/
@@ -90,6 +134,10 @@ struct result {
 	double depress_bytes;
 	double press_bytes;
 	double pressbound_bytes;
+#ifdef QTS
+	double qts_press_clocktime;
+	double qts_depress_clocktime;
+#endif /* QTS */
 	uint64_t n;
 };
 

@@ -536,7 +536,7 @@ static int write_code_table_to_memory(buf_cache* pc, SymbolEncoder* se, uint32_t
 		}
 	}
 
-	fprintf(stderr, "table size: %ld\n", bytes);
+	//fprintf(stderr, "table size: %ld\n", bytes);
 
 	return 0;
 }

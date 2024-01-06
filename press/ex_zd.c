@@ -6,6 +6,12 @@
 #include "press.h"
 #include "streamvbyte/include/streamvbyte.h"
 
+#define ASSERT(statement, ret) \
+if (!(statement)) { \
+    fprintf(stderr, "line %d: assertion `%s' failed\n", __LINE__, #statement); \
+    return ret; \
+}
+
 static int ex_press(const uint16_t *in, uint32_t nin, uint8_t **out_ptr,
 		    uint64_t *cap_out_ptr, size_t *offset_ptr, uint64_t *nout)
 {
@@ -393,11 +399,39 @@ static inline int16_t *do_qts(const int16_t *s, uint64_t n, uint8_t q){
     return out;
 }
 
-static inline void do_rev_qts_inplace(int16_t *s, uint64_t n, uint8_t q){
+uint8_t findo_qts(const int16_t *s, uint64_t n, uint8_t max, int16_t **qs) {
+	uint8_t q;
+
+	q = find_qts(s, n, max);
+	if (q)
+		*qs = do_qts(s, n, q);
+	else
+		*qs = (int16_t *) s;
+	return q;
+}
+
+void do_rev_qts_inplace(int16_t *s, uint64_t n, uint8_t q){
     for(uint64_t i=0; i<n; i++){
         s[i] = s[i] << q;
     }
-    return;
+}
+
+void do_rev_qts_inplace_u16(uint16_t *s, uint64_t n, uint8_t q){
+    for(uint64_t i=0; i<n; i++){
+        s[i] = s[i] << q;
+    }
+}
+
+void do_rev_qts_inplace_32(int32_t *s, uint64_t n, uint8_t q){
+    for(uint64_t i=0; i<n; i++){
+        s[i] = s[i] << q;
+    }
+}
+
+void do_rev_qts_inplace_u32(uint32_t *s, uint64_t n, uint8_t q){
+    for(uint64_t i=0; i<n; i++){
+        s[i] = s[i] << q;
+    }
 }
 
 uint8_t *ptr_compress_ex_zd_v0(const int16_t *ptr, size_t count, size_t *n)
@@ -427,7 +461,7 @@ uint8_t *ptr_compress_ex_zd_v0(const int16_t *ptr, size_t count, size_t *n)
 	memcpy(out_vb+offset, &nin, sz);
 	offset += sz;
 
-	q = find_qts(in, nin, 5);
+	q = find_qts(in, nin, MAX_QTS_SEARCH);
 	int16_t *q_in = NULL;
 	if(q){
 		q_in = do_qts(in, nin, q);
