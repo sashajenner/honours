@@ -94,7 +94,11 @@ struct result {
 };
 
 /* the first read from PAF25452_pass_bfdfd1d8_1 */
-#define P11_BITS_PER_SAMPLE (12) /* actually 11 but FLAC__STREAM_ENCODER_INIT_STATUS_NOT_STREAMABLE error */
-#define P11_SAMPLING_RATE (4000)
+#define BITS_PER_SAMPLE_P11 (12) /* actually 11 but FLAC__STREAM_ENCODER_INIT_STATUS_NOT_STREAMABLE error */
+#define SAMPLING_RATE_P11 (4000)
+
+/* 5kHz data */
+#define BITS_PER_SAMPLE_5KHZ (13)
+#define SAMPLING_RATE_5KHZ (5000)
 
 # endif /* test.h */

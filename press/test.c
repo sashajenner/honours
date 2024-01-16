@@ -2430,7 +2430,14 @@ int test_flac(const int16_t *sigs, const uint32_t nr_sigs, uint32_t bps,
 int test_flac_P11(const int16_t *sigs, const uint32_t nr_sigs,
 		  struct result *res)
 {
-	return test_flac(sigs, nr_sigs, P11_BITS_PER_SAMPLE, P11_SAMPLING_RATE,
+	return test_flac(sigs, nr_sigs, BITS_PER_SAMPLE_P11, SAMPLING_RATE_P11,
+			 res);
+}
+
+int test_flac_5khz(const int16_t *sigs, const uint32_t nr_sigs,
+		   struct result *res)
+{
+	return test_flac(sigs, nr_sigs, BITS_PER_SAMPLE_5KHZ, SAMPLING_RATE_5KHZ,
 			 res);
 }
 
@@ -2513,8 +2520,15 @@ int test_zstd_flac(const int16_t *sigs, const uint32_t nr_sigs, uint32_t bps,
 int test_zstd_flac_P11(const int16_t *sigs, const uint32_t nr_sigs,
 		       struct result *res)
 {
-	return test_zstd_flac(sigs, nr_sigs, P11_BITS_PER_SAMPLE,
-			      P11_SAMPLING_RATE, res);
+	return test_zstd_flac(sigs, nr_sigs, BITS_PER_SAMPLE_P11,
+			      SAMPLING_RATE_P11, res);
+}
+
+int test_zstd_flac_5khz(const int16_t *sigs, const uint32_t nr_sigs,
+			struct result *res)
+{
+	return test_zstd_flac(sigs, nr_sigs, BITS_PER_SAMPLE_5KHZ,
+			      SAMPLING_RATE_5KHZ, res);
 }
 
 int test_turbopfor(const int16_t *sigs, const uint32_t nr_sigs,
@@ -6141,7 +6155,8 @@ int main(int argc, char **argv)
 	TEST(bzip2_svb12_zd, &res, fp);
 	TEST(fast_lzma2_svb12_zd, &res, fp);
 	TEST(flac_P11, &res, fp);
-	TEST(zstd_flac_P11, &res, fp);
+	TEST(flac_5khz, &res, fp);
+	TEST(zstd_flac_5khz, &res, fp);
 	//TEST(turbopfor, &res, fp); double free or corruption (!prev)
 	TEST(vb1e2_zd, &res, fp);
 	TEST(vbe21_zd, &res, fp);
